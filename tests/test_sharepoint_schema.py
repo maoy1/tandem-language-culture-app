@@ -11,6 +11,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = ROOT / "config" / "sharepoint_schema.json"
 VALIDATOR_PATH = ROOT / "scripts" / "sharepoint" / "validate_schema.py"
+REGISTRATION_POLICY_PATH = ROOT / "config" / "participant_registration.json"
+REGISTRATION_VALIDATOR_PATH = ROOT / "scripts" / "sharepoint" / "validate_registration.py"
 
 
 def load_validator():
@@ -26,8 +28,23 @@ def load_current_schema() -> dict:
     return json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
 
 
+def load_registration_policy() -> dict:
+    return json.loads(REGISTRATION_POLICY_PATH.read_text(encoding="utf-8"))
+
+
 def fields_by_name(list_definition: dict) -> dict:
     return {field["internalName"]: field for field in list_definition["fields"]}
+
+
+def load_registration_validator():
+    spec = importlib.util.spec_from_file_location(
+        "validate_registration", REGISTRATION_VALIDATOR_PATH
+    )
+    if spec is None or spec.loader is None:
+        raise AssertionError(f"Could not load validator: {REGISTRATION_VALIDATOR_PATH}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def test_current_schema_passes_validator() -> None:
@@ -141,3 +158,23 @@ def test_validator_requires_manual_location_provisioning() -> None:
     errors = validator.validate(schema)
 
     assert any("Location fields must be marked manual" in error for error in errors)
+
+
+def test_participant_registration_policy_matches_schema() -> None:
+    validator = load_registration_validator()
+
+    assert validator.validate(load_registration_policy(), load_current_schema()) == []
+
+
+def test_registration_policy_uses_authenticated_unique_identity() -> None:
+    policy = load_registration_policy()
+
+    assert policy["identity"] == {
+        "field": "ParticipantAccount",
+        "source": "authenticated_user",
+        "required": True,
+        "unique": True,
+        "participantEditable": False,
+    }
+    assert policy["access"]["approvalRequired"] is False
+    assert policy["access"]["participantUpdate"] == "own_profile"

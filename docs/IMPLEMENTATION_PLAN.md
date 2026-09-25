@@ -34,8 +34,11 @@ approve the final result.
   - Validate the schema locally with repeatable tests.
   - Human checkpoint: create and configure the lists in the approved tenant,
     including the rich Location field and participant-form settings.
-- [ ] **POC-03 — Participant self-registration**
+- [ ] **POC-03 — Participant self-registration** *(implementation in progress)*
   - Let an authenticated colleague create and update their own profile.
+  - Keep the registration contract and automated consistency checks in the
+    repository; apply the form and item-level permissions manually in the
+    tenant.
   - Human checkpoint: test the form once with a normal account.
 - [ ] **POC-04 to POC-06 — Profile data and participation status**
   - Add controlled language preferences, profile context, and Active/Paused/
@@ -72,6 +75,8 @@ report, or documented repeatable step.
 
 ## Current focus
 
+POC-03 is the current focus. Its registration contract and manual form setup
+must follow [POC_03_PARTICIPANT_SELF_REGISTRATION.md](POC_03_PARTICIPANT_SELF_REGISTRATION.md).
 POC-02 is complete. Its schema and manual setup must follow
 [CURRENT_DESIGN.md](CURRENT_DESIGN.md), especially the current Participants
 schema and the removal of the Culture, Time zone, and Location catalogues.

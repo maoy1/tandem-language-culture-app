@@ -83,6 +83,9 @@ the New item form.
 Language lookup fields must allow multiple selections and must use the
 Language catalogue values. Do not replace them with free-text fields.
 
+For the self-registration behavior and item-level permissions, follow
+[POC-03 participant self-registration](POC_03_PARTICIPANT_SELF_REGISTRATION.md).
+
 ## Participant submission flow
 
 Create an automated cloud flow with:
