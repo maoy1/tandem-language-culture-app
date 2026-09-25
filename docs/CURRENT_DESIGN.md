@@ -43,7 +43,7 @@ design.
 | Column | Type | Use |
 |---|---|---|
 | Title | Single line text | Canonical language name |
-| ISO code | Single line text | ISO language code |
+| ISO code | Single line text | Required, unique, and indexed ISO language code |
 | Aliases | Multiple lines | Search or display aliases |
 | Active | Yes/No | Allows a language to be retired without deleting history |
 

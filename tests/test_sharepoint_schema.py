@@ -57,6 +57,7 @@ def test_language_catalogue_has_controlled_values() -> None:
     assert fields["ISOCode"]["required"] is True
     assert fields["ISOCode"]["unique"] is True
     assert fields["Active"]["defaultValue"] is True
+    assert "ISOCode" in language_catalogue["indexes"]
 
 
 def test_participants_schema_matches_current_design() -> None:

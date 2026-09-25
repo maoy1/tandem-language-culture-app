@@ -26,7 +26,7 @@ Create one controlled catalogue with:
 | Column | Type |
 |---|---|
 | Title | Canonical language name |
-| ISO code | Single line text |
+| ISO code | Single line text, unique and indexed |
 | Aliases | Multiple lines |
 | Active | Yes/No |
 

@@ -9,7 +9,8 @@
         { "internalName": "ISOCode", "displayName": "ISO code", "type": "Text", "required": true, "unique": true },
         { "internalName": "Aliases", "displayName": "Aliases", "type": "Note" },
         { "internalName": "Active", "displayName": "Active", "type": "Boolean", "defaultValue": true }
-      ]
+      ],
+      "indexes": ["ISOCode"]
     },
     {
       "name": "Participants",
