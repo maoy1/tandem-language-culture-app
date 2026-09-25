@@ -7,9 +7,10 @@ Use these repository documents as the source of truth for the current design:
 
 - [Implementation plan](../IMPLEMENTATION_PLAN.md)
 - [SharePoint POC setup](../POC_SHAREPOINT_SETUP.md)
-- [SharePoint provisioning](../SHAREPOINT_PROVISIONING.md)
+- [Current design](../CURRENT_DESIGN.md)
 
-The reference documents describe an earlier design that included culture and
-time-zone catalogues. The current POC uses the SharePoint `Location` field and
-derives the time zone when needed; it does not require participants to select a
-time zone catalogue value.
+The reference documents describe an earlier design and are not the
+implementation authority. The current POC uses a controlled Time zone
+catalogue selected in Power Apps, without a participant city/location field in
+the current POC. Use
+`docs/CURRENT_DESIGN.md` for the current schema and behavior.

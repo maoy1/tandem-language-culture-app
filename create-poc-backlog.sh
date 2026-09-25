@@ -217,11 +217,11 @@ create_issue \
   "epic:foundation" \
   "yes" \
   "POC-01" \
-  "The approved SharePoint lists, columns, choices, lookups, unique constraints, and indexes are recorded in version-controlled schema." \
+  "The approved SharePoint lists, including Language and Time zone catalogues, columns, choices, lookups, unique constraints, and indexes are recorded in version-controlled schema." \
   "The schema validator and automated tests run without tenant access." \
   "The Excel import template and manual setup guide cover the tenant configuration steps." \
   "The design explicitly excludes the removed catalogues and fields." \
-  "Any tenant-specific limitations, including the rich Location field and participant-form settings, are documented."
+  "The deferred profile-enrichment fields, Power Apps form settings, and manual tenant steps are documented."
 
 create_issue \
   "POC-03" \
@@ -236,8 +236,10 @@ create_issue \
   "Microsoft/company identity is used for the participant." \
   "One participant profile exists per user." \
   "Reopening registration edits the existing profile rather than creating a duplicate." \
+  "Power Apps locks Participant account to the signed-in user and exposes Time zone as a required controlled dropdown." \
   "No admin approval is required for initial registration." \
-  "Participant can update their own profile."
+  "Participant can update their own profile in the app, and the app can be shared through a Teams tab." \
+  "The ticket documents that app filtering is not SharePoint row-level security when the unique identity field is retained."
 
 create_issue \
   "POC-04" \
@@ -269,9 +271,9 @@ create_issue \
   "Preferred group size can be stored." \
   "Optional language level can be stored/displayed." \
   "Informational language/culture interests can be entered." \
-  "Participant city is obtained from SharePoint location." \
-  "No separate time-zone field is requested." \
-  "Derived time zone can be used by discovery."
+  "Optional city/location context can be added later through the approved profile-enrichment change." \
+  "Participant selects one controlled time zone from the Time zone catalogue." \
+  "The selected time zone can be used by discovery."
 
 create_issue \
   "POC-06" \
@@ -317,7 +319,7 @@ create_issue \
   "Rank eligible opportunities so the most practical candidates appear first." \
   "Reciprocal language fit may rank above one-way fit." \
   "Same-city candidate receives a ranking bonus." \
-  "Time-zone proximity can be derived from SharePoint location and influence ranking." \
+  "Time-zone proximity can be calculated from the selected catalogue values and influence ranking." \
   "Preferred group size can influence ranking." \
   "Waiting time can influence ranking." \
   "Soft preferences do not become hard exclusions."

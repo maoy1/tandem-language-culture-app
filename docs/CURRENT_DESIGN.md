@@ -37,7 +37,7 @@ non-identifying results to participants.
 
 ### Language catalogue
 
-This is the only controlled catalogue required by the current registration
+This is one of the controlled catalogues required by the current registration
 design.
 
 | Column | Type | Use |
@@ -50,6 +50,20 @@ design.
 Participants select languages from this catalogue through lookup fields. They
 may select multiple values in both language fields.
 
+### Time zone catalogue
+
+This catalogue is imported and maintained manually.
+
+| Column | Type | Use |
+|---|---|---|
+| Title | Single line text | Display label shown in Power Apps |
+| IANA ID | Single line text | Required, unique, and indexed canonical identifier |
+| Windows ID | Single line text | Optional compatibility identifier |
+| Active | Yes/No | Allows a time zone to be retired without deleting history |
+
+Participants select one active value through the Power Apps dropdown; they do
+not type a time zone.
+
 ### Participants
 
 | Column | Type | Current rule |
@@ -58,8 +72,7 @@ may select multiple values in both language fields.
 | Participant account | Person or Group, single | Required and unique; authoritative identity |
 | Teach languages | Lookup to Language catalogue, multiple | Optional individually |
 | Learn languages | Lookup to Language catalogue, multiple | Optional individually |
-| Location | SharePoint Location | Required; the flow uses its City component |
-| Time zone | Single line text, hidden | Flow-maintained derived IANA value; never entered by participants |
+| Time zone | Lookup to Time zone catalogue, single | Required; selected in Power Apps |
 | Learning focus | Multiple lines | Optional context |
 | Comments | Multiple lines | Optional context |
 | Status | Choice, flow-managed | `Active` or `Needs review` in the current POC |
@@ -84,19 +97,12 @@ These are later delivery items, not part of the initial participant setup:
 The statistics page should use aggregated values and avoid exposing the
 Participants list or personal details.
 
-## Location and time-zone policy
+## Time-zone policy
 
-Participants enter one Location value. Do not create separate participant
-columns for office city, country, or time zone.
-
-The flow reads `Location: City` and derives a canonical IANA time-zone value
-for matching and reporting. Participants never choose a time zone. The
-city-to-IANA mapping is implementation data maintained in the repository; it
-is not a second participant-facing catalogue.
-
-If the Location is missing, the record is incomplete. If the city is unknown
-to the mapping, the record should go to `Needs review` rather than silently
-using a wildcard or guessed time zone.
+Participants choose one time zone from the controlled Time zone catalogue.
+This is the authoritative value for matching and reporting. Location or city is
+out of scope for the current POC. A later enhancement may add it as optional
+context, but it must not replace the controlled time-zone selection.
 
 ## Participant submission flow
 
@@ -104,7 +110,7 @@ The current validation rule is:
 
 ```text
 (Teach languages is not empty OR Learn languages is not empty)
-AND Location is not empty
+AND Time zone is not empty
 ```
 
 Expected behavior:
@@ -113,7 +119,7 @@ Expected behavior:
 - If the rule is true, set `Status` to `Active`.
 - If the rule is false, set `Status` to `Needs review`.
 - Use the trigger's item ID when updating the item.
-- Derive the hidden time zone from the Location city as an enrichment step.
+- Validate that the selected time zone is an active catalogue value.
 - Do not use a file-content action or parse the language seed JSON in this
   participant submission flow.
 
@@ -122,13 +128,23 @@ catalogue. It is not the source of participant submissions.
 
 ## Visibility and manual work
 
-Participants should be able to register and maintain their own profile without
-seeing other participant records. Hide helper and flow-managed fields from the
-participant form, including Title, Status, Time zone, and any technical Email
-copy.
+Participants should use the Power Apps form to register and maintain their own
+profile. The app filters its gallery to the signed-in user's unique
+Participant account and locks that control. The form shows the required time
+zone lookup.
 
-Automation should handle validation, identity enrichment, time-zone
-derivation, status updates, notifications, and repeatable checks. People still
+This app filter is a user-experience rule, not a SharePoint security boundary.
+Because Participant account remains unique, SharePoint's built-in item-level
+permission setting cannot be enabled. Users with direct list permissions may
+still see other rows in SharePoint. Strict row privacy requires a later custom
+permission flow or a data source with row-level security.
+
+Hide system and flow-managed fields from the participant form, including Title
+and Status. Do not expose the Participant account people picker for choosing
+another colleague.
+
+Automation should handle validation, identity enrichment, time-zone lookup
+validation, status updates, notifications, and repeatable checks. People still
 decide whether to connect, accept or decline requests, arrange meetings, run
 the exchange, approve tenant changes, and handle exceptional cases.
 
@@ -137,10 +153,8 @@ the exchange, approve tenant changes, and handle exceptional cases.
 Do not add these back unless a new product decision is recorded in this file:
 
 - Culture catalogue
-- Time zone catalogue
 - Location catalogue
-- Separate Country or Office city participant columns
-- Participant-entered Time zone
+- Required native SharePoint Location input
 - Consent confirmed field
 - Participant Role field
 - Participant-entered Email as a required registration field
@@ -149,12 +163,18 @@ Culture-related concepts may still appear in the older product reference
 documents, but they are not part of the current SharePoint registration
 schema.
 
+## Deferred optional profile enrichment
+
+After the registration and matching core is stable, a later ticket may add
+optional profile context such as city/location, culture interests, or other
+free-text information. Those fields must be reviewed for privacy, matching
+value, and form usability before being added to the SharePoint schema.
+
 ## Implementation checklist
 
 - [ ] Validate the SharePoint schema against this file.
-- [ ] Confirm the participant form hides system, helper, and flow-managed fields.
+- [ ] Confirm the participant form hides system and flow-managed fields.
 - [ ] Confirm the language lookup fields allow multiple controlled selections.
-- [ ] Confirm Location is required and no separate city/country/time-zone input exists.
+- [ ] Confirm Time zone is a required single-value lookup to the Time zone catalogue.
 - [ ] Implement and test the submission flow rule.
-- [ ] Implement city-to-IANA enrichment and the unknown-city exception.
 - [ ] Add later lists only through their own GitHub issues and PRs.

@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "list": "Participants",
+  "identity": {
+    "field": "ParticipantAccount",
+    "source": "authenticated_user",
+    "required": true,
+    "unique": true,
+    "participantEditable": false
+  },
+  "access": {
+    "approvalRequired": false,
+    "participantCreate": "own_profile",
+    "participantRead": "app_filtered_own_profile",
+    "participantUpdate": "app_filtered_own_profile",
+    "participantDelete": false,
+    "administratorAccess": "all_profiles",
+    "sharepointItemLevelPermissions": "unavailable_with_unique_identity"
+  },
+  "form": {
+    "mode": "create_or_edit_own_profile",
+    "visibleFields": [
+      "ParticipantAccount",
+      "TeachLanguages",
+      "LearnLanguages",
+      "TimeZone",
+      "LearningFocus",
+      "Comments"
+    ],
+    "hiddenFields": [
+      "Title",
+      "Status"
+    ]
+  }
+}
