@@ -29,7 +29,19 @@ validation, tests, and repeatable setup should be handled by the repository.
 See [the implementation plan](docs/IMPLEMENTATION_PLAN.md) for the current
 sequence and control points.
 
+## Local Python environment
+
+The repository uses the ignored `.venv` directory for local Python tools:
+
+```powershell
+& .\.venv\Scripts\Activate.ps1
+python --version
+```
+
+If it does not exist, create it with `python -m venv .venv` using an available
+Python 3.11+ installation.
+
 ## Current status
 
-POC-01 (repository foundation) is in progress. The next planned issue is
-POC-02, repeatable SharePoint provisioning.
+POC-01 (repository foundation) is complete. POC-02, repeatable SharePoint
+provisioning, is now in progress.

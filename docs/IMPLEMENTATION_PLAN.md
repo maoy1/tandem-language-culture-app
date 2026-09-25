@@ -20,10 +20,10 @@ user-facing experience, and approve the final result.
 
 ## Sequence
 
-- [ ] **POC-01 — Repository foundation**
+- [x] **POC-01 — Repository foundation**
   - Create the repeatable repository layout and working instructions.
   - Human checkpoint: confirm the structure is easy to maintain.
-- [ ] **POC-02 — Automate SharePoint provisioning**
+- [ ] **POC-02 — Automate SharePoint provisioning** *(current)*
   - Create or validate the required lists, columns, choices, lookups, and views.
   - Human checkpoint: approve the target SharePoint site and permissions.
 - [ ] **POC-03 — Participant self-registration**
@@ -64,5 +64,6 @@ report, or documented repeatable step.
 
 ## Current focus
 
-POC-01 is the active issue. After its acceptance criteria are met, move to
-[POC-02](https://github.com/maoy1/tandem-language-culture-app/issues/2).
+POC-02 is the active issue. The schema and repeatable provisioner are prepared;
+the remaining checkpoint is a live validation against the approved SharePoint
+site, followed by review of any reported manual Location-field or index steps.
