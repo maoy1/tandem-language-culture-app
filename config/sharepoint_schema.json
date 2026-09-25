@@ -6,7 +6,7 @@
       "name": "Language catalogue",
       "fields": [
         { "internalName": "Title", "displayName": "Title", "type": "Text", "required": true },
-        { "internalName": "ISOCode", "displayName": "ISO code", "type": "Text", "required": true },
+        { "internalName": "ISOCode", "displayName": "ISO code", "type": "Text", "required": true, "unique": true },
         { "internalName": "Aliases", "displayName": "Aliases", "type": "Note" },
         { "internalName": "Active", "displayName": "Active", "type": "Boolean", "defaultValue": true }
       ]
@@ -15,7 +15,7 @@
       "name": "Participants",
       "fields": [
         { "internalName": "Title", "displayName": "Title", "type": "Text" },
-        { "internalName": "ParticipantAccount", "displayName": "Participant account", "type": "User", "required": true },
+        { "internalName": "ParticipantAccount", "displayName": "Participant account", "type": "User", "required": true, "unique": true },
         { "internalName": "TeachLanguages", "displayName": "Teach languages", "type": "Lookup", "lookupList": "Language catalogue", "lookupField": "Title", "allowMultiple": true },
         { "internalName": "LearnLanguages", "displayName": "Learn languages", "type": "Lookup", "lookupList": "Language catalogue", "lookupField": "Title", "allowMultiple": true },
         { "internalName": "Location", "displayName": "Location", "type": "Location", "provisioning": "manual", "required": true },

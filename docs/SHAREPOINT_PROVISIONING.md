@@ -18,7 +18,7 @@ enrichment.
 - create missing standard fields;
 - create choice fields and lookup fields after their target lists exist;
 - validate required fields and report missing configuration;
-- create or validate the declared list indexes;
+- create or validate the declared list indexes and unique participant identity;
 - safely reuse existing lists and fields instead of duplicating them.
 
 The script never stores the site URL, credentials, or employee data in the

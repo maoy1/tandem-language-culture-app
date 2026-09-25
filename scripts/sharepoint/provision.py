@@ -120,7 +120,7 @@ def find_lists(client: GraphClient, site_id: str) -> dict[str, dict[str, Any]]:
 def find_columns(client: GraphClient, site_id: str, list_id: str) -> dict[str, dict[str, Any]]:
     endpoint = (
         f"/sites/{site_id}/lists/{list_id}/columns"
-        "?$select=id,name,displayName,required,hidden,indexed"
+        "?$select=id,name,displayName,required,hidden,indexed,enforceUniqueValues"
     )
     return {item["name"]: item for item in client.paged(endpoint)}
 
@@ -132,6 +132,7 @@ def build_column_payload(field: dict[str, Any], indexed: bool = False) -> dict[s
         "displayName": field["displayName"],
         "required": field.get("required", False),
         "hidden": field.get("hidden", False),
+        "enforceUniqueValues": field.get("unique", False),
         "indexed": indexed,
     }
     if field_type == "Text":
@@ -174,6 +175,7 @@ def build_lookup_payload(
         "displayName": field["displayName"],
         "required": field.get("required", False),
         "hidden": field.get("hidden", False),
+        "enforceUniqueValues": field.get("unique", False),
         "indexed": indexed,
         "lookup": {
             "listId": target_list["id"],
@@ -227,6 +229,9 @@ def provision(schema: dict[str, Any], client: GraphClient, site_url: str, valida
                 if field.get("hidden", False) != bool(current.get("hidden", False)):
                     expected = "hidden" if field.get("hidden", False) else "visible"
                     print_result("ERROR", f"Field is not {expected}: {list_name}.{internal_name}")
+                    errors += 1
+                elif field.get("unique", False) and not current.get("enforceUniqueValues", False):
+                    print_result("ERROR", f"Field is not unique: {list_name}.{internal_name}")
                     errors += 1
                 elif field.get("required", False) and not current.get("required", False):
                     print_result("ERROR", f"Field is not required: {list_name}.{internal_name}")

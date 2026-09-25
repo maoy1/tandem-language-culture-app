@@ -55,6 +55,7 @@ def test_language_catalogue_has_controlled_values() -> None:
 
     assert fields["Title"]["required"] is True
     assert fields["ISOCode"]["required"] is True
+    assert fields["ISOCode"]["unique"] is True
     assert fields["Active"]["defaultValue"] is True
 
 
@@ -66,6 +67,7 @@ def test_participants_schema_matches_current_design() -> None:
     fields = fields_by_name(participants)
 
     assert fields["ParticipantAccount"]["required"] is True
+    assert fields["ParticipantAccount"]["unique"] is True
     assert fields["Location"] == {
         "internalName": "Location",
         "displayName": "Location",

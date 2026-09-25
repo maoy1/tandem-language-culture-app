@@ -55,7 +55,7 @@ may select multiple values in both language fields.
 | Column | Type | Current rule |
 |---|---|---|
 | Title | System text | Hidden from the participant form; not user-maintained |
-| Participant account | Person or Group, single | Required; authoritative identity |
+| Participant account | Person or Group, single | Required and unique; authoritative identity |
 | Teach languages | Lookup to Language catalogue, multiple | Optional individually |
 | Learn languages | Lookup to Language catalogue, multiple | Optional individually |
 | Location | SharePoint Location | Required; the flow uses its City component |

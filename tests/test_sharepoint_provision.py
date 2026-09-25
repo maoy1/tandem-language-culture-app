@@ -49,6 +49,22 @@ def test_person_column_payload_is_single_person_only() -> None:
     assert payload["required"] is True
 
 
+def test_person_column_payload_can_enforce_uniqueness() -> None:
+    provisioner = load_provisioner()
+
+    payload = provisioner.build_column_payload(
+        {
+            "internalName": "ParticipantAccount",
+            "displayName": "Participant account",
+            "type": "User",
+            "required": True,
+            "unique": True,
+        }
+    )
+
+    assert payload["enforceUniqueValues"] is True
+
+
 def test_choice_column_does_not_allow_free_text() -> None:
     provisioner = load_provisioner()
 

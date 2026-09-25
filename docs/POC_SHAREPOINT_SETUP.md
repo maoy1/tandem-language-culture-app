@@ -48,7 +48,7 @@ used by the participant submission flow.
 | Column | Type | Participant-facing? |
 |---|---|---|
 | Title | SharePoint system text | No |
-| Participant account | Person or Group, one person | Yes; required |
+| Participant account | Person or Group, one person | Yes; required and unique |
 | Teach languages | Lookup to Language catalogue, multiple | Yes; optional |
 | Learn languages | Lookup to Language catalogue, multiple | Yes; optional |
 | Location | SharePoint Location | Yes; required |
