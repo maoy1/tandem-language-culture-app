@@ -39,13 +39,14 @@ alignment of the existing GitHub tickets with the current design.
 
 The repository uses the ignored `.venv` directory for local Python tools:
 
-```powershell
-& .\.venv\Scripts\Activate.ps1
+```bash
+source .venv/Scripts/activate
 python --version
 ```
 
 If it does not exist, create it with `python -m venv .venv` using an available
-Python 3.11+ installation.
+Python 3.11+ installation. In Git Bash, activation uses
+`source .venv/Scripts/activate`; PowerShell is not required.
 
 ## Current status
 

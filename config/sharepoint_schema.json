@@ -19,7 +19,15 @@
         { "internalName": "TeachLanguages", "displayName": "Teach languages", "type": "Lookup", "lookupList": "Language catalogue", "lookupField": "Title", "allowMultiple": true },
         { "internalName": "LearnLanguages", "displayName": "Learn languages", "type": "Lookup", "lookupList": "Language catalogue", "lookupField": "Title", "allowMultiple": true },
         { "internalName": "Location", "displayName": "Location", "type": "Location", "provisioning": "manual", "required": true },
-        { "internalName": "TimeZone", "displayName": "Time zone", "type": "Text" },
+        {
+          "internalName": "TimeZone",
+          "displayName": "Time zone",
+          "type": "Text",
+          "hidden": true,
+          "provisioning": "flow-derived",
+          "editableByParticipants": false,
+          "description": "Derived from Location City by the participant submission flow."
+        },
         { "internalName": "LearningFocus", "displayName": "Learning focus", "type": "Note" },
         { "internalName": "Comments", "displayName": "Comments", "type": "Note" },
         { "internalName": "Status", "displayName": "Status", "type": "Choice", "choices": ["Active", "Needs review"] }
