@@ -210,21 +210,18 @@ create_issue \
 
 create_issue \
   "POC-02" \
-  "Automate SharePoint provisioning" \
+  "Define SharePoint schema and manual setup" \
   "priority:P0" \
   "type:infrastructure" \
   "area:sharepoint,area:github" \
   "epic:foundation" \
   "yes" \
   "POC-01" \
-  "Create repeatable provisioning scripts for the SharePoint structures required by the POC. Manual SharePoint configuration should be minimized." \
-  "Required lists and core columns can be created or validated by script." \
-  "Script is safe to rerun." \
-  "Existing valid structures are not duplicated." \
-  "Incorrect or missing configuration is clearly reported." \
-  "Required indexes are provisioned or validated." \
-  "Any unavoidable manual steps are explicitly documented." \
-  "Script does not depend on the original developer's workstation."
+  "The approved SharePoint lists, columns, choices, lookups, unique constraints, and indexes are recorded in version-controlled schema." \
+  "The schema validator and automated tests run without tenant access." \
+  "The Excel import template and manual setup guide cover the tenant configuration steps." \
+  "The design explicitly excludes the removed catalogues and fields." \
+  "Any tenant-specific limitations, including the rich Location field and participant-form settings, are documented."
 
 create_issue \
   "POC-03" \

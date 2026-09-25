@@ -18,19 +18,22 @@ Work proceeds in one small GitHub issue at a time:
 3. Run automated checks and document any manual tenant step.
 4. Review the result together and merge when accepted.
 
-Automation should handle tests, validation, repeatable provisioning, and
-diagnostic summaries. The owner should only need to decide product behavior,
-approve changes affecting the SharePoint/Power Platform tenant, test the
-user-facing experience, and approve the final result.
+Automation should handle tests, schema validation, and diagnostic summaries.
+The owner should only need to decide product behavior, perform the documented
+SharePoint/Power Platform tenant setup, test the user-facing experience, and
+approve the final result.
 
 ## Sequence
 
 - [x] **POC-01 — Repository foundation**
   - Create the repeatable repository layout and working instructions.
   - Human checkpoint: confirm the structure is easy to maintain.
-- [ ] **POC-02 — Automate SharePoint provisioning** *(current)*
-  - Create or validate the required lists, columns, choices, lookups, and views.
-  - Human checkpoint: approve the target SharePoint site and permissions.
+- [x] **POC-02 — Define SharePoint schema and manual setup**
+  - Keep the approved lists, columns, choices, lookups, unique constraints,
+    and indexes in version-controlled schema.
+  - Validate the schema locally with repeatable tests.
+  - Human checkpoint: create and configure the lists in the approved tenant,
+    including the rich Location field and participant-form settings.
 - [ ] **POC-03 — Participant self-registration**
   - Let an authenticated colleague create and update their own profile.
   - Human checkpoint: test the form once with a normal account.
@@ -69,6 +72,6 @@ report, or documented repeatable step.
 
 ## Current focus
 
-POC-02 is the active issue. Its schema and provisioning work must follow
+POC-02 is complete. Its schema and manual setup must follow
 [CURRENT_DESIGN.md](CURRENT_DESIGN.md), especially the current Participants
 schema and the removal of the Culture, Time zone, and Location catalogues.

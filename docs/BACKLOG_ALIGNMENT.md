@@ -16,7 +16,7 @@ must be revised before implementation.
 
 | Ticket | Alignment action |
 |---|---|
-| #2 | Provision Language catalogue and the approved participant fields only. Remove Culture catalogue, Time zone catalogue, Location catalogue, culture fields, and other removed fields from the schema. |
+| #2 | Define and validate the Language catalogue and approved participant fields only. Remove Culture catalogue, Time zone catalogue, Location catalogue, culture fields, and other removed fields from the schema. The repository provides the schema, local validation/tests, Excel import support, and manual setup guidance; list creation and tenant configuration remain manual. |
 | #5 | Remove “culture interests” from the current participant profile. Keep language/profile context only when separately approved; do not add unapproved fields to the current schema. |
 | #6 | The current POC status choices are `Active` and `Needs review`. `Paused`, `Inactive`, and a separate “open to new connections” field require a later design decision before being added. |
 | #7 | Do not require an “open to new connections” field in the current POC. Base initial eligibility on approved participant status and language/location data. |

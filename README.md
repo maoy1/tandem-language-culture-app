@@ -4,13 +4,15 @@ This repository contains the Tandem proof of concept: participant registration,
 language discovery, connection requests, and tandem-group management.
 
 The GitHub issue backlog is the source of truth for implementation work. Work
-is completed one issue at a time, with automation used for repeatable checks and
-provisioning. The older `tandem_app` repository is reference material only.
+is completed one issue at a time, with automation used for repeatable checks.
+SharePoint tenant configuration is performed manually because tenant access
+and permissions are not available to this repository. The older `tandem_app`
+repository is reference material only.
 
 ## Repository layout
 
 - `src/` — application and domain code
-- `scripts/` — repeatable setup, validation, and data utilities
+- `scripts/` — repeatable validation and data utilities
 - `tests/` — automated tests
 - `docs/` — architecture, operating instructions, and the living implementation plan
 - `.github/` — repository automation and contribution settings
@@ -50,5 +52,6 @@ Python 3.11+ installation. In Git Bash, activation uses
 
 ## Current status
 
-POC-01 (repository foundation) is complete. POC-02, repeatable SharePoint
-provisioning, is now in progress.
+POC-01 (repository foundation) and POC-02 (SharePoint schema and manual setup)
+are complete. POC-02 includes the version-controlled schema, local validation,
+tests, an Excel import template, and the manual tenant setup guide.
