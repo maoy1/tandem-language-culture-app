@@ -3,6 +3,14 @@
 POC-02 uses a declarative schema and a repeatable PowerShell script. The schema
 is [config/sharepoint_schema.json](../config/sharepoint_schema.json); the script
 is [scripts/sharepoint/provision.ps1](../scripts/sharepoint/provision.ps1).
+The schema provisions the current participant-registration slice only:
+`Language catalogue` and `Participants`. Future group, request, and statistics
+lists are added through their own issues after their design is approved.
+
+The schema follows [CURRENT_DESIGN.md](CURRENT_DESIGN.md). It deliberately
+does not provision Culture, Time zone, or Location catalogues. Participants
+provide one SharePoint Location value; the time zone is derived later by flow
+enrichment.
 
 ## What is automated
 

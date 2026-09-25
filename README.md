@@ -29,6 +29,12 @@ validation, tests, and repeatable setup should be handled by the repository.
 See [the implementation plan](docs/IMPLEMENTATION_PLAN.md) for the current
 sequence and control points.
 
+See the [current design source of truth](docs/CURRENT_DESIGN.md) for the
+agreed SharePoint schema, participant flow, and removed design elements.
+
+See the [backlog alignment notes](docs/BACKLOG_ALIGNMENT.md) for the written
+alignment of the existing GitHub tickets with the current design.
+
 ## Local Python environment
 
 The repository uses the ignored `.venv` directory for local Python tools:

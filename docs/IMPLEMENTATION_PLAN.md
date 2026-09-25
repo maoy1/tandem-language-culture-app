@@ -4,6 +4,11 @@ This is the working plan for the new repository. GitHub issues remain the
 authoritative task records; this document explains the order and the amount of
 human involvement expected.
 
+The current product and SharePoint design is recorded in
+[CURRENT_DESIGN.md](CURRENT_DESIGN.md). Every implementation issue and pull
+request must follow that file. If a decision changes, update the design source
+of truth in the same pull request before changing the implementation.
+
 ## Operating model
 
 Work proceeds in one small GitHub issue at a time:
@@ -64,6 +69,6 @@ report, or documented repeatable step.
 
 ## Current focus
 
-POC-02 is the active issue. The schema and repeatable provisioner are prepared;
-the remaining checkpoint is a live validation against the approved SharePoint
-site, followed by review of any reported manual Location-field or index steps.
+POC-02 is the active issue. Its schema and provisioning work must follow
+[CURRENT_DESIGN.md](CURRENT_DESIGN.md), especially the current Participants
+schema and the removal of the Culture, Time zone, and Location catalogues.

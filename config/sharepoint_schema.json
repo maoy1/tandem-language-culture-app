@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 1,
-  "description": "SharePoint lists and fields required by the Tandem POC.",
+  "schemaVersion": 2,
+  "description": "Current SharePoint lists and fields required for the Tandem participant-registration POC.",
   "lists": [
     {
       "name": "Language catalogue",
@@ -12,90 +12,19 @@
       ]
     },
     {
-      "name": "Culture catalogue",
-      "fields": [
-        { "internalName": "Title", "displayName": "Title", "type": "Text", "required": true },
-        { "internalName": "Aliases", "displayName": "Aliases", "type": "Note" },
-        { "internalName": "Active", "displayName": "Active", "type": "Boolean", "defaultValue": true },
-        { "internalName": "Notes", "displayName": "Notes", "type": "Note" }
-      ]
-    },
-    {
-      "name": "Time zone catalogue",
-      "fields": [
-        { "internalName": "Title", "displayName": "Title", "type": "Text", "required": true },
-        { "internalName": "IANAID", "displayName": "IANA ID", "type": "Text", "required": true },
-        { "internalName": "RepresentativeCities", "displayName": "Representative cities", "type": "Text" },
-        { "internalName": "Active", "displayName": "Active", "type": "Boolean", "defaultValue": true }
-      ]
-    },
-    {
-      "name": "Matching Cycles",
-      "fields": [
-        { "internalName": "Title", "displayName": "Title", "type": "Text", "required": true },
-        { "internalName": "IntakeStart", "displayName": "Intake start", "type": "DateTime" },
-        { "internalName": "IntakeEnd", "displayName": "Intake end", "type": "DateTime" },
-        { "internalName": "Status", "displayName": "Status", "type": "Choice", "choices": ["Draft", "Open", "Frozen", "Matching", "Published", "Closed"] }
-      ]
-    },
-    {
       "name": "Participants",
       "fields": [
         { "internalName": "Title", "displayName": "Title", "type": "Text" },
         { "internalName": "ParticipantAccount", "displayName": "Participant account", "type": "User", "required": true },
-        { "internalName": "Email", "displayName": "Email", "type": "Text" },
-        { "internalName": "FullName", "displayName": "Full name", "type": "Text" },
         { "internalName": "TeachLanguages", "displayName": "Teach languages", "type": "Lookup", "lookupList": "Language catalogue", "lookupField": "Title", "allowMultiple": true },
         { "internalName": "LearnLanguages", "displayName": "Learn languages", "type": "Lookup", "lookupList": "Language catalogue", "lookupField": "Title", "allowMultiple": true },
-        { "internalName": "CultureInterests", "displayName": "Culture interests", "type": "Lookup", "lookupList": "Culture catalogue", "lookupField": "Title", "allowMultiple": true },
-        { "internalName": "OpenToOtherCultures", "displayName": "Open to other cultures", "type": "Boolean" },
-        { "internalName": "GroupSizePreference", "displayName": "Group size preference", "type": "Choice", "choices": ["One-to-one", "Group of 3", "4 to 5", "Any is fine"] },
-        { "internalName": "TimeZone", "displayName": "Time zone", "type": "Text" },
         { "internalName": "Location", "displayName": "Location", "type": "Location", "provisioning": "manual", "required": true },
-        { "internalName": "Department", "displayName": "Department", "type": "Text" },
+        { "internalName": "TimeZone", "displayName": "Time zone", "type": "Text" },
         { "internalName": "LearningFocus", "displayName": "Learning focus", "type": "Note" },
         { "internalName": "Comments", "displayName": "Comments", "type": "Note" },
-        { "internalName": "Status", "displayName": "Status", "type": "Choice", "choices": ["Draft", "Active", "Needs review", "Waiting list", "Matched", "Inactive"] },
-        { "internalName": "MatchingCycle", "displayName": "Matching cycle", "type": "Lookup", "lookupList": "Matching Cycles", "lookupField": "Title" }
+        { "internalName": "Status", "displayName": "Status", "type": "Choice", "choices": ["Active", "Needs review"] }
       ],
       "indexes": ["Status", "ParticipantAccount"]
-    },
-    {
-      "name": "Groups",
-      "fields": [
-        { "internalName": "Title", "displayName": "Title", "type": "Text", "required": true },
-        { "internalName": "MatchingCycle", "displayName": "Matching cycle", "type": "Lookup", "lookupList": "Matching Cycles", "lookupField": "Title" },
-        { "internalName": "FocusLanguage", "displayName": "Focus language", "type": "Text" },
-        { "internalName": "CultureThemes", "displayName": "Culture themes", "type": "Note" },
-        { "internalName": "Status", "displayName": "Status", "type": "Choice", "choices": ["Proposed", "Needs review", "Approved", "Sent", "Active", "Paused", "Closed"] },
-        { "internalName": "ReviewNotes", "displayName": "Review notes", "type": "Note" }
-      ],
-      "indexes": ["Status", "MatchingCycle"]
-    },
-    {
-      "name": "Group Members",
-      "fields": [
-        { "internalName": "Title", "displayName": "Title", "type": "Text", "required": true },
-        { "internalName": "Group", "displayName": "Group", "type": "Lookup", "lookupList": "Groups", "lookupField": "Title" },
-        { "internalName": "Participant", "displayName": "Participant", "type": "Lookup", "lookupList": "Participants", "lookupField": "Title" },
-        { "internalName": "MembershipStatus", "displayName": "Membership status", "type": "Choice", "choices": ["Active", "Left", "Removed"] },
-        { "internalName": "TeachLanguage", "displayName": "Teach language", "type": "Text" },
-        { "internalName": "LearnLanguage", "displayName": "Learn language", "type": "Text" },
-        { "internalName": "EmailStatus", "displayName": "Email status", "type": "Choice", "choices": ["Not queued", "Queued", "Sent", "Failed"] }
-      ],
-      "indexes": ["Group", "Participant"]
-    },
-    {
-      "name": "Cycle Statistics",
-      "fields": [
-        { "internalName": "Title", "displayName": "Title", "type": "Text", "required": true },
-        { "internalName": "MatchingCycle", "displayName": "Matching cycle", "type": "Lookup", "lookupList": "Matching Cycles", "lookupField": "Title" },
-        { "internalName": "StatisticType", "displayName": "Statistic type", "type": "Choice", "choices": ["KPI", "Language", "Culture", "Time zone", "Location", "Group size"] },
-        { "internalName": "Category", "displayName": "Category", "type": "Text" },
-        { "internalName": "Value", "displayName": "Value", "type": "Number" },
-        { "internalName": "DisplayOrder", "displayName": "Display order", "type": "Number" }
-      ],
-      "indexes": ["MatchingCycle", "StatisticType"]
     }
   ]
 }
