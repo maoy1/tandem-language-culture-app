@@ -48,9 +48,11 @@ def validate(policy: dict[str, Any], schema: dict[str, Any]) -> list[str]:
     access = policy.get("access", {})
     if access.get("approvalRequired") is not False:
         errors.append("Initial registration must not require administrator approval.")
-    for key in ("participantCreate", "participantRead", "participantUpdate"):
-        if access.get(key) != "own_profile":
-            errors.append(f"{key} must be restricted to own_profile.")
+    if access.get("participantCreate") != "own_profile":
+        errors.append("participantCreate must be restricted to own_profile.")
+    for key in ("participantRead", "participantUpdate"):
+        if access.get(key) not in {"own_profile", "app_filtered_own_profile"}:
+            errors.append(f"{key} must be restricted to the participant's own profile.")
     if access.get("participantDelete") is not False:
         errors.append("Participant deletion must not be enabled by this contract.")
 
@@ -67,9 +69,15 @@ def validate(policy: dict[str, Any], schema: dict[str, Any]) -> list[str]:
         errors.append("The form must support create_or_edit_own_profile.")
     if identity_name not in visible:
         errors.append("The identity field must be present in the form contract.")
-    for managed in ("Title", "TimeZone", "Status"):
+    for managed in ("Title", "Status"):
         if managed in fields and managed not in hidden:
             errors.append(f"Flow/system-managed field must be hidden: {managed!r}.")
+
+    if access.get("sharepointItemLevelPermissions") != "unavailable_with_unique_identity":
+        errors.append(
+            "The registration contract must record that built-in SharePoint "
+            "item-level permissions are unavailable with the unique identity field."
+        )
 
     return errors
 

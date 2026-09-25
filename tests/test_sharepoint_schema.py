@@ -59,6 +59,7 @@ def test_current_schema_contains_only_initial_registration_lists() -> None:
 
     assert [item["name"] for item in schema["lists"]] == [
         "Language catalogue",
+        "Time zone catalogue",
         "Participants",
     ]
 
@@ -77,6 +78,20 @@ def test_language_catalogue_has_controlled_values() -> None:
     assert "ISOCode" in language_catalogue["indexes"]
 
 
+def test_time_zone_catalogue_has_controlled_values() -> None:
+    schema = load_current_schema()
+    catalogue = next(
+        item for item in schema["lists"] if item["name"] == "Time zone catalogue"
+    )
+    fields = fields_by_name(catalogue)
+
+    assert fields["Title"]["required"] is True
+    assert fields["IANAId"]["required"] is True
+    assert fields["IANAId"]["unique"] is True
+    assert fields["Active"]["defaultValue"] is True
+    assert "IANAId" in catalogue["indexes"]
+
+
 def test_participants_schema_matches_current_design() -> None:
     schema = load_current_schema()
     participants = next(
@@ -86,20 +101,18 @@ def test_participants_schema_matches_current_design() -> None:
 
     assert fields["ParticipantAccount"]["required"] is True
     assert fields["ParticipantAccount"]["unique"] is True
-    assert fields["Location"] == {
-        "internalName": "Location",
-        "displayName": "Location",
-        "type": "Location",
-        "provisioning": "manual",
-        "required": True,
-    }
+    assert "Location" not in fields
+    assert fields["TimeZone"]["type"] == "Lookup"
+    assert fields["TimeZone"]["lookupList"] == "Time zone catalogue"
+    assert fields["TimeZone"]["lookupField"] == "Title"
+    assert fields["TimeZone"]["required"] is True
+    assert fields["TimeZone"]["allowMultiple"] is False
+    assert fields["TimeZone"].get("hidden", False) is False
     assert fields["TeachLanguages"]["allowMultiple"] is True
     assert fields["LearnLanguages"]["allowMultiple"] is True
     assert fields["TeachLanguages"]["lookupList"] == "Language catalogue"
     assert fields["LearnLanguages"]["lookupList"] == "Language catalogue"
-    assert fields["TimeZone"]["hidden"] is True
-    assert fields["TimeZone"]["provisioning"] == "flow-derived"
-    assert fields["TimeZone"]["editableByParticipants"] is False
+    assert fields["TimeZone"]["editableByParticipants"] is True
     assert fields["Status"]["choices"] == ["Active", "Needs review"]
     assert "Status" in participants["indexes"]
     assert "ParticipantAccount" in participants["indexes"]
@@ -114,7 +127,6 @@ def test_removed_catalogues_and_fields_are_absent() -> None:
     participant_fields = set(fields_by_name(participant))
 
     assert "Culture catalogue" not in list_names
-    assert "Time zone catalogue" not in list_names
     assert "Location catalogue" not in list_names
     assert participant_fields.isdisjoint(
         {
@@ -124,6 +136,7 @@ def test_removed_catalogues_and_fields_are_absent() -> None:
             "ConsentConfirmed",
             "Country",
             "OfficeCity",
+            "Location",
         }
     )
 
@@ -144,20 +157,20 @@ def test_validator_rejects_unknown_lookup_target() -> None:
     assert any("unknown lookup list" in error for error in errors)
 
 
-def test_validator_requires_manual_location_provisioning() -> None:
+def test_validator_rejects_missing_lookup_target() -> None:
     validator = load_validator()
     schema = copy.deepcopy(load_current_schema())
     participants = next(
         item for item in schema["lists"] if item["name"] == "Participants"
     )
-    location = next(
-        field for field in participants["fields"] if field["internalName"] == "Location"
+    timezone = next(
+        field for field in participants["fields"] if field["internalName"] == "TimeZone"
     )
-    location["provisioning"] = "automatic"
+    timezone["lookupList"] = "Missing catalogue"
 
     errors = validator.validate(schema)
 
-    assert any("Location fields must be marked manual" in error for error in errors)
+    assert any("unknown lookup list" in error for error in errors)
 
 
 def test_participant_registration_policy_matches_schema() -> None:
@@ -177,4 +190,9 @@ def test_registration_policy_uses_authenticated_unique_identity() -> None:
         "participantEditable": False,
     }
     assert policy["access"]["approvalRequired"] is False
-    assert policy["access"]["participantUpdate"] == "own_profile"
+    assert policy["access"]["participantUpdate"] == "app_filtered_own_profile"
+    assert policy["access"]["sharepointItemLevelPermissions"] == (
+        "unavailable_with_unique_identity"
+    )
+    assert "TimeZone" in policy["form"]["visibleFields"]
+    assert "TimeZone" not in policy["form"]["hiddenFields"]

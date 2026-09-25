@@ -14,8 +14,10 @@ Future matching logic = discovery and proposed groups
 SharePoint page = anonymised aggregate statistics
 ```
 
-Participants register through a SharePoint form or Power Apps form. They do
-not receive access to other participant records.
+Participants register through the Power Apps form embedded in Teams. The app
+filters the user experience to the signed-in participant. Direct SharePoint
+row privacy is not guaranteed in this POC because the unique Participant
+account field prevents the built-in item-level permission setting.
 
 ## Current lists
 
@@ -43,6 +45,21 @@ Import the language seed JSON with a one-time manual flow:
 This import flow is only for maintaining the Language catalogue. It is not
 used by the participant submission flow.
 
+### Time zone catalogue
+
+Use the **Time zone catalogue** sheet in the Excel import workbook. The list
+must contain:
+
+| Column | Type | Rule |
+|---|---|---|
+| Title / Time zone | Single line text | Required display label |
+| IANA ID | Single line text | Required, unique, and indexed |
+| Windows ID | Single line text | Optional |
+| Active | Yes/No | Default Yes |
+
+Import the catalogue before configuring the Participants lookup. Delete the
+sample row after import, then set the IANA ID column to unique and indexed.
+
 ### Participants
 
 | Column | Type | Participant-facing? |
@@ -51,8 +68,7 @@ used by the participant submission flow.
 | Participant account | Person or Group, one person | Yes; required and unique |
 | Teach languages | Lookup to Language catalogue, multiple | Yes; optional |
 | Learn languages | Lookup to Language catalogue, multiple | Yes; optional |
-| Location | SharePoint Location | Yes; required |
-| Time zone | Single line text | No; derived by flow |
+| Time zone | Lookup to Time zone catalogue, one value | Yes; required |
 | Learning focus | Multiple lines | Yes; optional |
 | Comments | Multiple lines | Yes; optional |
 | Status | Choice: Active; Needs review | No; flow-managed |
@@ -72,19 +88,19 @@ The participant form should show only:
 - Participant account
 - Teach languages
 - Learn languages
-- Location
+- Time zone
 - Learning focus
 - Comments
 
-Hide Title, Time zone, Status, and any technical helper fields through **Edit
-form → Edit columns**. Hiding a column from a list view does not hide it from
-the New item form.
+Hide Title, Status, and any technical helper fields through **Edit form → Edit
+columns**. Keep Time zone visible and required. Hiding a column from a list
+view does not hide it from the New item form.
 
 Language lookup fields must allow multiple selections and must use the
 Language catalogue values. Do not replace them with free-text fields.
 
-For the self-registration behavior and item-level permissions, follow
-[POC-03 participant self-registration](POC_03_PARTICIPANT_SELF_REGISTRATION.md).
+For the self-registration behavior, Power Apps configuration, and Teams
+sharing, follow [POC-03 participant self-registration](POC_03_PARTICIPANT_SELF_REGISTRATION.md).
 
 ## Participant submission flow
 
@@ -95,14 +111,13 @@ Create an automated cloud flow with:
 
    ```text
    (Teach languages is not empty OR Learn languages is not empty)
-   AND Location is not empty
+   AND Time zone is not empty
    ```
 
 3. If true, set Status to `Active`.
 4. If false, set Status to `Needs review`.
 5. Use the trigger item ID when updating the item.
-6. Read `Location: City` and derive the hidden IANA time-zone value from the
-   repository city mapping when that enrichment is implemented.
+6. Confirm the selected Time zone lookup is active in the Time zone catalogue.
 7. Send an exception notification only when review is needed.
 
 The form saves before the flow runs. Therefore incomplete submissions are
@@ -111,15 +126,28 @@ experience must block saving before submission.
 
 Do not use **Get file content** or parse the language seed JSON in this flow.
 
-## Location and time zone
+## Time zone
 
-Use the SharePoint Location field as the only location input. Do not create
-separate Country, Office city, Location catalogue, or Time zone catalogue
-columns/lists.
+Create a **Time zone catalogue** with the imported canonical values. The
+catalogue should contain `Title` (display label), unique indexed `IANA ID`,
+optional `Windows ID`, and `Active`.
 
-The flow uses the Location City component to derive an IANA time-zone value.
-Participants never select a time zone. If the city is not in the repository
-mapping, set Status to `Needs review` rather than guessing.
+In Participants, make `Time zone` a required single-value lookup to the
+catalogue. Power Apps renders it as a controlled dropdown. Location or city is
+deferred and is not part of the current registration form or schema.
+
+## Sharing through Teams
+
+After saving and publishing the app:
+
+1. Share it with the intended Team/security group or the organisation.
+2. In Teams, open the target Team and channel.
+3. Select **+ → Power Apps**, choose the app, and save the tab.
+4. Pin the tab or announce it in the channel.
+
+Adding the Teams tab makes the app discoverable; it does not replace app or
+SharePoint data-source permissions. Users need access to the Participants list
+for the SharePoint connector to work.
 
 ## Future lists
 
@@ -138,13 +166,15 @@ must not expose participant names, email addresses, or membership details.
 The current design does not use:
 
 - Culture catalogue
-- Time zone catalogue
 - Location catalogue
 - Culture interests or culture themes in the SharePoint schema
-- Separate Country or Office city fields
+- Required native SharePoint Location input
 - Consent confirmed
 - Participant Role
 - Required participant-entered Email
+
+Optional profile enrichment such as city/location, culture interests, and
+additional free-text context is deferred to a later ticket.
 
 For the complete rationale and change-control rules, see
 [CURRENT_DESIGN.md](CURRENT_DESIGN.md).

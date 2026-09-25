@@ -53,5 +53,6 @@ Python 3.11+ installation. In Git Bash, activation uses
 ## Current status
 
 POC-01 (repository foundation) and POC-02 (SharePoint schema and manual setup)
-are complete. POC-02 includes the version-controlled schema, local validation,
-tests, an Excel import template, and the manual tenant setup guide.
+are complete. POC-02 includes the version-controlled Language and Time zone
+catalogues, local validation, tests, an Excel import template, and the manual
+tenant setup guide. POC-03 is being completed in Power Apps and Teams.

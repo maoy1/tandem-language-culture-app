@@ -33,13 +33,16 @@ approve the final result.
     and indexes in version-controlled schema.
   - Validate the schema locally with repeatable tests.
   - Human checkpoint: create and configure the lists in the approved tenant,
-    including the rich Location field and participant-form settings.
+    including the Language and Time zone catalogues, lookup fields, indexes,
+    and participant-form settings.
 - [ ] **POC-03 — Participant self-registration** *(implementation in progress)*
   - Let an authenticated colleague create and update their own profile.
-  - Keep the registration contract and automated consistency checks in the
-    repository; apply the form and item-level permissions manually in the
-    tenant.
-  - Human checkpoint: test the form once with a normal account.
+  - Use Power Apps to lock the unique Participant account to the signed-in
+    user, and expose the Time zone catalogue as a dropdown.
+  - Share the app through a Teams tab. Record the known limitation that the
+    app filter is not row-level SharePoint security.
+  - Human checkpoint: test the form once with a normal account and one second
+    account.
 - [ ] **POC-04 to POC-06 — Profile data and participation status**
   - Add controlled language preferences, profile context, and Active/Paused/
     Inactive behavior.
@@ -66,6 +69,8 @@ The following cannot safely be fully automated from this repository:
 
 - granting or approving tenant permissions;
 - confirming SharePoint and Power Platform environment choices;
+- importing and maintaining the Time zone catalogue;
+- configuring the Power Apps form and Teams tab;
 - checking the user experience with real colleagues;
 - approving match, request, and notification behavior;
 - deciding when the POC is ready for wider use.
@@ -75,8 +80,10 @@ report, or documented repeatable step.
 
 ## Current focus
 
-POC-03 is the current focus. Its registration contract and manual form setup
-must follow [POC_03_PARTICIPANT_SELF_REGISTRATION.md](POC_03_PARTICIPANT_SELF_REGISTRATION.md).
+POC-03 is the current focus. Its registration contract, Power Apps form, and
+Teams sharing setup must follow
+[POC_03_PARTICIPANT_SELF_REGISTRATION.md](POC_03_PARTICIPANT_SELF_REGISTRATION.md).
 POC-02 is complete. Its schema and manual setup must follow
 [CURRENT_DESIGN.md](CURRENT_DESIGN.md), especially the current Participants
-schema and the removal of the Culture, Time zone, and Location catalogues.
+schema, the required Time zone catalogue, and the removal of the Culture and
+Location catalogues.

@@ -13,21 +13,32 @@
       "indexes": ["ISOCode"]
     },
     {
+      "name": "Time zone catalogue",
+      "fields": [
+        { "internalName": "Title", "displayName": "Time zone", "type": "Text", "required": true },
+        { "internalName": "IANAId", "displayName": "IANA ID", "type": "Text", "required": true, "unique": true },
+        { "internalName": "WindowsId", "displayName": "Windows ID", "type": "Text" },
+        { "internalName": "Active", "displayName": "Active", "type": "Boolean", "defaultValue": true }
+      ],
+      "indexes": ["IANAId"]
+    },
+    {
       "name": "Participants",
       "fields": [
         { "internalName": "Title", "displayName": "Title", "type": "Text" },
         { "internalName": "ParticipantAccount", "displayName": "Participant account", "type": "User", "required": true, "unique": true },
         { "internalName": "TeachLanguages", "displayName": "Teach languages", "type": "Lookup", "lookupList": "Language catalogue", "lookupField": "Title", "allowMultiple": true },
         { "internalName": "LearnLanguages", "displayName": "Learn languages", "type": "Lookup", "lookupList": "Language catalogue", "lookupField": "Title", "allowMultiple": true },
-        { "internalName": "Location", "displayName": "Location", "type": "Location", "provisioning": "manual", "required": true },
         {
           "internalName": "TimeZone",
           "displayName": "Time zone",
-          "type": "Text",
-          "hidden": true,
-          "provisioning": "flow-derived",
-          "editableByParticipants": false,
-          "description": "Derived from Location City by the participant submission flow."
+          "type": "Lookup",
+          "lookupList": "Time zone catalogue",
+          "lookupField": "Title",
+          "required": true,
+          "allowMultiple": false,
+          "editableByParticipants": true,
+          "description": "Selected from the controlled Time zone catalogue in Power Apps."
         },
         { "internalName": "LearningFocus", "displayName": "Learning focus", "type": "Note" },
         { "internalName": "Comments", "displayName": "Comments", "type": "Note" },

@@ -11,10 +11,11 @@
   "access": {
     "approvalRequired": false,
     "participantCreate": "own_profile",
-    "participantRead": "own_profile",
-    "participantUpdate": "own_profile",
+    "participantRead": "app_filtered_own_profile",
+    "participantUpdate": "app_filtered_own_profile",
     "participantDelete": false,
-    "administratorAccess": "all_profiles"
+    "administratorAccess": "all_profiles",
+    "sharepointItemLevelPermissions": "unavailable_with_unique_identity"
   },
   "form": {
     "mode": "create_or_edit_own_profile",
@@ -22,13 +23,12 @@
       "ParticipantAccount",
       "TeachLanguages",
       "LearnLanguages",
-      "Location",
+      "TimeZone",
       "LearningFocus",
       "Comments"
     ],
     "hiddenFields": [
       "Title",
-      "TimeZone",
       "Status"
     ]
   }
