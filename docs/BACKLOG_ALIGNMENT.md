@@ -9,7 +9,7 @@ CURRENT_DESIGN.md; schema/config JSON still describes the implemented baseline.
 | Ticket | Purpose | Order |
 |---|---|---|
 | #45 | Parent for v0.2 scope and delivery alignment | Track; no implementation completion claimed |
-| #46 | Field/exposure contract, Comments notice, separated statuses and capacity decisions | Next; before schema and real-data integration |
+| #46 | Field matrix under review. Culture and combined 2–10 approved; time zone optional; no participant size preference or Comments notice. Exact Discovery display fields decided in #7/#42 | In progress |
 | #47 | Retry/idempotency, simultaneous accepts, capacity and partial-write recovery | With #11/#12/#17; before acceptance paths close |
 | #48 | Actual Excel inspection, mapping and safe migration | Last implementation phase, before existing-data launch |
 | #49 | Notification feasibility and event/channel decision | Before #21; email/Teams not preselected |
@@ -19,17 +19,17 @@ CURRENT_DESIGN.md; schema/config JSON still describes the implemented baseline.
 | Ticket | Aligned scope |
 |---|---|
 | #2/#3/#4 | Completed initial baseline. Preserve prior evidence; do not reopen just to describe target fields |
-| #5 | Controlled culture sharing/interests and preferred group size; culture-only registration; candidate-visible Comments warning. Time zone catalogue retained; no derived-location requirement |
+| #5 | Controlled culture sharing/interests and culture-only registration; optional catalogue time zone, including validation changes. No participant group-size field or Comments notice |
 | #6 | Participation Active/Paused/Inactive independent of validation and migration confirmation; open-to-connections; never reactivate a paused participant through validation |
-| #7/#9 | Compatible people only; language/culture/combined fit, status/open filters and authorized projection including Comments after notice. Existing synthetic language tests are baseline evidence only |
+| #7/#9 | Compatible people only; language/culture/combined fit and status/open filters. Exact display fields pending; participant fields generally eligible, admin/system-only columns excluded. No Comments notice. Blank time zone never excludes a candidate |
 | #8 | Later ranking; remove as dependency for group discovery. No required automatic location/time-zone derivation |
 | #10/#11 | Requests, recipient authority, sender status, unavailable-recipient handling and safe acceptance coordinated with #47; meet-first/expiry/bulk Later |
-| #12 | Typed groups: language 2 or 3 total; culture up to 10, minimum/mixed capacity decided in #46; membership creation on acceptance |
+| #12 | Typed groups: language 2 or 3 total; culture and combined 2–10 with valid focus relationships; membership creation on acceptance |
 | #13 | Simple Open/Closed/Ended MVP lifecycle and permitted member changes/admin override; richer states and timers Later |
-| #14 | Self-service leaving, preserved history and automatic normal membership counts; ambiguous recovery can be exceptional admin work |
+| #14 | Self-service leaving, preserved history and automatic counts/slots; keep Closed state until member reopens; hide groups lacking valid focus from Discovery. No auto-end/replacement/recovery timers; exceptional recovery can use admins |
 | #15 | Not confirmed in revised MVP; Later scope review, not a mandatory launch gate |
 | #16/#17 | Promote compatible existing-group discovery/join to MVP. Remove ranking dependency; recheck capacity and test #47 |
-| #18/#39–#42 | Ordinary-colleague access tests deferred by owner; remain open. Admin Members access is expected, ordinary access unverified; candidate Comments is now approved after notice |
+| #18/#39–#42 | Ordinary-colleague access tests deferred. Admin Members access expected; ordinary access unverified. Discovery field list undecided; exclude admin/system-only data, no Comments-specific notice |
 | #19/#20/#22–#24 | Retain necessary group/request access safeguards; no routine individual permission administration. Check selected approach/configuration before implementing |
 | #21 | Depends on #49 channel/event decision; automatic selected request notifications with safe failure/deduplication behavior |
 | #25 | Tests for culture-only, participation/validation, compatibility, comments projection, typed capacity and retries; no mandatory ranking or two-group warning |
@@ -37,6 +37,13 @@ CURRENT_DESIGN.md; schema/config JSON still describes the implemented baseline.
 | #29/#30/#31 | Later freshness/reminders/dashboard, not core implementation gates |
 
 ## Decision precedence and evidence
+
+Groups and Group Members now have detailed proposed field tables in
+MVP_FIELD_CONTRACT.md. Membership rows are maintained by accepted join/Leave
+workflows. Counts/slots/joinability are derived, not participant input or assumed
+cross-list calculated columns. Initial Open-if-space/otherwise-Closed follows
+successful membership creation; type/focus fixed, name/description editable,
+capacity bounded and Ended final are approved. No group schema changes deployed.
 
 The source DOCX scope table is a reviewed proposal. The owner's annotations
 override its automatic location derivation, blanket 3–10 group size, old-Excel

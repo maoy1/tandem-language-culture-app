@@ -10,9 +10,11 @@ Local Python schema validators are development tools only.
 Scope update: this is the tested language-only baseline, not complete v0.2
 eligibility. Freeze #46 fields first, then extend #7 for culture-only/combined
 fit, independent participation/validation and open-to-connections. Show compatible
-candidates only. Comments is approved for candidate display after notice, but
-the response allowlist must be finalized. Ranking #8 is Later; catalogue time
-zone stays. Do not connect real data until the field/response contract is agreed.
+candidates only. Exact display fields remain undecided; participant fields such
+as Comments are generally eligible, admin/system-only fields excluded. No Comments
+notice or profile group-size preference is required. Time zone is optional; empty
+values do not exclude candidates. Groups expose count/slots and Open/Closed/Ended.
+Ranking #8 is Later. Agree response fields before real-data integration.
 
 `config/discovery_eligibility.json` specifies two built-in actions: Filter array
 (`Eligible_candidates`) and Select (`Candidate_fit`). It is an action-definition

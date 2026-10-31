@@ -16,6 +16,12 @@ acceptance and status; planning completion does not imply deployment.
 5. Review and merge; use closing keywords only for completed acceptance work.
 6. Verify issue/PR state after merge before the next ticket.
 
+Use [TEST_CATALOGUE.md](TEST_CATALOGUE.md) for stable acceptance/regression IDs
+and [TEST_RUNS.md](TEST_RUNS.md) for version-specific evidence. Add or identify
+the relevant case when investigating an issue, then record its retest before
+closing the fix. Planned cases and owner-reported baseline checks must remain
+distinct from observed results for the deployed target MVP.
+
 ## Completed baseline
 
 - [x] #1 repository foundation.
@@ -31,11 +37,19 @@ their own implementation and regression checks.
 ## Revised delivery sequence
 
 - [ ] #45: approve and track this MVP scope alignment; planning only.
-- [ ] #46: finalize field contract, candidate projection including Comments notice,
-      separate statuses, culture-only rules and remaining capacity decisions.
+- [ ] #46: field matrix in MVP_FIELD_CONTRACT.md for review; optional time zone,
+      no participant size preference, and no Comments notice are now agreed.
+      culture and combined 2–10 with valid focus relationships are approved. Defaults,
+      exact technical choices and remaining projection decisions need acceptance.
       Pause real-data discovery wiring until this contract is agreed.
-- [ ] #5: implement controlled culture-share/interest and group-size fields;
-      update registration. Keep required Time zone catalogue.
+      Review progress: Active/Open defaults, culture participation, focus roles,
+      any-active-member control, request cancellation/history and bounded departure
+      handling are confirmed. Validation also blocks empty offer/interest saves,
+      excludes invalid records and revalidates without resetting participation.
+      Exact technical names, migration and display choices
+      still need review; no live behavior changed by these notes.
+- [ ] #5: implement controlled culture-share/interest fields; update registration
+      and validation to allow empty time zone. No participant group-size field.
 - [ ] #6: implement independent participation/validation states and open-to-connections;
       verify validation never reactivates paused profiles.
 - [ ] #7/#9: extend compatible participant discovery and maintain one rule location
@@ -43,6 +57,10 @@ their own implementation and regression checks.
       only after the prerequisite checks.
 - [ ] #12/#13: define typed groups, memberships, capacity and simple state. Do schema
       work before group discovery; group creation depends on request acceptance.
+      Detailed Groups/Group Members field tables now exist in MVP_FIELD_CONTRACT.md
+      for review. Derived counts/slots are automatic; no participant group-text
+      field. Owner approved Open-if-space/otherwise-Closed after memberships save,
+      editable name/description, fixed type/focus, bounded capacity and Ended final.
 - [ ] #16: compatible open-group discovery. Ranking #8 is not a dependency.
 - [ ] #10/#11/#17: connect/join, accept/decline, sender visibility and availability checks.
 - [ ] #47 alongside #11/#12/#17: implement/retest safe retries, simultaneous acceptance,
@@ -89,3 +107,7 @@ is one-off, at the end; no routine manual matching or per-user grant queue.
 Next: #46 field contract under planning parent #45. Then #5 and #6 before
 real-data discovery integration. Notifications (#49) are undecided; Excel (#48)
 is scheduled last. Approved target fields are not yet in the deployed schema.
+Discovery display fields remain to be decided in #7/#42, generally excluding
+admin/system-only columns. Group Open/Closed/Ended and real count/slots replace
+profile-level size preference. The existing schema's required time zone is a
+documented baseline restriction to remove during implementation, not current intent.

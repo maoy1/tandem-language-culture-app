@@ -8,6 +8,11 @@ its acceptance work is complete; otherwise link the open follow-up.
 Record relevant automated results and actual tenant test evidence. Identify
 outstanding manual checks explicitly.
 
+List relevant IDs from `docs/TEST_CATALOGUE.md` and link the execution entry in
+`docs/TEST_RUNS.md`. Include actual app/flow versions for tenant results; mark
+unexecuted or deferred checks explicitly. For bug fixes, identify the regression
+case and its retest result. Documentation-only changes need only relevant checks.
+
 ## Completion checklist
 
 - [ ] Production stays within SharePoint/Power Apps/Power Automate and existing entitlements; no new paid hosting/licences, premium/custom connectors, trials or local-script runtime.

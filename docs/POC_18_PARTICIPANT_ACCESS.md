@@ -32,9 +32,9 @@ operational dependencies must be disclosed before selecting an approach.
 - Direct SharePoint list/item/API access cannot expose or change other profiles.
 - Keep unique Participant account; administrators retain access.
 - Clicking Discovery returns eligible candidates through a controlled operation.
-- No public directory or extra discovery list is approved. The owner approved
-  Comments in compatible candidate profiles after a save-time notice; private
-  organiser information goes by email. #46 finalizes the rest of the projection.
+- No public directory or extra discovery list is approved. Exact Discovery fields
+  remain undecided; participant fields including Comments are generally eligible,
+  admin/system-only information excluded. The proposed Comments notice is removed.
 
 ## Delivery sequence
 
@@ -105,7 +105,8 @@ Keep broader rollout paused until tenant evidence passes and is accepted.
 ## D: candidate access during discovery
 
 Reuse eligibility/ranking in #7–#9, not a second matching implementation.
-Use #46's agreed candidate response fields, including Comments after notice. Reject arbitrary identities, record IDs
+Finalize candidate display fields with #7/#42 using the reviewed field contract;
+exclude admin/system-only data and impose no Comments notice for now. Reject arbitrary identities, record IDs
 and queries that could reveal all profiles. Candidate presentation is read-only;
 search and connecting need no manual candidate grants or approvals. Verify
 this path before discovery rollout while private registration stays protected.

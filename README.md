@@ -29,7 +29,7 @@ on them. Necessary one-time setup and exceptional maintenance must be explicit.
 
 1. Select the next GitHub issue from the POC Vertical Slice milestone.
 2. Implement only that issue and its acceptance criteria.
-3. Run the automated checks and update the relevant documentation.
+3. Run appropriate checks from the [test catalogue](docs/TEST_CATALOGUE.md) and record actual results, versions and outstanding checks in [test run records](docs/TEST_RUNS.md).
 4. Update the implementation plan and backlog alignment in the same PR, recording outstanding tenant checks.
 5. Review and merge the PR, let `Closes #N` close the completed issue, then verify GitHub and the plan agree before starting the next issue.
 
@@ -66,10 +66,16 @@ Python 3.11+ installation. In Git Bash, activation uses
 The owner's v0.2 annotations are now the target planning baseline: parent #45,
 field contract #46 next, acceptance concurrency #47, Excel migration #48 last,
 and notification option review #49 before channel selection. Culture-only and
-combined participation, separate statuses and candidate-visible Comments after
-warning are approved target requirements, not deployed features. Keep the
-working Time zone catalogue; automatic location derivation and ranking are Later.
+combined participation and separate statuses are approved target requirements,
+not deployed features. Time zone is optional and catalogue-based. No participant
+group-size preference or Comments notice; exact Discovery display fields remain
+undecided, generally excluding admin/system-only columns. Groups show count/slots
+and control Open/Closed/Ended. Location derivation and ranking are Later.
 See docs/CURRENT_DESIGN.md and docs/IMPLEMENTATION_PLAN.md before real-data wiring.
+
+The #46 [field contract](docs/MVP_FIELD_CONTRACT.md) is ready for review.
+Culture and combined groups 2–10 with valid focus relationships are approved; the
+proposed field names/defaults/projection do not yet change deployed registration.
 
 POC-01 (repository foundation) and POC-02 (SharePoint schema and manual setup)
 are complete. POC-02 includes the version-controlled Language and Time zone

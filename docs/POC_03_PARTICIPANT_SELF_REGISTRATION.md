@@ -3,7 +3,7 @@
 This document defines the registration contract for the Participants list.
 It records the tested language-registration baseline. Target v0.2 changes are
 tracked in #45/#46/#5/#6: culture-only and combined participation, independent
-participation/validation and a Comments visibility notice need implementation
+participation/validation and optional time zone need implementation
 and fresh tenant tests. Existing JSON/schema remain the current baseline.
 The repository cannot change the SharePoint tenant, so the final list,
 Power Apps form, sharing, and Teams-tab settings are applied manually.
@@ -33,7 +33,9 @@ Complete these steps once in the `Participants` list:
 
 1. Confirm `Participant account` is a required Person column configured for one
    person and has a unique-value constraint.
-2. Confirm `Time zone` is a required single-value lookup to `Time zone catalogue`.
+2. Target: `Time zone` is an optional single-value lookup to `Time zone catalogue`.
+   The tested baseline required it; remove that restriction and its validation
+   dependency during #5 implementation, then retest. No live change is implied here.
 3. Do not enable SharePoint's built-in item-level permission setting: it is
    incompatible with the unique Participant account column. Keep administrators
    as owners or full-control users.
@@ -60,7 +62,7 @@ between creating and editing the signed-in user's own item:
 - Set the Participant account field to the current signed-in user and lock the
   control so it cannot be changed.
 - Add `Time zone` as a single-select lookup dropdown backed by the Time zone
-  catalogue.
+  catalogue, optional in the target contract. No participant group-size field.
 - Filter the gallery to the signed-in user's Participant account. This keeps
   the app experience focused on the user's profile but does not replace
   SharePoint permissions.
