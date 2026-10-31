@@ -25,7 +25,7 @@ must be revised before implementation.
 | #7 | Do not require an “open to new connections” field in the current POC. Base initial eligibility on approved participant status, languages, and selected time zone. |
 | #13 | Define the future Groups and Group Members schema before implementing group lifecycle. Do not add culture themes or participant role fields. |
 | #18 | Parent for private self-service registration. Complete #39 (prerequisites), #40 (two-account proof), #41 (registration integration) before closing. Architecture is undecided. #42 (candidate access) is deferred to discovery #7–#9 and does not block registration completion. |
-| #39 | Next: flag and verify permissions, settings, connectors, connections and licences; choose a feasible approach requiring no routine admin intervention. Assessment only. |
+| #39 | Assessment in progress: live inherited Read/Edit list roles and existing instant-flow connection modes observed. Policy scope is hidden for non-owned environments; applicable connector policy, intended-user licensing, caller identity and self-onboarding are unverified. No approach selected; #40 cannot start. Evidence in POC_18_PARTICIPANT_ACCESS.md. |
 | #40 | After #39: isolated synthetic-data proof with two normal accounts; own-record access and self-onboarding must work automatically. |
 | #41 | After #40: integrate with registration, preserve data and retest; before wider testing. |
 | #42 | After #41, with #7–#9: controlled candidate access without general list access or manual per-candidate grants. |
