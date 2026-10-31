@@ -42,6 +42,10 @@ Complete these steps once in the `Participants` list:
 
 ## Power Apps form behavior
 
+This describes the tested direct-connector registration baseline. The agreed
+privacy boundary requires replacing its direct Participants reads/writes through
+POC-18; see [the access implementation guide](POC_18_PARTICIPANT_ACCESS.md).
+
 Power Apps is the recommended form for the POC because it can reliably choose
 between creating and editing the signed-in user's own item:
 

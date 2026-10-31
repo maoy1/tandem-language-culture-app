@@ -45,10 +45,13 @@ approve the final result.
     app filter is not row-level SharePoint security.
   - Human checkpoint: test the form once with a normal account and one second
     account.
-- [ ] **POC-18 — Participant access and privacy** *(next priority; before wider testing and discovery)*
+- [ ] **POC-18 — Participant access and privacy** *(in progress; before wider testing and discovery)*
   - Agree which profile fields others may read and enforce own-profile edits at the data source.
   - Verify access using two normal accounts, including direct list access; record the result before wider rollout.
   - This ticket is open. The app filter alone does not meet this gate.
+  - Agreed: own profile only; candidates through controlled Discovery. Proposed:
+    private Participants list with authenticated flow access. First prove caller
+    identity using the no-data tenant probe in [POC-18](POC_18_PARTICIPANT_ACCESS.md).
 - [x] **POC-04 — Structured language preferences** *(acceptance verified; closure on completion PR merge)*
   - Catalogue-backed multi-value Teach/Learn fields are present in the schema.
   - Owner confirmed persistence after reopening, multiple selections in both
@@ -100,7 +103,7 @@ Location catalogues.
 
 Next: resolve issue #18's access/privacy design and implementation before wider
 testing or discovery. Issue #4's owner-account checks all passed on 2026-10-31;
-its completion PR closes #4 on merge. Issue #18 remains open and is the next
+PR #37 is merged and #4 is delivered. Issue #18 remains open and is the current
 implementation priority. Optional profile enrichment remains deferred.
 The first restart check should recheck live registration and sharing; repository
 completion does not certify the current tenant configuration.

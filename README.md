@@ -59,4 +59,5 @@ catalogues, local validation, tests, an Excel import template, and the manual
 tenant setup guide. POC-03 was delivered in merged PR #34 and issue #3 is closed.
 Issue #18 (participant access and privacy) is the next priority before wider
 testing or discovery. POC-04's language preferences passed the owner's acceptance
-checks on 2026-10-31; issue #4 closes when its completion PR merges.
+checks on 2026-10-31 and its completion PR #37 is merged. POC-18 is in progress;
+start with the identity probe in [the tenant guide](docs/POC_18_PARTICIPANT_ACCESS.md).

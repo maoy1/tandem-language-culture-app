@@ -145,6 +145,18 @@ by others, protect private fields, enforce own-profile edits at the data source,
 and record two-account tests including direct SharePoint access. The technical
 approach is decided in that ticket; the unique identity requirement remains.
 
+The agreed access boundary is now explicit: normal registration exposes only
+the caller's profile, including through direct SharePoint access. Discovery is
+a separate controlled operation returning eligible candidates, not list access.
+No private-Comments classification or public directory is approved.
+
+The proposed implementation is an administrator/automation-only Participants
+list accessed through authenticated registration flows. It requires replacing
+direct Power Apps Participants reads/writes and proving caller identity in the
+tenant before cutover. The current app-filter implementation remains insecure
+for wider rollout until that work passes. Follow
+[the POC-18 implementation and tenant gates](POC_18_PARTICIPANT_ACCESS.md).
+
 Hide system and flow-managed fields from the participant form, including Title
 and Status. Do not expose the Participant account people picker for choosing
 another colleague.

@@ -24,7 +24,7 @@ must be revised before implementation.
 | #6 | The current POC status choices are `Active` and `Needs review`. `Paused`, `Inactive`, and a separate “open to new connections” field require a later design decision before being added. |
 | #7 | Do not require an “open to new connections” field in the current POC. Base initial eligibility on approved participant status, languages, and selected time zone. |
 | #13 | Define the future Groups and Group Members schema before implementing group lifecycle. Do not add culture themes or participant role fields. |
-| #18 | Next priority after #3: define readable discovery fields versus private profile data; enforce own-profile edits and administrator access at the data source. Verify direct SharePoint access using two normal accounts. Complete before wider testing and discovery; app filtering alone is insufficient. |
+| #18 | In progress: registration exposes only the caller's profile, including direct list access. Discovery returns eligible candidates through a controlled operation (#7–#9). Proposed private Participants list plus authenticated flows; first prove caller identity in the tenant. No public directory or private-Comments split is approved. Keep open until implementation and two-account tests pass; see POC_18_PARTICIPANT_ACCESS.md. |
 | #25 | Align tests with fields that actually exist. Tests for Paused, Inactive, or two-group behavior belong after their schema decisions are recorded. |
 | #29 | Define freshness fields and status behavior in `CURRENT_DESIGN.md` before implementing tracking. In particular, decide whether `LastConfirmedAt` and `Needs confirmation` are required. |
 
