@@ -50,9 +50,9 @@ their own implementation and regression checks.
       still need review; no live behavior changed by these notes.
 - [ ] #5: implement controlled culture-share/interest fields; update registration
       and validation to allow empty time zone. No participant group-size field.
-      In progress after merged PR #51: JSON schema/policy, local regression checks
-      and POC_05_CULTURE_REGISTRATION.md prepared. Culture labels/keys await owner
-      input. Tenant permissions, active-value filtering/validation, create/edit
+      Draft PR #52: JSON schema/policy, 85 proposed culture values, local regression
+      checks and POC_05_CULTURE_REGISTRATION.md prepared. Culture labels/keys remain
+      proposed for review. Tenant permissions, active-value filtering/validation, create/edit
       trigger loop guard, form deployment and acceptance remain unverified.
 - [ ] #6: implement independent participation/validation states and open-to-connections;
       verify validation never reactivates paused profiles.
@@ -110,10 +110,15 @@ is one-off, at the end; no routine manual matching or per-user grant queue.
 
 PR #51 merged the reviewed #46 contract/test documentation. #46 remains open for
 its outstanding decisions. Current: prepare the approved registration subset in
-#5; tenant setup and acceptance are pending. Then #6 before
+#5 in draft PR #52; verify setup access, then follow POC_05_CULTURE_REGISTRATION.md
+and record tenant acceptance. #5 stays open. Then #6 before
 real-data discovery integration. Notifications (#49) are undecided; Excel (#48)
 is scheduled last. Approved target fields are not yet in the deployed schema.
 Discovery display fields remain to be decided in #7/#42, generally excluding
 admin/system-only columns. Group Open/Closed/Ended and real count/slots replace
 profile-level size preference. The existing schema's required time zone is a
 documented baseline restriction to remove during implementation, not current intent.
+
+Owner prerequisite update (2026-10-31): SharePoint list/column creation and existing
+app/submission-flow edit access are not yet checked. Verify those screens before
+live setup; no tenant permission or deployment success is claimed.
