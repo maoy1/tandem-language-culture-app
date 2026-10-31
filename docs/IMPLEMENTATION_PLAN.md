@@ -134,19 +134,27 @@ catalogue connection access, ordinary-user access or deployment. Owner subsequen
 confirms Culture catalogue bulk entry and checks (85 entries, keys, Active Yes).
 Owner subsequently confirms the participant ShareCultures/LearnCultures lookup
 columns and their requested optional/multiple-value settings/display names are
-ready. App/flow catalogue access and live registration remain unverified.
+ready. Full registration acceptance and independent catalogue validity checks
+remain unverified.
 
 The earlier Participants screenshot showed Time zone required and no culture
 lookups. Owner subsequently confirms Time zone Required = No in SharePoint.
 Both culture lookups and their addition to the saved form are now owner-confirmed.
-Owner reports culture lookup display is correct after Items/display binding
-changes; the Item 1/2/3 issue is resolved in preview. Multiple selection/persistence
-still needs explicit verification. Owner confirms the all-four-empty save guard
-works in Preview (REG-005 form portion). Next: inspect the existing submission
-trigger/actions (owner confirms creation-only trigger), then safely add edit
-revalidation with an update-loop guard, update culture/optional-time-zone rules and verify
-create/edit, save/reopen and loop prevention. See the setup/run entries in
-TEST_RUNS.md. No new published version confirmed.
+Current owner evidence:
+- Culture lookup labels now display correctly; empty-selection Save guard passes
+  in Preview. Multi-selection persistence still needs explicit verification.
+- Flow uses created-or-modified, current Get item values, four-field OR presence
+  and change-only Status guards. Old Created By identity rewrites were removed.
+- Already-Active edit skips the write (screenshot). Owner confirms Needs review
+  corrects to Active once, follow-up skips and identity/selections are preserved.
+  The earlier unresolved correction is resolved by this retest; cause not supplied.
+- Designer loop warnings remain advisory; Needs review-path runtime behavior,
+  concurrent/queued edits and catalogue validity have not been established.
+
+Next: test the empty-profile Needs review correction/no-write path, then culture-
+only and optional-time-zone save/reopen, multiple selections, catalogue validity
+and required remaining REG checks. See TEST_RUNS.md for scoped evidence and gaps.
+No new published app version confirmed. Keep #5 open and PR #52 draft.
 
 PR #53 merged the full 40-ticket backlog review on 2026-10-31. See
 [the complete audit](BACKLOG_AUDIT_2026-10-31.md) for corrections, scheduling and
