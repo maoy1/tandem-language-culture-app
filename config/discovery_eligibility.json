@@ -1,6 +1,8 @@
 {
   "version": 1,
-  "status": "power_automate_core_specification_not_deployed",
+  "status": "tested_language_baseline_requires_mvp_v02_extension_not_integrated",
+  "scopePlanIssue": 45,
+  "fieldContractIssue": 46,
   "executionPlatform": "Power Automate",
   "additionalBudgetAllowed": false,
   "inputContract": {

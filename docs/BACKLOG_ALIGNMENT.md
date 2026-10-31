@@ -1,68 +1,50 @@
-# Backlog alignment with the current design
+# Backlog alignment with approved MVP v0.2
 
-This file records the local alignment review of the 31 GitHub tickets. It is
-not a replacement for the GitHub issue bodies; it identifies which tickets
-must be revised before implementation.
+This file maps the existing backlog to the owner's latest annotations. GitHub
+is authoritative for live status. Approved target behavior is documented in
+CURRENT_DESIGN.md; schema/config JSON still describes the implemented baseline.
 
-## Overall status
+## Planning and new work
 
-Operating clarification: ordinary internal-user journeys are self-service with
-minimal admin workload as participation scales. Critical/exceptional cases may
-use necessary admin approval, correction or assistance; no blanket ban on admin
-intervention and no new routine approval requirement is intended.
+| Ticket | Purpose | Order |
+|---|---|---|
+| #45 | Parent for v0.2 scope and delivery alignment | Track; no implementation completion claimed |
+| #46 | Field/exposure contract, Comments notice, separated statuses and capacity decisions | Next; before schema and real-data integration |
+| #47 | Retry/idempotency, simultaneous accepts, capacity and partial-write recovery | With #11/#12/#17; before acceptance paths close |
+| #48 | Actual Excel inspection, mapping and safe migration | Last implementation phase, before existing-data launch |
+| #49 | Notification feasibility and event/channel decision | Before #21; email/Teams not preselected |
 
-- Issues `#1`–`#3` are closed; POC-03 was merged in PR #34.
-- Issue `#18` is open and moves ahead of wider testing and discovery as the access/privacy gate.
-- Other ticket status must be checked on GitHub when work starts; this file records design alignment, not a live status mirror.
-- Issues `#2`–`#15` form the core vertical slice.
-- Issues `#16`–`#31`, except the promoted privacy work in `#18`, are later extensions and should not drive the initial
-  SharePoint schema.
+## Existing-ticket changes
 
-## Required revisions before implementation
-
-| Ticket | Alignment action |
+| Ticket | Aligned scope |
 |---|---|
-| #2 | Define and validate the Language catalogue, Time zone catalogue, and approved participant fields. Remove Culture catalogue, Location catalogue, culture fields, and other removed fields. The repository provides the schema, local validation/tests, Excel import support, and manual setup guidance; list creation and tenant configuration remain manual. |
-| #3 | Use Power Apps for self-registration. Keep Participant account required, unique, and locked to the signed-in user; expose the Time zone lookup as a required catalogue dropdown. Location/city is deferred. Share through a Teams tab. Do not claim that the app filter provides SharePoint row security: the unique identity field prevents the built-in item-level permission setting. |
-| #4 | Acceptance verified by the owner on 2026-10-31: save/reopen persistence, multiple Teach and Learn values, simultaneous learner/sharer use, and teach-only saving all pass. Both fields are catalogue lookups in the schema, providing identifiers for future discovery. Close on completion PR merge; #18 still gates wider testing and discovery. |
-| #5 | Remove “culture interests” from the current participant profile. Keep only approved language/profile context; do not add unapproved fields to the current schema. Location/city may be considered later as an optional enhancement. |
-| #6 | The current POC status choices are `Active` and `Needs review`. `Paused`, `Inactive`, and a separate “open to new connections” field require a later design decision before being added. |
-| #7 | Owner confirmed basic synthetic Compose/Filter/Select, reciprocal/one-way, teach-only and Needs review tests in Power Automate (2026-10-31). Full fixture/edge cases, trusted SharePoint normalization, authorization and Power Apps integration remain pending. No Python production runtime, paid hosting or new participation field; keep open. |
-| #13 | Define the future Groups and Group Members schema before implementing group lifecycle. Do not add culture themes or participant role fields. |
-| #18 | Parent for private self-service registration. Complete #39 (prerequisites), #40 (two-account proof), #41 (registration integration) before closing. Architecture is undecided. #42 (candidate access) is deferred to discovery #7–#9 and does not block registration completion. |
-| #39 | Next: flag and verify permissions, settings, connectors, connections and licences; choose a feasible approach requiring no routine admin intervention. Assessment only. |
-| #40 | After #39: isolated synthetic-data proof with two normal accounts; own-record access and self-onboarding must work automatically. |
-| #41 | After #40: integrate with registration, preserve data and retest; before wider testing. |
-| #42 | After #41, with #7–#9: controlled candidate access without general list access or manual per-candidate grants. |
+| #2/#3/#4 | Completed initial baseline. Preserve prior evidence; do not reopen just to describe target fields |
+| #5 | Controlled culture sharing/interests and preferred group size; culture-only registration; candidate-visible Comments warning. Time zone catalogue retained; no derived-location requirement |
+| #6 | Participation Active/Paused/Inactive independent of validation and migration confirmation; open-to-connections; never reactivate a paused participant through validation |
+| #7/#9 | Compatible people only; language/culture/combined fit, status/open filters and authorized projection including Comments after notice. Existing synthetic language tests are baseline evidence only |
+| #8 | Later ranking; remove as dependency for group discovery. No required automatic location/time-zone derivation |
+| #10/#11 | Requests, recipient authority, sender status, unavailable-recipient handling and safe acceptance coordinated with #47; meet-first/expiry/bulk Later |
+| #12 | Typed groups: language 2 or 3 total; culture up to 10, minimum/mixed capacity decided in #46; membership creation on acceptance |
+| #13 | Simple Open/Closed/Ended MVP lifecycle and permitted member changes/admin override; richer states and timers Later |
+| #14 | Self-service leaving, preserved history and automatic normal membership counts; ambiguous recovery can be exceptional admin work |
+| #15 | Not confirmed in revised MVP; Later scope review, not a mandatory launch gate |
+| #16/#17 | Promote compatible existing-group discovery/join to MVP. Remove ranking dependency; recheck capacity and test #47 |
+| #18/#39–#42 | Ordinary-colleague access tests deferred by owner; remain open. Admin Members access is expected, ordinary access unverified; candidate Comments is now approved after notice |
+| #19/#20/#22–#24 | Retain necessary group/request access safeguards; no routine individual permission administration. Check selected approach/configuration before implementing |
+| #21 | Depends on #49 channel/event decision; automatic selected request notifications with safe failure/deduplication behavior |
+| #25 | Tests for culture-only, participation/validation, compatibility, comments projection, typed capacity and retries; no mandatory ranking or two-group warning |
+| #26–#28 | Synthetic platform/scale/handover checks within no-budget runtime; target current approved fields only |
+| #29/#30/#31 | Later freshness/reminders/dashboard, not core implementation gates |
 
-Owner direction (2026-10-31): defer ordinary-colleague access testing and access
-redesign during today's implementation session. Admin-only Members access is
-expected; ordinary-user effective access remains untested. Continue core work
-using owner/synthetic data without closing #18 or its prerequisite tickets.
-| #25 | Align tests with fields that actually exist. Tests for Paused, Inactive, or two-group behavior belong after their schema decisions are recorded. |
-| #29 | Define freshness fields and status behavior in `CURRENT_DESIGN.md` before implementing tracking. In particular, decide whether `LastConfirmedAt` and `Needs confirmation` are required. |
+## Decision precedence and evidence
 
-## Compatible tickets
+The source DOCX scope table is a reviewed proposal. The owner's annotations
+override its automatic location derivation, blanket 3–10 group size, old-Excel
+visibility rule, fixed notification-channel text and standalone-hosting option.
+Culture catalogue/fields are now approved target MVP requirements, superseding
+their previous removal. Do not change live schema/flows until #46 and
+prerequisites pass.
 
-The following tickets do not currently contradict the agreed product boundary,
-provided they use the current schema and do not reintroduce removed fields:
-
-- #3–#4: self-registration, controlled language preferences, and the Power Apps registration form
-- #8–#12: discovery, requests, acceptance, and 1:1 tandem creation
-- #14–#15: leaving a group and the active-group warning
-- #16–#17: group discovery and join requests
-- #19–#24: group/request permissions and notifications
-- #26–#28: synthetic data, scale testing, and reproducibility
-- #30–#31: reminders and admin overview after freshness behavior is defined
-
-Tickets #13–#24, except participant-only ticket #18, still require the future group/request lists; they must not
-expand the initial Participants schema.
-
-## PR and document gate
-
-PR #32 established the manual SharePoint schema baseline. This POC-03 change
-supersedes its original rich Location/derived-time-zone assumption with the
-Time zone catalogue and Power Apps design. Every later PR must link to
-`CURRENT_DESIGN.md` and state which design sections it implements. A product
-change must update `CURRENT_DESIGN.md` in the same PR before the schema or
-ticket is changed.
+PR #44 retains owner-confirmed synthetic language cases; it does not implement
+culture/status/open filters or authorize real-data discovery. The scope-alignment
+PR is planning only and must not close #5/#6/#7/#18 or #45–#49 automatically.

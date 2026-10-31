@@ -1,6 +1,7 @@
 # POC-18: self-service access in small steps
 
-Status: prerequisite assessment pending. No architecture is selected and no live
+Status: ordinary-colleague access testing deferred by the owner; #39 has partial
+read-only evidence in draft PR #43. No architecture is selected and no live
 permissions or app connections have changed. #18 is the registration-access
 parent. This planning PR closes none of the access tickets.
 
@@ -31,8 +32,9 @@ operational dependencies must be disclosed before selecting an approach.
 - Direct SharePoint list/item/API access cannot expose or change other profiles.
 - Keep unique Participant account; administrators retain access.
 - Clicking Discovery returns eligible candidates through a controlled operation.
-- No public directory, extra discovery list or private-Comments classification
-  is approved. Candidate fields will be agreed during discovery.
+- No public directory or extra discovery list is approved. The owner approved
+  Comments in compatible candidate profiles after a save-time notice; private
+  organiser information goes by email. #46 finalizes the rest of the projection.
 
 ## Delivery sequence
 
@@ -103,7 +105,7 @@ Keep broader rollout paused until tenant evidence passes and is accepted.
 ## D: candidate access during discovery
 
 Reuse eligibility/ranking in #7–#9, not a second matching implementation.
-Agree candidate response fields there. Reject arbitrary identities, record IDs
+Use #46's agreed candidate response fields, including Comments after notice. Reject arbitrary identities, record IDs
 and queries that could reveal all profiles. Candidate presentation is read-only;
 search and connecting need no manual candidate grants or approvals. Verify
 this path before discovery rollout while private registration stays protected.
