@@ -6,9 +6,10 @@ registration POC. The design authority is
 design authority wins.
 
 This guide describes the implemented registration baseline. The approved v0.2
-target (#45) adds controlled culture fields, group preferences and separate
+target (#45) adds controlled culture fields and separate
 statuses after #46 defines their exact contract. Do not create those columns
-from this baseline guide yet. Comments will be candidate-visible after notice;
+from this baseline guide yet. Target time zone is optional; no participant size
+preference or Comments notice. Exact Discovery display fields remain undecided;
 notifications remain undecided (#49). Catalogue time zone stays; Excel inspection
 and migration are the final phase (#48).
 
@@ -75,7 +76,7 @@ sample row after import, then set the IANA ID column to unique and indexed.
 | Participant account | Person or Group, one person | Yes; required and unique |
 | Teach languages | Lookup to Language catalogue, multiple | Yes; optional |
 | Learn languages | Lookup to Language catalogue, multiple | Yes; optional |
-| Time zone | Lookup to Time zone catalogue, one value | Yes; required |
+| Time zone | Lookup to Time zone catalogue, one value | Yes; optional target (required restriction exists in baseline) |
 | Learning focus | Multiple lines | Yes; optional |
 | Comments | Multiple lines | Yes; optional |
 | Status | Choice: Active; Needs review | No; flow-managed |
@@ -100,7 +101,8 @@ The participant form should show only:
 - Comments
 
 Hide Title, Status, and any technical helper fields through **Edit form → Edit
-columns**. Keep Time zone visible and required. Hiding a column from a list
+columns**. Keep Time zone visible; make it optional during #5 implementation and
+remove mandatory-time-zone validation at the same time. Hiding a column from a list
 view does not hide it from the New item form.
 
 Language lookup fields must allow multiple selections and must use the
@@ -111,7 +113,12 @@ sharing, follow [POC-03 participant self-registration](POC_03_PARTICIPANT_SELF_R
 
 ## Participant submission flow
 
-Create an automated cloud flow with:
+Historical tested baseline below requires time zone. Do not use this as the new
+contract: #5 must allow empty time zone, and extend the interest check for cultures
+when those lookups are added. A supplied time zone must still be a valid active
+catalogue value. Preserve existing test evidence separately from those changes.
+
+The original automated cloud flow used:
 
 1. SharePoint trigger **When an item is created** on `Participants`.
 2. Condition:
@@ -124,7 +131,8 @@ Create an automated cloud flow with:
 3. If true, set Status to `Active`.
 4. If false, set Status to `Needs review`.
 5. Use the trigger item ID when updating the item.
-6. Confirm the selected Time zone lookup is active in the Time zone catalogue.
+6. Target: if a Time zone is supplied, confirm it is active in the catalogue;
+   an empty value is valid and does not prevent registration/discovery.
 7. Send an exception notification only when review is needed.
 
 The form saves before the flow runs. Therefore incomplete submissions are
@@ -139,7 +147,7 @@ Create a **Time zone catalogue** with the imported canonical values. The
 catalogue should contain `Title` (display label), unique indexed `IANA ID`,
 optional `Windows ID`, and `Active`.
 
-In Participants, make `Time zone` a required single-value lookup to the
+Target: in Participants, make `Time zone` an optional single-value lookup to the
 catalogue. Power Apps renders it as a controlled dropdown. Location or city is
 deferred and is not part of the current registration form or schema.
 
