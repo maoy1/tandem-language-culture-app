@@ -1,0 +1,25 @@
+{
+  "verificationStatus": "synthetic_tenant_scenarios_not_yet_run",
+  "myProfile": {"profileId": 1, "accountId": "synthetic-a", "status": "Active", "teachIds": [1], "learnIds": [2]},
+  "candidates": [
+    {"profileId": 1, "accountId": "synthetic-a", "status": "Active", "teachIds": [2], "learnIds": [1]},
+    {"profileId": 2, "accountId": "synthetic-b", "status": "Active", "teachIds": [2], "learnIds": [1]},
+    {"profileId": 3, "accountId": "synthetic-c", "status": "Active", "teachIds": [2], "learnIds": []},
+    {"profileId": 4, "accountId": "synthetic-d", "status": "Needs review", "teachIds": [2], "learnIds": [1]},
+    {"profileId": 5, "accountId": "synthetic-e", "status": "Active", "teachIds": [3], "learnIds": []},
+    {"profileId": 6, "accountId": "synthetic-f", "status": "Active", "teachIds": [], "learnIds": [1]}
+  ],
+  "expectedCandidateFit": [
+    {"profileId": 2, "canLearnIds": [2], "canTeachIds": [1], "reciprocal": true},
+    {"profileId": 3, "canLearnIds": [2], "canTeachIds": [], "reciprocal": false},
+    {"profileId": 6, "canLearnIds": [], "canTeachIds": [1], "reciprocal": false}
+  ],
+  "additionalScenarios": [
+    {"change": "myProfile.learnIds = []", "expectedProfileIds": [2, 6], "expectedReciprocal": false},
+    {"change": "myProfile.status = Needs review", "expectedProfileIds": []},
+    {"change": "myProfile = null", "expectedProfileIds": []},
+    {"change": "candidates = []", "expectedProfileIds": []},
+    {"change": "candidate teachIds and learnIds are null", "expected": "that candidate is excluded"},
+    {"change": "duplicate account IDs or non-integer catalogue IDs at normalization", "expected": "reject malformed input before eligibility"}
+  ]
+}

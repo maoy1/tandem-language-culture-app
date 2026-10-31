@@ -22,6 +22,14 @@ Every implementation ticket must:
 
 ## Product boundary
 
+Mandatory budget/runtime constraint: production uses only SharePoint and the
+associated Power Apps/Power Automate capabilities covered by existing licences.
+No new paid licences, trials, premium/custom connectors, external services,
+Azure hosting, Python server or local scheduled script may be required. If the
+tenant cannot meet a requirement within that boundary, report the constraint
+before implementation rather than adding infrastructure. Local Python validation
+is optional developer tooling and never part of participant operation.
+
 Implementation session decision (2026-10-31): normal-participant access tests are
 deferred by the owner. Site Members are trusted administrators; their inherited
 access is expected, and ordinary-user access is not yet established. Continue
@@ -32,6 +40,9 @@ language IDs. Either exchange direction qualifies, including teach-only users;
 both directions identify a reciprocal suggestion. Exclude self and non-Active
 profiles. There is no separate open-to-connections field yet. Ranking, published
 candidate fields and authorized tenant integration are later delivery items.
+Implement eligibility with built-in Power Automate data operations; see
+`config/discovery_eligibility.json` and `src/README.md`. The action fragment and
+synthetic scenarios are prepared, not deployed or tenant-tested.
 
 All participant actions must be self-service: no routine admin approvals,
 per-person grants, manual matching or manual group maintenance. Flag any needed

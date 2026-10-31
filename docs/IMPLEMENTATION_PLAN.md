@@ -111,6 +111,14 @@ review status and language lookup IDs, without introducing an unapproved field.
 Record repository checks separately from Power Apps deployment and tenant tests;
 finishing code does not establish a working end-to-end deployed app.
 
+Runtime correction: discovery runs in Power Automate using built-in operations
+and the existing SharePoint connector. PR #44 now contains an action-definition
+fragment and synthetic tenant scenarios, not an unhosted Python implementation.
+The flow still needs verified prerequisites, trusted data normalization, actual
+tenant configuration and app integration. Do not claim the old Python tests
+validate this replacement. No additional budget, premium/custom connectors or
+external hosting is permitted; no routine admin action per participant/search.
+
 POC-03 was delivered in merged PR #34 and issue #3 is closed. Its registration
 contract, Power Apps form, and Teams sharing setup are documented in
 [POC_03_PARTICIPANT_SELF_REGISTRATION.md](POC_03_PARTICIPANT_SELF_REGISTRATION.md).
