@@ -6,6 +6,14 @@ acceptance and status; planning completion does not imply deployment.
 
 ## Working process
 
+Owner direction (2026-10-31): build the end-to-end app/flow path first and resume
+the remaining detailed tests afterward. Stop the current per-case registration
+test sequence. Retain passed/failed evidence and mark outstanding cases deferred,
+not passed. Use batched build steps. One ticket per branch/PR still applies;
+stacked build branches may proceed while earlier acceptance remains open. Actual
+save/run blockers are fixed during construction; full verification follows the
+integrated workflow. Do not close incomplete tickets or widen release on that basis.
+
 1. Select one ticket; check its dependencies and current acceptance criteria.
 2. Flag/verify permissions, licences, connectors, settings, connection owners and
    setup before dependent implementation. Existing Microsoft platform only; no
@@ -116,12 +124,36 @@ is one-off, at the end; no routine manual matching or per-user grant queue.
 
 ## Current focus
 
+### Core build first — current priority
+
+| Order | Build output | Related tickets | State |
+|---|---|---|---|
+| 1 | Power Apps Discover screen/button and Power Apps-triggered discovery flow using existing Participants | #7/#9 | Current build; branch codex/issue-7-discovery-app-build based on #52 |
+| 2 | In-app received/sent requests, recipient accept/decline and sender cancel | #10/#11 | Next; connect backing Requests data when binding actions |
+| 3 | Accepted request creates Groups and Group Members; My groups displays results | #12/#13/#47 | Next; SharePoint foundation required before persistent actions run |
+| 4 | Existing-group discovery/join and member controls/leave | #16/#17/#14 | Core build after first creation path |
+| 5 | Central in-app notification/request experience; evaluate Approvals at this stage | #49/#21 | Channel/connector undecided; no email or Teams assumption |
+| 6 | Resume deferred acceptance, identity/access, capacity/retry and delivery checks | #5/#25 and related cases | After integrated core is built; before wider rollout |
+
+Separate participation/openness (#6) is bound into eligibility before ordinary
+rollout. During owner-only construction, record the implemented subset explicitly;
+do not infer missing availability fields as an approved default. Core actions
+still need identity, allowed state, compatibility and capacity checks as part of
+their implementation; deferring tests does not remove those behaviors.
+
+Owner clarified: postpone discussion of notification connectors and one-time
+setup automation. Approvals is a candidate to evaluate, not selected. Prioritize
+the app/flow build using current lists first. Add required backing lists/columns
+at their data-binding step; screens alone do not establish working persistence.
+No setup-automation capability or notification connection has been verified.
+
 PR #51 merged the reviewed contract/test documentation. #46 remains open for
-outstanding decisions; its approved registration subset is in progress under #5,
-draft PR #52. Finish and verify participant culture lookups and optional Time zone,
-then form/flow acceptance. #6 follows before
-real-data discovery integration. Notifications (#49) are undecided; Excel (#48)
-is scheduled last. Approved target fields are not yet in the deployed schema.
+outstanding decisions. Registration progress is retained under #5/draft PR #52;
+remaining detailed acceptance is deferred while the core app/flows are built.
+Begin owner-only Discover screen/flow construction with the current Participants
+list. Bind #6 availability fields and trusted caller identity before ordinary
+rollout. Notifications (#49) remain undecided; Excel (#48) stays last. Desired
+configuration is not a live tenant export; owner setup evidence follows below.
 Discovery display fields remain to be decided in #7/#42, generally excluding
 admin/system-only columns. Group Open/Closed/Ended and real count/slots replace
 profile-level size preference. The existing schema's required time zone is a
@@ -151,9 +183,9 @@ Current owner evidence:
 - Designer loop warnings remain advisory; Needs review-path runtime behavior,
   concurrent/queued edits and catalogue validity have not been established.
 
-Next: test the empty-profile Needs review correction/no-write path, then culture-
-only and optional-time-zone save/reopen, multiple selections, catalogue validity
-and required remaining REG checks. See TEST_RUNS.md for scoped evidence and gaps.
+Deferred at owner's request: empty-profile Needs review correction/no-write path,
+culture-only/optional-time-zone persistence, multiple selections, catalogue validity
+and remaining REG checks. Resume after the integrated core build; see TEST_RUNS.md.
 No new published app version confirmed. Keep #5 open and PR #52 draft.
 
 PR #53 merged the full 40-ticket backlog review on 2026-10-31. See

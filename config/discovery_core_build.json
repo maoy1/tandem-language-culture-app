@@ -1,0 +1,67 @@
+{
+  "version": 2,
+  "status": "owner_only_core_build_culture_extension_not_deployed_or_verified",
+  "scopePlanIssue": 45,
+  "fieldContractIssue": 46,
+  "executionPlatform": "Power Automate",
+  "additionalBudgetAllowed": false,
+  "buildScope": "Owner-only unpublished app/flow build using existing validation Status. Culture extension is prepared, not live. Separate participation/openness filters, trusted ordinary-caller binding, field projection and full acceptance remain gates before ordinary rollout.",
+  "inputContract": {
+    "My_profile": "Compose: server-loaded profile; owner-only construction. App-supplied item ID is a reference, not authorization.",
+    "Candidate_profiles": "Compose: normalized server-loaded candidate array",
+    "profileShape": {
+      "profileId": "SharePoint item ID; internal reference",
+      "accountId": "canonical Person Claims from stored profile, never app email",
+      "displayName": "stored Person DisplayName for owner preview",
+      "status": "validation Status choice Value; participation status is separate pending #6",
+      "teachIds": "array of integer Language catalogue IDs",
+      "learnIds": "array of integer Language catalogue IDs",
+      "shareCultureIds": "array of integer Culture catalogue IDs",
+      "learnCultureIds": "array of integer Culture catalogue IDs"
+    }
+  },
+  "completionGates": [
+    "Bind authenticated caller before sharing with ordinary users; owner-only construction is not an authorization solution.",
+    "Implement separate participation/openness filters after #6 fields are bound; missing target fields must not imply availability.",
+    "Agree final response fields with #42 before wider exposure.",
+    "Verify actual lookup ID-array fields, pagination and synchronous response bounds; fail clearly on incomplete data.",
+    "Complete deferred test cases and do not close #7 on preparation artifacts."
+  ],
+  "actions": {
+    "Eligible_candidates": {
+      "type": "Query",
+      "inputs": {
+        "from": "@coalesce(outputs('Candidate_profiles'), json('[]'))",
+        "where": "@and(equals(outputs('My_profile')?['status'], 'Active'), not(empty(outputs('My_profile')?['accountId'])), equals(item()?['status'], 'Active'), not(empty(item()?['accountId'])), not(equals(item()?['accountId'], outputs('My_profile')?['accountId'])), or(not(empty(intersection(coalesce(outputs('My_profile')?['learnIds'], json('[]')), coalesce(item()?['teachIds'], json('[]'))))), not(empty(intersection(coalesce(outputs('My_profile')?['teachIds'], json('[]')), coalesce(item()?['learnIds'], json('[]'))))), not(empty(intersection(coalesce(outputs('My_profile')?['learnCultureIds'], json('[]')), coalesce(item()?['shareCultureIds'], json('[]'))))), not(empty(intersection(coalesce(outputs('My_profile')?['shareCultureIds'], json('[]')), coalesce(item()?['learnCultureIds'], json('[]')))))))"
+      },
+      "runAfter": {
+        "Candidate_profiles": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Candidate_fit": {
+      "type": "Select",
+      "inputs": {
+        "from": "@body('Eligible_candidates')",
+        "select": {
+          "profileId": "@item()?['profileId']",
+          "displayName": "@item()?['displayName']",
+          "fitType": "@if(or(not(empty(intersection(coalesce(outputs('My_profile')?['learnIds'], json('[]')), coalesce(item()?['teachIds'], json('[]'))))), not(empty(intersection(coalesce(outputs('My_profile')?['teachIds'], json('[]')), coalesce(item()?['learnIds'], json('[]')))))), if(or(not(empty(intersection(coalesce(outputs('My_profile')?['learnCultureIds'], json('[]')), coalesce(item()?['shareCultureIds'], json('[]'))))), not(empty(intersection(coalesce(outputs('My_profile')?['shareCultureIds'], json('[]')), coalesce(item()?['learnCultureIds'], json('[]')))))), 'Combined', 'Language'), 'Culture')",
+          "canLearnIds": "@intersection(coalesce(outputs('My_profile')?['learnIds'], json('[]')), coalesce(item()?['teachIds'], json('[]')))",
+          "canTeachIds": "@intersection(coalesce(outputs('My_profile')?['teachIds'], json('[]')), coalesce(item()?['learnIds'], json('[]')))",
+          "canLearnCultureIds": "@intersection(coalesce(outputs('My_profile')?['learnCultureIds'], json('[]')), coalesce(item()?['shareCultureIds'], json('[]')))",
+          "canShareCultureIds": "@intersection(coalesce(outputs('My_profile')?['shareCultureIds'], json('[]')), coalesce(item()?['learnCultureIds'], json('[]')))",
+          "reciprocal": "@and(not(empty(intersection(coalesce(outputs('My_profile')?['learnIds'], json('[]')), coalesce(item()?['teachIds'], json('[]'))))), not(empty(intersection(coalesce(outputs('My_profile')?['teachIds'], json('[]')), coalesce(item()?['learnIds'], json('[]'))))))"
+        }
+      },
+      "runAfter": {
+        "Eligible_candidates": [
+          "Succeeded"
+        ]
+      }
+    }
+  },
+  "baselineEvidence": "PR #44 owner-reported language-only runs remain historical evidence. The new culture paths/display mapping are not thereby tested.",
+  "deploymentNote": "Built-in action fragments/expression reference, not an importable flow package or deployed endpoint. Tenant connections, caller binding, normalization and Power Apps response still require configuration. See src/README.md."
+}

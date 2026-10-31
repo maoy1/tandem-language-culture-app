@@ -63,6 +63,13 @@ Python 3.11+ installation. In Git Bash, activation uses
 
 ## Current status
 
+Current priority: build the integrated app/flow path first. Start with the Discover
+screen and Power Apps-triggered flow using the existing Participants list, then
+in-app requests, accepted groups/memberships and notifications. Remaining detailed
+acceptance tests are deferred, not passed. Notification/Approvals choices and setup
+automation are discussed at their build stage. See the current-priority table in
+docs/IMPLEMENTATION_PLAN.md and the build batches in src/README.md.
+
 The owner's v0.2 annotations are now the target planning baseline: parent #45,
 reviewed contract #46 with outstanding decisions, registration #5 in progress,
 acceptance concurrency #47, Excel migration #48 last,
