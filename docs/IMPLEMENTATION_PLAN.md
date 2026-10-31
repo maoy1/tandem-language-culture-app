@@ -12,7 +12,9 @@ acceptance and status; planning completion does not imply deployment.
    extra budget. Ordinary users are self-service; necessary admin exceptions are allowed.
 3. Use one branch and PR per ticket. Run appropriate checks and record tenant
    evidence separately from local/JSON validation.
-4. Update design, plan, related setup/field contracts and issue evidence together.
+4. Update design, plan, related setup/field contracts and affected open ticket
+   bodies/dependencies/scheduling together. Preserve closed baseline evidence;
+   do not equate an approved requirement with completed implementation.
 5. Review and merge; use closing keywords only for completed acceptance work.
 6. Verify issue/PR state after merge before the next ticket.
 
@@ -50,6 +52,10 @@ their own implementation and regression checks.
       still need review; no live behavior changed by these notes.
 - [ ] #5: implement controlled culture-share/interest fields; update registration
       and validation to allow empty time zone. No participant group-size field.
+      Draft PR #52 prepares the configuration, 85 culture values, setup guide and
+      tests. Owner confirms catalogue population/checks, but the latest Participants
+      screenshot still shows required Time zone and no visible culture lookups.
+      Participant columns, app/flow changes and tenant acceptance remain pending.
 - [ ] #6: implement independent participation/validation states and open-to-connections;
       verify validation never reactivates paused profiles.
 - [ ] #7/#9: extend compatible participant discovery and maintain one rule location
@@ -104,10 +110,19 @@ is one-off, at the end; no routine manual matching or per-user grant queue.
 
 ## Current focus
 
-Next: #46 field contract under planning parent #45. Then #5 and #6 before
+PR #51 merged the reviewed contract/test documentation. #46 remains open for
+outstanding decisions; its approved registration subset is in progress under #5,
+draft PR #52. Finish and verify participant culture lookups and optional Time zone,
+then form/flow acceptance. #6 follows before
 real-data discovery integration. Notifications (#49) are undecided; Excel (#48)
 is scheduled last. Approved target fields are not yet in the deployed schema.
 Discovery display fields remain to be decided in #7/#42, generally excluding
 admin/system-only columns. Group Open/Closed/Ended and real count/slots replace
 profile-level size preference. The existing schema's required time zone is a
 documented baseline restriction to remove during implementation, not current intent.
+
+All 40 issue tickets were reviewed against the plan on 2026-10-31. See
+[the complete audit](BACKLOG_AUDIT_2026-10-31.md) for corrections, scheduling and
+remaining decisions. The audit preserves issue states and does not close #45 or
+any implementation ticket. Later #8/#15/#29–#31 are outside the core milestone;
+required MVP and release-check tickets are included, even when owner-deferred.
