@@ -54,8 +54,12 @@ their own implementation and regression checks.
       and validation to allow empty time zone. No participant group-size field.
       Draft PR #52 prepares the configuration, 85 culture values, setup guide and
       tests. Owner confirms catalogue population/checks, but the latest Participants
-      screenshot still shows required Time zone and no visible culture lookups.
-      Participant columns, app/flow changes and tenant acceptance remain pending.
+      screenshot did not show culture lookups. Owner subsequently confirms both
+      optional multi-value culture lookups and removal of the Time zone required
+      setting. Owner also confirms both culture cards added to Form1 after refresh
+      and app saved. Culture labels now display correctly, and the empty-selection
+      save guard passes in Preview (owner-reported). Persistence and flow validation
+      remain unverified; no new published app version confirmed.
       Follow POC_05_CULTURE_REGISTRATION.md; verify active-value checks and the
       create/edit validation loop guard before treating the flow as complete.
 - [ ] #6: implement independent participation/validation states and open-to-connections;
@@ -128,12 +132,21 @@ checks work: SharePoint New List/Create column, registration app Edit and submis
 flow Edit. This confirms owner access to those screens, not successful creation,
 catalogue connection access, ordinary-user access or deployment. Owner subsequently
 confirms Culture catalogue bulk entry and checks (85 entries, keys, Active Yes).
-Next: create the participant ShareCultures/LearnCultures lookup columns. App/flow
-catalogue access and live registration acceptance remain unverified.
+Owner subsequently confirms the participant ShareCultures/LearnCultures lookup
+columns and their requested optional/multiple-value settings/display names are
+ready. App/flow catalogue access and live registration remain unverified.
 
-Latest Participants screenshot still shows Time zone required and does not show
-the two culture lookups. Create/verify those lookups and make Time zone optional
-before form/flow acceptance; see SETUP-20261031-03 in TEST_RUNS.md.
+The earlier Participants screenshot showed Time zone required and no culture
+lookups. Owner subsequently confirms Time zone Required = No in SharePoint.
+Both culture lookups and their addition to the saved form are now owner-confirmed.
+Owner reports culture lookup display is correct after Items/display binding
+changes; the Item 1/2/3 issue is resolved in preview. Multiple selection/persistence
+still needs explicit verification. Owner confirms the all-four-empty save guard
+works in Preview (REG-005 form portion). Next: inspect the existing submission
+trigger/actions (owner confirms creation-only trigger), then safely add edit
+revalidation with an update-loop guard, update culture/optional-time-zone rules and verify
+create/edit, save/reopen and loop prevention. See the setup/run entries in
+TEST_RUNS.md. No new published version confirmed.
 
 PR #53 merged the full 40-ticket backlog review on 2026-10-31. See
 [the complete audit](BACKLOG_AUDIT_2026-10-31.md) for corrections, scheduling and

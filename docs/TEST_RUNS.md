@@ -93,6 +93,83 @@ the app/flow versions separately.
 - #5 remains open. Optional-time-zone acceptance and culture form/flow tests have
   not passed merely because the Culture catalogue was populated.
 
+### SETUP-20261031-04 — optional SharePoint Time zone
+
+- Owner confirms the instructed change: Participants Time zone, Require that
+  this column contains information = No, saved in SharePoint.
+- Owner-reported setting only; no new screenshot, app save/reopen, flow result or
+  blank-time-zone discovery case observed. REG-003 and DISC-005 remain unverified.
+- Culture lookup settings and app/flow refresh/validation remain pending.
+
+### SETUP-20261031-05 — participant culture lookups
+
+- Owner confirms both instructed lookup columns are ready: ShareCultures and
+  LearnCultures, displayed as Cultures I can share and Cultures of interest,
+  looking up Culture catalogue / Title, multiple selections Yes, required No.
+- Evidence is owner-reported completion of the setup instructions. Internal names
+  and settings were not independently inspected through a tenant export.
+- No app refresh, culture save/reopen or flow validation result confirmed yet;
+  REG tenant scenarios remain unverified. Next: add generated cards to Form1.
+
+### SETUP-20261031-06 — culture cards added to app
+
+- Owner confirms the instructed Participants refresh, addition of both culture
+  fields to Form1 and app save. Publication was not requested; no published
+  version or flow change is evidenced by this confirmation.
+- Catalogue options/multiple selection, stored lookup IDs, blank Time zone,
+  save/reopen and submission-flow validation remain unverified. Next: preview
+  both culture dropdowns in Edit/New mode and check multiple selections.
+
+### RUN-20261031-03 — culture selector options
+
+- REG-013: FAIL, owner-reported. Both culture lookup controls show Item 1/2/3
+  rather than the expected catalogue labels during the requested preview check.
+- App editing/preview version not recorded; no screenshot or Items expression
+  inspected. Sample/default control binding is suspected, not a proven cause.
+- Proposed correction: select the control inside each culture card, inspect Items,
+  and bind it to Choices of the corresponding Participants culture lookup; use
+  Value as the display field for classic lookup combo boxes. Retest pending.
+- No successful culture selection, save/reopen, flow validation or published
+  app behavior is established by this run.
+
+### RUN-20261031-04 — culture selector retest
+
+- Owner reports the lookups are now correct after the supplied Items/display
+  binding changes. The reported Item 1/2/3 display issue is resolved in preview.
+- REG-013 label-display portion: PASS, owner-reported. Multiple selections and
+  stored lookup persistence were not explicitly confirmed; full case remains
+  pending those checks. Earlier failed run is retained above.
+- No published app version or submission-flow version recorded. REG-002/003/007
+  save/reopen and REG-005 empty-input blocking remain unverified.
+
+### SETUP-20261031-07 — registration control names
+
+- Owner confirms the four Combo box controls were renamed to cmbTeachLanguages,
+  cmbLearnLanguages, cmbShareCultures and cmbLearnCultures as instructed.
+- No new save, validation or persistence result confirmed. Next: configure the
+  Save OnSelect all-four-empty guard and test REG-005 without submitting data.
+
+### RUN-20261031-05 — empty-selection save guard
+
+- REG-005 form/Preview portion: PASS, owner-reported. Following the supplied Save
+  OnSelect formula, clearing all four language/culture selections and clicking
+  Save shows the validation message and keeps the form open as expected.
+- The instruction included cancelling the temporary edit. No SharePoint write
+  audit, published app version or backend validation run was independently observed.
+- This does not prove server-side rejection of invalid direct-list input. Culture
+  save/reopen, optional blank Time zone, multi-selection persistence, inactive-ID
+  checks and submission-flow create/edit validation remain unverified.
+- Next prerequisite: inspect the actual participant-submission trigger and current
+  validation actions before changing edit handling or its update-loop guard.
+
+### SETUP-20261031-08 — submission trigger inspected
+
+- Owner confirms the existing Tandem – Participant submission trigger is When an
+  item is created. This trigger alone does not revalidate profile edits.
+- No trigger change performed/confirmed. Inspect current Compose/Condition/Update
+  item structure and design/test a guard against self-triggered Status updates
+  before adopting created-or-modified validation. Create/edit acceptance pending.
+
 ## New run template
 
 Copy this section for an execution. Record one row per case (or split a case into

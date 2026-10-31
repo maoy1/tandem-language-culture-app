@@ -26,7 +26,7 @@ Owner-confirmed catalogue import does not establish participant form/flow accept
 | Ticket | Aligned scope |
 |---|---|
 | #2/#3/#4 | Completed initial baseline. Preserve prior evidence; do not reopen just to describe target fields |
-| #5 | In progress in draft PR #52: catalogue setup reported complete; participant culture lookups not visible in latest screenshot, Time zone still required. Finish columns/app/flow and live acceptance. No size preference or Comments notice. See POC_05_CULTURE_REGISTRATION.md |
+| #5 | In progress in draft PR #52: catalogue/columns and saved culture cards owner-confirmed; lookup labels fixed; all-four-empty Save guard passes in Preview. Persistence, published behavior and backend/create-edit flow validation remain unverified. No size preference or Comments notice. See POC_05_CULTURE_REGISTRATION.md |
 | #6 | Participation Active/Paused/Inactive independent of validation and migration confirmation; open-to-connections; never reactivate a paused participant through validation |
 | #7/#9 | Compatible people only; language/culture/combined fit and status/open filters. Exact display fields pending; participant fields generally eligible, admin/system-only columns excluded. No Comments notice. Blank time zone never excludes a candidate |
 | #8 | Later ranking; remove as dependency for group discovery. No required automatic location/time-zone derivation |

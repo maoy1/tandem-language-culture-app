@@ -22,6 +22,11 @@ remaining decisions. This ticket uses only the approved registration subset.
 
 These are one-time setup checks. Ordinary registration needs no admin approval.
 
+Owner inspection confirms the current submission trigger is **When an item is
+created** (SETUP-20261031-08). Edit revalidation is not established. Inspect the
+existing branches and status writes before switching triggers; configure and test
+loop prevention along with the culture/optional-time-zone validation update.
+
 ## Suggested starter culture values — review before import
 
 [culture_catalogue_proposal.json](../config/culture_catalogue_proposal.json)

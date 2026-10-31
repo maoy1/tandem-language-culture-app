@@ -100,6 +100,7 @@ only a success message. Use the currently published test app.
 | REG-010 | Inspect registration controls | No participant group-size-preference field and no proposed Comments notice |
 | REG-011 | Existing/imported invalid record; correct editable inputs and save | Revalidation succeeds without ordinary admin approval; no premature discovery before valid |
 | REG-012 | Submit twice or retry an interrupted create | At most one profile per company account; understandable result |
+| REG-013 | Open each culture selector in Edit/New mode after refresh | Both show Culture catalogue labels rather than sample Item 1/2/3, and allow multiple selections; inactive-value handling is separately REG-008 |
 
 ## Participation and availability
 
