@@ -10,6 +10,13 @@ Registration, updates, joining, discovery and connecting must be self-service.
 No routine admin approvals, per-person grants, manual participant account
 creation, manual matching or manual group maintenance may be required.
 
+These restrictions apply to ordinary operations in this trusted internal app.
+Critical or exceptional cases may involve necessary admin approval, correction
+or assistance. Minimize admin workload as participation grows; do not make every
+new user or ordinary action a manual task. This permits exceptional intervention
+without changing the agreed own-profile access rules or adding a routine approval
+workflow.
+
 Every permission, setting, connector, connection, licence or configuration
 prerequisite must be flagged to the owner and verified before dependent work.
 Record one-time setup separately from recurring maintenance; neither is

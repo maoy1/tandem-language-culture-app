@@ -1,0 +1,31 @@
+{
+  "verificationStatus": "basic_chat_scenarios_owner_confirmed_full_fixture_not_replayed",
+  "ownerVerification": {
+    "date": "2026-10-31",
+    "source": "owner confirmation during guided manual Power Automate testing",
+    "passed": ["Compose object/array", "five-profile eligibility filtering", "reciprocal/one-way Select output", "teach-only profile", "current profile Needs review returns empty"],
+    "notVerified": ["exact full six-profile fixture", "null-handling fragment", "malformed input rejection", "SharePoint data", "Power Apps trigger/response", "authorization", "pagination/scale"]
+  },
+  "myProfile": {"profileId": 1, "accountId": "synthetic-a", "status": "Active", "teachIds": [1], "learnIds": [2]},
+  "candidates": [
+    {"profileId": 1, "accountId": "synthetic-a", "status": "Active", "teachIds": [2], "learnIds": [1]},
+    {"profileId": 2, "accountId": "synthetic-b", "status": "Active", "teachIds": [2], "learnIds": [1]},
+    {"profileId": 3, "accountId": "synthetic-c", "status": "Active", "teachIds": [2], "learnIds": []},
+    {"profileId": 4, "accountId": "synthetic-d", "status": "Needs review", "teachIds": [2], "learnIds": [1]},
+    {"profileId": 5, "accountId": "synthetic-e", "status": "Active", "teachIds": [3], "learnIds": []},
+    {"profileId": 6, "accountId": "synthetic-f", "status": "Active", "teachIds": [], "learnIds": [1]}
+  ],
+  "expectedCandidateFit": [
+    {"profileId": 2, "canLearnIds": [2], "canTeachIds": [1], "reciprocal": true},
+    {"profileId": 3, "canLearnIds": [2], "canTeachIds": [], "reciprocal": false},
+    {"profileId": 6, "canLearnIds": [], "canTeachIds": [1], "reciprocal": false}
+  ],
+  "additionalScenarios": [
+    {"change": "myProfile.learnIds = []", "expectedProfileIds": [2, 6], "expectedReciprocal": false},
+    {"change": "myProfile.status = Needs review", "expectedProfileIds": []},
+    {"change": "myProfile = null", "expectedProfileIds": []},
+    {"change": "candidates = []", "expectedProfileIds": []},
+    {"change": "candidate teachIds and learnIds are null", "expected": "that candidate is excluded"},
+    {"change": "duplicate account IDs or non-integer catalogue IDs at normalization", "expected": "reject malformed input before eligibility"}
+  ]
+}

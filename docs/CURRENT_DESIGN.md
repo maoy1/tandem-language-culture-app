@@ -22,8 +22,39 @@ Every implementation ticket must:
 
 ## Product boundary
 
-All participant actions must be self-service: no routine admin approvals,
-per-person grants, manual matching or manual group maintenance. Flag any needed
+Mandatory budget/runtime constraint: production uses only SharePoint and the
+associated Power Apps/Power Automate capabilities covered by existing licences.
+No new paid licences, trials, premium/custom connectors, external services,
+Azure hosting, Python server or local scheduled script may be required. If the
+tenant cannot meet a requirement within that boundary, report the constraint
+before implementation rather than adding infrastructure. Local Python validation
+is optional developer tooling and never part of participant operation.
+
+Implementation session decision (2026-10-31): normal-participant access tests are
+deferred by the owner. Site Members are trusted administrators; their inherited
+access is expected, and ordinary-user access is not yet established. Continue
+core development with owner/synthetic data while #18 remains open.
+
+Initial discovery eligibility uses the existing Active status and catalogue
+language IDs. Either exchange direction qualifies, including teach-only users;
+both directions identify a reciprocal suggestion. Exclude self and non-Active
+profiles. There is no separate open-to-connections field yet. Ranking, published
+candidate fields and authorized tenant integration are later delivery items.
+Implement eligibility with built-in Power Automate data operations; see
+`config/discovery_eligibility.json` and `src/README.md`. The action fragment and
+synthetic scenarios are prepared. The owner confirmed basic synthetic Compose,
+Filter array, Select, teach-only and Needs review scenarios in Power Automate on
+2026-10-31; SharePoint/Power Apps integration and broader access remain untested.
+
+This is a trusted internal app. Ordinary participant actions are self-service:
+routine use must not depend on admin approvals, per-person grants, manual
+matching or manual group maintenance. Admin effort should not grow per ordinary
+registration or search as participation expands. Critical or exceptional cases
+may require necessary admin approval, access correction, assistance or other
+intervention. Keep those exceptions explicit and proportionate, without routing
+ordinary actions through an approval queue. Agreed identity/privacy rules remain.
+This decision permits exceptional support; it does not introduce a new mandatory
+approval workflow or define automatic critical-case criteria. Flag any needed
 permission, setting, connector, connection, licence or configuration to the owner
 and verify it before dependent implementation. Identify one-time setup and
 recurring operational maintenance separately and upfront.

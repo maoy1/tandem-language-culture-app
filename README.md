@@ -19,6 +19,14 @@ repository is reference material only.
 
 ## Working method
 
+Production is SharePoint + Power Apps + Power Automate within existing licences:
+no additional hosting budget, paid service, premium/custom connector, trial or
+Python application runtime. Ordinary participant workflows must be self-service,
+with minimal admin effort as participation grows. Critical or exceptional cases
+may involve necessary admin approval or intervention; routine actions do not.
+Flag and verify permissions, connections, licences and settings before relying
+on them. Necessary one-time setup and exceptional maintenance must be explicit.
+
 1. Select the next GitHub issue from the POC Vertical Slice milestone.
 2. Implement only that issue and its acceptance criteria.
 3. Run the automated checks and update the relevant documentation.
@@ -41,6 +49,8 @@ alignment of the existing GitHub tickets with the current design.
 ## Local Python environment
 
 The repository uses the ignored `.venv` directory for local Python tools:
+
+These tools validate repository files; they do not host or run the deployed app.
 
 ```bash
 source .venv/Scripts/activate

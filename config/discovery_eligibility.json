@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "status": "power_automate_core_specification_not_deployed",
+  "executionPlatform": "Power Automate",
+  "additionalBudgetAllowed": false,
+  "inputContract": {
+    "My_profile": "Compose: trusted server-resolved profile or null",
+    "Candidate_profiles": "Compose: normalized trusted candidate array",
+    "profileShape": {
+      "profileId": "SharePoint item ID; internal processing only",
+      "accountId": "canonical stable account identity; not accepted from app input",
+      "status": "SharePoint Status choice value",
+      "teachIds": "array of integer Language catalogue lookup IDs",
+      "learnIds": "array of integer Language catalogue lookup IDs"
+    }
+  },
+  "actions": {
+    "Eligible_candidates": {
+      "type": "Query",
+      "inputs": {
+        "from": "@coalesce(outputs('Candidate_profiles'), json('[]'))",
+        "where": "@and(equals(outputs('My_profile')?['status'], 'Active'), not(empty(outputs('My_profile')?['accountId'])), equals(item()?['status'], 'Active'), not(empty(item()?['accountId'])), not(equals(item()?['accountId'], outputs('My_profile')?['accountId'])), or(not(empty(intersection(coalesce(outputs('My_profile')?['learnIds'], json('[]')), coalesce(item()?['teachIds'], json('[]'))))), not(empty(intersection(coalesce(outputs('My_profile')?['teachIds'], json('[]')), coalesce(item()?['learnIds'], json('[]')))))))"
+      },
+      "runAfter": { "Candidate_profiles": ["Succeeded"] }
+    },
+    "Candidate_fit": {
+      "type": "Select",
+      "inputs": {
+        "from": "@body('Eligible_candidates')",
+        "select": {
+          "profileId": "@item()?['profileId']",
+          "canLearnIds": "@intersection(coalesce(outputs('My_profile')?['learnIds'], json('[]')), coalesce(item()?['teachIds'], json('[]')))",
+          "canTeachIds": "@intersection(coalesce(outputs('My_profile')?['teachIds'], json('[]')), coalesce(item()?['learnIds'], json('[]')))",
+          "reciprocal": "@and(not(empty(intersection(coalesce(outputs('My_profile')?['learnIds'], json('[]')), coalesce(item()?['teachIds'], json('[]'))))), not(empty(intersection(coalesce(outputs('My_profile')?['teachIds'], json('[]')), coalesce(item()?['learnIds'], json('[]'))))))"
+        }
+      },
+      "runAfter": { "Eligible_candidates": ["Succeeded"] }
+    }
+  },
+  "deploymentNote": "Only an action-definition fragment. Not an importable flow package or authorization endpoint. Tenant connections, identity, normalization, bounds and app response are not configured here. See src/README.md."
+}
