@@ -49,7 +49,7 @@ approve the final result.
   - Human checkpoint: test the form once with a normal account and one second
     account.
 - [ ] **POC-18 — Private self-service registration** *(parent remains open)*
-  - [ ] #39 / POC-18A: check prerequisites and select the simplest supported approach. Next action; assessment only.
+  - [ ] #39 / POC-18A: assessment started. Inherited Participants Read/Edit roles and instant-flow connection modes observed. Applicable policy, intended-user entitlement, caller identity and self-onboarding are unverified; no-go for #40 yet.
   - [ ] #40 / POC-18B: prove own-record access using two accounts and synthetic data, after #39.
   - [ ] #41 / POC-18C: integrate the proven approach and verify registration, after #40 and before wider testing.
   - Close #18 only after A–C are delivered and verified. No architecture is selected yet.

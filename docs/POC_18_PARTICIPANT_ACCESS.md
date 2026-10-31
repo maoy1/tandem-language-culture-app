@@ -1,6 +1,6 @@
 # POC-18: self-service access in small steps
 
-Status: prerequisite assessment pending. No architecture is selected and no live
+Status: #39 assessment started; prerequisites remain incomplete. No architecture is selected and no live
 permissions or app connections have changed. #18 is the registration-access
 parent. This planning PR closes none of the access tickets.
 
@@ -112,3 +112,53 @@ this path before discovery rollout while private registration stays protected.
 
 No live access-control tests have passed. The working app still uses its
 documented direct-connector/filter baseline. PR #38 is planning only.
+
+## #39 assessment evidence — 2026-10-31
+
+Read-only browser inspection; no flows were created/run, no settings saved and
+no participant records opened. UI availability is not a successful permission test.
+
+| Check | Observation | Meaning |
+|---|---|---|
+| Actual Participants list | Settings identify the existing Participants list; it contains extra legacy/helper columns beyond the repository schema | Preserve current data; do not delete or migrate columns during assessment |
+| List permissions | Inherits parent permissions; Members have Edit, Visitors Read, Owners Full Control | Current inherited list roles do not enforce own-profile-only access; effective per-item access and group membership are not yet tested |
+| Permission tools | Stop Inheriting Permissions and Check Permissions are visible | Potential setup control exists; no change attempted and no assertion of effective change rights |
+| Existing environment | Power Automate default environment loads; existing Tandem submission and seed flows are listed | Maker can view existing flows; no conclusion about all participant capabilities |
+| Existing instant flow | Time-zone seed flow has a SharePoint connection and run-only settings; no run-only audience currently assigned | Reuse no existing seed flow for user access; its sharing is not a self-service proof |
+| Connection modes | SharePoint selector offers Provided by run-only user and Use this connection; current value is caller-provided | Configuration capability observed on an existing instant flow only; Power Apps-triggered behavior and secure caller identity remain unknown |
+| Current user's licences | My Licenses lists Power Automate for Office 365 and Free | No premium or all-user entitlement is established by this observation |
+| Policy visibility | Admin center allows viewing policies, explicitly denies policy creation/editing privileges, and hides non-owned environments from policy scope view | Applicable policy and allowed connector combinations cannot be established from this account's scope view |
+
+No personal identifiers, policy-owner names, tokens, employee rows or full tenant
+policy exports are included in this record.
+
+### Approach comparison and decision
+
+| Approach | Assessment result |
+|---|---|
+| Existing app filter/direct list permissions | Does not meet the agreed underlying access requirement |
+| Built-in creator-only list settings | Previously rejected by this tenant with unique columns; keep unique identity, do not retry by removing it |
+| Automatic per-item permission flow | No manual per-person grants in principle, but creation-window exposure, failure handling, identity protection and self-onboarding are unverified; not selected |
+| Private list with authenticated registration flows | Candidate for further assessment; requires verified caller identity, connector policy, audience/licensing, ownership and app changes; not selected |
+| Different backend/custom service | Adds permissions, hosting/licensing and operational requirements not yet available; no migration proposed |
+
+Decision: no-go for #40 yet. No approach has all prerequisites verified. The next
+check is factual confirmation of the applicable environment policy, connector
+combination and intended-user entitlements, not permission expansion.
+
+For the flow option, check SharePoint together with the proposed identity method
+(Office 365 Users if used), Power Apps-triggered run-only behavior, and a supported
+invocation-bound caller identity. Do not treat the connection-mode selector or
+an email input as proof. Confirm app/flow audience access permits self-onboarding
+without routine individual grants or manual group maintenance.
+
+One-time setup, if an approach is later selected: isolated proof resources,
+explicit audience/connection configuration, and eventually permission cutover
+with data preservation. Recurring dependencies to resolve first: connection
+ownership/renewal, flow failures and policy/licence changes. Do not imply zero
+operational maintenance or accept per-participant manual repair as normal use.
+
+Reference for interpreting connection modes:
+[Microsoft: run-only flow connections](https://learn.microsoft.com/en-us/power-automate/create-team-flows).
+This supports the feature description, not this tenant's policy, licensing or
+the security of an unbuilt registration flow.
