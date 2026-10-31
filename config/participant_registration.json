@@ -1,5 +1,6 @@
 {
-  "version": 1,
+  "version": 2,
+  "deploymentStatus": "poc05_pending_tenant_setup_and_tests",
   "list": "Participants",
   "identity": {
     "field": "ParticipantAccount",
@@ -23,6 +24,8 @@
       "ParticipantAccount",
       "TeachLanguages",
       "LearnLanguages",
+      "ShareCultures",
+      "LearnCultures",
       "TimeZone",
       "LearningFocus",
       "Comments"
@@ -31,5 +34,10 @@
       "Title",
       "Status"
     ]
+  },
+  "validation": {
+    "requireAnyOf": ["TeachLanguages", "LearnLanguages", "ShareCultures", "LearnCultures"],
+    "optionalCatalogueFields": ["TimeZone"],
+    "rejectInactiveSelections": true
   }
 }
