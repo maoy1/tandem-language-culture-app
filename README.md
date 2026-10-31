@@ -58,4 +58,5 @@ are complete. POC-02 includes the version-controlled Language and Time zone
 catalogues, local validation, tests, an Excel import template, and the manual
 tenant setup guide. POC-03 was delivered in merged PR #34 and issue #3 is closed.
 Issue #18 (participant access and privacy) is the next priority before wider
-testing or discovery; issue #4's language preferences follow that gate.
+testing or discovery. POC-04's language preferences passed the owner's acceptance
+checks on 2026-10-31; issue #4 closes when its completion PR merges.
