@@ -64,6 +64,20 @@ repository as tenant-specific identifiers.
 
 ## Acceptance test
 
+### POC-04 language verification — 2026-10-31
+
+The owner supplied a screenshot showing one profile with Learn languages =
+Dutch and Teach languages = English, Chinese, then confirmed that the saved
+values remained after reopening the app. This confirms persistence, multiple
+Teach selections, and simultaneous learner/sharer participation for that test.
+The schema defines both language fields as multi-value Language catalogue
+lookups, providing structured identifiers for future discovery.
+
+Still to verify in the tenant for issue #4: save and reopen with multiple Learn
+selections, and register/save a teach-only profile without requiring a Learn
+selection. These checks must be recorded before closing #4. This evidence does
+not complete issue #18's permission tests.
+
 Use two normal test accounts and one administrator account. Remove the test
 rows afterwards if they are not needed.
 
