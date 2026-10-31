@@ -16,7 +16,9 @@ Work proceeds in one small GitHub issue at a time:
 1. Choose the next issue and confirm its acceptance criteria.
 2. Make the change on a short-lived branch.
 3. Run automated checks and document any manual tenant step.
-4. Review the result together and merge when accepted.
+4. In the same PR, update this plan, backlog alignment, and affected design/setup documents. State completed work, remaining tenant checks, and the next issue.
+5. Review the result together and merge when accepted. Use `Closes #N` so GitHub closes the issue on merge; keep incomplete acceptance work in an open follow-up.
+6. After merge, verify the PR is merged and the issue is closed, then reconcile the plan before starting another ticket. Do not call a tenant check complete without recorded evidence.
 
 Automation should handle tests, schema validation, and diagnostic summaries.
 The owner should only need to decide product behavior, perform the documented
@@ -35,7 +37,7 @@ approve the final result.
   - Human checkpoint: create and configure the lists in the approved tenant,
     including the Language and Time zone catalogues, lookup fields, indexes,
     and participant-form settings.
-- [ ] **POC-03 — Participant self-registration** *(implementation in progress)*
+- [x] **POC-03 — Participant self-registration** *(issue #3 closed; PR #34 merged)*
   - Let an authenticated colleague create and update their own profile.
   - Use Power Apps to lock the unique Participant account to the signed-in
     user, and expose the Time zone catalogue as a dropdown.
@@ -43,6 +45,10 @@ approve the final result.
     app filter is not row-level SharePoint security.
   - Human checkpoint: test the form once with a normal account and one second
     account.
+- [ ] **POC-18 — Participant access and privacy** *(next priority; before wider testing and discovery)*
+  - Agree which profile fields others may read and enforce own-profile edits at the data source.
+  - Verify access using two normal accounts, including direct list access; record the result before wider rollout.
+  - This ticket is open. The app filter alone does not meet this gate.
 - [ ] **POC-04 to POC-06 — Profile data and participation status**
   - Add controlled language preferences, profile context, and Active/Paused/
     Inactive behavior.
@@ -80,10 +86,15 @@ report, or documented repeatable step.
 
 ## Current focus
 
-POC-03 is the current focus. Its registration contract, Power Apps form, and
-Teams sharing setup must follow
+POC-03 was delivered in merged PR #34 and issue #3 is closed. Its registration
+contract, Power Apps form, and Teams sharing setup are documented in
 [POC_03_PARTICIPANT_SELF_REGISTRATION.md](POC_03_PARTICIPANT_SELF_REGISTRATION.md).
 POC-02 is complete. Its schema and manual setup must follow
 [CURRENT_DESIGN.md](CURRENT_DESIGN.md), especially the current Participants
 schema, the required Time zone catalogue, and the removal of the Culture and
 Location catalogues.
+
+Next: resolve issue #18's access/privacy design and implementation before wider
+testing or discovery. Then verify and finish issue #4's language preferences.
+The first restart check should recheck live registration and sharing; repository
+completion does not certify the current tenant configuration.

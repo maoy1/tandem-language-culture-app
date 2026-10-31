@@ -475,18 +475,20 @@ create_issue \
 
 create_issue \
   "POC-18" \
-  "Protect participant profile edits" \
-  "priority:P1" \
+  "Protect participant access and privacy before wider rollout" \
+  "priority:P0" \
   "type:feature" \
   "area:permissions" \
   "epic:security" \
   "no" \
   "POC-03" \
-  "Implement own-profile editing while preserving read access required for discovery." \
+  "Resolve participant access and privacy before wider testing or discovery; retain the unique Participant account requirement." \
   "Participant can edit their own participant record." \
   "Participant cannot edit another participant's profile." \
   "Admin can edit all profiles." \
-  "Discoverable participant information remains readable as required."
+  "Define the fields readable for discovery and the private profile fields; enforce that boundary at the data source." \
+  "Verify two normal accounts and administrator access, including direct SharePoint list access." \
+  "Record tenant evidence and outstanding risks; app filtering alone does not satisfy this ticket."
 
 create_issue \
   "POC-19" \
