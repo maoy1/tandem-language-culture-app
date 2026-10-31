@@ -42,7 +42,9 @@ profiles. There is no separate open-to-connections field yet. Ranking, published
 candidate fields and authorized tenant integration are later delivery items.
 Implement eligibility with built-in Power Automate data operations; see
 `config/discovery_eligibility.json` and `src/README.md`. The action fragment and
-synthetic scenarios are prepared, not deployed or tenant-tested.
+synthetic scenarios are prepared. The owner confirmed basic synthetic Compose,
+Filter array, Select, teach-only and Needs review scenarios in Power Automate on
+2026-10-31; SharePoint/Power Apps integration and broader access remain untested.
 
 This is a trusted internal app. Ordinary participant actions are self-service:
 routine use must not depend on admin approvals, per-person grants, manual

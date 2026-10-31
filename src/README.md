@@ -11,7 +11,8 @@ Local Python schema validators are development tools only.
 (`Eligible_candidates`) and Select (`Candidate_fit`). It is an action-definition
 fragment and expression reference, not an importable flow or deployed feature.
 `tests/fixtures/discovery_flow_cases.json` supplies synthetic inputs and expected
-results. Those scenarios have not yet been executed in Power Automate.
+results. The owner has verified the basic five-profile scenarios below in a
+manually triggered Power Automate flow; additional fixture cases remain pending.
 
 Power Automate hosts these actions. After integration, the user's Discovery
 button invokes the flow; no one runs a script or approves each search. A trusted
@@ -42,7 +43,7 @@ or deploy a new service merely to follow this guide.
 
 ## Build steps after prerequisites pass
 
-1. Create an isolated Power Apps-triggered test flow. First use only synthetic
+1. Create an isolated manually triggered test flow. First use only synthetic
    Compose inputs to verify the rule actions; this does not prove authorization.
 2. Name two Compose actions `My_profile` and `Candidate_profiles`. Make the second
    follow the first so both outputs exist before filtering. Set their inputs to
@@ -78,11 +79,26 @@ eligibility exclusion. No new open-to-connections field is introduced.
 
 ## Validation and remaining work
 
-This PR removes the unhosted Python implementation. Its former 26-test result
-does not validate the replacement Power Automate expressions. Only JSON structure
-and repository consistency have been checked. #7 remains open until the actual
-flow, normalization, authorized response and Power Apps integration pass tenant
-tests. No production flow export exists yet.
+Owner-reported tenant checks on 2026-10-31:
+
+| Check | Confirmed result |
+|---|---|
+| Two Compose actions with five synthetic profiles | Succeeded |
+| Active learner/sharer filtering | Only test-b and test-c remain; self, Needs review and incompatible candidates excluded |
+| Select fit projection | Reciprocal profile 2 and one-way profile 3 match expected values |
+| Teach-only current profile | Only profile 2 remains, canTeachIds = [1], reciprocal = false |
+| Current profile Needs review | Filter and Select return empty arrays |
+
+These are owner-confirmed manual runs of the expressions supplied in chat, not
+an exported production flow or automated replay of the full repository fixture.
+The chat expressions use non-null ID arrays; the fragment's null-handling paths,
+extra profile 6, malformed-input rejection, pagination and scale remain untested.
+The manual trigger proves these data operations work for the owner's synthetic
+test, not Power Apps connectivity, all-user licensing or authorization.
+
+The former Python test result does not validate this flow. #7 remains open until
+trusted SharePoint normalization, an authorized response and Power Apps integration
+pass tenant tests. No production flow export exists yet.
 
 Sources: [data operations](https://learn.microsoft.com/en-us/power-automate/data-operations),
 [expression reference](https://learn.microsoft.com/en-us/azure/logic-apps/workflow-definition-language-functions-reference),

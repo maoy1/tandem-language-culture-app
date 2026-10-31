@@ -116,8 +116,11 @@ finishing code does not establish a working end-to-end deployed app.
 Runtime correction: discovery runs in Power Automate using built-in operations
 and the existing SharePoint connector. PR #44 now contains an action-definition
 fragment and synthetic tenant scenarios, not an unhosted Python implementation.
-The flow still needs verified prerequisites, trusted data normalization, actual
-tenant configuration and app integration. Do not claim the old Python tests
+Basic synthetic Compose/Filter/Select, teach-only and Needs review tests were
+confirmed by the owner in Power Automate on 2026-10-31. The integrated flow still
+needs verified prerequisites, trusted SharePoint normalization and Power Apps
+configuration. Null/malformed data, pagination and access tests remain pending.
+Do not claim the old Python tests
 validate this replacement. No additional budget, premium/custom connectors or
 external hosting is permitted; no routine admin action per participant/search.
 
