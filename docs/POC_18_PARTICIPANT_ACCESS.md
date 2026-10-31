@@ -1,120 +1,114 @@
-# POC-18: private registration and controlled discovery
+# POC-18: self-service access in small steps
 
-Status: design and tenant feasibility work in progress. No tenant permissions
-or application connections have been changed by this document. Issue #18 stays
-open until implementation and two-account acceptance tests pass.
+Status: prerequisite assessment pending. No architecture is selected and no live
+permissions or app connections have changed. #18 is the registration-access
+parent. This planning PR closes none of the access tickets.
+
+## Operating rules
+
+Registration, updates, joining, discovery and connecting must be self-service.
+No routine admin approvals, per-person grants, manual participant account
+creation, manual matching or manual group maintenance may be required.
+
+Every permission, setting, connector, connection, licence or configuration
+prerequisite must be flagged to the owner and verified before dependent work.
+Record one-time setup separately from recurring maintenance; neither is
+implicitly approved. Unknown prerequisites block dependent implementation.
+Owner decisions, explicitly identified one-time setup and acceptance testing
+remain human checkpoints. Connection ownership, renewal and other recurring
+operational dependencies must be disclosed before selecting an approach.
 
 ## Agreed behavior
 
-- My registration returns only the signed-in participant's profile.
-- Participants create and update only their own profile; no participant delete.
-- Direct SharePoint access must not expose other profiles or permit editing them.
-- Clicking Discovery requests eligible candidates through a separate controlled
-  operation. Eligibility and candidate presentation belong to #7–#9.
-- Administrators retain access to all profiles.
-- Keep the unique Participant account field. Do not introduce a public directory,
-  extra discovery list, or a private-Comments requirement without a new decision.
+- Registration exposes only the authenticated person's profile for create/read/update.
+- Direct SharePoint list/item/API access cannot expose or change other profiles.
+- Keep unique Participant account; administrators retain access.
+- Clicking Discovery returns eligible candidates through a controlled operation.
+- No public directory, extra discovery list or private-Comments classification
+  is approved. Candidate fields will be agreed during discovery.
 
-The candidate response fields still need agreement in the discovery tickets.
-Until then no candidate records are returned. This does not impose a new
-private/public classification on Comments or Learning focus.
+## Delivery sequence
 
-## Proposed implementation to validate in the tenant
+| Stage | Ticket | Outcome | Timing |
+|---|---|---|---|
+| A | [#39: prerequisites](https://github.com/maoy1/tandem-language-culture-app/issues/39) | Establish the simplest supported approach and its exact setup needs | Next; assessment only |
+| B | [#40: two-user proof](https://github.com/maoy1/tandem-language-culture-app/issues/40) | Two users automatically access only their own synthetic record | After A passes |
+| C | [#41: registration integration](https://github.com/maoy1/tandem-language-culture-app/issues/41) | Apply the proven approach and retest the existing form | After B; before wider testing |
+| D | [#42: discovery access](https://github.com/maoy1/tandem-language-culture-app/issues/42) | Return candidates without granting general participant-list access | With #7–#9, after C |
 
-Use authenticated Power Apps-triggered flows as the registration access path.
-The Participants list is accessible to administrators and the automation account;
-ordinary participants have no direct list access, including inherited group or
-sharing-link access. Catalogue lists remain readable by the app audience.
+One child ticket, branch and PR at a time. Update evidence, documents and
+pending tenant checks in the same PR. #18 closes after A–C are delivered and
+verified. D remains separately open until discovery integration passes; it is
+not required to finish private registration. A planning PR completes none of
+these implementation stages.
 
-The flow uses a controlled owner connection for SharePoint. Every profile
-operation resolves the authenticated caller, checks authorization, and returns
-only that caller's record. This avoids a post-create permission-change window
-and avoids managing a unique permission scope for every participant.
+## A: check before configuring
 
-This changes the current app: direct Participants galleries, lookup queries,
-SubmitForm, and Patch operations must be replaced for registration by calls to
-these flows. Existing language/time-zone catalogue controls can remain. Do not
-remove list access from the working app audience before the replacement has
-passed isolated tests and a cutover plan is ready.
+Inventory current app/list permissions and environment capabilities without
+changing the working app or reading other participants' data.
 
-This is a proposed architecture, not a deployable flow export. The tenant must
-prove caller identity, connector policies, sharing and licensing support first.
-If the tenant cannot support this securely, stop and choose another authenticated
-backend with the owner; do not fall back to app filtering or client-supplied email.
-
-## First tenant step: identity feasibility probe (no participant data)
-
-1. Create a test instant flow with the Power Apps (V2) trigger and no inputs.
-2. Add Office 365 Users **Get my profile (V2)**. Request only ID and user principal
-   name. Do not use Get user profile with an email passed from Power Apps.
-3. Configure its Office 365 Users connection as **Provided by run-only user**,
-   where supported by this trigger/environment. The identity action must never
-   silently use the automation owner's connection.
-4. Return the resolved identity to a temporary test app. Add the flow to that app.
-   Share the test app and flow with the two test accounts as users/run-only users,
-   not co-owners. No Participants list or owner SharePoint connection is needed.
-5. Run as A and B. Record the resolved Entra object IDs and confirm A resolves
-   to A, B to B, and neither resolves to the owner. Do not commit personal IDs.
-6. Confirm the connection is bound to the authenticated invocation, not merely
-   any supplied account connection. Reject mismatches with trusted invocation
-   identity. Where the tenant exposes no supported way to prove this binding,
-   treat the probe as incomplete and do not add elevated SharePoint operations.
-7. Verify normal users cannot edit the flow or inspect other users' run data.
-   Verify applicable tenant connector policies and user licensing with the admin.
-
-The Microsoft documentation supports run-only connection selection and the
-current-user profile action; it does not establish that this complete design
-works in this tenant. Record the actual outcome before the next phase.
-
-## Registration operations after the identity gate passes
-
-| Operation | Accepted app inputs | Server-side behavior |
+| Prerequisite | Current status | Evidence needed |
 |---|---|---|
-| Get my profile | None | Resolve caller; query by caller's canonical Participant account; return zero or one own profile |
-| Save my profile | Teach/learn lookup IDs, time-zone ID, learning focus, comments, optional concurrency token | Resolve caller; validate allowlisted values; create/update only the caller's record |
-| Discover candidates (later #7–#9) | Only approved bounded preferences | Resolve caller; load own profile; apply eligibility and ranking server-side; return approved candidate fields only |
+| Authenticated caller identity | Unknown | Supported caller identity method; no trust in an app-supplied email |
+| List/site permissions | Unknown | Available rights, inheritance, existing item shares |
+| Connectors and tenant policies | Unknown | Permitted connectors and restrictions in the actual environment |
+| User/automation licensing | Unknown | Entitlements required by each considered approach |
+| App/flow audience and self-onboarding | Unknown | New colleagues join without individual grants or manual group maintenance |
+| Setup and operational dependencies | Unknown | Exact settings, connection owners, renewal and maintenance requirements |
 
-Never accept a participant identity, owner email, arbitrary item ID, OData filter,
-field list, or arbitrary query as authorization. Use canonical identity resolved
-server-side; keep the object-ID-to-SharePoint-person mapping under server control.
-Updates find the caller's item server-side. Allowlist mutable fields; ignore no
-unexpected fields silently. Status is computed by validation, not chosen by the
-app. Reject unknown/inactive catalogue IDs. Preserve unique-account enforcement
-under concurrent creates and handle version conflicts without overwriting edits.
+Do not ask the owner to create a flow or change permissions until requirements
+are identified, flagged and checked. If a configuration experiment is needed
+to verify a capability, explain its purpose and prerequisites beforehand and
+keep it isolated from the working app and data.
 
-No generic participant-list/read-by-ID endpoint may be exposed to normal users.
-An invoked flow is a security boundary: calling it outside the app must enforce
-the same rules. Return minimal own-profile data and safe error messages; do not
-return SharePoint response bodies, all profiles, or owner credentials. Restrict
-flow ownership/run history and protect sensitive action inputs/outputs.
+Compare feasible approaches retaining unique identity. Authenticated flows
+in front of a private Participants list are one candidate, not the selected
+architecture: they can require changes to existing app reads/writes and add
+connection/licensing dependencies. An after-save permission flow must also be
+assessed for temporary exposure and permission failures. Neither is approved.
 
-An owner-created profile records the automation account in Created By. Do not
-use Created By as participant identity. The existing created-item status flow
-must be reviewed alongside the new save validation; edits also need validation.
+Finish A with a recommendation, verified prerequisite record and proceed/stop
+result. If nothing meets the self-service requirements, report the constraint
+before building a more complex workaround.
 
-## Cutover and acceptance (all pending)
+## B: one isolated proof
 
-Work in an isolated test list/app first, using synthetic data where possible.
+Using the verified approach, two normal accounts and synthetic data, prove
+caller identity, self-onboarding, own-record create/read/update and admin access.
+Try direct list/item/API access and tampered requests against the other record.
+Users must not gain flow ownership or other users' execution data.
+Do not change the working app. Record evidence and limits. Flag and verify any
+new configuration dependency before proceeding.
 
-- [ ] Identity probe passes with A and B and resists attempted identity substitution.
-- [ ] Get/save operations pass create, reopen, edit, multi-language and teach-only tests.
-- [ ] Tampered identity, another person's item ID, arbitrary queries and managed fields are rejected.
-- [ ] Catalogue validation, duplicate-create and concurrent-update failure cases are handled.
-- [ ] A and B cannot browse/read/write Participants via direct list, item link or API.
-- [ ] A gets only A's profile and B only B's, including when invoking flows outside the app.
-- [ ] Administrators and automation retain the intended access.
-- [ ] Existing records are preserved; inherited access and old item shares are audited.
-- [ ] Tenant permissions are restricted, the new app is published to the test audience,
-      and direct Participants connections/old app access paths no longer expose data.
-- [ ] Catalogue access and Teams/app/flow sharing work for a normal account.
-- [ ] Evidence is recorded without committing employee data or secrets.
+## C: integrate the proof
 
-Do not close #18 on a documentation PR. Implementation and tenant evidence must
-be reviewed first. If reverting to the old app, keep broad rollout paused rather
-than restoring broad list read/write access as an automatic fallback.
+Preserve records, unique identity and catalogue selections. Apply only the proven
+access approach. Recheck save/reopen, multiple Teach/Learn selections, simultaneous
+learner/sharer use and teach-only saving. Reject tampered identities and managed
+fields; handle duplicate creates and update conflicts. Check inherited access,
+old shares and old app paths cannot bypass protection.
 
-## Sources
+Record cutover/recovery setup upfront and verify two normal accounts plus admin.
+Registration must never routinely need per-person permission repair or approval.
+Update the registration contract when the implemented path replaces the baseline.
+Keep broader rollout paused until tenant evidence passes and is accepted.
 
-- [Microsoft: share a cloud flow and configure run-only connections](https://learn.microsoft.com/en-us/power-automate/create-team-flows)
-- [Microsoft: Office 365 Users connector, Get my profile (V2)](https://learn.microsoft.com/en-us/connectors/office365users/)
-- [Microsoft: SharePoint list permissions and inheritance](https://support.microsoft.com/en-us/sharepoint/lists/sharepoint-sharing-and-permissions/customize-permissions-for-a-sharepoint-list-or-library)
+## D: candidate access during discovery
+
+Reuse eligibility/ranking in #7–#9, not a second matching implementation.
+Agree candidate response fields there. Reject arbitrary identities, record IDs
+and queries that could reveal all profiles. Candidate presentation is read-only;
+search and connecting need no manual candidate grants or approvals. Verify
+this path before discovery rollout while private registration stays protected.
+
+## Evidence and status
+
+- [x] Own-profile registration and candidate-only discovery rules agreed.
+- [x] Stages A–D tracked in #39–#42.
+- [ ] A: prerequisites verified and approach selected.
+- [ ] B: isolated two-account proof passed.
+- [ ] C: registration integrated and tested; parent #18 ready for closure.
+- [ ] D: controlled discovery access tested with #7–#9.
+
+No live access-control tests have passed. The working app still uses its
+documented direct-connector/filter baseline. PR #38 is planning only.

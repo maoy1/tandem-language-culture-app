@@ -24,7 +24,11 @@ must be revised before implementation.
 | #6 | The current POC status choices are `Active` and `Needs review`. `Paused`, `Inactive`, and a separate “open to new connections” field require a later design decision before being added. |
 | #7 | Do not require an “open to new connections” field in the current POC. Base initial eligibility on approved participant status, languages, and selected time zone. |
 | #13 | Define the future Groups and Group Members schema before implementing group lifecycle. Do not add culture themes or participant role fields. |
-| #18 | In progress: registration exposes only the caller's profile, including direct list access. Discovery returns eligible candidates through a controlled operation (#7–#9). Proposed private Participants list plus authenticated flows; first prove caller identity in the tenant. No public directory or private-Comments split is approved. Keep open until implementation and two-account tests pass; see POC_18_PARTICIPANT_ACCESS.md. |
+| #18 | Parent for private self-service registration. Complete #39 (prerequisites), #40 (two-account proof), #41 (registration integration) before closing. Architecture is undecided. #42 (candidate access) is deferred to discovery #7–#9 and does not block registration completion. |
+| #39 | Next: flag and verify permissions, settings, connectors, connections and licences; choose a feasible approach requiring no routine admin intervention. Assessment only. |
+| #40 | After #39: isolated synthetic-data proof with two normal accounts; own-record access and self-onboarding must work automatically. |
+| #41 | After #40: integrate with registration, preserve data and retest; before wider testing. |
+| #42 | After #41, with #7–#9: controlled candidate access without general list access or manual per-candidate grants. |
 | #25 | Align tests with fields that actually exist. Tests for Paused, Inactive, or two-group behavior belong after their schema decisions are recorded. |
 | #29 | Define freshness fields and status behavior in `CURRENT_DESIGN.md` before implementing tracking. In particular, decide whether `LastConfirmedAt` and `Needs confirmation` are required. |
 
