@@ -95,6 +95,9 @@ schema, the required Time zone catalogue, and the removal of the Culture and
 Location catalogues.
 
 Next: resolve issue #18's access/privacy design and implementation before wider
-testing or discovery. Then verify and finish issue #4's language preferences.
+testing or discovery. Issue #4 can be verified with the owner's account or
+synthetic data in parallel: save/reopen persistence and multiple Teach selections
+were confirmed on 2026-10-31. Multiple Learn selections and teach-only saving
+remain to be checked; #4 stays open pending that evidence.
 The first restart check should recheck live registration and sharing; repository
 completion does not certify the current tenant configuration.
