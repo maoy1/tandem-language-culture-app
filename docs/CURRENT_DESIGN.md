@@ -5,6 +5,14 @@ Approved target behavior is not evidence that a field, flow or permission exists
 
 ## Authority and change control
 
+Owner priority update (2026-10-31): build the integrated Power Apps/Power Automate
+path through discovery, in-app requests, group/membership creation and notifications
+before resuming remaining detailed tests. Preserve evidence and incomplete tickets;
+no blanket validation pass or broader-release approval is implied. Prioritize the
+app/flows over setup automation. Notification selection, including possible use of
+Approvals, is discussed when that feature is built; central in-app experience is
+the owner's preference. Required backing data is bound at the relevant build step.
+
 - This file controls implementation decisions; IMPLEMENTATION_PLAN.md sets sequence and GitHub issues hold acceptance evidence.
 - Combined Requirements v0.2 under docs/reference is the reviewed input. The owner's subsequent annotations recorded below override conflicting draft passages and reviewer comments.
 - The old tandem_app repository and older DOCX files are reference material only.
@@ -202,11 +210,13 @@ ordinary user's access. The owner deferred colleague access testing; #18/#39–#
 remain open while work continues with owner/synthetic data. No access redesign
 is approved. Verify actual ordinary-user access before broader release.
 
-The current submission flow validates created profiles using language selection
-plus required time zone and writes baseline Status. That is a legacy baseline,
-not the approved target: time zone is optional. Revise for optional time zone, culture-only
-registration and must never reactivate a paused participant. Retest edits as
-well as creation. Existing baseline tests are preserved, not proof of the new MVP.
+The former submission flow used language selection plus mandatory time zone and
+rewrote identity from Created By. Owner-guided changes now use current item data,
+four-field language/culture presence, modified-event handling and change-only
+Status writes preserving identity. The Active no-op/correction/follow-up cases
+have scoped owner evidence; remaining cases, catalogue validation and full
+registration acceptance are deferred to the integrated test phase. Do not reset
+participation/openness through validation or treat old baseline tests as new-MVP proof.
 
 Confirmed target validation: the form blocks save if all four language/culture
 offer/interest fields are empty, with a clear correction message. Empty time zone
