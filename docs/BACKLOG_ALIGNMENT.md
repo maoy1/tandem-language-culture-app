@@ -2,7 +2,9 @@
 
 This file maps the existing backlog to the owner's latest annotations. GitHub
 is authoritative for live status. Approved target behavior is documented in
-CURRENT_DESIGN.md; schema/config JSON still describes the implemented baseline.
+CURRENT_DESIGN.md. Registration schema/policy JSON now describes the POC-05
+target, explicitly pending tenant setup/tests; Discovery JSON remains the earlier
+language-only baseline. Neither file certifies live deployment.
 
 ## Planning and new work
 
@@ -19,7 +21,7 @@ CURRENT_DESIGN.md; schema/config JSON still describes the implemented baseline.
 | Ticket | Aligned scope |
 |---|---|
 | #2/#3/#4 | Completed initial baseline. Preserve prior evidence; do not reopen just to describe target fields |
-| #5 | Controlled culture sharing/interests and culture-only registration; optional catalogue time zone, including validation changes. No participant group-size field or Comments notice |
+| #5 | In progress: schema/policy and local checks prepared; culture values, tenant setup, active-value checks and create/edit flow validation pending. Optional catalogue time zone; no participant size field or Comments notice. See POC_05_CULTURE_REGISTRATION.md |
 | #6 | Participation Active/Paused/Inactive independent of validation and migration confirmation; open-to-connections; never reactivate a paused participant through validation |
 | #7/#9 | Compatible people only; language/culture/combined fit and status/open filters. Exact display fields pending; participant fields generally eligible, admin/system-only columns excluded. No Comments notice. Blank time zone never excludes a candidate |
 | #8 | Later ranking; remove as dependency for group discovery. No required automatic location/time-zone derivation |

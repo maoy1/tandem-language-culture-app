@@ -24,6 +24,40 @@ as passed. Catalogue targets are NOT RUN unless specifically deferred/pending.
 | NOT-001 | REQUIREMENT PENDING | #49 must select event/channel/recipient behavior |
 | MIG-001–002 | DEFERRED | Actual Excel inspection/migration is final phase #48 |
 
+## Latest local checks
+
+### RUN-20261031-01 — POC-05 local configuration checks
+
+- Tester: agent; repository checks only, no tenant account used.
+- Branch: codex/issue-5-culture-registration; working tree for the POC-05 PR.
+- App/flow version: not applicable; neither was inspected or deployed.
+- Inputs: repository schema/policy and synthetic mutated configurations; no
+  employee data or live SharePoint calls.
+
+| Check | Actual result | Status | Scope |
+|---|---|---|---|
+| pytest, tests/test_sharepoint_schema.py | 22 passed | PASS | Schema/policy consistency and rejection of required optional fields, omitted offer/interest branches, wrong culture targets and disabled inactive-selection rule |
+| validate_schema.py | Schema is valid | PASS | Desired schema structure only |
+| validate_registration.py | Registration policy is valid | PASS | Desired form/policy agrees with schema |
+| git diff --check | No formatting errors | PASS | Working-tree text changes |
+| REG-001–009, REG-011–012 tenant scenarios | Not executed | NOT RUN | Culture values, prerequisites, actual form/flow changes and acceptance remain pending |
+
+The mutation tests cover configuration protections related to REG-002/003/005/
+006/008. They do not establish a live save, active-option filter, validation flow,
+edit-loop guard, authentication or discovery result. No cleanup was needed;
+no live records were created. Retest live scenarios after owner setup and record
+the app/flow versions separately.
+
+### RUN-20261031-02 — expanded culture proposal
+
+- Agent local check on codex/issue-5-culture-registration; no app/flow deployed.
+- PASS: culture_catalogue_proposal.json parses; all 85 display labels and keys
+  are unique; labels are alphabetically ordered; Active values are Boolean true;
+  proposal_pending_owner_review status is preserved.
+- PASS: git diff --check. No tenant records created or changed.
+- This validates proposal data structure only, not coverage approval, import,
+  active-option filtering or any REG acceptance scenario.
+
 ## New run template
 
 Copy this section for an execution. Record one row per case (or split a case into

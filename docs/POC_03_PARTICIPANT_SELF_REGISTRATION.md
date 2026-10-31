@@ -4,7 +4,10 @@ This document defines the registration contract for the Participants list.
 It records the tested language-registration baseline. Target v0.2 changes are
 tracked in #45/#46/#5/#6: culture-only and combined participation, independent
 participation/validation and optional time zone need implementation
-and fresh tenant tests. Existing JSON/schema remain the current baseline.
+and fresh tenant tests. JSON/schema now describe the desired POC-05 culture/optional
+time-zone delta, explicitly pending deployment; this historical evidence remains
+limited to the original language-registration baseline. Use
+[POC_05_CULTURE_REGISTRATION.md](POC_05_CULTURE_REGISTRATION.md) for the delta.
 The repository cannot change the SharePoint tenant, so the final list,
 Power Apps form, sharing, and Teams-tab settings are applied manually.
 

@@ -36,8 +36,10 @@ for approved rules and outstanding decisions; record executions in TEST_RUNS.md.
 | Synthetic flow | Controlled Compose/Filter/Select and business-flow cases | Authentication, real SharePoint normalization or published app |
 | Integrated tenant | Published app with actual test lists, flows and account roles | Other environments/versions without retesting |
 
-The existing schema JSON still describes the original required-time-zone baseline.
-New optional-time-zone/culture/status cases below are NOT RUN until implementation.
+The schema JSON describes the desired POC-05 culture/optional-time-zone delta,
+explicitly pending tenant setup/tests. Local checks do not exercise the live form.
+New optional-time-zone/culture/status cases below are NOT RUN until implemented
+and exercised at their specified layer.
 The old BASE tests retain their original scope; do not relabel them as new-MVP tests.
 
 ## Reusable fictional fixtures
