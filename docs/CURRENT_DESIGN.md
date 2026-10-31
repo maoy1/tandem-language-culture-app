@@ -22,6 +22,17 @@ Every implementation ticket must:
 
 ## Product boundary
 
+Implementation session decision (2026-10-31): normal-participant access tests are
+deferred by the owner. Site Members are trusted administrators; their inherited
+access is expected, and ordinary-user access is not yet established. Continue
+core development with owner/synthetic data while #18 remains open.
+
+Initial discovery eligibility uses the existing Active status and catalogue
+language IDs. Either exchange direction qualifies, including teach-only users;
+both directions identify a reciprocal suggestion. Exclude self and non-Active
+profiles. There is no separate open-to-connections field yet. Ranking, published
+candidate fields and authorized tenant integration are later delivery items.
+
 All participant actions must be self-service: no routine admin approvals,
 per-person grants, manual matching or manual group maintenance. Flag any needed
 permission, setting, connector, connection, licence or configuration to the owner

@@ -22,6 +22,7 @@ must be revised before implementation.
 | #4 | Acceptance verified by the owner on 2026-10-31: save/reopen persistence, multiple Teach and Learn values, simultaneous learner/sharer use, and teach-only saving all pass. Both fields are catalogue lookups in the schema, providing identifiers for future discovery. Close on completion PR merge; #18 still gates wider testing and discovery. |
 | #5 | Remove “culture interests” from the current participant profile. Keep only approved language/profile context; do not add unapproved fields to the current schema. Location/city may be considered later as an optional enhancement. |
 | #6 | The current POC status choices are `Active` and `Needs review`. `Paused`, `Inactive`, and a separate “open to new connections” field require a later design decision before being added. |
+| #7 | Core eligibility implemented against existing Active status and controlled language IDs; self excluded, one-way/reciprocal suggestions supported, including teach-only users. No new participation field. Authorized data adapter, app integration and #6 expansion remain pending; do not close on core tests alone. |
 | #7 | Do not require an “open to new connections” field in the current POC. Base initial eligibility on approved participant status, languages, and selected time zone. |
 | #13 | Define the future Groups and Group Members schema before implementing group lifecycle. Do not add culture themes or participant role fields. |
 | #18 | Parent for private self-service registration. Complete #39 (prerequisites), #40 (two-account proof), #41 (registration integration) before closing. Architecture is undecided. #42 (candidate access) is deferred to discovery #7–#9 and does not block registration completion. |
@@ -29,6 +30,11 @@ must be revised before implementation.
 | #40 | After #39: isolated synthetic-data proof with two normal accounts; own-record access and self-onboarding must work automatically. |
 | #41 | After #40: integrate with registration, preserve data and retest; before wider testing. |
 | #42 | After #41, with #7–#9: controlled candidate access without general list access or manual per-candidate grants. |
+
+Owner direction (2026-10-31): defer ordinary-colleague access testing and access
+redesign during today's implementation session. Admin-only Members access is
+expected; ordinary-user effective access remains untested. Continue core work
+using owner/synthetic data without closing #18 or its prerequisite tickets.
 | #25 | Align tests with fields that actually exist. Tests for Paused, Inactive, or two-group behavior belong after their schema decisions are recorded. |
 | #29 | Define freshness fields and status behavior in `CURRENT_DESIGN.md` before implementing tracking. In particular, decide whether `LastConfirmedAt` and `Needs confirmation` are required. |
 

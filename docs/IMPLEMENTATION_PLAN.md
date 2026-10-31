@@ -96,6 +96,21 @@ report, or documented repeatable step.
 
 ## Current focus
 
+### Owner-directed implementation session — 2026-10-31
+
+The owner deferred the normal-colleague access test until a tester is available.
+Keep #18 and #39–#42 open; do not spend this session on an access redesign.
+The owner clarified site Members are trusted admins. Their inherited access
+alone does not establish ordinary-participant exposure. Actual participant
+access remains untested; draft PR #43 is partial evidence, not an access verdict.
+
+Continue core implementation with owner/synthetic data. #5 optional profile
+enrichment stays deferred. Start #7 eligibility against current Active/Needs
+review status and language lookup IDs, without introducing an unapproved field.
+#6's expanded status design and live discovery integration remain pending.
+Record repository checks separately from Power Apps deployment and tenant tests;
+finishing code does not establish a working end-to-end deployed app.
+
 POC-03 was delivered in merged PR #34 and issue #3 is closed. Its registration
 contract, Power Apps form, and Teams sharing setup are documented in
 [POC_03_PARTICIPANT_SELF_REGISTRATION.md](POC_03_PARTICIPANT_SELF_REGISTRATION.md).
@@ -104,11 +119,11 @@ POC-02 is complete. Its schema and manual setup must follow
 schema, the required Time zone catalogue, and the removal of the Culture and
 Location catalogues.
 
-Next: resolve issue #18's access/privacy design and implementation before wider
-testing or discovery. Issue #4's owner-account checks all passed on 2026-10-31;
-PR #37 is merged and #4 is delivered. Issue #18 remains open and is the current
-implementation priority. Start with #39's prerequisite assessment; do not
-configure a replacement flow yet. #40 and #41 follow only after their gates pass.
-#42 is scheduled with discovery later. Optional profile enrichment remains deferred.
+Issue #4's owner-account checks passed and PR #37 is merged. Current implementation
+priority is #7's core eligibility with synthetic data. #18 and #39–#42 remain open
+but access investigation/testing is deferred by the owner until a colleague can
+test. Do not configure replacement flows now. Wider rollout still needs access
+verification; code work can proceed without declaring that requirement satisfied.
+Optional profile enrichment remains deferred.
 The first restart check should recheck live registration and sharing; repository
 completion does not certify the current tenant configuration.
