@@ -73,10 +73,14 @@ Teach selections, and simultaneous learner/sharer participation for that test.
 The schema defines both language fields as multi-value Language catalogue
 lookups, providing structured identifiers for future discovery.
 
-Still to verify in the tenant for issue #4: save and reopen with multiple Learn
-selections, and register/save a teach-only profile without requiring a Learn
-selection. These checks must be recorded before closing #4. This evidence does
-not complete issue #18's permission tests.
+The owner subsequently confirmed both remaining tenant checks passed: multiple
+Learn selections persist after save/reopen, and a teach-only profile saves with
+Learn languages empty. POC-04 acceptance is verified: controlled multi-value
+language preferences persist, one person can learn and share, and teaching does
+not require a learning selection. Catalogue lookup identifiers provide the data
+contract for future discovery; discovery behavior is covered by later tickets.
+Issue #4 can close when its completion PR merges. These checks do not complete
+issue #18's permission tests.
 
 Use two normal test accounts and one administrator account. Remove the test
 rows afterwards if they are not needed.

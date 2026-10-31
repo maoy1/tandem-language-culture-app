@@ -49,7 +49,11 @@ approve the final result.
   - Agree which profile fields others may read and enforce own-profile edits at the data source.
   - Verify access using two normal accounts, including direct list access; record the result before wider rollout.
   - This ticket is open. The app filter alone does not meet this gate.
-- [ ] **POC-04 to POC-06 — Profile data and participation status**
+- [x] **POC-04 — Structured language preferences** *(acceptance verified; closure on completion PR merge)*
+  - Catalogue-backed multi-value Teach/Learn fields are present in the schema.
+  - Owner confirmed persistence after reopening, multiple selections in both
+    fields, simultaneous learner/sharer use, and teach-only saving on 2026-10-31.
+- [ ] **POC-05 to POC-06 — Profile data and participation status**
   - Add controlled language preferences, profile context, and Active/Paused/
     Inactive behavior.
 - [ ] **POC-07 to POC-09 — Discovery**
@@ -95,9 +99,8 @@ schema, the required Time zone catalogue, and the removal of the Culture and
 Location catalogues.
 
 Next: resolve issue #18's access/privacy design and implementation before wider
-testing or discovery. Issue #4 can be verified with the owner's account or
-synthetic data in parallel: save/reopen persistence and multiple Teach selections
-were confirmed on 2026-10-31. Multiple Learn selections and teach-only saving
-remain to be checked; #4 stays open pending that evidence.
+testing or discovery. Issue #4's owner-account checks all passed on 2026-10-31;
+its completion PR closes #4 on merge. Issue #18 remains open and is the next
+implementation priority. Optional profile enrichment remains deferred.
 The first restart check should recheck live registration and sharing; repository
 completion does not certify the current tenant configuration.
