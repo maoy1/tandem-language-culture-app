@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "description": "Current SharePoint lists and fields required for the Tandem participant-registration POC.",
+  "description": "Implemented registration baseline. Approved MVP v0.2 culture/status/group targets are pending field contract #46 and implementation; see docs/CURRENT_DESIGN.md. This file does not claim target fields are deployed.",
   "lists": [
     {
       "name": "Language catalogue",

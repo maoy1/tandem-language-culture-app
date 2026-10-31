@@ -1,236 +1,186 @@
 # Current design source of truth
 
-This file records the current agreed product and SharePoint design for the
-Tandem proof of concept. It is the design reference for implementation work.
+This file records the approved MVP direction and the implemented baseline.
+Approved target behavior is not evidence that a field, flow or permission exists.
 
 ## Authority and change control
 
-- This file is the source of truth for the current schema and product decisions.
-- `docs/IMPLEMENTATION_PLAN.md` defines the delivery sequence.
-- GitHub issues define the work for each ticket and its acceptance criteria.
-- The old `tandem_app` repository and the DOCX files under
-  `docs/reference/` are reference material only.
-- If a new decision conflicts with this file, update this file in the same PR
-  before implementing the conflicting change.
+- This file controls implementation decisions; IMPLEMENTATION_PLAN.md sets sequence and GitHub issues hold acceptance evidence.
+- Combined Requirements v0.2 under docs/reference is the reviewed input. The owner's subsequent annotations recorded below override conflicting draft passages and reviewer comments.
+- The old tandem_app repository and older DOCX files are reference material only.
+- Update design, plan, affected ticket and setup evidence together on one ticket branch/PR.
+- Do not close an issue until its implementation and applicable tenant tests pass.
 
-Every implementation ticket must:
+## Fixed platform and operating constraints
 
-1. Read this file before changing the schema, flow, or user experience.
-2. State which sections it implements in the PR description.
-3. Avoid reintroducing anything listed under “Removed from the current design”.
-4. Update this file in the same PR when the product decision changes.
+Production is SharePoint with associated Power Apps/Power Automate under existing
+entitlements only. No paid hosting, standalone server, Azure Functions, external
+services, premium/custom connectors, new paid licences or trials as dependencies.
+Python remains optional local repository tooling, never a participant runtime.
 
-## Product boundary
+Ordinary internal-user actions are self-service. Admin effort must not grow per
+normal registration, search or request. Critical/exceptional cases may involve
+necessary approval, correction or assistance. Flag and verify permissions,
+settings, connections, connector policy, licences, one-time setup and recurring
+operational dependencies before relying on them.
 
-Mandatory budget/runtime constraint: production uses only SharePoint and the
-associated Power Apps/Power Automate capabilities covered by existing licences.
-No new paid licences, trials, premium/custom connectors, external services,
-Azure hosting, Python server or local scheduled script may be required. If the
-tenant cannot meet a requirement within that boundary, report the constraint
-before implementation rather than adding infrastructure. Local Python validation
-is optional developer tooling and never part of participant operation.
+## Approved v0.2 decisions
 
-Implementation session decision (2026-10-31): normal-participant access tests are
-deferred by the owner. Site Members are trusted administrators; their inherited
-access is expected, and ordinary-user access is not yet established. Continue
-core development with owner/synthetic data while #18 remains open.
-
-Initial discovery eligibility uses the existing Active status and catalogue
-language IDs. Either exchange direction qualifies, including teach-only users;
-both directions identify a reciprocal suggestion. Exclude self and non-Active
-profiles. There is no separate open-to-connections field yet. Ranking, published
-candidate fields and authorized tenant integration are later delivery items.
-Implement eligibility with built-in Power Automate data operations; see
-`config/discovery_eligibility.json` and `src/README.md`. The action fragment and
-synthetic scenarios are prepared. The owner confirmed basic synthetic Compose,
-Filter array, Select, teach-only and Needs review scenarios in Power Automate on
-2026-10-31; SharePoint/Power Apps integration and broader access remain untested.
-
-This is a trusted internal app. Ordinary participant actions are self-service:
-routine use must not depend on admin approvals, per-person grants, manual
-matching or manual group maintenance. Admin effort should not grow per ordinary
-registration or search as participation expands. Critical or exceptional cases
-may require necessary admin approval, access correction, assistance or other
-intervention. Keep those exceptions explicit and proportionate, without routing
-ordinary actions through an approval queue. Agreed identity/privacy rules remain.
-This decision permits exceptional support; it does not introduce a new mandatory
-approval workflow or define automatic critical-case criteria. Flag any needed
-permission, setting, connector, connection, licence or configuration to the owner
-and verify it before dependent implementation. Identify one-time setup and
-recurring operational maintenance separately and upfront.
-
-The MVP helps colleagues register language preferences, discover potentially
-compatible people or groups, and decide themselves whether to connect. The
-system may validate data, filter opportunities, rank suggestions, send
-notifications, and maintain status. It must not automatically decide that two
-people are a match or place them into a group without participant action.
-
-SharePoint is the operational database. Power Automate handles validation and
-enrichment. Later matching logic can read approved participant data and write
-proposed groups for review. A shared statistics page may show aggregated,
-non-identifying results to participants.
-
-## Current SharePoint schema
-
-### Language catalogue
-
-This is one of the controlled catalogues required by the current registration
-design.
-
-| Column | Type | Use |
+| Area | Decision | Delivery |
 |---|---|---|
-| Title | Single line text | Canonical language name |
-| ISO code | Single line text | Required, unique, and indexed ISO language code |
-| Aliases | Multiple lines | Search or display aliases |
-| Active | Yes/No | Allows a language to be retired without deleting history |
+| Time zone | Keep required single selection from the Time zone catalogue | Current baseline retained |
+| Location derivation | Lower priority; reconsider only when cheap and supported | Later; no profile-location dependency |
+| Discovery audience | Present compatible available profiles/groups, not all profiles | #7, #16, #42 |
+| Comments | Show Comments on compatible candidate profiles; warn users before save | #46 then #5/#7 |
+| Private organiser notes | Participant emails organisers; no new private-Comments split | Contact route to identify; separate from notification-channel decision |
+| Language groups | 1-to-1 or 1-to-2, meaning 2 or 3 people total | #12/#13 |
+| Culture groups | Up to 10 total members | Minimum not decided; combined-type capacity also needs agreement in #46 |
+| Participant status | Separate Active/Paused/Inactive participation from validation | #46 then #6 |
+| Culture-only participation | Supported; no mandatory language selection | #5/#7 |
+| Notifications | Evaluate options first; channel/event matrix not yet agreed | #49 then #21 |
+| Membership changes | Normal acceptance, membership and slot updates automatic | #11/#12/#17/#47 |
+| Exceptions | Necessary admin support permitted; avoid routine organiser matching | #13/#14 |
+| Excel import | Inspect/map/migrate at the end of implementation | #48; before launch if existing-data launch requirement remains |
+| Hosting | Standalone hosting alternative rejected under no-budget constraint | All tickets |
 
-Participants select languages from this catalogue through lookup fields. They
-may select multiple values in both language fields.
+## Implemented SharePoint baseline
 
-### Time zone catalogue
+config/sharepoint_schema.json and config/participant_registration.json describe
+the current registration baseline. They are not silently expanded by this plan.
 
-This catalogue is imported and maintained manually.
+Language catalogue: Title, required unique indexed ISOCode, Aliases, Active.
+Time zone catalogue: Title, required unique indexed IANAId, optional WindowsId,
+Active.
 
-| Column | Type | Use |
-|---|---|---|
-| Title | Single line text | Display label shown in Power Apps |
-| IANA ID | Single line text | Required, unique, and indexed canonical identifier |
-| Windows ID | Single line text | Optional compatibility identifier |
-| Active | Yes/No | Allows a time zone to be retired without deleting history |
+| Participants field | Current implementation |
+|---|---|
+| ParticipantAccount | Required unique single Person identity; locked to signed-in user in the app |
+| TeachLanguages / LearnLanguages | Multi-value Language catalogue lookups |
+| TimeZone | Required single Time zone catalogue lookup |
+| LearningFocus / Comments | Optional multiple-line text |
+| Status | Flow-managed validation baseline: Active / Needs review |
+| Title | Hidden technical text |
+| Created / Modified and authors | SharePoint system-managed columns |
 
-Participants select one active value through the Power Apps dropdown; they do
-not type a time zone.
+Do not introduce a participant-entered identity email. Migration email matching
+must resolve to the company account; decide mapping/duplicate handling in #46/#48.
+Do not delete existing tenant helper/legacy columns during planning.
 
-### Participants
+## Target fields and candidate exposure
 
-| Column | Type | Current rule |
-|---|---|---|
-| Title | System text | Hidden from the participant form; not user-maintained |
-| Participant account | Person or Group, single | Required and unique; authoritative identity |
-| Teach languages | Lookup to Language catalogue, multiple | Optional individually |
-| Learn languages | Lookup to Language catalogue, multiple | Optional individually |
-| Time zone | Lookup to Time zone catalogue, single | Required; selected in Power Apps |
-| Learning focus | Multiple lines | Optional context |
-| Comments | Multiple lines | Optional context |
-| Status | Choice, flow-managed | `Active` or `Needs review` in the current POC |
+Finalize exact types, requiredness, defaults, field ownership and exposure in #46
+before schema/form changes in #5/#6. These target fields are approved requirements
+but are not yet deployed:
 
-The participant form must not ask users to type an email address. The Person
-field is the identity source. A hidden email helper may be retained only if a
-later automation genuinely needs it; it must be populated by the flow and not
-be a participant input.
+- Controlled Cultures I can share and Cultures I am interested in, using a Culture
+  catalogue. This supersedes the earlier removal/deferment of controlled culture fields.
+- Preferred group size, with choices aligned to language/culture capacities.
+- Participant-controlled participation status Active / Paused / Inactive.
+- Open to new connections, separate from validation; exact interaction with open
+  group membership must be specified without inventing a second manual status.
+- Independent validation state and migration-confirmation state. Retaining the
+  existing Status as validation is an option to preserve flows; technical names
+  and transition/default rules are finalized in #46.
+- Group exchange type, capacity, Open/Closed/Ended state, authoritative membership
+  records and derived free slots. Waiting / In a group are derived from memberships.
 
-`Created` and `Modified` are SharePoint system columns. Leave them system
-managed; do not create replacement columns or require users to edit them.
+Culture-only validation must accept useful culture selections without requiring
+Teach/Learn languages. Culture discovery needs a genuine sharer; interest alone
+must not imply sharing expertise. Agree how combined interests are represented.
 
-### Future lists
+Comments are candidate-visible. Show before saving:
+“Your comments are shown to compatible participants in Discovery. For private
+information, email the organisers.”
+This is visibility to eligible discovery users, not public/internet publication
+or general list access. Identify a real organiser email route before publishing;
+do not invent an address or send mail automatically.
 
-These are later delivery items, not part of the initial participant setup:
+The candidate projection must be an explicit allowlist based on this project's
+field contract, not every field in an old Excel workbook. Comments are included;
+identity/name, language/culture preferences, time zone, focus and group context
+still need exact projection decisions in #46. Do not expose validation/migration
+flags, audit fields or other technical/admin metadata by default.
 
-- Matching Cycles
-- Groups
-- Group Members
-- Cycle Statistics
+## Discovery and baseline test evidence
 
-The statistics page should use aggregated values and avoid exposing the
-Participants list or personal details.
+The tested language baseline uses Active plus catalogue language IDs, excludes
+self/non-Active profiles and allows either exchange direction; both directions
+identify reciprocal fit. The owner confirmed synthetic Compose, Filter array,
+Select, teach-only and Needs review cases in Power Automate on 2026-10-31.
+config/discovery_eligibility.json remains that baseline, not the complete v0.2 rule.
 
-## Time-zone policy
+Before real-data integration, extend normalization and filtering for separate
+participation/validation, open-to-connections, culture-only/combined compatibility
+and compatible open groups with space. No assignments or memberships are created
+by discovery. Optional filters narrow compatible results, not a public directory.
 
-Participants choose one time zone from the controlled Time zone catalogue.
-This is the authoritative value for matching and reporting. Location or city is
-out of scope for the current POC. A later enhancement may add it as optional
-context, but it must not replace the controlled time-zone selection.
+Ranking by city/time zone/waiting time is Later (#8). Retain time zone for display;
+do not require derived location, paid services, AI suggestions or scheduling.
 
-## Participant submission flow
+## Requests and groups
 
-The current validation rule is:
+MVP includes connect/join requests, recipient/member accept or decline, and sender
+request-state visibility. Use Pending/Accepted/Declined/Cancelled where required;
+meet-first, expiry and bulk invitations remain Later. Recheck availability and
+capacity before acceptance. Unavailability cancellation details are specified
+in #10/#11 without implicitly enabling an unchosen notification channel.
 
-```text
-(Teach languages is not empty OR Learn languages is not empty)
-AND Time zone is not empty
-```
+Group creation/membership updates follow accepted participant actions.
+Language capacity is 2 or 3 total; culture capacity is at most 10. Do not infer
+a universal minimum of 3. Open/Closed/Ended is the target simple MVP group state;
+other lifecycle states and timers require a later decision. Active members may
+make permitted changes, with necessary admin override.
 
-Expected behavior:
+Normal membership counts and free slots update automatically. A departure remains
+self-service and preserves history; ambiguous group purpose/sharer recovery can
+use exceptional admin support. Do not close/end/disband or rejoin people
+automatically under unimplemented Later rules.
 
-- Trigger: SharePoint **When an item is created** on `Participants`.
-- If the rule is true, set `Status` to `Active`.
-- If the rule is false, set `Status` to `Needs review`.
-- Use the trigger's item ID when updating the item.
-- Validate that the selected time zone is an active catalogue value.
-- Do not use a file-content action or parse the language seed JSON in this
-  participant submission flow.
+#47 covers duplicate accepts, simultaneous last-slot joins, retries and partial
+multi-record failure. It is shared acceptance logic/testing for #11/#12/#17,
+not a second matching implementation. Ordinary successful processing is automatic.
 
-Language seed JSON is used only when importing or maintaining the Language
-catalogue. It is not the source of participant submissions.
+## Intake migration and notifications
 
-## Visibility and manual work
+Direct in-tool registration is the agreed intake. Do not implement a second
+Microsoft Forms sync. Existing Excel inspection/migration is the final phase
+(#48): preserve originals, resolve accounts, report ambiguous colours/statuses,
+duplicates and mappings, recreate confirmed memberships and record confirmation.
+Do not guess culture expertise from ambiguous historical interest text.
+Whether unconfirmed migrated profiles appear in discovery remains to decide.
 
-Participants should use the Power Apps form to register and maintain their own
-profile. The app filters its gallery to the signed-in user's unique
-Participant account and locks that control. The form shows the required time
-zone lookup.
+Notification options are undecided despite email-only statements in the draft.
+#49 must compare permitted existing email/Teams capabilities and agree recipient,
+event, privacy, reliability, retry and cost behavior before #21 implementation.
+At least request-received/request-answered are candidates to evaluate, not a
+silent commitment to every event in the source document.
 
-This app filter is a user-experience rule, not a SharePoint security boundary.
-Because Participant account remains unique, SharePoint's built-in item-level
-permission setting cannot be enabled. Users with direct list permissions may
-still see other rows in SharePoint. Strict row privacy requires a later custom
-permission flow or a data source with row-level security.
+## Access and release checks
 
-Issue #18 owns this access/privacy work and must be completed before wider
-testing or discovery. It must define which information is intentionally readable
-by others, protect private fields, enforce own-profile edits at the data source,
-and record two-account tests including direct SharePoint access. The technical
-approach is decided in that ticket; the unique identity requirement remains.
+Normal registration exposes only the caller's profile; discovery returns only
+approved compatible candidate details. An app filter alone is not authorization.
+Site Members are trusted admins; their inherited access does not establish an
+ordinary user's access. The owner deferred colleague access testing; #18/#39–#42
+remain open while work continues with owner/synthetic data. No access redesign
+is approved. Verify actual ordinary-user access before broader release.
 
-The agreed access boundary is now explicit: normal registration exposes only
-the caller's profile, including through direct SharePoint access. Discovery is
-a separate controlled operation returning eligible candidates, not list access.
-No private-Comments classification or public directory is approved.
+The current submission flow validates created profiles using language selection
+plus time zone and writes baseline Status. It must be revised for culture-only
+registration and must never reactivate a paused participant. Retest edits as
+well as creation. Existing baseline tests are preserved, not proof of the new MVP.
 
-No replacement architecture is selected yet. First assess prerequisites (#39),
-then prove own-record access in isolation (#40), then integrate registration
-(#41). These complete parent #18 only after verified evidence. Controlled
-candidate access (#42) follows with discovery #7–#9. Authenticated registration
-flows are one option to assess, not an instruction to configure them now.
-The current app-filter baseline remains unsuitable for wider rollout. Follow
-[the staged access plan](POC_18_PARTICIPANT_ACCESS.md).
+Go-live still needs data-policy review, field/exposure acceptance, actual
+permissions, request/capacity tests, selected notifications and migration evidence
+where existing participants/groups must be available at launch.
 
-Hide system and flow-managed fields from the participant form, including Title
-and Status. Do not expose the Participant account people picker for choosing
-another colleague.
+## Later or excluded
 
-Automation should handle validation, identity enrichment, time-zone lookup
-validation, status updates, notifications, and repeatable checks. People still
-decide whether to connect, accept or decline requests, arrange meetings, run
-the exchange, approve tenant changes, and handle exceptional cases.
+Later: automatic location/time-zone derivation, ranking, optional language level,
+freshness/reminders (#29/#30), dashboards/statistics (#31), detailed admin audit
+UI, needs-sharer timers, automatic departure recovery, bulk invitations, meet-first,
+request expiry and search-broadening advice. The earlier two-active-groups warning
+is not confirmed in v0.2; keep #15 for later review rather than silently require it.
 
-## Explicitly removed from the current design
-
-Do not add these back unless a new product decision is recorded in this file:
-
-- Culture catalogue
-- Location catalogue
-- Required native SharePoint Location input
-- Consent confirmed field
-- Participant Role field
-- Participant-entered Email as a required registration field
-
-Culture-related concepts may still appear in the older product reference
-documents, but they are not part of the current SharePoint registration
-schema.
-
-## Deferred optional profile enrichment
-
-After the registration and matching core is stable, a later ticket may add
-optional profile context such as city/location, culture interests, or other
-free-text information. Those fields must be reviewed for privacy, matching
-value, and form usability before being added to the SharePoint schema.
-
-## Implementation checklist
-
-- [ ] Validate the SharePoint schema against this file.
-- [ ] Confirm the participant form hides system and flow-managed fields.
-- [ ] Confirm the language lookup fields allow multiple controlled selections.
-- [ ] Confirm Time zone is a required single-value lookup to the Time zone catalogue.
-- [ ] Implement and test the submission flow rule.
-- [ ] Add later lists only through their own GitHub issues and PRs.
+Excluded: separate paid hosting, automatic AI matching/assignment, in-app chat/video,
+detailed scheduling, mandatory Location catalogue, required native SharePoint
+Location input, participant Role and required participant-entered identity email.

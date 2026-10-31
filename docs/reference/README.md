@@ -1,7 +1,9 @@
 # Reference product documents
 
 These DOCX files are retained for product context and colleague discussion.
-They are not the current implementation specification.
+Combined Requirements v0.2 was reviewed for the current MVP plan (#45). The
+owner's later annotations are recorded in CURRENT_DESIGN.md and override draft
+conflicts. The source DOCX is preserved unchanged; it is not a deployed schema.
 
 Use these repository documents as the source of truth for the current design:
 
@@ -9,8 +11,8 @@ Use these repository documents as the source of truth for the current design:
 - [SharePoint POC setup](../POC_SHAREPOINT_SETUP.md)
 - [Current design](../CURRENT_DESIGN.md)
 
-The reference documents describe an earlier design and are not the
-implementation authority. The current POC uses a controlled Time zone
-catalogue selected in Power Apps, without a participant city/location field in
-the current POC. Use
-`docs/CURRENT_DESIGN.md` for the current schema and behavior.
+Older reference documents are historical. Keep the working Time zone catalogue;
+location derivation is lower priority. Culture fields/catalogue are approved
+target requirements now, superseding the earlier removal, but implementation
+waits for #46 and #5. Notifications are undecided despite email-only draft text.
+Use CURRENT_DESIGN.md to distinguish approved targets from implemented fields.

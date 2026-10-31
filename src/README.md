@@ -7,6 +7,13 @@ Local Python schema validators are development tools only.
 
 ## Discovery eligibility in Power Automate
 
+Scope update: this is the tested language-only baseline, not complete v0.2
+eligibility. Freeze #46 fields first, then extend #7 for culture-only/combined
+fit, independent participation/validation and open-to-connections. Show compatible
+candidates only. Comments is approved for candidate display after notice, but
+the response allowlist must be finalized. Ranking #8 is Later; catalogue time
+zone stays. Do not connect real data until the field/response contract is agreed.
+
 `config/discovery_eligibility.json` specifies two built-in actions: Filter array
 (`Eligible_candidates`) and Select (`Candidate_fit`). It is an action-definition
 fragment and expression reference, not an importable flow or deployed feature.

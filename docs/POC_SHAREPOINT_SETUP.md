@@ -5,12 +5,19 @@ registration POC. The design authority is
 [CURRENT_DESIGN.md](CURRENT_DESIGN.md). If this guide conflicts with it, the
 design authority wins.
 
+This guide describes the implemented registration baseline. The approved v0.2
+target (#45) adds controlled culture fields, group preferences and separate
+statuses after #46 defines their exact contract. Do not create those columns
+from this baseline guide yet. Comments will be candidate-visible after notice;
+notifications remain undecided (#49). Catalogue time zone stays; Excel inspection
+and migration are the final phase (#48).
+
 ## Architecture
 
 ```text
 SharePoint lists = operational database
 Power Automate = validation, identity enrichment, and status updates
-Future matching logic = discovery and proposed groups
+Power Automate discovery = compatible candidates; participants choose connections
 SharePoint page = anonymised aggregate statistics
 ```
 
@@ -165,20 +172,22 @@ Create these only through their own implementation issues:
 The future statistics page must expose aggregate, non-identifying results. It
 must not expose participant names, email addresses, or membership details.
 
-## Removed from this setup
+## Baseline limits and deferred fields
 
-The current design does not use:
+The implemented baseline does not yet contain the approved Culture catalogue
+and culture fields. Their target contract is #46 and implementation is #5.
+Do not interpret their absence as exclusion from the revised MVP.
 
-- Culture catalogue
+Still excluded or deferred:
+
 - Location catalogue
-- Culture interests or culture themes in the SharePoint schema
 - Required native SharePoint Location input
 - Consent confirmed
 - Participant Role
 - Required participant-entered Email
 
-Optional profile enrichment such as city/location, culture interests, and
-additional free-text context is deferred to a later ticket.
+City/location derivation and optional language level remain Later. Controlled
+culture sharing/interests are approved target MVP fields, not deferred enrichment.
 
 For the complete rationale and change-control rules, see
 [CURRENT_DESIGN.md](CURRENT_DESIGN.md).

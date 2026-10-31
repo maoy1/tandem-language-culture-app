@@ -1,142 +1,91 @@
 # Tandem implementation plan
 
-This is the working plan for the new repository. GitHub issues remain the
-authoritative task records; this document explains the order and the amount of
-human involvement expected.
+The approved design is CURRENT_DESIGN.md. This plan reflects the owner's
+annotations to Combined Requirements v0.2. GitHub tickets hold implementation
+acceptance and status; planning completion does not imply deployment.
 
-The current product and SharePoint design is recorded in
-[CURRENT_DESIGN.md](CURRENT_DESIGN.md). Every implementation issue and pull
-request must follow that file. If a decision changes, update the design source
-of truth in the same pull request before changing the implementation.
+## Working process
 
-## Operating model
+1. Select one ticket; check its dependencies and current acceptance criteria.
+2. Flag/verify permissions, licences, connectors, settings, connection owners and
+   setup before dependent implementation. Existing Microsoft platform only; no
+   extra budget. Ordinary users are self-service; necessary admin exceptions are allowed.
+3. Use one branch and PR per ticket. Run appropriate checks and record tenant
+   evidence separately from local/JSON validation.
+4. Update design, plan, related setup/field contracts and issue evidence together.
+5. Review and merge; use closing keywords only for completed acceptance work.
+6. Verify issue/PR state after merge before the next ticket.
 
-Work proceeds in one small GitHub issue at a time:
+## Completed baseline
 
-1. Choose the next issue and confirm its acceptance criteria.
-   Flag and verify all permission, setting, connector, connection, licence and
-   configuration prerequisites first. Separate one-time setup from recurring
-   maintenance; participant workflows must require no routine admin intervention.
-   Necessary approvals or support for critical/exceptional cases are allowed;
-   ordinary internal users remain self-service as participation grows.
-2. Make the change on a short-lived branch.
-3. Run automated checks and document any manual tenant step.
-4. In the same PR, update this plan, backlog alignment, and affected design/setup documents. State completed work, remaining tenant checks, and the next issue.
-5. Review the result together and merge when accepted. Use `Closes #N` so GitHub closes the issue on merge; keep incomplete acceptance work in an open follow-up.
-6. After merge, verify the PR is merged and the issue is closed, then reconcile the plan before starting another ticket. Do not call a tenant check complete without recorded evidence.
+- [x] #1 repository foundation.
+- [x] #2 initial schema/manual setup, delivered through PR #32.
+- [x] #3 initial self-registration, delivered through PR #34.
+- [x] #4 language selections and persistence, delivered through PR #37.
+- [x] Owner-confirmed synthetic language eligibility in Power Automate under PR #44.
+      #7 remains open: full v0.2 eligibility and real-data/app integration are pending.
 
-Automation should handle tests, schema validation, and diagnostic summaries.
-The owner should only need to decide product behavior, perform the documented
-SharePoint/Power Platform tenant setup, test the user-facing experience, and
-approve the final result.
+These results certify the old baseline only. New fields and status rules need
+their own implementation and regression checks.
 
-## Sequence
+## Revised delivery sequence
 
-- [x] **POC-01 — Repository foundation**
-  - Create the repeatable repository layout and working instructions.
-  - Human checkpoint: confirm the structure is easy to maintain.
-- [x] **POC-02 — Define SharePoint schema and manual setup**
-  - Keep the approved lists, columns, choices, lookups, unique constraints,
-    and indexes in version-controlled schema.
-  - Validate the schema locally with repeatable tests.
-  - Human checkpoint: create and configure the lists in the approved tenant,
-    including the Language and Time zone catalogues, lookup fields, indexes,
-    and participant-form settings.
-- [x] **POC-03 — Participant self-registration** *(issue #3 closed; PR #34 merged)*
-  - Let an authenticated colleague create and update their own profile.
-  - Use Power Apps to lock the unique Participant account to the signed-in
-    user, and expose the Time zone catalogue as a dropdown.
-  - Share the app through a Teams tab. Record the known limitation that the
-    app filter is not row-level SharePoint security.
-  - Human checkpoint: test the form once with a normal account and one second
-    account.
-- [ ] **POC-18 — Private self-service registration** *(parent remains open)*
-  - [ ] #39 / POC-18A: check prerequisites and select the simplest supported approach. Next action; assessment only.
-  - [ ] #40 / POC-18B: prove own-record access using two accounts and synthetic data, after #39.
-  - [ ] #41 / POC-18C: integrate the proven approach and verify registration, after #40 and before wider testing.
-  - Close #18 only after A–C are delivered and verified. No architecture is selected yet.
-  - #42 / POC-18D is separate: controlled candidate access, delivered with #7–#9 after registration protection.
-  - Follow [the staged access plan](POC_18_PARTICIPANT_ACCESS.md).
-- [x] **POC-04 — Structured language preferences** *(PR #37 merged)*
-  - Catalogue-backed multi-value Teach/Learn fields are present in the schema.
-  - Owner confirmed persistence after reopening, multiple selections in both
-    fields, simultaneous learner/sharer use, and teach-only saving on 2026-10-31.
-- [ ] **POC-05 to POC-06 — Profile data and participation status**
-  - Add controlled language preferences, profile context, and Active/Paused/
-    Inactive behavior.
-- [ ] **POC-07 to POC-09 — Discovery**
-  - Implement eligibility and ranking in one testable location, then expose it
-    to the user interface.
-  - Human checkpoint: review example suggestions and ranking behavior.
-- [ ] **POC-10 to POC-15 — Requests and 1:1 tandem lifecycle**
-  - Add connection requests, accept/decline, tandem creation, group lifecycle,
-    leaving, and the two-active-groups warning.
-  - Human checkpoint: run one complete participant-to-tandem scenario.
-- [ ] **POC-16 to POC-24 — Existing groups, permissions, and notifications**
-  - Add group discovery, join requests, permission safeguards, and notifications.
-  - Human checkpoint: approve notification wording and access boundaries.
-- [ ] **POC-25 to POC-28 — Tests, scale, and reproducibility**
-  - Add automated discovery tests, synthetic data, scale checks, and a
-    repeatable handover process.
-- [ ] **POC-29 to POC-31 — Operations**
-  - Add freshness tracking, reminders, and an administrative status overview.
+- [ ] #45: approve and track this MVP scope alignment; planning only.
+- [ ] #46: finalize field contract, candidate projection including Comments notice,
+      separate statuses, culture-only rules and remaining capacity decisions.
+      Pause real-data discovery wiring until this contract is agreed.
+- [ ] #5: implement controlled culture-share/interest and group-size fields;
+      update registration. Keep required Time zone catalogue.
+- [ ] #6: implement independent participation/validation states and open-to-connections;
+      verify validation never reactivates paused profiles.
+- [ ] #7/#9: extend compatible participant discovery and maintain one rule location
+      in Power Automate; connect trusted normalized data and the Power Apps response
+      only after the prerequisite checks.
+- [ ] #12/#13: define typed groups, memberships, capacity and simple state. Do schema
+      work before group discovery; group creation depends on request acceptance.
+- [ ] #16: compatible open-group discovery. Ranking #8 is not a dependency.
+- [ ] #10/#11/#17: connect/join, accept/decline, sender visibility and availability checks.
+- [ ] #47 alongside #11/#12/#17: implement/retest safe retries, simultaneous acceptance,
+      last-slot capacity protection and partial-failure handling.
+- [ ] #12/#14: complete automatic accepted-membership/free-slot updates and self-service
+      leaving; necessary ambiguous group recovery may use exceptional admin support.
+- [ ] #49: inspect available notification options and agree event/channel matrix.
+      Do before any notification configuration; may be assessed alongside core work.
+- [ ] #21: implement selected request notifications after #49 passes.
+- [ ] #25 and relevant #26/#27/#28 checks: validate core workflows, capacity/retries,
+      bounded data access and operational handover within existing platform.
+- [ ] #48 LAST IMPLEMENTATION PHASE: inspect actual old Excel; approve mappings,
+      migrate confirmed participants/groups, report exceptions and reconcile data.
+      Do not hold core coding on a workbook inspection.
+- [ ] Release checks: ordinary colleague access, approved exposure/data policy,
+      notification delivery and migration confirmation, then broader rollout.
 
-## Manual work that remains
+## Deferred access test
 
-The following cannot safely be fully automated from this repository:
+#18 and #39–#42 stay open. The owner will arrange ordinary-colleague testing later.
+Trusted admin Members access is expected; ordinary access is unverified.
+Continue owner/synthetic-data work without selecting/configuring a new access
+architecture. Ordinary-user verification is still needed before broader rollout.
 
-- granting or approving tenant permissions;
-- confirming SharePoint and Power Platform environment choices;
-- importing and maintaining the Time zone catalogue;
-- configuring the Power Apps form and Teams tab;
-- checking the user experience with real colleagues;
-- approving match, request, and notification behavior;
-- deciding when the POC is ready for wider use.
+## Later delivery
 
-Everything else should be a candidate for a script, automated test, validation
-report, or documented repeatable step.
+#8 ranking; #15 active-group warning pending scope review; #29/#30 freshness and
+reminders; #31 dashboards; automatic location/time-zone derivation only if cheap;
+optional language level; bulk invitations; meet-first; expiry; detailed admin
+audit UI; automatic departure recovery and needs-sharer timers.
+
+No standalone hosting, new paid licence or premium/custom connector is allowed.
+
+## Manual involvement
+
+Participants decide whom to approach, accept/decline requests, arrange meetings
+and maintain their participation. Routine system updates run automatically.
+The owner/admins handle explicitly flagged one-time setup, product decisions,
+test acceptance and necessary exceptional corrections. Migration mapping review
+is one-off, at the end; no routine manual matching or per-user grant queue.
 
 ## Current focus
 
-### Owner-directed implementation session — 2026-10-31
-
-The owner deferred the normal-colleague access test until a tester is available.
-Keep #18 and #39–#42 open; do not spend this session on an access redesign.
-The owner clarified site Members are trusted admins. Their inherited access
-alone does not establish ordinary-participant exposure. Actual participant
-access remains untested; draft PR #43 is partial evidence, not an access verdict.
-
-Continue core implementation with owner/synthetic data. #5 optional profile
-enrichment stays deferred. Start #7 eligibility against current Active/Needs
-review status and language lookup IDs, without introducing an unapproved field.
-#6's expanded status design and live discovery integration remain pending.
-Record repository checks separately from Power Apps deployment and tenant tests;
-finishing code does not establish a working end-to-end deployed app.
-
-Runtime correction: discovery runs in Power Automate using built-in operations
-and the existing SharePoint connector. PR #44 now contains an action-definition
-fragment and synthetic tenant scenarios, not an unhosted Python implementation.
-Basic synthetic Compose/Filter/Select, teach-only and Needs review tests were
-confirmed by the owner in Power Automate on 2026-10-31. The integrated flow still
-needs verified prerequisites, trusted SharePoint normalization and Power Apps
-configuration. Null/malformed data, pagination and access tests remain pending.
-Do not claim the old Python tests
-validate this replacement. No additional budget, premium/custom connectors or
-external hosting is permitted; no routine admin action per participant/search.
-
-POC-03 was delivered in merged PR #34 and issue #3 is closed. Its registration
-contract, Power Apps form, and Teams sharing setup are documented in
-[POC_03_PARTICIPANT_SELF_REGISTRATION.md](POC_03_PARTICIPANT_SELF_REGISTRATION.md).
-POC-02 is complete. Its schema and manual setup must follow
-[CURRENT_DESIGN.md](CURRENT_DESIGN.md), especially the current Participants
-schema, the required Time zone catalogue, and the removal of the Culture and
-Location catalogues.
-
-Issue #4's owner-account checks passed and PR #37 is merged. Current implementation
-priority is #7's core eligibility with synthetic data. #18 and #39–#42 remain open
-but access investigation/testing is deferred by the owner until a colleague can
-test. Do not configure replacement flows now. Wider rollout still needs access
-verification; code work can proceed without declaring that requirement satisfied.
-Optional profile enrichment remains deferred.
-The first restart check should recheck live registration and sharing; repository
-completion does not certify the current tenant configuration.
+Next: #46 field contract under planning parent #45. Then #5 and #6 before
+real-data discovery integration. Notifications (#49) are undecided; Excel (#48)
+is scheduled last. Approved target fields are not yet in the deployed schema.

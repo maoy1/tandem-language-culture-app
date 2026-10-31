@@ -63,15 +63,20 @@ Python 3.11+ installation. In Git Bash, activation uses
 
 ## Current status
 
+The owner's v0.2 annotations are now the target planning baseline: parent #45,
+field contract #46 next, acceptance concurrency #47, Excel migration #48 last,
+and notification option review #49 before channel selection. Culture-only and
+combined participation, separate statuses and candidate-visible Comments after
+warning are approved target requirements, not deployed features. Keep the
+working Time zone catalogue; automatic location derivation and ranking are Later.
+See docs/CURRENT_DESIGN.md and docs/IMPLEMENTATION_PLAN.md before real-data wiring.
+
 POC-01 (repository foundation) and POC-02 (SharePoint schema and manual setup)
 are complete. POC-02 includes the version-controlled Language and Time zone
 catalogues, local validation, tests, an Excel import template, and the manual
 tenant setup guide. POC-03 was delivered in merged PR #34 and issue #3 is closed.
-Issue #18 (participant access and privacy) is the next priority before wider
-testing or discovery. POC-04's language preferences passed the owner's acceptance
-checks on 2026-10-31 and its completion PR #37 is merged. POC-18 is in progress;
-start with #39's prerequisite assessment in [the staged plan](docs/POC_18_PARTICIPANT_ACCESS.md).
-No replacement architecture is selected. Registration integration (#41) follows
-the two-account proof (#40); candidate access (#42) comes later with discovery.
-Participant workflows must be self-service; flag and verify permission, licence,
-connector and configuration needs before implementation.
+POC-04's language preferences passed the owner's acceptance checks and PR #37
+is merged. #18/#39–#42 remain open; the owner deferred ordinary-colleague access
+testing until a tester is available. No replacement access architecture is
+selected. Complete needed access checks before broader release; continue
+owner/synthetic-data work meanwhile. Next is #46, not another access redesign.

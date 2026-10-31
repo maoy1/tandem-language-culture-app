@@ -1,6 +1,10 @@
 # POC-03 participant self-registration
 
 This document defines the registration contract for the Participants list.
+It records the tested language-registration baseline. Target v0.2 changes are
+tracked in #45/#46/#5/#6: culture-only and combined participation, independent
+participation/validation and a Comments visibility notice need implementation
+and fresh tenant tests. Existing JSON/schema remain the current baseline.
 The repository cannot change the SharePoint tenant, so the final list,
 Power Apps form, sharing, and Teams-tab settings are applied manually.
 
