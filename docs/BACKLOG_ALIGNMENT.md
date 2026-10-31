@@ -6,6 +6,11 @@ CURRENT_DESIGN.md. Registration schema/policy JSON now describes the POC-05
 target, explicitly pending tenant setup/tests; Discovery JSON remains the earlier
 language-only baseline. Neither file certifies live deployment.
 
+The [2026-10-31 full audit](BACKLOG_AUDIT_2026-10-31.md) reviews all 40 tickets and
+records the corrected live acceptance criteria and scheduling. PR #52 separately
+prepares the desired POC-05 schema/policy; it remains a draft, not deployment.
+Owner-confirmed catalogue import does not establish participant form/flow acceptance.
+
 ## Planning and new work
 
 | Ticket | Purpose | Order |
@@ -21,7 +26,7 @@ language-only baseline. Neither file certifies live deployment.
 | Ticket | Aligned scope |
 |---|---|
 | #2/#3/#4 | Completed initial baseline. Preserve prior evidence; do not reopen just to describe target fields |
-| #5 | In progress: schema/policy and local checks prepared; culture values, tenant setup, active-value checks and create/edit flow validation pending. Optional catalogue time zone; no participant size field or Comments notice. See POC_05_CULTURE_REGISTRATION.md |
+| #5 | In progress in draft PR #52: catalogue setup reported complete; participant culture lookups not visible in latest screenshot, Time zone still required. Finish columns/app/flow and live acceptance. No size preference or Comments notice. See POC_05_CULTURE_REGISTRATION.md |
 | #6 | Participation Active/Paused/Inactive independent of validation and migration confirmation; open-to-connections; never reactivate a paused participant through validation |
 | #7/#9 | Compatible people only; language/culture/combined fit and status/open filters. Exact display fields pending; participant fields generally eligible, admin/system-only columns excluded. No Comments notice. Blank time zone never excludes a candidate |
 | #8 | Later ranking; remove as dependency for group discovery. No required automatic location/time-zone derivation |
@@ -32,10 +37,10 @@ language-only baseline. Neither file certifies live deployment.
 | #15 | Not confirmed in revised MVP; Later scope review, not a mandatory launch gate |
 | #16/#17 | Promote compatible existing-group discovery/join to MVP. Remove ranking dependency; recheck capacity and test #47 |
 | #18/#39–#42 | Ordinary-colleague access tests deferred. Admin Members access expected; ordinary access unverified. Discovery field list undecided; exclude admin/system-only data, no Comments-specific notice |
-| #19/#20/#22–#24 | Retain necessary group/request access safeguards; no routine individual permission administration. Check selected approach/configuration before implementing |
+| #19/#20/#22–#24 | Retain group/request/member authorization outcomes; item-specific ACL synchronization is an option, not an approved architecture. Verify approach first; no routine individual permission administration. Expiry stays Later |
 | #21 | Depends on #49 channel/event decision; automatic selected request notifications with safe failure/deduplication behavior |
 | #25 | Tests for culture-only, participation/validation, compatibility, comments projection, typed capacity and retries; no mandatory ranking or two-group warning |
-| #26–#28 | Synthetic platform/scale/handover checks within no-budget runtime; target current approved fields only |
+| #26–#28 | Synthetic platform/scale/handover checks for current fields, optional time zone and manual one-time setup; no hosted-service fallback or tenant-provisioning promise |
 | #29/#30/#31 | Later freshness/reminders/dashboard, not core implementation gates |
 
 ## Decision precedence and evidence
