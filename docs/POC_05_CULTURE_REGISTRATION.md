@@ -61,6 +61,19 @@ deploymentStatus explicitly says setup/testing are pending; it is not a live exp
    Do not add a preferred group-size field or Comments notice. Separate
    participation/open-status fields are ticket #6, not this setup.
 
+## Bulk catalogue entry
+
+The workbook [culture_catalogue_import.xlsx](import/culture_catalogue_import.xlsx)
+contains the 85 proposed values from the JSON. In Excel select **A2:B86** (data
+only, no headers). In the empty Culture catalogue, put Title and Culture key next
+to each other in that order, choose Edit in grid view, select the first blank
+Title cell and paste. Active is omitted from the paste: its list default must be
+Yes. Exit grid view, refresh and verify 85 entries with keys populated and Active
+Yes. This method populates the existing list; do not create a second list from
+the workbook. If rows already exist, reconcile by Culture key before pasting;
+this is not an upsert/import automation. Live paste/row counts remain unverified
+until the owner confirms them.
+
 ## Power Apps form
 
 Refresh Participants in the Data pane, select Form1, then Edit fields and add

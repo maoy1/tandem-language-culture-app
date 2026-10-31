@@ -58,6 +58,41 @@ the app/flow versions separately.
 - This validates proposal data structure only, not coverage approval, import,
   active-option filtering or any REG acceptance scenario.
 
+## Tenant setup evidence
+
+### SETUP-20261031-01 — owner access screens
+
+- Owner-reported: SharePoint New List/Create column options available; existing
+  registration app and submission flow open in Edit. All three checks confirmed.
+- No creation/save operation was tested by these checks; no app/flow version
+  changed. Culture catalogue connection/read access remains to verify after creation.
+- This is setup evidence, not a REG/ACC scenario pass or ordinary-user access proof.
+
+### SETUP-20261031-02 — catalogue rename and bulk-entry workbook
+
+- Owner reports the CultureKey display-name change to Culture key is done.
+  Required/unique/default settings and catalogue contents have not been
+  independently inspected.
+- Agent generated docs/import/culture_catalogue_import.xlsx from the 85-value
+  JSON proposal. PASS: all 85 rows and three columns match the source after XLSX
+  export/reimport; first rows rendered and visually inspected.
+- Owner subsequently confirms the bulk-entry step and its requested checks are
+  done: 85 catalogue entries, populated keys and Active = Yes. Evidence is owner
+  reported; no list export or screenshot captured. App/flow catalogue-read access
+  remains NOT RUN. This is not a registration acceptance pass.
+
+### SETUP-20261031-03 — Participants column screenshot
+
+- Screenshot shows required Participant account and required Time zone; Time zone
+  is a Lookup. ShareCultures/LearnCultures (or their intended display labels) are
+  not visible in the supplied column list. Their creation/settings are unverified.
+- Email, Matching cycle and Full name are visible existing helper/legacy fields;
+  their presence does not authorize deletion or changing the identity contract.
+- A column summary does not prove lookup catalogue targets, multiple selections,
+  uniqueness or actual internal names. Inspect field settings for those checks.
+- #5 remains open. Optional-time-zone acceptance and culture form/flow tests have
+  not passed merely because the Culture catalogue was populated.
+
 ## New run template
 
 Copy this section for an execution. Record one row per case (or split a case into

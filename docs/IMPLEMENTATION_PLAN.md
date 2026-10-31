@@ -119,6 +119,14 @@ admin/system-only columns. Group Open/Closed/Ended and real count/slots replace
 profile-level size preference. The existing schema's required time zone is a
 documented baseline restriction to remove during implementation, not current intent.
 
-Owner prerequisite update (2026-10-31): SharePoint list/column creation and existing
-app/submission-flow edit access are not yet checked. Verify those screens before
-live setup; no tenant permission or deployment success is claimed.
+Owner prerequisite update (2026-10-31): owner confirms all three access-screen
+checks work: SharePoint New List/Create column, registration app Edit and submission
+flow Edit. This confirms owner access to those screens, not successful creation,
+catalogue connection access, ordinary-user access or deployment. Owner subsequently
+confirms Culture catalogue bulk entry and checks (85 entries, keys, Active Yes).
+Next: create the participant ShareCultures/LearnCultures lookup columns. App/flow
+catalogue access and live registration acceptance remain unverified.
+
+Latest Participants screenshot still shows Time zone required and does not show
+the two culture lookups. Create/verify those lookups and make Time zone optional
+before form/flow acceptance; see SETUP-20261031-03 in TEST_RUNS.md.
