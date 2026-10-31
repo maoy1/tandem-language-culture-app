@@ -139,6 +139,12 @@ permission setting cannot be enabled. Users with direct list permissions may
 still see other rows in SharePoint. Strict row privacy requires a later custom
 permission flow or a data source with row-level security.
 
+Issue #18 owns this access/privacy work and must be completed before wider
+testing or discovery. It must define which information is intentionally readable
+by others, protect private fields, enforce own-profile edits at the data source,
+and record two-account tests including direct SharePoint access. The technical
+approach is decided in that ticket; the unique identity requirement remains.
+
 Hide system and flow-managed fields from the participant form, including Title
 and Status. Do not expose the Participant account people picker for choosing
 another colleague.

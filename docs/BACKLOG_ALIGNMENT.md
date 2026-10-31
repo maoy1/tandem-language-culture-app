@@ -6,10 +6,11 @@ must be revised before implementation.
 
 ## Overall status
 
-- Issue `#1` is closed.
-- Issues `#2`–`#31` are open.
+- Issues `#1`–`#3` are closed; POC-03 was merged in PR #34.
+- Issue `#18` is open and moves ahead of wider testing and discovery as the access/privacy gate.
+- Other ticket status must be checked on GitHub when work starts; this file records design alignment, not a live status mirror.
 - Issues `#2`–`#15` form the core vertical slice.
-- Issues `#16`–`#31` are later extensions and should not drive the initial
+- Issues `#16`–`#31`, except the promoted privacy work in `#18`, are later extensions and should not drive the initial
   SharePoint schema.
 
 ## Required revisions before implementation
@@ -22,6 +23,7 @@ must be revised before implementation.
 | #6 | The current POC status choices are `Active` and `Needs review`. `Paused`, `Inactive`, and a separate “open to new connections” field require a later design decision before being added. |
 | #7 | Do not require an “open to new connections” field in the current POC. Base initial eligibility on approved participant status, languages, and selected time zone. |
 | #13 | Define the future Groups and Group Members schema before implementing group lifecycle. Do not add culture themes or participant role fields. |
+| #18 | Next priority after #3: define readable discovery fields versus private profile data; enforce own-profile edits and administrator access at the data source. Verify direct SharePoint access using two normal accounts. Complete before wider testing and discovery; app filtering alone is insufficient. |
 | #25 | Align tests with fields that actually exist. Tests for Paused, Inactive, or two-group behavior belong after their schema decisions are recorded. |
 | #29 | Define freshness fields and status behavior in `CURRENT_DESIGN.md` before implementing tracking. In particular, decide whether `LastConfirmedAt` and `Needs confirmation` are required. |
 
@@ -33,12 +35,12 @@ provided they use the current schema and do not reintroduce removed fields:
 - #3–#4: self-registration, controlled language preferences, and the Power Apps registration form
 - #8–#12: discovery, requests, acceptance, and 1:1 tandem creation
 - #14–#15: leaving a group and the active-group warning
-- #16–#18: group discovery, join requests, and participant edit protection
+- #16–#17: group discovery and join requests
 - #19–#24: group/request permissions and notifications
 - #26–#28: synthetic data, scale testing, and reproducibility
 - #30–#31: reminders and admin overview after freshness behavior is defined
 
-Tickets #13–#24 still require the future group/request lists; they must not
+Tickets #13–#24, except participant-only ticket #18, still require the future group/request lists; they must not
 expand the initial Participants schema.
 
 ## PR and document gate

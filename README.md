@@ -22,7 +22,8 @@ repository is reference material only.
 1. Select the next GitHub issue from the POC Vertical Slice milestone.
 2. Implement only that issue and its acceptance criteria.
 3. Run the automated checks and update the relevant documentation.
-4. Review the result together before moving to the next issue.
+4. Update the implementation plan and backlog alignment in the same PR, recording outstanding tenant checks.
+5. Review and merge the PR, let `Closes #N` close the completed issue, then verify GitHub and the plan agree before starting the next issue.
 
 The human checkpoints are intentionally limited to product decisions, SharePoint
 or Power Platform tenant actions, and approval of user-facing behavior. Routine
@@ -55,4 +56,6 @@ Python 3.11+ installation. In Git Bash, activation uses
 POC-01 (repository foundation) and POC-02 (SharePoint schema and manual setup)
 are complete. POC-02 includes the version-controlled Language and Time zone
 catalogues, local validation, tests, an Excel import template, and the manual
-tenant setup guide. POC-03 is being completed in Power Apps and Teams.
+tenant setup guide. POC-03 was delivered in merged PR #34 and issue #3 is closed.
+Issue #18 (participant access and privacy) is the next priority before wider
+testing or discovery; issue #4's language preferences follow that gate.
