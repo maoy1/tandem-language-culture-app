@@ -30,6 +30,10 @@ No generic read-all-profiles endpoint is permitted.
 - The agreed audience can self-onboard without individual grants, new-account
   administration or manual group updates. Connection ownership and any necessary
   exceptional maintenance are disclosed upfront.
+
+The self-service requirement applies to ordinary operations. Necessary admin
+approval or intervention in critical/exceptional cases is allowed, without
+introducing per-user or per-search manual work into the standard flow.
 - List-read rights and candidate response fields are explicitly agreed. Ordinary
   access testing remains deferred, not passed; admin site roles are expected.
 

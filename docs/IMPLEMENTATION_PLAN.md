@@ -17,6 +17,8 @@ Work proceeds in one small GitHub issue at a time:
    Flag and verify all permission, setting, connector, connection, licence and
    configuration prerequisites first. Separate one-time setup from recurring
    maintenance; participant workflows must require no routine admin intervention.
+   Necessary approvals or support for critical/exceptional cases are allowed;
+   ordinary internal users remain self-service as participation grows.
 2. Make the change on a short-lived branch.
 3. Run automated checks and document any manual tenant step.
 4. In the same PR, update this plan, backlog alignment, and affected design/setup documents. State completed work, remaining tenant checks, and the next issue.

@@ -11,7 +11,7 @@ outstanding manual checks explicitly.
 ## Completion checklist
 
 - [ ] Production stays within SharePoint/Power Apps/Power Automate and existing entitlements; no new paid hosting/licences, premium/custom connectors, trials or local-script runtime.
-- [ ] Participant workflows require no routine admin approvals or individual permission/group maintenance.
+- [ ] Ordinary participant workflows are self-service without per-user admin work as usage grows; any necessary critical-case approval or exceptional intervention is explicit and proportionate.
 - [ ] Required permissions, settings, connectors, connections and licences were flagged to the owner and verified before dependent implementation; one-time setup and recurring maintenance are explicit.
 - [ ] Current design and relevant setup documentation agree with this change.
 - [ ] Implementation plan records completion state, remaining work, and next ticket.

@@ -21,7 +21,9 @@ repository is reference material only.
 
 Production is SharePoint + Power Apps + Power Automate within existing licences:
 no additional hosting budget, paid service, premium/custom connector, trial or
-Python application runtime. All participant workflows must be self-service.
+Python application runtime. Ordinary participant workflows must be self-service,
+with minimal admin effort as participation grows. Critical or exceptional cases
+may involve necessary admin approval or intervention; routine actions do not.
 Flag and verify permissions, connections, licences and settings before relying
 on them. Necessary one-time setup and exceptional maintenance must be explicit.
 

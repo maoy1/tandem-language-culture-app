@@ -44,8 +44,15 @@ Implement eligibility with built-in Power Automate data operations; see
 `config/discovery_eligibility.json` and `src/README.md`. The action fragment and
 synthetic scenarios are prepared, not deployed or tenant-tested.
 
-All participant actions must be self-service: no routine admin approvals,
-per-person grants, manual matching or manual group maintenance. Flag any needed
+This is a trusted internal app. Ordinary participant actions are self-service:
+routine use must not depend on admin approvals, per-person grants, manual
+matching or manual group maintenance. Admin effort should not grow per ordinary
+registration or search as participation expands. Critical or exceptional cases
+may require necessary admin approval, access correction, assistance or other
+intervention. Keep those exceptions explicit and proportionate, without routing
+ordinary actions through an approval queue. Agreed identity/privacy rules remain.
+This decision permits exceptional support; it does not introduce a new mandatory
+approval workflow or define automatic critical-case criteria. Flag any needed
 permission, setting, connector, connection, licence or configuration to the owner
 and verify it before dependent implementation. Identify one-time setup and
 recurring operational maintenance separately and upfront.

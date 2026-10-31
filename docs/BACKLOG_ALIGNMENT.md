@@ -6,6 +6,11 @@ must be revised before implementation.
 
 ## Overall status
 
+Operating clarification: ordinary internal-user journeys are self-service with
+minimal admin workload as participation scales. Critical/exceptional cases may
+use necessary admin approval, correction or assistance; no blanket ban on admin
+intervention and no new routine approval requirement is intended.
+
 - Issues `#1`–`#3` are closed; POC-03 was merged in PR #34.
 - Issue `#18` is open and moves ahead of wider testing and discovery as the access/privacy gate.
 - Other ticket status must be checked on GitHub when work starts; this file records design alignment, not a live status mirror.
