@@ -22,6 +22,12 @@ Every implementation ticket must:
 
 ## Product boundary
 
+All participant actions must be self-service: no routine admin approvals,
+per-person grants, manual matching or manual group maintenance. Flag any needed
+permission, setting, connector, connection, licence or configuration to the owner
+and verify it before dependent implementation. Identify one-time setup and
+recurring operational maintenance separately and upfront.
+
 The MVP helps colleagues register language preferences, discover potentially
 compatible people or groups, and decide themselves whether to connect. The
 system may validate data, filter opportunities, rank suggestions, send
@@ -144,6 +150,19 @@ testing or discovery. It must define which information is intentionally readable
 by others, protect private fields, enforce own-profile edits at the data source,
 and record two-account tests including direct SharePoint access. The technical
 approach is decided in that ticket; the unique identity requirement remains.
+
+The agreed access boundary is now explicit: normal registration exposes only
+the caller's profile, including through direct SharePoint access. Discovery is
+a separate controlled operation returning eligible candidates, not list access.
+No private-Comments classification or public directory is approved.
+
+No replacement architecture is selected yet. First assess prerequisites (#39),
+then prove own-record access in isolation (#40), then integrate registration
+(#41). These complete parent #18 only after verified evidence. Controlled
+candidate access (#42) follows with discovery #7–#9. Authenticated registration
+flows are one option to assess, not an instruction to configure them now.
+The current app-filter baseline remains unsuitable for wider rollout. Follow
+[the staged access plan](POC_18_PARTICIPANT_ACCESS.md).
 
 Hide system and flow-managed fields from the participant form, including Title
 and Status. Do not expose the Participant account people picker for choosing

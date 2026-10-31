@@ -14,6 +14,9 @@ of truth in the same pull request before changing the implementation.
 Work proceeds in one small GitHub issue at a time:
 
 1. Choose the next issue and confirm its acceptance criteria.
+   Flag and verify all permission, setting, connector, connection, licence and
+   configuration prerequisites first. Separate one-time setup from recurring
+   maintenance; participant workflows must require no routine admin intervention.
 2. Make the change on a short-lived branch.
 3. Run automated checks and document any manual tenant step.
 4. In the same PR, update this plan, backlog alignment, and affected design/setup documents. State completed work, remaining tenant checks, and the next issue.
@@ -45,11 +48,14 @@ approve the final result.
     app filter is not row-level SharePoint security.
   - Human checkpoint: test the form once with a normal account and one second
     account.
-- [ ] **POC-18 — Participant access and privacy** *(next priority; before wider testing and discovery)*
-  - Agree which profile fields others may read and enforce own-profile edits at the data source.
-  - Verify access using two normal accounts, including direct list access; record the result before wider rollout.
-  - This ticket is open. The app filter alone does not meet this gate.
-- [x] **POC-04 — Structured language preferences** *(acceptance verified; closure on completion PR merge)*
+- [ ] **POC-18 — Private self-service registration** *(parent remains open)*
+  - [ ] #39 / POC-18A: check prerequisites and select the simplest supported approach. Next action; assessment only.
+  - [ ] #40 / POC-18B: prove own-record access using two accounts and synthetic data, after #39.
+  - [ ] #41 / POC-18C: integrate the proven approach and verify registration, after #40 and before wider testing.
+  - Close #18 only after A–C are delivered and verified. No architecture is selected yet.
+  - #42 / POC-18D is separate: controlled candidate access, delivered with #7–#9 after registration protection.
+  - Follow [the staged access plan](POC_18_PARTICIPANT_ACCESS.md).
+- [x] **POC-04 — Structured language preferences** *(PR #37 merged)*
   - Catalogue-backed multi-value Teach/Learn fields are present in the schema.
   - Owner confirmed persistence after reopening, multiple selections in both
     fields, simultaneous learner/sharer use, and teach-only saving on 2026-10-31.
@@ -100,7 +106,9 @@ Location catalogues.
 
 Next: resolve issue #18's access/privacy design and implementation before wider
 testing or discovery. Issue #4's owner-account checks all passed on 2026-10-31;
-its completion PR closes #4 on merge. Issue #18 remains open and is the next
-implementation priority. Optional profile enrichment remains deferred.
+PR #37 is merged and #4 is delivered. Issue #18 remains open and is the current
+implementation priority. Start with #39's prerequisite assessment; do not
+configure a replacement flow yet. #40 and #41 follow only after their gates pass.
+#42 is scheduled with discovery later. Optional profile enrichment remains deferred.
 The first restart check should recheck live registration and sharing; repository
 completion does not certify the current tenant configuration.

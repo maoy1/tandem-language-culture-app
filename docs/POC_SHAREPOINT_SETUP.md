@@ -146,8 +146,12 @@ After saving and publishing the app:
 4. Pin the tab or announce it in the channel.
 
 Adding the Teams tab makes the app discoverable; it does not replace app or
-SharePoint data-source permissions. Users need access to the Participants list
-for the SharePoint connector to work.
+SharePoint data-source permissions. The existing direct-connector app requires
+Participants access and is not approved for wider rollout. POC-18 is split into
+prerequisite assessment (#39), isolated proof (#40) and registration integration
+(#41). No replacement architecture is selected. Flag and verify every required
+permission/configuration before implementation; do not remove current test access
+before a replacement is validated. See [the staged plan](POC_18_PARTICIPANT_ACCESS.md).
 
 ## Future lists
 
