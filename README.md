@@ -64,7 +64,8 @@ Python 3.11+ installation. In Git Bash, activation uses
 ## Current status
 
 The owner's v0.2 annotations are now the target planning baseline: parent #45,
-field contract #46 next, acceptance concurrency #47, Excel migration #48 last,
+reviewed contract #46 with outstanding decisions, registration #5 in progress,
+acceptance concurrency #47, Excel migration #48 last,
 and notification option review #49 before channel selection. Culture-only and
 combined participation and separate statuses are approved target requirements,
 not deployed features. Time zone is optional and catalogue-based. No participant
@@ -85,4 +86,8 @@ POC-04's language preferences passed the owner's acceptance checks and PR #37
 is merged. #18/#39–#42 remain open; the owner deferred ordinary-colleague access
 testing until a tester is available. No replacement access architecture is
 selected. Complete needed access checks before broader release; continue
-owner/synthetic-data work meanwhile. Next is #46, not another access redesign.
+owner/synthetic-data work meanwhile. PR #51 merged the reviewed contract and test
+catalogue. Current work is the approved #5 registration subset; see
+[the POC-05 setup guide](docs/POC_05_CULTURE_REGISTRATION.md). Schema/policy JSON
+now describes that desired delta, explicitly pending tenant setup and tests.
+#46 stays open for outstanding decisions; #6 follows registration implementation.

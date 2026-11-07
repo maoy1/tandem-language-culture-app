@@ -36,8 +36,10 @@ for approved rules and outstanding decisions; record executions in TEST_RUNS.md.
 | Synthetic flow | Controlled Compose/Filter/Select and business-flow cases | Authentication, real SharePoint normalization or published app |
 | Integrated tenant | Published app with actual test lists, flows and account roles | Other environments/versions without retesting |
 
-The existing schema JSON still describes the original required-time-zone baseline.
-New optional-time-zone/culture/status cases below are NOT RUN until implementation.
+The schema JSON describes the desired POC-05 culture/optional-time-zone delta,
+explicitly pending tenant setup/tests. Local checks do not exercise the live form.
+New optional-time-zone/culture/status cases below are NOT RUN until implemented
+and exercised at their specified layer.
 The old BASE tests retain their original scope; do not relabel them as new-MVP tests.
 
 ## Reusable fictional fixtures
@@ -98,6 +100,10 @@ only a success message. Use the currently published test app.
 | REG-010 | Inspect registration controls | No participant group-size-preference field and no proposed Comments notice |
 | REG-011 | Existing/imported invalid record; correct editable inputs and save | Revalidation succeeds without ordinary admin approval; no premature discovery before valid |
 | REG-012 | Submit twice or retry an interrupted create | At most one profile per company account; understandable result |
+| REG-013 | Open each culture selector in Edit/New mode after refresh | Both show Culture catalogue labels rather than sample Item 1/2/3, and allow multiple selections; inactive-value handling is separately REG-008 |
+| REG-014 | Validate an existing profile, including a fixture created by an admin for a different participant | Participant account is preserved; Created By/Modified By never silently replaces the registered identity |
+| REG-015 | Validate when Status already equals the computed result; then allow one required Status change | Matching status causes no item write; a necessary write may trigger a follow-up run which performs no further write; no sustained self-update loop |
+| REG-016 | Edit and correct a profile under the modified trigger; exercise queued older events in an isolated fixture | Validation reads current saved values, rechecks edits and converges to the correct Status without overwriting profile fields; read failure cannot report validation success |
 
 ## Participation and availability
 
@@ -206,7 +212,7 @@ inventing an expected channel, field allowlist or migration-confirmation rule.
 
 ## Suggested regression sets
 
-- Profile/schema changes: REG-001–012, PAR-001–007 and DISC-004–005.
+- Profile/schema changes: REG-001–016, PAR-001–007 and DISC-004–005.
 - Eligibility/projection changes: DISC-001–011, GRP-005–007, LEAVE-003–004,
   plus ACC-001–003 after access prerequisites exist.
 - Group/request/flow changes: GRP-001–013, REQ-001–011 and LEAVE-001–006.

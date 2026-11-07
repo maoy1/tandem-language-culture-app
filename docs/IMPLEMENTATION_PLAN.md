@@ -54,8 +54,14 @@ their own implementation and regression checks.
       and validation to allow empty time zone. No participant group-size field.
       Draft PR #52 prepares the configuration, 85 culture values, setup guide and
       tests. Owner confirms catalogue population/checks, but the latest Participants
-      screenshot still shows required Time zone and no visible culture lookups.
-      Participant columns, app/flow changes and tenant acceptance remain pending.
+      screenshot did not show culture lookups. Owner subsequently confirms both
+      optional multi-value culture lookups and removal of the Time zone required
+      setting. Owner also confirms both culture cards added to Form1 after refresh
+      and app saved. Culture labels now display correctly, and the empty-selection
+      save guard passes in Preview (owner-reported). Persistence and flow validation
+      remain unverified; no new published app version confirmed.
+      Follow POC_05_CULTURE_REGISTRATION.md; verify active-value checks and the
+      create/edit validation loop guard before treating the flow as complete.
 - [ ] #6: implement independent participation/validation states and open-to-connections;
       verify validation never reactivates paused profiles.
 - [ ] #7/#9: extend compatible participant discovery and maintain one rule location
@@ -121,7 +127,36 @@ admin/system-only columns. Group Open/Closed/Ended and real count/slots replace
 profile-level size preference. The existing schema's required time zone is a
 documented baseline restriction to remove during implementation, not current intent.
 
-All 40 issue tickets were reviewed against the plan on 2026-10-31. See
+Owner prerequisite update (2026-10-31): owner confirms all three access-screen
+checks work: SharePoint New List/Create column, registration app Edit and submission
+flow Edit. This confirms owner access to those screens, not successful creation,
+catalogue connection access, ordinary-user access or deployment. Owner subsequently
+confirms Culture catalogue bulk entry and checks (85 entries, keys, Active Yes).
+Owner subsequently confirms the participant ShareCultures/LearnCultures lookup
+columns and their requested optional/multiple-value settings/display names are
+ready. Full registration acceptance and independent catalogue validity checks
+remain unverified.
+
+The earlier Participants screenshot showed Time zone required and no culture
+lookups. Owner subsequently confirms Time zone Required = No in SharePoint.
+Both culture lookups and their addition to the saved form are now owner-confirmed.
+Current owner evidence:
+- Culture lookup labels now display correctly; empty-selection Save guard passes
+  in Preview. Multi-selection persistence still needs explicit verification.
+- Flow uses created-or-modified, current Get item values, four-field OR presence
+  and change-only Status guards. Old Created By identity rewrites were removed.
+- Already-Active edit skips the write (screenshot). Owner confirms Needs review
+  corrects to Active once, follow-up skips and identity/selections are preserved.
+  The earlier unresolved correction is resolved by this retest; cause not supplied.
+- Designer loop warnings remain advisory; Needs review-path runtime behavior,
+  concurrent/queued edits and catalogue validity have not been established.
+
+Next: test the empty-profile Needs review correction/no-write path, then culture-
+only and optional-time-zone save/reopen, multiple selections, catalogue validity
+and required remaining REG checks. See TEST_RUNS.md for scoped evidence and gaps.
+No new published app version confirmed. Keep #5 open and PR #52 draft.
+
+PR #53 merged the full 40-ticket backlog review on 2026-10-31. See
 [the complete audit](BACKLOG_AUDIT_2026-10-31.md) for corrections, scheduling and
 remaining decisions. The audit preserves issue states and does not close #45 or
 any implementation ticket. Later #8/#15/#29–#31 are outside the core milestone;

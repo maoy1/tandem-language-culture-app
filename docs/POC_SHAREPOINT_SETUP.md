@@ -13,6 +13,11 @@ preference or Comments notice. Exact Discovery display fields remain undecided;
 notifications remain undecided (#49). Catalogue time zone stays; Excel inspection
 and migration are the final phase (#48).
 
+POC-05 now has a separate [culture registration delta guide](POC_05_CULTURE_REGISTRATION.md).
+The JSON schema/policy are prepared for that delta, explicitly pending tenant
+setup/tests; they no longer claim to be an export of the baseline below. Use the
+delta guide after its prerequisite checks, rather than recreating existing lists.
+
 ## Architecture
 
 ```text

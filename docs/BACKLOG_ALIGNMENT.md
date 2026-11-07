@@ -2,7 +2,9 @@
 
 This file maps the existing backlog to the owner's latest annotations. GitHub
 is authoritative for live status. Approved target behavior is documented in
-CURRENT_DESIGN.md; schema/config JSON still describes the implemented baseline.
+CURRENT_DESIGN.md. Registration schema/policy JSON now describes the POC-05
+target, explicitly pending tenant setup/tests; Discovery JSON remains the earlier
+language-only baseline. Neither file certifies live deployment.
 
 The [2026-10-31 full audit](BACKLOG_AUDIT_2026-10-31.md) reviews all 40 tickets and
 records the corrected live acceptance criteria and scheduling. PR #52 separately
@@ -24,7 +26,7 @@ Owner-confirmed catalogue import does not establish participant form/flow accept
 | Ticket | Aligned scope |
 |---|---|
 | #2/#3/#4 | Completed initial baseline. Preserve prior evidence; do not reopen just to describe target fields |
-| #5 | In progress in draft PR #52: catalogue setup reported complete; participant culture lookups not visible in latest screenshot, Time zone still required. Finish columns/app/flow and live acceptance. No size preference or Comments notice |
+| #5 | In progress in draft PR #52: catalogue/columns/form guard owner-confirmed; Active no-op and correction/follow-up tested, identity/selections preserved. Needs review path, culture/blank-time-zone persistence, catalogue checks and published acceptance remain pending. See POC_05_CULTURE_REGISTRATION.md |
 | #6 | Participation Active/Paused/Inactive independent of validation and migration confirmation; open-to-connections; never reactivate a paused participant through validation |
 | #7/#9 | Compatible people only; language/culture/combined fit and status/open filters. Exact display fields pending; participant fields generally eligible, admin/system-only columns excluded. No Comments notice. Blank time zone never excludes a candidate |
 | #8 | Later ranking; remove as dependency for group discovery. No required automatic location/time-zone derivation |

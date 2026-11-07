@@ -1,6 +1,7 @@
 {
-  "schemaVersion": 2,
-  "description": "Implemented registration baseline. Approved MVP v0.2 culture/status/group targets are pending field contract #46 and implementation; see docs/CURRENT_DESIGN.md. This file does not claim target fields are deployed.",
+  "schemaVersion": 3,
+  "deploymentStatus": "poc05_pending_tenant_setup_and_tests",
+  "description": "Desired POC-05 registration schema: controlled culture fields and optional time zone. Repository preparation only; tenant setup, culture values and tests remain pending. Participation/status extensions (#6) and group schema are not included.",
   "lists": [
     {
       "name": "Language catalogue",
@@ -23,22 +24,33 @@
       "indexes": ["IANAId"]
     },
     {
+      "name": "Culture catalogue",
+      "fields": [
+        { "internalName": "Title", "displayName": "Title", "type": "Text", "required": true },
+        { "internalName": "CultureKey", "displayName": "Culture key", "type": "Text", "required": true, "unique": true },
+        { "internalName": "Active", "displayName": "Active", "type": "Boolean", "defaultValue": true }
+      ],
+      "indexes": ["CultureKey"]
+    },
+    {
       "name": "Participants",
       "fields": [
         { "internalName": "Title", "displayName": "Title", "type": "Text" },
         { "internalName": "ParticipantAccount", "displayName": "Participant account", "type": "User", "required": true, "unique": true },
         { "internalName": "TeachLanguages", "displayName": "Teach languages", "type": "Lookup", "lookupList": "Language catalogue", "lookupField": "Title", "allowMultiple": true },
         { "internalName": "LearnLanguages", "displayName": "Learn languages", "type": "Lookup", "lookupList": "Language catalogue", "lookupField": "Title", "allowMultiple": true },
+        { "internalName": "ShareCultures", "displayName": "Cultures I can share", "type": "Lookup", "lookupList": "Culture catalogue", "lookupField": "Title", "allowMultiple": true },
+        { "internalName": "LearnCultures", "displayName": "Cultures of interest", "type": "Lookup", "lookupList": "Culture catalogue", "lookupField": "Title", "allowMultiple": true },
         {
           "internalName": "TimeZone",
           "displayName": "Time zone",
           "type": "Lookup",
           "lookupList": "Time zone catalogue",
           "lookupField": "Title",
-          "required": true,
+          "required": false,
           "allowMultiple": false,
           "editableByParticipants": true,
-          "description": "Selected from the controlled Time zone catalogue in Power Apps."
+          "description": "Optional controlled catalogue selection. Blank must not block registration or discovery."
         },
         { "internalName": "LearningFocus", "displayName": "Learning focus", "type": "Note" },
         { "internalName": "Comments", "displayName": "Comments", "type": "Note" },

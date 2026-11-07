@@ -7,6 +7,8 @@ import importlib.util
 import json
 from pathlib import Path
 
+import pytest
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = ROOT / "config" / "sharepoint_schema.json"
@@ -54,12 +56,13 @@ def test_current_schema_passes_validator() -> None:
     assert validator.validate(schema) == []
 
 
-def test_current_schema_contains_only_initial_registration_lists() -> None:
+def test_current_schema_contains_poc05_registration_lists() -> None:
     schema = load_current_schema()
 
     assert [item["name"] for item in schema["lists"]] == [
         "Language catalogue",
         "Time zone catalogue",
+        "Culture catalogue",
         "Participants",
     ]
 
@@ -105,7 +108,7 @@ def test_participants_schema_matches_current_design() -> None:
     assert fields["TimeZone"]["type"] == "Lookup"
     assert fields["TimeZone"]["lookupList"] == "Time zone catalogue"
     assert fields["TimeZone"]["lookupField"] == "Title"
-    assert fields["TimeZone"]["required"] is True
+    assert fields["TimeZone"]["required"] is False
     assert fields["TimeZone"]["allowMultiple"] is False
     assert fields["TimeZone"].get("hidden", False) is False
     assert fields["TeachLanguages"]["allowMultiple"] is True
@@ -126,7 +129,7 @@ def test_removed_catalogues_and_fields_are_absent() -> None:
     )
     participant_fields = set(fields_by_name(participant))
 
-    assert "Culture catalogue" not in list_names
+    assert "Culture catalogue" in list_names
     assert "Location catalogue" not in list_names
     assert participant_fields.isdisjoint(
         {
@@ -196,3 +199,35 @@ def test_registration_policy_uses_authenticated_unique_identity() -> None:
     )
     assert "TimeZone" in policy["form"]["visibleFields"]
     assert "TimeZone" not in policy["form"]["hiddenFields"]
+
+
+@pytest.mark.parametrize("field_name", ["TeachLanguages", "LearnLanguages", "ShareCultures", "LearnCultures", "TimeZone"])
+def test_registration_rejects_individually_required_interest_or_timezone(field_name) -> None:
+    """REG-002/003/006: optional fields cannot silently become mandatory."""
+    schema = load_current_schema()
+    participants = next(item for item in schema["lists"] if item["name"] == "Participants")
+    fields_by_name(participants)[field_name]["required"] = True
+    assert load_registration_validator().validate(load_registration_policy(), schema)
+
+
+@pytest.mark.parametrize("field_name", ["TeachLanguages", "LearnLanguages", "ShareCultures", "LearnCultures"])
+def test_registration_rejects_missing_interest_branch(field_name) -> None:
+    """REG-005/006: every useful offer/interest is included in the OR rule."""
+    policy = load_registration_policy()
+    policy["validation"]["requireAnyOf"].remove(field_name)
+    assert any("all four" in error for error in load_registration_validator().validate(policy, load_current_schema()))
+
+
+@pytest.mark.parametrize("field_name", ["ShareCultures", "LearnCultures"])
+def test_registration_rejects_culture_field_pointing_to_languages(field_name) -> None:
+    schema = load_current_schema()
+    participants = next(item for item in schema["lists"] if item["name"] == "Participants")
+    fields_by_name(participants)[field_name]["lookupList"] = "Language catalogue"
+    assert load_registration_validator().validate(load_registration_policy(), schema)
+
+
+def test_registration_requires_inactive_selection_validation() -> None:
+    """REG-008: a policy edit cannot silently disable the catalogue rule."""
+    policy = load_registration_policy()
+    policy["validation"]["rejectInactiveSelections"] = False
+    assert any("Inactive" in error for error in load_registration_validator().validate(policy, load_current_schema()))

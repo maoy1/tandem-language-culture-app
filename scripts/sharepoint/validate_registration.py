@@ -79,6 +79,29 @@ def validate(policy: dict[str, Any], schema: dict[str, Any]) -> list[str]:
             "item-level permissions are unavailable with the unique identity field."
         )
 
+    validation = policy.get("validation", {})
+    expected_offers = {"TeachLanguages", "LearnLanguages", "ShareCultures", "LearnCultures"}
+    offer_fields = validation.get("requireAnyOf", [])
+    if not isinstance(offer_fields, list) or set(offer_fields) != expected_offers:
+        errors.append("requireAnyOf must include all four language/culture offer/interest fields.")
+    else:
+        for name in offer_fields:
+            field = fields.get(name, {})
+            expected_catalogue = "Culture catalogue" if name in {"ShareCultures", "LearnCultures"} else "Language catalogue"
+            if (field.get("type") != "Lookup" or field.get("allowMultiple") is not True
+                    or field.get("lookupList") != expected_catalogue
+                    or field.get("required", False) or name not in visible):
+                errors.append(f"{name} must be a visible optional multi-value lookup to {expected_catalogue}.")
+    if validation.get("optionalCatalogueFields") != ["TimeZone"]:
+        errors.append("TimeZone must be recorded as an optional catalogue field.")
+    timezone = fields.get("TimeZone", {})
+    if (timezone.get("required", False) or timezone.get("type") != "Lookup"
+            or timezone.get("lookupList") != "Time zone catalogue"
+            or timezone.get("allowMultiple") is not False or "TimeZone" not in visible):
+        errors.append("TimeZone must be a visible optional single-value catalogue lookup.")
+    if validation.get("rejectInactiveSelections") is not True:
+        errors.append("Inactive catalogue selections must be rejected by validation.")
+
     return errors
 
 

@@ -46,8 +46,10 @@ operational dependencies before relying on them.
 
 ## Implemented SharePoint baseline
 
-config/sharepoint_schema.json and config/participant_registration.json describe
-the current registration baseline. They are not silently expanded by this plan.
+The table below records the last verified registration baseline. The JSON schema
+and registration policy now describe the desired POC-05 delta (culture fields and
+optional time zone), explicitly marked pending tenant setup/tests. They are not a
+live export. See [POC_05_CULTURE_REGISTRATION.md](POC_05_CULTURE_REGISTRATION.md).
 
 Language catalogue: Title, required unique indexed ISOCode, Aliases, Active.
 Time zone catalogue: Title, required unique indexed IANAId, optional WindowsId,
