@@ -1,0 +1,1474 @@
+{
+  "artifactVersion": 1,
+  "artifactKind": "sanitized_observed_flow_definition_reference_not_import_package",
+  "flowName": "TandemRespondRequest",
+  "reviewStatus": "changes_required",
+  "observedExport": {
+    "fileName": "TandemRespondRequest-review_20261107212221.zip",
+    "sha256": "045fa25fb5243f3b6e98ae0913e3fe24194cf5004fdc67922fe1298910368d0b",
+    "flowModifiedUtc": "2026-11-07T21:21:16.5567363Z"
+  },
+  "handling": "Raw ZIP stays local. Creator/tenant/flow/action metadata IDs, site/list bindings and runtime authentication wrappers are removed or replaced. Definition is observed, not silently patched to the desired result.",
+  "structuralReview": {
+    "actionCount": 77,
+    "maximumActionDepth": 6,
+    "missingActionReferences": [],
+    "invalidSiblingRunAfterReferences": [],
+    "responseActionCount": 1,
+    "etagProtectedMergeActions": [
+      "Decline_conditionally",
+      "Accept_conditionally",
+      "Finish_group_setup",
+      "Mark_membership_Left",
+      "End_unfinished_group"
+    ]
+  },
+  "findings": [
+    {
+      "id": "RESP-REVIEW-001",
+      "severity": "required_fix",
+      "action": "Set_ContinueProcessing_2",
+      "path": "Process_valid_response/True/Is_decline/True",
+      "observed": true,
+      "expected": false,
+      "reason": "Successful Decline must stop processing; otherwise group validation can evaluate skipped Accept inputs and change the result/message."
+    },
+    {
+      "id": "RESP-REVIEW-002",
+      "severity": "required_fix",
+      "action": "Acceptance_result_ready",
+      "observed": "@outputs('Read_final_request')?['body/Status']",
+      "expected": "@body('Read_final_request')?['Status']?['Value']",
+      "reason": "Final check must compare the Value of the declared SharePoint Choice field, consistently with the connector contract, rather than its expanded object. Actual run output still needs verification."
+    },
+    {
+      "id": "RESP-REVIEW-003",
+      "severity": "label_cleanup",
+      "inputProperty": "number",
+      "observedTitle": "NParticipantIdumber",
+      "expectedTitle": "ParticipantId",
+      "reason": "Correct the trigger input label while keeping the input/order intact."
+    }
+  ],
+  "connectionReview": {
+    "connector": "SharePoint",
+    "exportSource": "Invoker",
+    "ordinaryAccountPermissionsVerified": false,
+    "note": "Caller-provided connection binding is observed, not an approved private-data architecture or proof of caller-to-participant ownership. Coordinate #18/#39-42 before wider rollout; no connection setting changed."
+  },
+  "remainingAcceptance": "No exported definition proves live behavior. App controls, #6 availability, trusted caller/access, persisted focus checks and complete #47 duplicate/retry/interruption/recovery cases remain open.",
+  "definition": {
+    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+    "contentVersion": "undefined",
+    "parameters": {
+      "$authentication": {
+        "defaultValue": {},
+        "type": "SecureObject"
+      },
+      "$connections": {
+        "defaultValue": {},
+        "type": "Object"
+      }
+    },
+    "triggers": {
+      "manual": {
+        "type": "Request",
+        "kind": "PowerAppV2",
+        "inputs": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "number": {
+                "description": "Please enter a number",
+                "title": "NParticipantIdumber",
+                "type": "number",
+                "x-ms-content-hint": "NUMBER",
+                "x-ms-dynamically-added": true
+              },
+              "number_1": {
+                "description": "Please enter a number",
+                "title": "RequestId",
+                "type": "number",
+                "x-ms-content-hint": "NUMBER",
+                "x-ms-dynamically-added": true
+              },
+              "text": {
+                "description": "Please enter your input",
+                "title": "Decision",
+                "type": "string",
+                "x-ms-content-hint": "TEXT",
+                "x-ms-dynamically-added": true
+              },
+              "text_1": {
+                "description": "Please enter your input",
+                "title": "GroupName",
+                "type": "string",
+                "x-ms-content-hint": "TEXT",
+                "x-ms-dynamically-added": true
+              },
+              "text_2": {
+                "description": "Please enter your input",
+                "title": "ExchangeType",
+                "type": "string",
+                "x-ms-content-hint": "TEXT",
+                "x-ms-dynamically-added": true
+              },
+              "number_2": {
+                "description": "Please enter a number",
+                "title": "Capacity",
+                "type": "number",
+                "x-ms-content-hint": "NUMBER",
+                "x-ms-dynamically-added": true
+              },
+              "text_3": {
+                "description": "Please enter your input",
+                "title": "LanguageFocusIds",
+                "type": "string",
+                "x-ms-content-hint": "TEXT",
+                "x-ms-dynamically-added": true
+              },
+              "text_4": {
+                "description": "Please enter your input",
+                "title": "CultureFocusIds",
+                "type": "string",
+                "x-ms-content-hint": "TEXT",
+                "x-ms-dynamically-added": true
+              }
+            },
+            "required": [
+              "number",
+              "number_1",
+              "text",
+              "text_1",
+              "text_2",
+              "number_2",
+              "text_3",
+              "text_4"
+            ]
+          }
+        }
+      }
+    },
+    "actions": {
+      "Read_participant": {
+        "runAfter": {},
+        "type": "OpenApiConnection",
+        "inputs": {
+          "parameters": {
+            "dataset": "{SHAREPOINT_SITE_URL}",
+            "table": "{PARTICIPANTS_LIST_ID}",
+            "id": "@triggerBody()?['number']"
+          },
+          "host": {
+            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+            "connectionName": "shared_sharepointonline",
+            "operationId": "GetItem"
+          }
+        }
+      },
+      "Read_request": {
+        "runAfter": {
+          "Read_participant": [
+            "Succeeded"
+          ]
+        },
+        "type": "OpenApiConnection",
+        "inputs": {
+          "parameters": {
+            "dataset": "{SHAREPOINT_SITE_URL}",
+            "table": "{CONNECTION_REQUESTS_LIST_ID}",
+            "id": "@triggerBody()?['number_1']"
+          },
+          "host": {
+            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+            "connectionName": "shared_sharepointonline",
+            "operationId": "GetItem"
+          }
+        }
+      },
+      "Requested_decision": {
+        "runAfter": {
+          "Read_response_revision": [
+            "Succeeded"
+          ]
+        },
+        "type": "Compose",
+        "inputs": "@triggerBody()?['text']"
+      },
+      "Can_respond": {
+        "actions": {
+          "Set_ContinueProcessing": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "ContinueProcessing",
+              "value": true
+            }
+          }
+        },
+        "runAfter": {
+          "Initialize_ResponseMessage": [
+            "Succeeded"
+          ]
+        },
+        "else": {
+          "actions": {}
+        },
+        "expression": {
+          "and": [
+            {
+              "equals": [
+                "@and(\r\n  not(empty(body('Read_participant')?['Participantaccount']?['Claims'])),\r\n  equals(\r\n    body('Read_response_revision')?['d']?['RecipientParticipantId'],\r\n    body('Read_participant')?['ID']\r\n  ),\r\n  equals(\r\n    body('Read_response_revision')?['d']?['SenderParticipantId'],\r\n    body('Read_request')?['SenderParticipantId']\r\n  ),\r\n  equals(\r\n    body('Read_response_revision')?['d']?['RecipientParticipantId'],\r\n    body('Read_request')?['RecipientParticipantId']\r\n  ),\r\n  equals(\r\n    body('Read_response_revision')?['d']?['Status'],\r\n    'Pending'\r\n  ),\r\n  or(\r\n    equals(outputs('Requested_decision'), 'Accept'),\r\n    equals(outputs('Requested_decision'), 'Decline')\r\n  )\r\n)",
+                "@true"
+              ]
+            }
+          ]
+        },
+        "type": "If"
+      },
+      "Initialize_ResultGroupId": {
+        "runAfter": {
+          "Requested_decision": [
+            "Succeeded"
+          ]
+        },
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "ResultGroupId",
+              "type": "integer",
+              "value": 0
+            }
+          ]
+        }
+      },
+      "Read_response_revision": {
+        "runAfter": {
+          "Read_request": [
+            "Succeeded"
+          ]
+        },
+        "type": "OpenApiConnection",
+        "inputs": {
+          "parameters": {
+            "dataset": "{SHAREPOINT_SITE_URL}",
+            "parameters/method": "GET",
+            "parameters/uri": "@concat(\r\n  '_api/web/lists/getbytitle(''Connection Requests'')/items(',\r\n  string(body('Read_request')?['ID']),\r\n  ')'\r\n)",
+            "parameters/headers": {
+              "Accept": "application/json;odata=verbose"
+            }
+          },
+          "host": {
+            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+            "connectionName": "shared_sharepointonline",
+            "operationId": "HttpRequest"
+          }
+        }
+      },
+      "Initialize_ContinueProcessing": {
+        "runAfter": {
+          "Initialize_ResultGroupId": [
+            "Succeeded"
+          ]
+        },
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "ContinueProcessing",
+              "type": "boolean",
+              "value": false
+            }
+          ]
+        }
+      },
+      "Initialize_ResponseSucceeded": {
+        "runAfter": {
+          "Initialize_ContinueProcessing": [
+            "Succeeded"
+          ]
+        },
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "ResponseSucceeded",
+              "type": "boolean",
+              "value": false
+            }
+          ]
+        }
+      },
+      "Initialize_ResponseMessage": {
+        "runAfter": {
+          "Initialize_ResponseSucceeded": [
+            "Succeeded"
+          ]
+        },
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "ResponseMessage",
+              "type": "string",
+              "value": "The request could not be completed. Reload My requests and try again."
+            }
+          ]
+        }
+      },
+      "Process_valid_response": {
+        "actions": {
+          "Is_decline": {
+            "actions": {
+              "Decline_conditionally": {
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "parameters": {
+                    "dataset": "{SHAREPOINT_SITE_URL}",
+                    "parameters/method": "POST",
+                    "parameters/uri": "@concat(\r\n  '_api/web/lists/getbytitle(''Connection Requests'')/items(',\r\n  string(body('Read_request')?['ID']),\r\n  ')'\r\n)",
+                    "parameters/headers": {
+                      "Accept": "application/json;odata=verbose",
+                      "Content-Type": "application/json;odata=verbose",
+                      "X-HTTP-Method": "MERGE",
+                      "IF-MATCH": "@{body('Read_response_revision')?['d']?['__metadata']?['etag']}"
+                    },
+                    "parameters/body": "@json(\r\n  concat(\r\n    '{\"__metadata\":{\"type\":\"',\r\n    body('Read_response_revision')?['d']?['__metadata']?['type'],\r\n    '\"},\"Status\":\"Declined\"}'\r\n  )\r\n)"
+                  },
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                    "connectionName": "shared_sharepointonline",
+                    "operationId": "HttpRequest"
+                  }
+                }
+              },
+              "Set_ResponseMessage": {
+                "runAfter": {
+                  "Decline_conditionally": [
+                    "Succeeded"
+                  ]
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "ResponseMessage",
+                  "value": "The request was declined"
+                }
+              },
+              "Set_ResponseSucceeded": {
+                "runAfter": {
+                  "Set_ResponseMessage": [
+                    "Succeeded"
+                  ]
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "ResponseSucceeded",
+                  "value": true
+                }
+              },
+              "Set_ContinueProcessing_2": {
+                "runAfter": {
+                  "Set_ResponseSucceeded": [
+                    "Succeeded"
+                  ]
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "ContinueProcessing",
+                  "value": true
+                }
+              }
+            },
+            "else": {
+              "actions": {
+                "Read_sender": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "{SHAREPOINT_SITE_URL}",
+                      "table": "{PARTICIPANTS_LIST_ID}",
+                      "id": "@body('Read_request')?['SenderParticipantId']"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetItem"
+                    }
+                  }
+                },
+                "Compatible_languages": {
+                  "runAfter": {
+                    "Read_sender": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Compose",
+                  "inputs": "@union(\r\n  intersection(\r\n    coalesce(body('Read_sender')?['Teachlanguages#Id'], json('[]')),\r\n    coalesce(body('Read_participant')?['Learnlanguages#Id'], json('[]'))\r\n  ),\r\n  intersection(\r\n    coalesce(body('Read_sender')?['Learnlanguages#Id'], json('[]')),\r\n    coalesce(body('Read_participant')?['Teachlanguages#Id'], json('[]'))\r\n  )\r\n)"
+                },
+                "Compatible_cultures": {
+                  "runAfter": {
+                    "Compatible_languages": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Compose",
+                  "inputs": "@union(\r\n  intersection(\r\n    coalesce(body('Read_sender')?['ShareCultures#Id'], json('[]')),\r\n    coalesce(body('Read_participant')?['LearnCultures#Id'], json('[]'))\r\n  ),\r\n  intersection(\r\n    coalesce(body('Read_sender')?['LearnCultures#Id'], json('[]')),\r\n    coalesce(body('Read_participant')?['ShareCultures#Id'], json('[]'))\r\n  )\r\n)"
+                },
+                "Group_name": {
+                  "runAfter": {
+                    "Compatible_cultures": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Compose",
+                  "inputs": "@triggerBody()?['text_1']"
+                },
+                "Group_type": {
+                  "runAfter": {
+                    "Group_name": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Compose",
+                  "inputs": "@triggerBody()?['text_2']"
+                },
+                "Group_capacity": {
+                  "runAfter": {
+                    "Group_type": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Compose",
+                  "inputs": "@triggerBody()?['number_2']"
+                },
+                "Selected_languages": {
+                  "runAfter": {
+                    "Group_capacity": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@triggerBody()?['text_3']",
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "Selected_cultures": {
+                  "runAfter": {
+                    "Selected_languages": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@triggerBody()?['text_4']",
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "expression": {
+              "and": [
+                {
+                  "equals": [
+                    "@outputs('Requested_decision')",
+                    "Decline"
+                  ]
+                }
+              ]
+            },
+            "type": "If"
+          }
+        },
+        "runAfter": {
+          "Can_respond": [
+            "Succeeded"
+          ]
+        },
+        "else": {
+          "actions": {}
+        },
+        "expression": {
+          "and": [
+            {
+              "equals": [
+                "@variables('ContinueProcessing')",
+                "@true"
+              ]
+            }
+          ]
+        },
+        "type": "If"
+      },
+      "Prepare_group": {
+        "actions": {
+          "Group_choices_valid": {
+            "actions": {
+              "Find_existing_group": {
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "parameters": {
+                    "dataset": "{SHAREPOINT_SITE_URL}",
+                    "table": "{GROUPS_LIST_ID}",
+                    "$filter": "@concat(\r\n  'SourceRequestId eq ',\r\n  string(body('Read_request')?['ID'])\r\n)",
+                    "$top": 1
+                  },
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                    "connectionName": "shared_sharepointonline",
+                    "operationId": "GetItems"
+                  }
+                }
+              },
+              "Group_not_created": {
+                "actions": {
+                  "Group_language_references": {
+                    "type": "Select",
+                    "inputs": {
+                      "from": "@body('Selected_languages')",
+                      "select": {
+                        "Id": "@item()"
+                      }
+                    }
+                  },
+                  "Group_culture_references": {
+                    "runAfter": {
+                      "Group_language_references": [
+                        "Succeeded"
+                      ]
+                    },
+                    "type": "Select",
+                    "inputs": {
+                      "from": "@body('Selected_cultures')",
+                      "select": {
+                        "Id": "@item()"
+                      }
+                    }
+                  },
+                  "Create_group": {
+                    "runAfter": {
+                      "Group_culture_references": [
+                        "Succeeded"
+                      ]
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "{SHAREPOINT_SITE_URL}",
+                        "table": "{GROUPS_LIST_ID}",
+                        "item/Capacity": "@outputs('Group_capacity')",
+                        "item/SourceRequestId": "@body('Read_request')?['ID']",
+                        "item/Title": "@trim(string(outputs('Group_name')))",
+                        "item/ExchangeType/Value": "@outputs('Group_type')",
+                        "item/LanguageFocus": "@body('Group_language_references')",
+                        "item/CultureFocus": "@body('Group_culture_references')",
+                        "item/State/Value": "Closed"
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "PostItem"
+                      }
+                    }
+                  },
+                  "Set_variable": {
+                    "runAfter": {
+                      "Create_group": [
+                        "Succeeded"
+                      ]
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ResultGroupId",
+                      "value": "@outputs('Create_group')?['body/ID']"
+                    }
+                  }
+                },
+                "runAfter": {
+                  "Find_existing_group": [
+                    "Succeeded"
+                  ]
+                },
+                "else": {
+                  "actions": {
+                    "Set_variable_1": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "ResultGroupId",
+                        "value": "@first(body('Find_existing_group')?['value'])?['ID']"
+                      }
+                    }
+                  }
+                },
+                "expression": {
+                  "and": [
+                    {
+                      "equals": [
+                        "@empty(body('Find_existing_group')?['value'])",
+                        "@true"
+                      ]
+                    }
+                  ]
+                },
+                "type": "If"
+              },
+              "Participants_to_add": {
+                "runAfter": {
+                  "Group_not_created": [
+                    "Succeeded"
+                  ]
+                },
+                "type": "Compose",
+                "inputs": "@createArray(\r\n  body('Read_request')?['SenderParticipantId'],\r\n  body('Read_request')?['RecipientParticipantId']\r\n)"
+              },
+              "For_each_participant": {
+                "foreach": "@outputs('Participants_to_add')",
+                "actions": {
+                  "Membership_key": {
+                    "type": "Compose",
+                    "inputs": "@concat(\r\n  'request:',\r\n  string(body('Read_request')?['ID']),\r\n  ':participant:',\r\n  string(item())\r\n)"
+                  },
+                  "Find_membership": {
+                    "runAfter": {
+                      "Membership_key": [
+                        "Succeeded"
+                      ]
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "{SHAREPOINT_SITE_URL}",
+                        "table": "{GROUP_MEMBERS_LIST_ID}",
+                        "$filter": "@concat(\r\n  'MembershipKey eq ''',\r\n  outputs('Membership_key'),\r\n  ''''\r\n)",
+                        "$top": 1
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "GetItems"
+                      }
+                    }
+                  },
+                  "Membership_not_created": {
+                    "actions": {
+                      "Create_membership": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "parameters": {
+                            "dataset": "{SHAREPOINT_SITE_URL}",
+                            "table": "{GROUP_MEMBERS_LIST_ID}",
+                            "item/JoinedAt": "@utcNow()",
+                            "item/MembershipKey": "@outputs('Membership_key')",
+                            "item/Group/Id": "@variables('ResultGroupId')",
+                            "item/Participant/Id": "@items('For_each_participant')",
+                            "item/MembershipStatus/Value": "Active"
+                          },
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                            "connectionName": "shared_sharepointonline",
+                            "operationId": "PostItem"
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Find_membership": [
+                        "Succeeded"
+                      ]
+                    },
+                    "else": {
+                      "actions": {}
+                    },
+                    "expression": {
+                      "and": [
+                        {
+                          "equals": [
+                            "@empty(body('Find_membership')?['value'])",
+                            "@true"
+                          ]
+                        }
+                      ]
+                    },
+                    "type": "If"
+                  }
+                },
+                "runAfter": {
+                  "Participants_to_add": [
+                    "Succeeded"
+                  ]
+                },
+                "type": "Foreach"
+              },
+              "Read_saved_group": {
+                "runAfter": {
+                  "For_each_participant": [
+                    "Succeeded"
+                  ]
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "parameters": {
+                    "dataset": "{SHAREPOINT_SITE_URL}",
+                    "table": "{GROUPS_LIST_ID}",
+                    "id": "@variables('ResultGroupId')"
+                  },
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                    "connectionName": "shared_sharepointonline",
+                    "operationId": "GetItem"
+                  }
+                }
+              },
+              "Read_active_memberships": {
+                "runAfter": {
+                  "Read_saved_group": [
+                    "Succeeded"
+                  ]
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "parameters": {
+                    "dataset": "{SHAREPOINT_SITE_URL}",
+                    "table": "{GROUP_MEMBERS_LIST_ID}",
+                    "$filter": "@concat(\r\n  'GroupId eq ',\r\n  string(variables('ResultGroupId')),\r\n  ' and MembershipStatus eq ''Active'''\r\n)",
+                    "$top": 11
+                  },
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                    "connectionName": "shared_sharepointonline",
+                    "operationId": "GetItems"
+                  }
+                }
+              },
+              "Sender_membership": {
+                "runAfter": {
+                  "Read_active_memberships": [
+                    "Succeeded"
+                  ]
+                },
+                "type": "Query",
+                "inputs": {
+                  "from": "@body('Read_active_memberships')?['value']",
+                  "where": "@equals(and(\r\n  equals(\r\n    item()?['Participant']?['Id'],\r\n    body('Read_request')?['SenderParticipantId']\r\n  ),\r\n  equals(\r\n    item()?['MembershipKey'],\r\n    concat(\r\n      'request:',\r\n      string(body('Read_request')?['ID']),\r\n      ':participant:',\r\n      string(body('Read_request')?['SenderParticipantId'])\r\n    )\r\n  )\r\n),true)"
+                }
+              },
+              "Recipient_membership": {
+                "runAfter": {
+                  "Sender_membership": [
+                    "Succeeded"
+                  ]
+                },
+                "type": "Query",
+                "inputs": {
+                  "from": "@body('Read_active_memberships')?['value']",
+                  "where": "@equals(and(\r\n  equals(\r\n    item()?['Participant']?['Id'],\r\n    body('Read_request')?['RecipientParticipantId']\r\n  ),\r\n  equals(\r\n    item()?['MembershipKey'],\r\n    concat(\r\n      'request:',\r\n      string(body('Read_request')?['ID']),\r\n      ':participant:',\r\n      string(body('Read_request')?['RecipientParticipantId'])\r\n    )\r\n  )\r\n),true)"
+                }
+              },
+              "Memberships_ready": {
+                "actions": {},
+                "runAfter": {
+                  "Recipient_membership": [
+                    "Succeeded"
+                  ]
+                },
+                "else": {
+                  "actions": {
+                    "Set_ResponseMessage_8": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "ResponseMessage",
+                        "value": "The group memberships could not be verified. Reload My requests and try again"
+                      }
+                    },
+                    "Set_ContinueProcessing_9": {
+                      "runAfter": {
+                        "Set_ResponseMessage_8": [
+                          "Succeeded"
+                        ]
+                      },
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "ContinueProcessing",
+                        "value": false
+                      }
+                    }
+                  }
+                },
+                "expression": {
+                  "and": [
+                    {
+                      "equals": [
+                        "@and(\r\n  equals(length(body('Sender_membership')), 1),\r\n  equals(length(body('Recipient_membership')), 1),\r\n  equals(\r\n    length(body('Read_active_memberships')?['value']),\r\n    2\r\n  ),\r\n  equals(\r\n    body('Read_saved_group')?['SourceRequestId'],\r\n    body('Read_request')?['ID']\r\n  )\r\n)",
+                        "@true"
+                      ]
+                    }
+                  ]
+                },
+                "type": "If"
+              }
+            },
+            "else": {
+              "actions": {
+                "Set_ResponseMessage_2": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ResponseMessage",
+                    "value": "Please check the group name, type, capacity and compatible focus selections. Both profiles must be Active"
+                  }
+                },
+                "Set_ContinueProcessing_3": {
+                  "runAfter": {
+                    "Set_ResponseMessage_2": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ContinueProcessing",
+                    "value": false
+                  }
+                }
+              }
+            },
+            "expression": {
+              "and": [
+                {
+                  "equals": [
+                    "@and(\r\n  equals(body('Read_sender')?['Status']?['Value'], 'Active'),\r\n  equals(body('Read_participant')?['Status']?['Value'], 'Active'),\r\n  greater(length(trim(string(outputs('Group_name')))), 0),\r\n  lessOrEquals(length(trim(string(outputs('Group_name')))), 255),\r\n  contains(\r\n    createArray(2, 3, 4, 5, 6, 7, 8, 9, 10),\r\n    outputs('Group_capacity')\r\n  ),\r\n  equals(\r\n    length(intersection(\r\n      body('Selected_languages'),\r\n      outputs('Compatible_languages')\r\n    )),\r\n    length(body('Selected_languages'))\r\n  ),\r\n  equals(\r\n    length(intersection(\r\n      body('Selected_cultures'),\r\n      outputs('Compatible_cultures')\r\n    )),\r\n    length(body('Selected_cultures'))\r\n  ),\r\n  or(\r\n    and(\r\n      equals(outputs('Group_type'), 'Language'),\r\n      not(empty(body('Selected_languages'))),\r\n      empty(body('Selected_cultures')),\r\n      lessOrEquals(outputs('Group_capacity'), 3)\r\n    ),\r\n    and(\r\n      equals(outputs('Group_type'), 'Culture'),\r\n      empty(body('Selected_languages')),\r\n      not(empty(body('Selected_cultures')))\r\n    ),\r\n    and(\r\n      equals(outputs('Group_type'), 'Combined'),\r\n      not(empty(body('Selected_languages'))),\r\n      not(empty(body('Selected_cultures')))\r\n    )\r\n  )\r\n)",
+                    "@true"
+                  ]
+                }
+              ]
+            },
+            "type": "If"
+          }
+        },
+        "runAfter": {
+          "Process_valid_response": [
+            "Succeeded"
+          ]
+        },
+        "else": {
+          "actions": {}
+        },
+        "expression": {
+          "and": [
+            {
+              "equals": [
+                "@variables('ContinueProcessing')",
+                "@true"
+              ]
+            }
+          ]
+        },
+        "type": "If"
+      },
+      "Complete_acceptance": {
+        "actions": {
+          "Commit_acceptance": {
+            "actions": {
+              "Accept_conditionally": {
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "parameters": {
+                    "dataset": "{SHAREPOINT_SITE_URL}",
+                    "parameters/method": "POST",
+                    "parameters/uri": "@concat(\r\n  '_api/web/lists/getbytitle(''Connection Requests'')/items(',\r\n  string(body('Read_request')?['ID']),\r\n  ')'\r\n)",
+                    "parameters/headers": {
+                      "Accept": "application/json;odata=verbose",
+                      "Content-Type": "application/json;odata=verbose",
+                      "X-HTTP-Method": "MERGE",
+                      "IF-MATCH": "@{body('Read_response_revision')?['d']?['__metadata']?['etag']}"
+                    },
+                    "parameters/body": "@json(\r\n  concat(\r\n    '{\"__metadata\":{\"type\":\"',\r\n    body('Read_response_revision')?['d']?['__metadata']?['type'],\r\n    '\"},\"Status\":\"Accepted\"}'\r\n  )\r\n)"
+                  },
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                    "connectionName": "shared_sharepointonline",
+                    "operationId": "HttpRequest"
+                  }
+                }
+              }
+            },
+            "type": "Scope"
+          },
+          "Read_acceptance_outcome": {
+            "runAfter": {
+              "Commit_acceptance": [
+                "Succeeded",
+                "TimedOut",
+                "Skipped",
+                "Failed"
+              ]
+            },
+            "type": "OpenApiConnection",
+            "inputs": {
+              "parameters": {
+                "dataset": "{SHAREPOINT_SITE_URL}",
+                "parameters/method": "GET",
+                "parameters/uri": "@concat(\r\n  '_api/web/lists/getbytitle(''Connection Requests'')/items(',\r\n  string(body('Read_request')?['ID']),\r\n  ')'\r\n)",
+                "parameters/headers": {
+                  "Accept": "application/json;odata=verbose"
+                }
+              },
+              "host": {
+                "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                "connectionName": "shared_sharepointonline",
+                "operationId": "HttpRequest"
+              }
+            }
+          },
+          "Acceptance_confirmed": {
+            "actions": {
+              "Read_group_revision": {
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "parameters": {
+                    "dataset": "{SHAREPOINT_SITE_URL}",
+                    "parameters/method": "GET",
+                    "parameters/uri": "@concat(\r\n  '_api/web/lists/getbytitle(''Groups'')/items(',\r\n  string(variables('ResultGroupId')),\r\n  ')'\r\n)",
+                    "parameters/headers": {
+                      "Accept": "application/json;odata=verbose"
+                    }
+                  },
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                    "connectionName": "shared_sharepointonline",
+                    "operationId": "HttpRequest"
+                  }
+                }
+              },
+              "Group_setup_complete": {
+                "actions": {},
+                "runAfter": {
+                  "Read_group_revision": [
+                    "Succeeded"
+                  ]
+                },
+                "else": {
+                  "actions": {
+                    "Group_can_finish_setup": {
+                      "actions": {
+                        "Finish_group_setup": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "dataset": "{SHAREPOINT_SITE_URL}",
+                              "parameters/method": "POST",
+                              "parameters/uri": "@concat(\r\n  '_api/web/lists/getbytitle(''Groups'')/items(',\r\n  string(variables('ResultGroupId')),\r\n  ')'\r\n)",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose",
+                                "Content-Type": "application/json;odata=verbose",
+                                "X-HTTP-Method": "MERGE",
+                                "IF-MATCH": "@{body('Read_group_revision')?['d']?['__metadata']?['etag']}"
+                              },
+                              "parameters/body": "@json(\r\n  concat(\r\n    '{\"__metadata\":{\"type\":\"',\r\n    body('Read_group_revision')?['d']?['__metadata']?['type'],\r\n    '\"},\"State\":\"',\r\n    if(\r\n      greater(\r\n        body('Read_group_revision')?['d']?['Capacity'],\r\n        length(body('Read_active_memberships')?['value'])\r\n      ),\r\n      'Open',\r\n      'Closed'\r\n    ),\r\n    '\",\"SetupComplete\":true}'\r\n  )\r\n)"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest"
+                            }
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {}
+                      },
+                      "expression": {
+                        "and": [
+                          {
+                            "equals": [
+                              "@and(\r\n  equals(body('Read_group_revision')?['d']?['SetupComplete'], false),\r\n  equals(\r\n    body('Read_group_revision')?['d']?['SourceRequestId'],\r\n    body('Read_request')?['ID']\r\n  ),\r\n  equals(body('Read_group_revision')?['d']?['State'], 'Closed'),\r\n  contains(\r\n    createArray(2, 3, 4, 5, 6, 7, 8, 9, 10),\r\n    body('Read_group_revision')?['d']?['Capacity']\r\n  ),\r\n  or(\r\n    and(\r\n      equals(\r\n        body('Read_group_revision')?['d']?['ExchangeType'],\r\n        'Language'\r\n      ),\r\n      contains(\r\n        createArray(2, 3),\r\n        body('Read_group_revision')?['d']?['Capacity']\r\n      )\r\n    ),\r\n    contains(\r\n      createArray('Culture', 'Combined'),\r\n      body('Read_group_revision')?['d']?['ExchangeType']\r\n    )\r\n  )\r\n)",
+                              "@true"
+                            ]
+                          }
+                        ]
+                      },
+                      "type": "If"
+                    }
+                  }
+                },
+                "expression": {
+                  "and": [
+                    {
+                      "equals": [
+                        "@body('Read_group_revision')?['d']?['SetupComplete']",
+                        "@true"
+                      ]
+                    }
+                  ]
+                },
+                "type": "If"
+              }
+            },
+            "runAfter": {
+              "Read_acceptance_outcome": [
+                "Succeeded"
+              ]
+            },
+            "else": {
+              "actions": {}
+            },
+            "expression": {
+              "and": [
+                {
+                  "equals": [
+                    "@and(\r\n  equals(\r\n    body('Read_acceptance_outcome')?['d']?['Status'],\r\n    'Accepted'\r\n  ),\r\n  equals(\r\n    body('Read_acceptance_outcome')?['d']?['SenderParticipantId'],\r\n    body('Read_request')?['SenderParticipantId']\r\n  ),\r\n  equals(\r\n    body('Read_acceptance_outcome')?['d']?['RecipientParticipantId'],\r\n    body('Read_request')?['RecipientParticipantId']\r\n  )\r\n)",
+                    "@true"
+                  ]
+                }
+              ]
+            },
+            "type": "If"
+          }
+        },
+        "runAfter": {
+          "Prepare_group": [
+            "Succeeded"
+          ]
+        },
+        "else": {
+          "actions": {}
+        },
+        "expression": {
+          "and": [
+            {
+              "equals": [
+                "@variables('ContinueProcessing')",
+                "@true"
+              ]
+            }
+          ]
+        },
+        "type": "If"
+      },
+      "Check_acceptance_result": {
+        "actions": {
+          "Read_final_group": {
+            "runAfter": {
+              "Read_final_request": [
+                "Succeeded"
+              ]
+            },
+            "type": "OpenApiConnection",
+            "inputs": {
+              "parameters": {
+                "dataset": "{SHAREPOINT_SITE_URL}",
+                "table": "{GROUPS_LIST_ID}",
+                "id": "@variables('ResultGroupId')"
+              },
+              "host": {
+                "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                "connectionName": "shared_sharepointonline",
+                "operationId": "GetItem"
+              }
+            }
+          },
+          "Acceptance_result_ready": {
+            "actions": {
+              "Set_ResponseMessage_3": {
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "ResponseMessage",
+                  "value": "The request was accepted and your group is ready"
+                }
+              },
+              "Set_ResponseSucceeded_3": {
+                "runAfter": {
+                  "Set_ResponseMessage_3": [
+                    "Succeeded"
+                  ]
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "ResponseSucceeded",
+                  "value": true
+                }
+              }
+            },
+            "runAfter": {
+              "Read_final_group": [
+                "Succeeded"
+              ]
+            },
+            "else": {
+              "actions": {
+                "Set_ResponseMessage_4": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ResponseMessage",
+                    "value": "@if(\r\n  contains(\r\n    createArray('Cancelled', 'Declined'),\r\n    body('Read_cleanup_request')?['d']?['Status']\r\n  ),\r\n  concat(\r\n    'The request is ',\r\n    toLower(body('Read_cleanup_request')?['d']?['Status']),\r\n    '. This acceptance did not complete.'\r\n  ),\r\n  'Group setup has not completed. Please check My requests.'\r\n)"
+                  }
+                },
+                "Set_ResponseSucceeded_5": {
+                  "runAfter": {
+                    "Set_ResponseMessage_4": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ResponseSucceeded",
+                    "value": false
+                  }
+                }
+              }
+            },
+            "expression": {
+              "and": [
+                {
+                  "equals": [
+                    "@outputs('Read_final_request')?['body/Status']",
+                    "Accepted"
+                  ]
+                },
+                {
+                  "equals": [
+                    "@outputs('Read_final_group')?['body/SetupComplete']",
+                    "@true"
+                  ]
+                },
+                {
+                  "equals": [
+                    "@outputs('Read_final_group')?['body/SourceRequestId']",
+                    "@outputs('Read_final_request')?['body/ID']"
+                  ]
+                },
+                {
+                  "equals": [
+                    "@outputs('Read_final_request')?['body/SenderParticipantId']",
+                    "@outputs('Read_request')?['body/SenderParticipantId']"
+                  ]
+                },
+                {
+                  "equals": [
+                    "@outputs('Read_final_request')?['body/RecipientParticipantId']",
+                    "@body('Read_participant')?['ID']"
+                  ]
+                }
+              ]
+            },
+            "type": "If"
+          },
+          "Read_final_request": {
+            "type": "OpenApiConnection",
+            "inputs": {
+              "parameters": {
+                "dataset": "{SHAREPOINT_SITE_URL}",
+                "table": "{CONNECTION_REQUESTS_LIST_ID}",
+                "id": "@body('Read_request')?['ID']"
+              },
+              "host": {
+                "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                "connectionName": "shared_sharepointonline",
+                "operationId": "GetItem"
+              }
+            }
+          }
+        },
+        "runAfter": {
+          "Clean_up_rejected_attempt": [
+            "Succeeded",
+            "TimedOut",
+            "Skipped",
+            "Failed"
+          ]
+        },
+        "else": {
+          "actions": {}
+        },
+        "expression": {
+          "and": [
+            {
+              "equals": [
+                "@and(\r\n  equals(outputs('Requested_decision'), 'Accept'),\r\n  greater(variables('ResultGroupId'), 0)\r\n)",
+                "@true"
+              ]
+            }
+          ]
+        },
+        "type": "If"
+      },
+      "Respond_to_a_Power_App_or_flow": {
+        "runAfter": {
+          "Check_acceptance_result": [
+            "Succeeded",
+            "TimedOut",
+            "Skipped",
+            "Failed"
+          ]
+        },
+        "type": "Response",
+        "kind": "PowerApp",
+        "inputs": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "success": {
+                "title": "success",
+                "type": "boolean",
+                "x-ms-content-hint": "BOOLEAN",
+                "x-ms-dynamically-added": true
+              },
+              "message": {
+                "title": "message",
+                "type": "string",
+                "x-ms-content-hint": "TEXT",
+                "x-ms-dynamically-added": true
+              },
+              "groupid": {
+                "title": "groupid",
+                "type": "number",
+                "x-ms-content-hint": "NUMBER",
+                "x-ms-dynamically-added": true
+              }
+            },
+            "additionalProperties": {}
+          },
+          "statusCode": 200,
+          "body": {
+            "success": "@variables('ResponseSucceeded')",
+            "message": "@{variables('ResponseMessage')}",
+            "groupid": "@if(\r\n  and(\r\n    variables('ResponseSucceeded'),\r\n    equals(outputs('Requested_decision'), 'Accept')\r\n  ),\r\n  variables('ResultGroupId'),\r\n  0\r\n)"
+          }
+        }
+      },
+      "Clean_up_rejected_attempt": {
+        "actions": {
+          "Read_cleanup_request": {
+            "type": "OpenApiConnection",
+            "inputs": {
+              "parameters": {
+                "dataset": "{SHAREPOINT_SITE_URL}",
+                "parameters/method": "GET",
+                "parameters/uri": "@concat(\r\n  '_api/web/lists/getbytitle(''Connection Requests'')/items(',\r\n  string(body('Read_request')?['ID']),\r\n  ')'\r\n)",
+                "parameters/headers": {
+                  "Accept": "application/json;odata=verbose"
+                }
+              },
+              "host": {
+                "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                "connectionName": "shared_sharepointonline",
+                "operationId": "HttpRequest"
+              }
+            }
+          },
+          "Request_cancelled_or_declined": {
+            "actions": {
+              "Read_cleanup_group": {
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "parameters": {
+                    "dataset": "{SHAREPOINT_SITE_URL}",
+                    "parameters/method": "GET",
+                    "parameters/uri": "@concat(\r\n  '_api/web/lists/getbytitle(''Groups'')/items(',\r\n  string(variables('ResultGroupId')),\r\n  ')'\r\n)",
+                    "parameters/headers": {
+                      "Accept": "application/json;odata=verbose"
+                    }
+                  },
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                    "connectionName": "shared_sharepointonline",
+                    "operationId": "HttpRequest"
+                  }
+                }
+              },
+              "Unfinished_group_belongs_to_request": {
+                "actions": {
+                  "Find_cleanup_memberships": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "{SHAREPOINT_SITE_URL}",
+                        "table": "{GROUP_MEMBERS_LIST_ID}",
+                        "$filter": "@concat(\r\n  'GroupId eq ',\r\n  string(variables('ResultGroupId')),\r\n  ' and MembershipStatus eq ''Active'' and (MembershipKey eq ''request:',\r\n  string(body('Read_request')?['ID']),\r\n  ':participant:',\r\n  string(body('Read_request')?['SenderParticipantId']),\r\n  ''' or MembershipKey eq ''request:',\r\n  string(body('Read_request')?['ID']),\r\n  ':participant:',\r\n  string(body('Read_request')?['RecipientParticipantId']),\r\n  ''')'\r\n)",
+                        "$top": 2
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "GetItems"
+                      }
+                    }
+                  },
+                  "For_each_cleanup_membership": {
+                    "foreach": "@outputs('Find_cleanup_memberships')?['body/value']",
+                    "actions": {
+                      "Read_cleanup_membership_revision": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "parameters": {
+                            "dataset": "{SHAREPOINT_SITE_URL}",
+                            "parameters/method": "GET",
+                            "parameters/uri": "@concat(\r\n  '_api/web/lists/getbytitle(''Group Members'')/items(',\r\n  string(item()?['ID']),\r\n  ')'\r\n)",
+                            "parameters/headers": {
+                              "Accept": "application/json;odata=verbose"
+                            }
+                          },
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                            "connectionName": "shared_sharepointonline",
+                            "operationId": "HttpRequest"
+                          }
+                        }
+                      },
+                      "Cleanup_membership_active": {
+                        "actions": {
+                          "Mark_membership_Left": {
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "parameters": {
+                                "dataset": "{SHAREPOINT_SITE_URL}",
+                                "parameters/method": "POST",
+                                "parameters/uri": "@concat(\r\n  '_api/web/lists/getbytitle(''Group Members'')/items(',\r\n  string(item()?['ID']),\r\n  ')'\r\n)",
+                                "parameters/headers": {
+                                  "Accept": "application/json;odata=verbose",
+                                  "Content-Type": "application/json;odata=verbose",
+                                  "X-HTTP-Method": "MERGE",
+                                  "IF-MATCH": "@{body('Read_cleanup_membership_revision')?['d']?['__metadata']?['etag']}"
+                                },
+                                "parameters/body": "@json(\r\n  concat(\r\n    '{\"__metadata\":{\"type\":\"',\r\n    body('Read_cleanup_membership_revision')?['d']?['__metadata']?['type'],\r\n    '\"},\"MembershipStatus\":\"Left\",\"LeftAt\":\"',\r\n    utcNow(),\r\n    '\"}'\r\n  )\r\n)"
+                              },
+                              "host": {
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                "connectionName": "shared_sharepointonline",
+                                "operationId": "HttpRequest"
+                              }
+                            }
+                          }
+                        },
+                        "runAfter": {
+                          "Read_cleanup_membership_revision": [
+                            "Succeeded"
+                          ]
+                        },
+                        "else": {
+                          "actions": {}
+                        },
+                        "expression": {
+                          "and": [
+                            {
+                              "equals": [
+                                "@and(\r\n  equals(\r\n    body('Read_cleanup_membership_revision')?['d']?['MembershipStatus'],\r\n    'Active'\r\n  ),\r\n  equals(\r\n    body('Read_cleanup_membership_revision')?['d']?['GroupId'],\r\n    variables('ResultGroupId')\r\n  ),\r\n  contains(\r\n    createArray(\r\n      body('Read_request')?['SenderParticipantId'],\r\n      body('Read_request')?['RecipientParticipantId']\r\n    ),\r\n    body('Read_cleanup_membership_revision')?['d']?['ParticipantId']\r\n  ),\r\n  equals(\r\n    body('Read_cleanup_membership_revision')?['d']?['MembershipKey'],\r\n    concat(\r\n      'request:',\r\n      string(body('Read_request')?['ID']),\r\n      ':participant:',\r\n      string(body('Read_cleanup_membership_revision')?['d']?['ParticipantId'])\r\n    )\r\n  )\r\n)",
+                                "@true"
+                              ]
+                            }
+                          ]
+                        },
+                        "type": "If"
+                      }
+                    },
+                    "runAfter": {
+                      "Find_cleanup_memberships": [
+                        "Succeeded"
+                      ]
+                    },
+                    "type": "Foreach"
+                  },
+                  "End_unfinished_group": {
+                    "runAfter": {
+                      "For_each_cleanup_membership": [
+                        "Succeeded"
+                      ]
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "{SHAREPOINT_SITE_URL}",
+                        "parameters/method": "POST",
+                        "parameters/uri": "@concat(\r\n  '_api/web/lists/getbytitle(''Groups'')/items(',\r\n  string(variables('ResultGroupId')),\r\n  ')'\r\n)",
+                        "parameters/headers": {
+                          "Accept": "application/json;odata=verbose",
+                          "Content-Type": "application/json;odata=verbose",
+                          "X-HTTP-Method": "MERGE",
+                          "IF-MATCH": "@{body('Read_cleanup_group')?['d']?['__metadata']?['etag']}"
+                        },
+                        "parameters/body": "@json(\r\n  concat(\r\n    '{\"__metadata\":{\"type\":\"',\r\n    body('Read_cleanup_group')?['d']?['__metadata']?['type'],\r\n    '\"},\"State\":\"Ended\"}'\r\n  )\r\n)"
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "HttpRequest"
+                      }
+                    }
+                  }
+                },
+                "runAfter": {
+                  "Read_cleanup_group": [
+                    "Succeeded"
+                  ]
+                },
+                "else": {
+                  "actions": {}
+                },
+                "expression": {
+                  "and": [
+                    {
+                      "equals": [
+                        "@and(\r\n  equals(\r\n    body('Read_cleanup_group')?['d']?['SetupComplete'],\r\n    false\r\n  ),\r\n  equals(\r\n    body('Read_cleanup_group')?['d']?['SourceRequestId'],\r\n    body('Read_request')?['ID']\r\n  ),\r\n  contains(\r\n    createArray('Closed', 'Ended'),\r\n    body('Read_cleanup_group')?['d']?['State']\r\n  )\r\n)",
+                        "@true"
+                      ]
+                    }
+                  ]
+                },
+                "type": "If"
+              }
+            },
+            "runAfter": {
+              "Read_cleanup_request": [
+                "Succeeded"
+              ]
+            },
+            "else": {
+              "actions": {}
+            },
+            "expression": {
+              "and": [
+                {
+                  "equals": [
+                    "@and(\r\n  contains(\r\n    createArray('Cancelled', 'Declined'),\r\n    body('Read_cleanup_request')?['d']?['Status']\r\n  ),\r\n  equals(\r\n    body('Read_cleanup_request')?['d']?['SenderParticipantId'],\r\n    body('Read_request')?['SenderParticipantId']\r\n  ),\r\n  equals(\r\n    body('Read_cleanup_request')?['d']?['RecipientParticipantId'],\r\n    body('Read_request')?['RecipientParticipantId']\r\n  )\r\n)",
+                    "@true"
+                  ]
+                }
+              ]
+            },
+            "type": "If"
+          }
+        },
+        "runAfter": {
+          "Complete_acceptance": [
+            "Succeeded",
+            "TimedOut",
+            "Skipped",
+            "Failed"
+          ]
+        },
+        "else": {
+          "actions": {}
+        },
+        "expression": {
+          "and": [
+            {
+              "equals": [
+                "@and(\r\n  equals(outputs('Requested_decision'), 'Accept'),\r\n  greater(variables('ResultGroupId'), 0)\r\n)",
+                "@true"
+              ]
+            }
+          ]
+        },
+        "type": "If"
+      }
+    }
+  }
+}

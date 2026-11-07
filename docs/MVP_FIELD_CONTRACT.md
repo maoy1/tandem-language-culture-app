@@ -135,6 +135,8 @@ memberships and requests to it. All rows below are a contract proposal for
 | Capacity | Maximum total members; Number, integer | Required; Language 2 or 3, Culture/Combined 2–10 | Group selects within approved bounds; validate updates | Active member may propose change; never below current active member count | Show alongside current count/free slots | Planned/mapping pending |
 | State | Open / Closed / Ended; Choice | Required; initially Open if space remains, otherwise Closed, only after membership creation succeeds | Workflow sets initial state; authorized active member manages later transitions | Open/Closed can switch or become Ended; Ended is final in MVP | Open with valid focus/space is joinable; Closed/Ended not joinable | Planned/mapping pending |
 | Purpose | Brief group description; multiple lines plain text | Optional | Active members edit; admin exception | Editable | Exact projection to decide with Discovery | Proposed #12 |
+| SourceRequestId | Originating person-to-person acceptance; Number, integer, unique | Required in current new-group path; old-group migration mapping remains #48 | Workflow-managed, never participant input | Hidden technical reference | Excluded | Owner-confirmed configured; runtime uniqueness not verified |
+| SetupComplete | Technical publication/readiness marker; Yes/No | Default No | Acceptance sets Yes only after memberships and accepted result are established | Hidden; independent from Open/Closed/Ended | Gate operational group exposure; do not display raw marker | Owner-confirmed configured; export reviewed |
 | Created / Modified and authors | System history fields | Automatic | SharePoint | Not participant inputs | Excluded as system/admin-only metadata | System |
 
 Capacity is a group-level limit, not a registration preference. Group controls
@@ -163,7 +165,8 @@ directly; ordinary accepted joins and Leave actions maintain them automatically.
 | ID | Membership reference; SharePoint system ID | Automatic | SharePoint | Read-only reference | Not exposed by default | System |
 | Group | Single Lookup to Groups item | Required | Acceptance/migration automation resolves it; immutable for that episode | Shows which group, not an editable link | Technical link, not raw membership row | Planned/mapping pending |
 | Participant | Single Lookup to Participants item | Required | Acceptance resolves approved participant; immutable for that episode | Shows member identity under agreed access rules | Member-name exposure still to decide | Planned/mapping pending |
-| MembershipStatus | Active / Left; Choice | Required; Active only after successful acceptance/import | Workflow changes to Left on self-service departure | Join/Leave actions, not a freely editable status field | Used internally for count and validity | Planned/mapping pending |
+| MembershipStatus | Active / Left; Choice | Required; provisional Active during setup, operational only after accepted/completed parent | Workflow records departure or rejected-setup cleanup as Left | Join/Leave actions, not a freely editable status field | Used internally for count and validity | Planned/mapping pending |
+| MembershipKey | Request/participant episode key; single line text, unique | Required in current acceptance path | Workflow generates request:{requestId}:participant:{participantId}; immutable | Hidden | Excluded | Owner-confirmed configured; complete retry behavior remains #47 |
 | JoinedAt | Episode start; Date/time in UTC | Required for new accepted joins; migration unknown-date handling decided in #48 | Workflow timestamps; do not invent historical dates | Read-only where useful | Not exposed by default | Proposed #12 |
 | LeftAt | Episode departure; Date/time in UTC | Empty while Active; set on recorded departure | Leave workflow | Read-only history | Not exposed by default | Proposed #14 |
 | Created / Modified and authors | System change metadata | Automatic | SharePoint | Not participant inputs | Excluded | System |
@@ -173,9 +176,14 @@ behavior is Later unless explicitly enabled; do not reactivate old rows merely
 because a participant becomes Active again. No separate member Role field is
 needed: sharer/learner compatibility comes from profile selections and group focus.
 
-Source request links, idempotency keys and active-pair duplicate protection are
-designed in #47 with #11/#12/#17 before implementation. Do not imply a native
-multi-column unique constraint or a particular concurrency mechanism is available.
+The current #11/#12 build uses SourceRequestId and MembershipKey as documented
+above, plus ETag-conditional terminal/setup/cleanup writes. These are technical
+implementation choices under #47, not proof of complete idempotency or a native
+multi-column unique constraint. SourceRequestId migration mapping and group-join
+episode keys still need their dependent #48/#17 design. Built-in Title in Group
+Members is optional and unused by the current flow. Active membership rows may
+exist during partial construction; they do not represent an operational group
+until the source request is Accepted and SetupComplete is Yes.
 Retries must not create a second active membership, and acceptance must not
 report success until its required group/membership result is consistent.
 
