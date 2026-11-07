@@ -37,8 +37,8 @@ gates; this owner-only build must not be shared as an ordinary-user endpoint.
 
 ### Batch 2 — load and normalize profiles
 
-1. Add SharePoint Get items for Participants with Filter Query
-   `Status eq 'Active'` and deterministic `ID asc` order. Inspect its pagination
+1. Add SharePoint **Get items** named **Candidate source** for Participants with
+   Filter Query `Status eq 'Active'` and deterministic `ID asc` order. Inspect its pagination
    settings before relying on results. Proposed owner-build bound: fetch at most
    501, with pagination sufficient to retrieve that bound; if more than 500 are
    returned, respond with an explicit limit error, not partial-result success.
@@ -57,25 +57,68 @@ gates; this owner-only build must not be shared as an ordinary-user endpoint.
    `int(item()?['Id'])`. Do not silently interpret a misnamed field as an empty
    profile. Preserve separate language and culture ID namespaces.
 
+Owner supplied Get item output confirms Learnlanguages#Id is an integer array.
+Use built-in **Data Operations Select** named **My_profile_row**, From expression
+`array(body('Get_item'))`, with this mapping. Keys are plain text; values are fx
+expressions without @. Actual field keys for the other #Id arrays must still be
+confirmed with populated data during binding; missing keys are not proof of emptiness.
+
+| Key | Value expression |
+|---|---|
+| profileId | `item()?['ID']` |
+| accountId | `item()?['Participantaccount']?['Claims']` |
+| displayName | `item()?['Participantaccount']?['DisplayName']` |
+| status | `item()?['Status']?['Value']` |
+| teachIds | `coalesce(item()?['Teachlanguages#Id'], json('[]'))` |
+| learnIds | `coalesce(item()?['Learnlanguages#Id'], json('[]'))` |
+| shareCultureIds | `coalesce(item()?['ShareCultures#Id'], json('[]'))` |
+| learnCultureIds | `coalesce(item()?['LearnCultures#Id'], json('[]'))` |
+
+Then Compose **My_profile** = `first(body('My_profile_row'))`. Add another Select
+named **Normalized_candidates**, From the **value** array of Candidate source,
+using the same eight mappings. Compose **Candidate_profiles** =
+`body('Normalized_candidates')`. These are data-shaping actions, not per-record
+HTTP calls or a second matching implementation. Do not add an Apply to each.
+
 ### Batch 3 — match and respond
 
 1. Add **Eligible_candidates** Filter array and **Candidate_fit** Select using
    config/discovery_core_build.json. In fx omit leading @. The fragment assumes
    the two normalized inputs above are Composes; adapt references only if the
    actual action kinds/names differ. No assignments/writes happen during search.
+   In the basic Filter array editor, the complete Boolean predicate can be placed
+   in the left fx field, compared with Boolean true. Candidate_fit now projects
+   only profileId, displayName and fitType for the owner preview; matching ID
+   arrays/identity/audit fields are not returned to the gallery.
 2. Match either direction for language or culture, excluding self and non-Active
    validation status. Shared interest alone is insufficient without a matching
    sharer. Blank Time zone is not an exclusion.
-3. Add **Respond to a Power App or flow** with Text outputs **candidatesjson**
-   (`string(body('Candidate_fit'))`) and **errormessage** (empty on success).
-   The explicit over-bound path returns [] plus a clear error; failed reads must
-   not produce a successful broad-list response. Guard/failure paths need binding.
+3. Add **Respond to a Power App or flow** with Text outputs **candidatesjson** and
+   **errormessage**, using the responseContract expressions in the same JSON.
+   Candidate counts above 500 return [] plus a clear error, not partial matches.
+   A missing account/unready validation status returns registration feedback.
+   Failed reads do not reach the success response; the app's IfError handles the
+   failed invocation. None of this establishes ordinary-user caller authorization.
 
 ### Batch 4 — wire the Power Apps screen
 
-1. Add a blank screen named **scrDiscovery**, a vertical gallery with Items
-   **colCandidates**, and a Back control. Gallery name/fit labels bind to
-   `ThisItem.displayName` and `ThisItem.fitType`.
+Configuration checkpoint (2026-11-07): the owner confirms the flow/actions and
+app bindings below are configured. The sample artwork is removed. MainScreen1
+holds Discover; scrDiscovery holds Back and Gallery1. Owner reports empty results
+with no suitable candidate data and working Back navigation. Populated matching,
+actual flow responses/query limits, published versions and caller/access
+verification remain unverified. The JSON is a partial expression reference,
+not a tenant/app export. Request flow TandemSendRequest is separate #10 work.
+
+1. On scrDiscovery, use the vertical Gallery1 with Items **colCandidates**.
+   Set Title4.Text to **ThisItem.displayName** and Subtitle4.Text to
+   **ThisItem.fitType**. Back.OnSelect is
+   **Navigate(MainScreen1, ScreenTransition.None)**. If starting from the sample
+   template, remove the sample artwork controls after creating this gallery.
+   The owner's picker did not expose Blank, so a blank-screen option is not a
+   prerequisite. On MainScreen1 place Discover beside the registration view.
+   Use **RecordsGallery1.Selected.ID**; the earlier **Form1.Item.ID** reference
+   caused an editor error. This reference is not caller authorization.
 2. Add the TandemDiscovery flow through the app's Power Automate pane. Verify the
    connector's actual name/output fields using IntelliSense if names differ.
 3. Add a Discover button near the saved registration view and use this OnSelect
@@ -83,11 +126,11 @@ gates; this owner-only build must not be shared as an ordinary-user endpoint.
 
 ```powerfx
 If(
-    IsBlank(Form1.Item.ID),
+    IsBlank(RecordsGallery1.Selected.ID),
     Notify("Save your registration first.", NotificationType.Error),
     Clear(colCandidates);
     IfError(
-        Set(varDiscoveryResponse, TandemDiscovery.Run(Form1.Item.ID));
+        Set(varDiscoveryResponse, TandemDiscovery.Run(RecordsGallery1.Selected.ID));
         If(
             !IsBlank(varDiscoveryResponse.errormessage),
             Notify(varDiscoveryResponse.errormessage, NotificationType.Error),
