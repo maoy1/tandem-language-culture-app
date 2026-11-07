@@ -13,6 +13,13 @@ Owner-confirmed catalogue import does not establish participant form/flow accept
 
 ## Planning and new work
 
+Current owner scheduling overrides the earlier per-case sequence: core app/flow
+construction first, remaining acceptance afterward. #5 stays open; its remaining
+cases are deferred while #7/#9 owner-only discovery is built on the existing list.
+Then in-app requests, accepted groups/memberships, group actions and notifications.
+No notification channel or setup-automation path selected; Approvals is a candidate
+for later evaluation. Build completion and verified completion are tracked separately.
+
 | Ticket | Purpose | Order |
 |---|---|---|
 | #45 | Parent for v0.2 scope and delivery alignment | Track; no implementation completion claimed |

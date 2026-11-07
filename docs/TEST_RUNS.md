@@ -24,6 +24,7 @@ Target scenarios without explicit execution evidence remain NOT RUN or deferred.
 | DISC-008 | REQUIREMENT PENDING | Exact Discovery display fields not agreed |
 | NOT-001 | REQUIREMENT PENDING | #49 must select event/channel/recipient behavior |
 | MIG-001–002 | DEFERRED | Actual Excel inspection/migration is final phase #48 |
+| Remaining registration/flow cases and unexecuted case portions | DEFERRED | Owner explicitly prioritizes integrated app/flow construction before the remaining detailed tests (2026-10-31); preserve prior passes/failures and resume after core build |
 
 ## Latest local checks
 
@@ -362,6 +363,18 @@ the app/flow versions separately.
   cross-flow/concurrent safety, invalid-catalogue checks or full #5 completion.
 - Next: all-four-empty direct-list fixture to exercise Needs review correction
   and no-write follow-up, then restore the original selections.
+
+### DECISION-20261031-01 — build integrated core before remaining tests
+
+- Owner asks to prioritize app/Power Automate workflow construction through
+  discovery, requests, group/membership creation and notifications; detailed
+  tests/validation resume afterward. No pending case is promoted to PASS.
+- Owner prefers a central experience inside the app. Approvals may be considered
+  at the notification stage; no email/Teams/Approvals channel or connection chosen.
+- Setup-automation investigation is postponed. Required lists/data bindings are
+  attached when their dependent actions are built, not claimed completed now.
+- Existing owner evidence remains scoped. Wider-rollout access and other release
+  checks remain open; #5/#7 and other incomplete implementation tickets stay open.
 
 ## New run template
 
