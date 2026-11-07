@@ -211,10 +211,11 @@ The three flows above do not create groups. The subsequent #11 response build
 is recorded in the sanitized observed reference
 config/participant_response_flow.snapshot.json, with coordinated #12/#47 work.
 The complete export review found 77 actions/depth 6 and valid structural
-references, but requires the Decline stop flag and final Choice Value fixes.
-The first input label also needs correction. Do not treat it as a ready import,
-live matching/authorization proof or a completed #11 delivery. A corrected
-export/review precedes app Accept/Decline controls.
+references. Review2 verifies the Choice Value and label fixes. A subsequent
+saved-action fragment verifies Decline Set_ContinueProcessing_2 is false; the
+reference explicitly records this overlay rather than claiming a new full export. Do not treat it as a ready import,
+live matching/authorization proof or a completed #11 delivery. Configuration review is complete; PR #57 owner review precedes app
+Accept/Decline controls. Runtime acceptance remains pending.
 
 The backend groups use unique SourceRequestId; membership episodes use unique
 MembershipKey. SetupComplete defaults No and is workflow-managed. Only a group

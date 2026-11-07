@@ -682,6 +682,41 @@ the app/flow versions separately.
   saved/exported fields. No new tenant PASS or feature closure. Broader #47
   interruption/retry/duplicate/accepted-but-unfinished recovery remains open.
 
+### REVIEW-RESP-20261107-03 - review2 export, one correction remains
+
+- Source TandemRespondRequest-review2_20261107213618.zip; SHA256:
+  4397df23d5dc40ee3fd1ae73ea27738b52766ba27abb7c223e7ff723ba3e0521.
+  Modified UTC 2026-11-07T21:35:20.6910795Z.
+- Compared definitions excluding metadata: exactly two changes, first input
+  title corrected to ParticipantId and final request Choice path corrected to
+  body('Read_final_request')?['Status']?['Value']. Required input order unchanged.
+- RESP-REVIEW-002 and 003 resolved in this export. RESP-REVIEW-001 remains OPEN:
+  Process_valid_response/True/Is_decline/True/Set_ContinueProcessing_2 still has
+  value true, not false. No other change to the Decline branch observed.
+- Counts remain 77 actions/depth 6, no missing action refs or non-sibling run-after
+  refs, one response. Connection binding unchanged. This is static review only.
+- Sanitized snapshot updated to the actual second export, preserving original
+  findings/export fingerprint as history. Block 3 still changes-required until
+  the final Decline stop flag is saved and inspected. No new feature work or
+  tenant PASS. Existing local tests are not rerun for this evidence-only update.
+
+### REVIEW-RESP-20261107-04 - saved Decline correction verified, Block 3 complete
+
+- Owner supplied saved SetVariable Code view: ContinueProcessing Boolean false,
+  run-after Set_ResponseSucceeded Succeeded. Its action identity matches the
+  review2 Decline stop action; no new full export was requested or supplied.
+- RESP-REVIEW-001 resolved by this scoped saved-action evidence. RESP-REVIEW-002
+  and 003 were already resolved in review2. No outstanding corrections from this
+  bounded static review.
+- Reference uses review2 as exported base plus an explicitly recorded one-action
+  overlay. Export hashes remain unchanged; no false post-fix ZIP provenance.
+- Rechecked composed reference: 77 actions, depth 6, no missing action/sibling
+  references, expected false stop flag/Choice Value/input label, five versioned
+  writes and one response. Sanitization/diff checks passed.
+- Blocks 1/2 configured and Block 3 configuration review complete. This is not a
+  tenant scenario PASS. Full #11 app wiring, #6/caller/access and #47 retry/
+  interruption/recovery acceptance remain open. PR #57 owner review is next.
+
 ## New run template
 
 Copy this section for an execution. Record one row per case (or split a case into

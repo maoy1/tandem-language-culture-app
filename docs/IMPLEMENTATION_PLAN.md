@@ -162,9 +162,10 @@ not merely unexecuted tests. See TEST_RUNS.md for the evidence checkpoint.
 
 Latest owner checkpoint (recorded 2026-11-07): cleanup membership Left writes,
 unfinished-group Ended write and feedback are owner-confirmed saved. Blocks 1
-and 2 are configuration-complete; Block 3 export review found two required
-field corrections and one trigger-label cleanup. Correct/re-export before
-marking Block 3 complete.
+and 2 are configuration-complete. Block 3 is now configuration-review complete:
+review2 verified Status Value and ParticipantId label, and the owner's subsequent
+saved-action Code view verifies Decline ContinueProcessing = false with the
+correct predecessor. No post-correction full export or runtime run is claimed.
 The flow has not been exercised end to end. Owner confirmations of
 Save/configuration do not establish runtime acceptance.
 
@@ -183,7 +184,7 @@ checkpoints are historical and superseded by this current section.
 | Initial group/member persistence (#12 with #11) | Groups/Group Members, SourceRequestId/MembershipKey, create/reuse loop and membership verification configured |
 | Conditional acceptance and group setup (#11/#12/#47) | ETag Accepted attempt, outcome reread, group SetupComplete/initial-state update configured; no real acceptance result supplied |
 | Final result/response (#11) | Final request reader was missing; owner added it and saved the five-row condition and one success/message/groupid response |
-| Structure and defects | First pasted block: 34 actions/depth 6. Later preparation block: 26 actions/depth 5; Membership key, recipient From, IF-MATCH and outcome predicate corrections statically verified. Subsequent main-level moves owner-confirmed, not a new full-flow depth audit |
+| Structure and defects | First pasted block: 34 actions/depth 6. Later preparation block: 26 actions/depth 5; Membership key, recipient From, IF-MATCH and outcome predicate corrections statically verified. Complete exports reviewed at 77 actions/depth 6; later saved Decline correction verified separately |
 | Rejected-attempt cleanup (#47 shared) | Guarded membership revision/conditional Left+LeftAt loop, conditional unfinished-group Ended write and terminal-status feedback owner-confirmed saved; no runtime cleanup pass |
 
 The accepted intermediate structure keeps Group choices valid inside Prepare
@@ -193,8 +194,8 @@ main-level Complete acceptance stage; its failure branch stops processing.
 
 ### Finish line for this backend build batch
 
-Three work blocks define this batch; blocks 1 and 2 are now owner-confirmed
-configuration-complete. Only block 3 remains before the PR checkpoint:
+All three blocks in this bounded backend batch are configuration-complete.
+The next checkpoint is owner review of PR #57, not new feature construction:
 
 1. **Membership cleanup** - loop over the two request-owned membership episodes,
    read each current revision, conditionally mark only still-Active matching
@@ -208,16 +209,16 @@ configuration-complete. Only block 3 remains before the PR checkpoint:
    full available nesting. Save without template errors, synchronize docs/issues
    and raise the #11 draft/partial-delivery PR for review before new feature work.
 
-Current status: **Blocks 1/2 saved; Block 3 reviewed with changes required.**
-Export: 77 actions, maximum depth 6, no missing action or sibling run-after
-references, five ETag MERGE writes and one response. Required fixes: set the
-Decline ContinueProcessing flag false; compare final request Status Value.
-Also correct the first input label to ParticipantId. The sanitized observed
-reference is config/participant_response_flow.snapshot.json; it deliberately
-retains findings until a corrected export is reviewed.
-Review the full saved definition where export is available, or supplied action
-blocks if export is unavailable. Do not mark static review or tenant acceptance
-passed merely because Save succeeded.
+Current status: **Blocks 1/2 saved; Block 3 configuration review complete.**
+Review2 plus the verified post-export action correction resolves all three
+findings: Decline stop flag false, final Choice Value, ParticipantId input label.
+Structural checks: 77 actions, depth 6, valid action/sibling references, five
+versioned MERGEs and one response. The sanitized reference explicitly records
+the action overlay and retains the source-export fingerprints/history.
+PR #57 is ready for owner review as partial configuration delivery; it does
+not close #11/#12/#47 or establish end-to-end behavior. Pause before app controls
+until the owner has reviewed/merged this backend batch.
+
 Do not add My groups, notification configuration, group-join features or a new
 architecture to this backend batch.
 

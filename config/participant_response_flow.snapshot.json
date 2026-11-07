@@ -1,14 +1,14 @@
 {
-  "artifactVersion": 1,
-  "artifactKind": "sanitized_observed_flow_definition_reference_not_import_package",
+  "artifactVersion": 2,
+  "artifactKind": "sanitized_export_plus_verified_saved_action_reference_not_import_package",
   "flowName": "TandemRespondRequest",
-  "reviewStatus": "changes_required",
+  "reviewStatus": "bounded_configuration_review_complete_runtime_acceptance_pending",
   "observedExport": {
-    "fileName": "TandemRespondRequest-review_20261107212221.zip",
-    "sha256": "045fa25fb5243f3b6e98ae0913e3fe24194cf5004fdc67922fe1298910368d0b",
-    "flowModifiedUtc": "2026-11-07T21:21:16.5567363Z"
+    "fileName": "TandemRespondRequest-review2_20261107213618.zip",
+    "sha256": "4397df23d5dc40ee3fd1ae73ea27738b52766ba27abb7c223e7ff723ba3e0521",
+    "flowModifiedUtc": "2026-11-07T21:35:20.6910795Z"
   },
-  "handling": "Raw ZIP stays local. Creator/tenant/flow/action metadata IDs, site/list bindings and runtime authentication wrappers are removed or replaced. Definition is observed, not silently patched to the desired result.",
+  "handling": "Base definition is the review2 export. Only Set_ContinueProcessing_2 is overlaid from the owner's subsequently supplied saved Code view, with matched action identity and predecessor. This is not a new full export or runtime proof. Raw ZIP stays local; environment/authentication metadata remains excluded.",
   "structuralReview": {
     "actionCount": 77,
     "maximumActionDepth": 6,
@@ -29,25 +29,31 @@
       "severity": "required_fix",
       "action": "Set_ContinueProcessing_2",
       "path": "Process_valid_response/True/Is_decline/True",
-      "observed": true,
+      "observed": false,
       "expected": false,
-      "reason": "Successful Decline must stop processing; otherwise group validation can evaluate skipped Accept inputs and change the result/message."
+      "reason": "Successful Decline must stop processing; otherwise group validation can evaluate skipped Accept inputs and change the result/message.",
+      "status": "resolved_in_saved_action_fragment",
+      "previousObserved": true
     },
     {
       "id": "RESP-REVIEW-002",
       "severity": "required_fix",
       "action": "Acceptance_result_ready",
-      "observed": "@outputs('Read_final_request')?['body/Status']",
+      "observed": "@body('Read_final_request')?['Status']?['Value']",
       "expected": "@body('Read_final_request')?['Status']?['Value']",
-      "reason": "Final check must compare the Value of the declared SharePoint Choice field, consistently with the connector contract, rather than its expanded object. Actual run output still needs verification."
+      "reason": "Final check must compare the Value of the declared SharePoint Choice field, consistently with the connector contract, rather than its expanded object. Actual run output still needs verification.",
+      "previousObserved": "@outputs('Read_final_request')?['body/Status']",
+      "status": "resolved_in_review2_export"
     },
     {
       "id": "RESP-REVIEW-003",
       "severity": "label_cleanup",
       "inputProperty": "number",
-      "observedTitle": "NParticipantIdumber",
+      "observedTitle": "ParticipantId",
       "expectedTitle": "ParticipantId",
-      "reason": "Correct the trigger input label while keeping the input/order intact."
+      "reason": "Correct the trigger input label while keeping the input/order intact.",
+      "previousObservedTitle": "NParticipantIdumber",
+      "status": "resolved_in_review2_export"
     }
   ],
   "connectionReview": {
@@ -80,7 +86,7 @@
             "properties": {
               "number": {
                 "description": "Please enter a number",
-                "title": "NParticipantIdumber",
+                "title": "ParticipantId",
                 "type": "number",
                 "x-ms-content-hint": "NUMBER",
                 "x-ms-dynamically-added": true
@@ -375,7 +381,7 @@
                 "type": "SetVariable",
                 "inputs": {
                   "name": "ContinueProcessing",
-                  "value": true
+                  "value": false
                 }
               }
             },
@@ -1129,7 +1135,7 @@
               "and": [
                 {
                   "equals": [
-                    "@outputs('Read_final_request')?['body/Status']",
+                    "@body('Read_final_request')?['Status']?['Value']",
                     "Accepted"
                   ]
                 },
@@ -1470,5 +1476,32 @@
         "type": "If"
       }
     }
-  }
+  },
+  "observedExportHistory": [
+    {
+      "fileName": "TandemRespondRequest-review_20261107212221.zip",
+      "sha256": "045fa25fb5243f3b6e98ae0913e3fe24194cf5004fdc67922fe1298910368d0b",
+      "flowModifiedUtc": "2026-11-07T21:21:16.5567363Z"
+    }
+  ],
+  "outstandingRequiredFixes": [],
+  "postExportEvidence": [
+    {
+      "evidenceType": "owner_supplied_saved_action_code_view",
+      "recordedOn": "2026-11-07",
+      "action": "Set_ContinueProcessing_2",
+      "path": "Process_valid_response/True/Is_decline/True",
+      "sourceActionIdentityMatched": true,
+      "inputs": {
+        "name": "ContinueProcessing",
+        "value": false
+      },
+      "runAfter": {
+        "Set_ResponseSucceeded": [
+          "Succeeded"
+        ]
+      },
+      "scope": "Verifies this saved action only; the rest of the reference remains based on review2."
+    }
+  ]
 }

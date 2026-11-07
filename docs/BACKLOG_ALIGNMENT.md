@@ -54,7 +54,9 @@ Current #11 backend construction includes coordinated #12 persistence and #47
 conditional-write work. Main response/group-setup configuration is owner-confirmed;
 membership cleanup and unfinished-group Ended/feedback writes are now
 owner-confirmed saved. Blocks 1 and 2 are configuration-complete; Block 3 review
-found two required field corrections and a trigger-label typo. The export has
+review2 and the subsequent verified saved-action fragment resolve all three
+findings, including the Decline stop flag. Block 3 configuration review is
+complete; owner PR #57 review is next. The exported base has
 77 actions/depth 6 with valid structural references and five versioned MERGEs.
 See config/participant_response_flow.snapshot.json for observed evidence; no
 end-to-end cleanup run is supplied.
