@@ -502,6 +502,18 @@ the app/flow versions separately.
 - PR #54 retargeted from the merged #52 branch to main. PR #55 remains stacked
   on #54; both remain open. Do not infer their acceptance or merge from this step.
 
+### TRACK-20261107-02 - discovery reference synchronized
+
+- Discovery branch commit 15469f0 updates config/discovery_core_build.json and
+  src/README.md with the guided filter/projection/response and actual app bindings.
+- Version 3 distinguishes owner-reported configuration, empty-gallery/Back
+  observations and unverified populated matching. It lists coverage/omissions;
+  no live export or completed tenant acceptance is claimed.
+- Local pytest: 22 passed. JSON parse, projection/response keys and diff checks
+  passed. These do not execute Power Automate expressions or verify access.
+- PR #54 and #7 updated; #54 remains draft and #7 open. Tracking PR #55 includes
+  the updated discovery base. No new tenant run or published version supplied.
+
 ## New run template
 
 Copy this section for an execution. Record one row per case (or split a case into
