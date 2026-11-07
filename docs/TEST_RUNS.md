@@ -540,6 +540,183 @@ the app/flow versions separately.
 - #10 stays open. Core construction moves to #11; TandemRespondRequest not yet
   built. Existing caller/compatibility/availability/access gaps remain.
 
+### BUILD-RESP-20261107-01 - response/group scaffold configured
+
+- Owner confirms TandemRespondRequest inputs, participant/request readers,
+  Requested decision, recipient/Pending/decision guard and Decline branch.
+- Acceptance scaffold includes sender read, compatible language/culture ID
+  intersections, group-name/type/capacity inputs and parsed focus arrays,
+  Group choices valid, SourceRequestId group lookup/create/reuse, membership
+  loop/key lookup/create, group/membership reads, sender/recipient membership
+  filters and Memberships ready. No acceptance run is supplied.
+- Owner confirms Groups and Group Members created with instructed contract
+  fields, plus unique required Groups.SourceRequestId Number and Group Members
+  MembershipKey Text. Actual schema/export is not inspected. These keys support
+  retry identification; they do not prove full #47 safety.
+- Decline and Cancel still use normal Update item at this point. No final
+  Accepted write, publication, partial-group recovery or response UI is complete.
+  Configuration confirmations are not tenant acceptance. #11/#12/#47 stay open.
+
+### PREREQ-REQ-20261107-01 - conditional-update mechanism verified
+
+- TandemSharePointCheck uses existing SharePoint Send an HTTP request action.
+  Owner reports metadata GET succeeded with statusCode 200.
+- Test creates a temporary technical request with zero participant references,
+  reads verbose item metadata/ETag, attempts a current-version Cancelled MERGE,
+  attempts Declined with the original stale ETag, then deletes the test row.
+- Initial screenshot: first MERGE failed PreconditionFailed because IF-MATCH
+  contained the entire response body, not its ETag. Stale test skipped; overall
+  green banner did not establish the mechanism. Preserve this failed attempt.
+- Guided correction on both writes:
+  body('Read_test_revision')?['d']?['__metadata']?['etag'].
+- Owner then supplied stale-test inputs showing IF-MATCH with the original
+  quoted version. Owner reports stale PreconditionFailed and subsequently
+  explicitly confirms the first conditional write and Delete test request both
+  succeeded. Thus current-version write succeeds, stale write is rejected and
+  cleanup succeeds in this scoped synthetic mechanism check.
+- Run ID/time, flow revision and raw response codes for the final three actions
+  were not supplied. Do not invent exact 204/412 evidence beyond the expected
+  semantics and reported outcomes.
+- Related #47; prerequisite evidence for REQ-009/010/011, NOT a pass for those
+  full scenarios. Accept/Decline/Cancel still need conditional-write integration,
+  conflict handling, partial-group recovery and end-to-end authorization/state/
+  capacity verification. No routine admin workflow or new connection chosen.
+
+### REVIEW-RESP-20261107-01 - pasted response block audit
+
+- Source: owner-pasted Can respond action definition, not an entire flow export.
+  Static count: 34 actions including the supplied If; deepest action depth 6
+  within this block. Create_membership and Accept_conditionally are deepest.
+  Any external ancestor containers were not supplied. No eight-level violation
+  is established from this block alone.
+- Confirmed configuration defects (not newly observed runtime test failures):
+  Accept_conditionally header key is IF_MATCH rather than IF-MATCH;
+  Membership_key inputs is literal concat text without expression prefix;
+  Recipient_membership From contains its Boolean predicate instead of the
+  Read_active_memberships value array.
+- Condition_1 compares blank with blank and has no actions. It is a placeholder,
+  not the instructed Acceptance confirmed predicate. SetupComplete creation is
+  unconfirmed; no publication/recovery/Power Apps response implementation inferred.
+- Decline_conditionally has IF-MATCH and current group/member creation mappings
+  are visible, but static inspection does not certify actual runtime output shape
+  or the complete conditional-write workflow.
+- Next: owner fixes the three field errors, then restructure existing actions
+  into sibling stages with ContinueProcessing and one final app response.
+  Keep business actions outside accumulating validation branches. Preserve
+  action names/expressions and check run-after dependencies after moving.
+- Proposed sibling stages: validate request; decline; prepare/validate Accept
+  choices; prepare group/memberships; commit/read/finalize or recover; respond.
+  This is a layout plan, not a tested or imported replacement flow. No child-flow
+  dependency or new connection/permission/licence is introduced.
+- #11/#12/#47 remain open. Full caller, #6 availability, persisted focus/state,
+  idempotency, conflict/recovery and tenant acceptance still apply.
+
+### BUILD-RESP-20261107-02 - corrections, stages and final response configured
+
+- Later owner-pasted preparation block statically confirms 26 actions, maximum
+  depth 5 within that block and valid local sibling run-after references.
+  Membership_key expression, recipient From array, IF-MATCH and the formerly
+  empty Acceptance_confirmed predicate are corrected. Group choices valid was
+  moved with its contents; this valid extra validation level was explicitly
+  retained, superseding the instruction to empty its True branch.
+- Owner confirms ContinueProcessing/response variables, Can respond and Process
+  valid response separation, decline/failure flags, and Complete acceptance
+  extracted to a sibling main-level stage. Final whole-flow nesting not inspected.
+- Read group revision, SetupComplete condition, setup guard and conditional
+  State/SetupComplete update are owner-confirmed configured. Setup condition
+  was initially missing below the reader and was subsequently added.
+- Final request reader was initially missing. Owner added it before final group,
+  used five Dynamic content condition rows (recipient ID via known fx), and saved.
+  No raw saved final-condition code is supplied; verify Status Value/reference
+  choices in the final configuration review.
+- Owner confirms one main-level success/message/groupid response with run-after
+  handling. No actual Accept/Decline response or group/member persisted result.
+- Cleanup gate, request terminal/identity checks, source-owned incomplete group
+  guard and two-key Find cleanup memberships query are configured. No membership
+  Left or group Ended cleanup writes yet.
+- Backend batch finish line: membership cleanup, unfinished-group cleanup/feedback,
+  configuration review and #11 PR checkpoint. App wiring is a later batch.
+- No new tenant PASS. Remaining caller/availability/focus/retry/recovery gaps are
+  implementation work, not waived by this configuration checkpoint.
+
+### BUILD-RESP-20261107-03 - cleanup blocks saved, review pending
+
+- Owner confirms Block 1 saved: cleanup loop, fresh membership revision read,
+  Active/group/party/key guard and ETag MERGE MembershipStatus Left with LeftAt.
+  Original membership, JoinedAt and keys are retained; no cleanup run supplied.
+- Owner confirms Block 2 saved: after successful loop only, ETag MERGE sets the
+  unfinished source-owned group State Ended, and final failure feedback uses the
+  rejected request status. Completed SetupComplete groups remain outside the
+  cleanup eligibility guard. No persisted end/feedback result supplied.
+- Mark blocks 1 and 2 configuration-complete, not tenant PASS or full #47 safety.
+- Block 3: obtain a current complete flow export if available (owner/co-owner
+  export access not yet checked) or current action definitions; review names,
+  references, run-after, Boolean/Choice field handling, nesting, terminal writes
+  and response schema before the #11 PR checkpoint. No new feature work added.
+
+### REVIEW-RESP-20261107-02 - complete export reviewed, changes required
+
+- Owner supplied TandemRespondRequest-review_20261107212221.zip. Source SHA256:
+  045fa25fb5243f3b6e98ae0913e3fe24194cf5004fdc67922fe1298910368d0b.
+  Export metadata modified UTC: 2026-11-07T21:21:16.5567363Z.
+- Static full-definition counts: 77 actions, maximum action depth 6, one app
+  response with success/message/groupid, no missing body/outputs/items/action
+  references and no non-sibling run-after references. Five MERGEs use IF-MATCH
+  with version references and no wildcard.
+- Required fix RESP-REVIEW-001: Decline Set_ContinueProcessing_2 is still true,
+  allowing fall-through into group preparation that references skipped Accept
+  inputs. Change it to Boolean false after the successful Decline.
+- Required fix RESP-REVIEW-002: final status row reads body/Status rather than
+  the declared Choice Value. Compare body('Read_final_request')?['Status']?['Value']
+  with Accepted; current definition risks reporting successful acceptance as
+  failure. Actual connector output needs runtime confirmation.
+- Label cleanup RESP-REVIEW-003: first Number input title is NParticipantIdumber;
+  rename its title ParticipantId, preserving property number/input order.
+- Connection reference source is Invoker. This is a newly observed binding,
+  not caller-to-participant authorization or ordinary-account proof; do not
+  silently switch to owner credentials. Existing #18/#39-42 gates remain.
+- Raw package is not committed. Sanitized observed definition preserves action
+  logic/findings but removes creator/tenant/action metadata, site/list bindings
+  and runtime authentication wrappers. It is not an importable replacement.
+- Blocks 1/2 are configured; Block 3 remains CHANGES REQUIRED pending corrected
+  saved/exported fields. No new tenant PASS or feature closure. Broader #47
+  interruption/retry/duplicate/accepted-but-unfinished recovery remains open.
+
+### REVIEW-RESP-20261107-03 - review2 export, one correction remains
+
+- Source TandemRespondRequest-review2_20261107213618.zip; SHA256:
+  4397df23d5dc40ee3fd1ae73ea27738b52766ba27abb7c223e7ff723ba3e0521.
+  Modified UTC 2026-11-07T21:35:20.6910795Z.
+- Compared definitions excluding metadata: exactly two changes, first input
+  title corrected to ParticipantId and final request Choice path corrected to
+  body('Read_final_request')?['Status']?['Value']. Required input order unchanged.
+- RESP-REVIEW-002 and 003 resolved in this export. RESP-REVIEW-001 remains OPEN:
+  Process_valid_response/True/Is_decline/True/Set_ContinueProcessing_2 still has
+  value true, not false. No other change to the Decline branch observed.
+- Counts remain 77 actions/depth 6, no missing action refs or non-sibling run-after
+  refs, one response. Connection binding unchanged. This is static review only.
+- Sanitized snapshot updated to the actual second export, preserving original
+  findings/export fingerprint as history. Block 3 still changes-required until
+  the final Decline stop flag is saved and inspected. No new feature work or
+  tenant PASS. Existing local tests are not rerun for this evidence-only update.
+
+### REVIEW-RESP-20261107-04 - saved Decline correction verified, Block 3 complete
+
+- Owner supplied saved SetVariable Code view: ContinueProcessing Boolean false,
+  run-after Set_ResponseSucceeded Succeeded. Its action identity matches the
+  review2 Decline stop action; no new full export was requested or supplied.
+- RESP-REVIEW-001 resolved by this scoped saved-action evidence. RESP-REVIEW-002
+  and 003 were already resolved in review2. No outstanding corrections from this
+  bounded static review.
+- Reference uses review2 as exported base plus an explicitly recorded one-action
+  overlay. Export hashes remain unchanged; no false post-fix ZIP provenance.
+- Rechecked composed reference: 77 actions, depth 6, no missing action/sibling
+  references, expected false stop flag/Choice Value/input label, five versioned
+  writes and one response. Sanitization/diff checks passed.
+- Blocks 1/2 configured and Block 3 configuration review complete. This is not a
+  tenant scenario PASS. Full #11 app wiring, #6/caller/access and #47 retry/
+  interruption/recovery acceptance remain open. PR #57 owner review is next.
+
 ## New run template
 
 Copy this section for an execution. Record one row per case (or split a case into

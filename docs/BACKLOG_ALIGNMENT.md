@@ -25,8 +25,8 @@ observations, not a tenant export or inferred successful test.
 | #5 | Culture setup/form guard and previously recorded Active correction/no-op evidence | Deferred registration/persistence/catalogue checks |
 | #7/#9 | TandemDiscovery app binding, MainScreen1 Discover, scrDiscovery Gallery1 and Back; owner reports empty results and working Back | Populated candidate matching, lookup mappings, bounded-query behavior, #6 availability, caller binding and final projection |
 | #10 | Connection Requests list; TandemSendRequest reads/Active-different-account check, bidirectional Pending query, create/response branches; candidate arrow connected | No actual send/persistence test; caller/compatibility/availability checks, simultaneous-submit/retry protection, sent/received views and cancellation |
-| #11 | Not started | Authorized accept/decline coordinated with #12/#47 |
-| #12/#13/#14/#16/#17 | Not implemented | Groups/memberships, My groups, lifecycle/leave and existing-group discovery/join |
+| #11 | Response/Decline and membership scaffold configured, not runtime verified | Complete conditional transitions, publication/recovery, response and UI with #12/#47 |
+| #12/#13/#14/#16/#17 | #12 list/member scaffold configured, remaining features unimplemented | Groups/memberships, My groups, lifecycle/leave and existing-group discovery/join |
 | #23 and related access tickets | Not implemented/verified by the request scaffold | Private request visibility, caller/response authority and ordinary-user evidence |
 
 **Earlier pause point (superseded by the update below): TandemMyRequests was not started.** The owner explicitly did
@@ -47,6 +47,29 @@ open. Notifications #49/#21 remain undecided; migration #48 stays last.
 Detailed tests remain deferred until the integrated core is built, with missing
 identity/state/compatibility/reliability behavior tracked as implementation,
 not merely unexecuted tests. See TEST_RUNS.md for the evidence checkpoint.
+
+## Latest bounded build checkpoint - 2026-11-07
+
+Current #11 backend construction includes coordinated #12 persistence and #47
+conditional-write work. Main response/group-setup configuration is owner-confirmed;
+membership cleanup and unfinished-group Ended/feedback writes are now
+owner-confirmed saved. Blocks 1 and 2 are configuration-complete; Block 3 review
+review2 and the subsequent verified saved-action fragment resolve all three
+findings, including the Decline stop flag. Block 3 configuration review is
+complete; owner PR #57 review is next. The exported base has
+77 actions/depth 6 with valid structural references and five versioned MERGEs.
+See config/participant_response_flow.snapshot.json for observed evidence; no
+end-to-end cleanup run is supplied.
+The previous not-started/unfixed checkpoints below are historical.
+
+Remaining backend batch: (1) conditional membership departure writes,
+(2) source-owned unfinished-group end/feedback, (3) configuration review and
+the #11 PR checkpoint. Stop for review before app controls or new group features.
+No new tenant acceptance is claimed. See IMPLEMENTATION_PLAN.md Current focus
+for the bounded finish line and separate unresolved caller/#6/recovery gates.
+#52/#54/#55/#56 are merged partial/preparation/tracking deliveries; implementation
+tickets stay open. #11 Accept/Decline app controls and group-choice form are next,
+not part of the three remaining backend blocks.
 
 ## Planning and new work
 
@@ -74,7 +97,7 @@ for later evaluation. Build completion and verified completion are tracked separ
 | #6 | Participation Active/Paused/Inactive independent of validation and migration confirmation; open-to-connections; never reactivate a paused participant through validation |
 | #7/#9 | Compatible people only; language/culture/combined fit and status/open filters. Exact display fields pending; participant fields generally eligible, admin/system-only columns excluded. No Comments notice. Blank time zone never excludes a candidate |
 | #8 | Later ranking; remove as dependency for group discovery. No required automatic location/time-zone derivation |
-| #10/#11 | #10 send flow, My requests flow/screen and cancel flow/button owner-confirmed configured; no runtime request/cancellation pass. Earlier not-started checkpoint is superseded. #11 accept/decline next, not configured yet. Caller/compatibility/#6 availability and #47 safeguards remain. Meet-first/expiry/bulk Later |
+| #10/#11 | #10 send flow, My requests flow/screen and cancel flow/button owner-confirmed configured; no runtime request/cancellation pass. Earlier not-started checkpoint is superseded. #11 response/Decline and acceptance membership scaffold configured, not runtime verified; conditional transitions/publication/recovery/UI remain. Caller/compatibility/#6 availability and #47 safeguards remain. Meet-first/expiry/bulk Later |
 | #12 | Typed groups: language 2 or 3 total; culture and combined 2–10 with valid focus relationships; membership creation on acceptance |
 | #13 | Simple Open/Closed/Ended MVP lifecycle and permitted member changes/admin override; richer states and timers Later |
 | #14 | Self-service leaving, preserved history and automatic counts/slots; keep Closed state until member reopens; hide groups lacking valid focus from Discovery. No auto-end/replacement/recovery timers; exceptional recovery can use admins |

@@ -135,8 +135,8 @@ observations, not a tenant export or inferred successful test.
 | #5 | Culture setup/form guard and previously recorded Active correction/no-op evidence | Deferred registration/persistence/catalogue checks |
 | #7/#9 | TandemDiscovery app binding, MainScreen1 Discover, scrDiscovery Gallery1 and Back; owner reports empty results and working Back | Populated candidate matching, lookup mappings, bounded-query behavior, #6 availability, caller binding and final projection |
 | #10 | Connection Requests list; TandemSendRequest reads/Active-different-account check, bidirectional Pending query, create/response branches; candidate arrow connected | No actual send/persistence test; caller/compatibility/availability checks, simultaneous-submit/retry protection, sent/received views and cancellation |
-| #11 | Not started | Authorized accept/decline coordinated with #12/#47 |
-| #12/#13/#14/#16/#17 | Not implemented | Groups/memberships, My groups, lifecycle/leave and existing-group discovery/join |
+| #11 | Response/Decline and acceptance membership scaffold configured, not runtime verified | Conditional transitions, publication/recovery, response and app UI with #12/#47 |
+| #12/#13/#14/#16/#17 | #12 group/member lists and acceptance scaffold configured; other features not implemented | Complete accepted groups/memberships, My groups, lifecycle/leave and existing-group discovery/join |
 | #23 and related access tickets | Not implemented/verified by the request scaffold | Private request visibility, caller/response authority and ordinary-user evidence |
 
 **Earlier pause point (superseded by the update below): TandemMyRequests was not started.** The owner explicitly did
@@ -158,93 +158,106 @@ Detailed tests remain deferred until the integrated core is built, with missing
 identity/state/compatibility/reliability behavior tracked as implementation,
 not merely unexecuted tests. See TEST_RUNS.md for the evidence checkpoint.
 
-## Current focus
+## Current focus - bounded #11 backend build
 
-### Latest request build update
+Latest owner checkpoint (recorded 2026-11-07): cleanup membership Left writes,
+unfinished-group Ended write and feedback are owner-confirmed saved. Blocks 1
+and 2 are configuration-complete. Block 3 is now configuration-review complete:
+review2 verified Status Value and ParticipantId label, and the owner's subsequent
+saved-action Code view verifies Decline ContinueProcessing = false with the
+correct predecessor. No post-correction full export or runtime run is claimed.
+The flow has not been exercised end to end. Owner confirmations of
+Save/configuration do not establish runtime acceptance.
 
-Owner confirms TandemMyRequests saved, scrRequests/galRequests and the main
-My requests button bound to colRequests; TandemCancelRequest saved and the
-Cancel button added inside the request gallery. Get items has actual internal
-name Get_items, not the instructed Read_requests; response expressions were
-corrected before saving. Required sender/recipient IDs on cancellation Update
-item are preserved from Read_request.
+The product scope is unchanged. The guided #11 batch grew to include coordinated
+#12 group persistence and #47 conditional transitions/recovery. This expansion
+must be visible instead of presenting each added action as the final step.
+The earlier plan's not-started/draft/ordinary-update descriptions below older
+checkpoints are historical and superseded by this current section.
 
-No actual request load/cancellation or changed SharePoint row has been verified.
-Keep #10 open for caller/compatibility/#6 availability, safe state transitions
-and duplicate/retry protection. Core construction moves to #11 accept/decline;
-TandemRespondRequest is not configured yet. Detailed acceptance stays deferred.
-See src/README.md and the latest TEST_RUNS.md checkpoint.
+### What is configured
 
-### Core build first — current priority
+| Area | Evidence/state |
+|---|---|
+| Request history and Cancel (#10) | Owner confirms flow/screen/button bindings. PR #56 merged. Cancel conditional read/check/write owner-confirmed; no real cancellation run supplied |
+| Respond input/validation and Decline (#11) | Owner confirms recipient/Pending checks, group-choice inputs, conditional Decline and result variables |
+| Initial group/member persistence (#12 with #11) | Groups/Group Members, SourceRequestId/MembershipKey, create/reuse loop and membership verification configured |
+| Conditional acceptance and group setup (#11/#12/#47) | ETag Accepted attempt, outcome reread, group SetupComplete/initial-state update configured; no real acceptance result supplied |
+| Final result/response (#11) | Final request reader was missing; owner added it and saved the five-row condition and one success/message/groupid response |
+| Structure and defects | First pasted block: 34 actions/depth 6. Later preparation block: 26 actions/depth 5; Membership key, recipient From, IF-MATCH and outcome predicate corrections statically verified. Complete exports reviewed at 77 actions/depth 6; later saved Decline correction verified separately |
+| Rejected-attempt cleanup (#47 shared) | Guarded membership revision/conditional Left+LeftAt loop, conditional unfinished-group Ended write and terminal-status feedback owner-confirmed saved; no runtime cleanup pass |
 
-| Order | Build output | Related tickets | State |
-|---|---|---|---|
-| 1 | Power Apps Discover screen/button and Power Apps-triggered discovery flow using existing Participants | #7/#9 | Partial build in draft PR #54, now based on main after #52 merged; flow/app/button/gallery configured; empty gallery and Back owner-confirmed, populated matching and full acceptance unverified |
-| 2 | In-app received/sent requests, recipient accept/decline and sender cancel | #10/#11 | Partial #10: send flow, My requests flow/screen and cancel flow/button owner-confirmed configured; no request runtime pass; #11 accept/decline next |
-| 3 | Accepted request creates Groups and Group Members; My groups displays results | #12/#13/#47 | Next; SharePoint foundation required before persistent actions run |
-| 4 | Existing-group discovery/join and member controls/leave | #16/#17/#14 | Core build after first creation path |
-| 5 | Central in-app notification/request experience; evaluate Approvals at this stage | #49/#21 | Channel/connector undecided; no email or Teams assumption |
-| 6 | Resume deferred acceptance, identity/access, capacity/retry and delivery checks | #5/#25 and related cases | After integrated core is built; before wider rollout |
+The accepted intermediate structure keeps Group choices valid inside Prepare
+group with its actions. Do not repeat the superseded instruction to empty that
+branch. Memberships ready now has its completion work moved to the separate
+main-level Complete acceptance stage; its failure branch stops processing.
 
-Separate participation/openness (#6) is bound into eligibility before ordinary
-rollout. During owner-only construction, record the implemented subset explicitly;
-do not infer missing availability fields as an approved default. Core actions
-still need identity, allowed state, compatibility and capacity checks as part of
-their implementation; deferring tests does not remove those behaviors.
+### Finish line for this backend build batch
 
-Owner clarified: postpone discussion of notification connectors and one-time
-setup automation. Approvals is a candidate to evaluate, not selected. Prioritize
-the app/flow build using current lists first. Add required backing lists/columns
-at their data-binding step; screens alone do not establish working persistence.
-No setup-automation capability or notification connection has been verified.
+All three blocks in this bounded backend batch are configuration-complete.
+The next checkpoint is owner review of PR #57, not new feature construction:
 
-PR #51 merged the reviewed contract/test documentation. #46 remains open for
-outstanding decisions. Registration progress remains under #5; preparation PR #52 is merged;
-remaining detailed acceptance is deferred while the core app/flows are built.
-Begin owner-only Discover screen/flow construction with the current Participants
-list. Bind #6 availability fields and trusted caller identity before ordinary
-rollout. Notifications (#49) remain undecided; Excel (#48) stays last. Desired
-configuration is not a live tenant export; owner setup evidence follows below.
-Discovery display fields remain to be decided in #7/#42, generally excluding
-admin/system-only columns. Group Open/Closed/Ended and real count/slots replace
-profile-level size preference. The existing schema's required time zone is a
-documented baseline restriction to remove during implementation, not current intent.
+1. **Membership cleanup** - loop over the two request-owned membership episodes,
+   read each current revision, conditionally mark only still-Active matching
+   memberships Left and set LeftAt. Preserve keys, JoinedAt and history.
+2. **Unfinished-group cleanup and feedback** - conditionally mark only the
+   source-owned, not-SetupComplete group Ended after membership cleanup; preserve
+   completed groups/Accepted results. Make final response reflect Cancelled/
+   Declined versus incomplete setup, rather than report a completed acceptance.
+3. **Configuration review and PR checkpoint** - inspect supplied current blocks,
+   exact action references, status Value fields, gate/run-after dependencies and
+   full available nesting. Save without template errors, synchronize docs/issues
+   and raise the #11 draft/partial-delivery PR for review before new feature work.
 
-Owner prerequisite update (2026-10-31): owner confirms all three access-screen
-checks work: SharePoint New List/Create column, registration app Edit and submission
-flow Edit. This confirms owner access to those screens, not successful creation,
-catalogue connection access, ordinary-user access or deployment. Owner subsequently
-confirms Culture catalogue bulk entry and checks (85 entries, keys, Active Yes).
-Owner subsequently confirms the participant ShareCultures/LearnCultures lookup
-columns and their requested optional/multiple-value settings/display names are
-ready. Full registration acceptance and independent catalogue validity checks
-remain unverified.
+Current status: **Blocks 1/2 saved; Block 3 configuration review complete.**
+Review2 plus the verified post-export action correction resolves all three
+findings: Decline stop flag false, final Choice Value, ParticipantId input label.
+Structural checks: 77 actions, depth 6, valid action/sibling references, five
+versioned MERGEs and one response. The sanitized reference explicitly records
+the action overlay and retains the source-export fingerprints/history.
+PR #57 is ready for owner review as partial configuration delivery; it does
+not close #11/#12/#47 or establish end-to-end behavior. Pause before app controls
+until the owner has reviewed/merged this backend batch.
 
-The earlier Participants screenshot showed Time zone required and no culture
-lookups. Owner subsequently confirms Time zone Required = No in SharePoint.
-Both culture lookups and their addition to the saved form are now owner-confirmed.
-Current owner evidence:
-- Culture lookup labels now display correctly; empty-selection Save guard passes
-  in Preview. Multi-selection persistence still needs explicit verification.
-- Flow uses created-or-modified, current Get item values, four-field OR presence
-  and change-only Status guards. Old Created By identity rewrites were removed.
-- Already-Active edit skips the write (screenshot). Owner confirms Needs review
-  corrects to Active once, follow-up skips and identity/selections are preserved.
-  The earlier unresolved correction is resolved by this retest; cause not supplied.
-- Designer loop warnings remain advisory; Needs review-path runtime behavior,
-  concurrent/queued edits and catalogue validity have not been established.
+Do not add My groups, notification configuration, group-join features or a new
+architecture to this backend batch.
 
-Deferred at owner's request: empty-profile Needs review correction/no-write path,
-culture-only/optional-time-zone persistence, multiple selections, catalogue validity
-and remaining REG checks. Resume after the integrated core build; see TEST_RUNS.md.
-No new published app version confirmed. Keep #5 open; PR #52 merged partial
-preparation only, with the remaining detailed acceptance deferred.
+The finish line means **backend configuration milestone**, not #11/#12/#47
+closure or deployed readiness. Their unverified requirements remain open.
 
-PR #52 merged on 2026-11-07 as partial preparation, with #5 still open.
-#54 now targets main; #55 stays stacked on #54. Neither is merged by this update.
+### After the backend PR review
 
-PR #53 merged the full 40-ticket backlog review on 2026-10-31. See
-[the complete audit](BACKLOG_AUDIT_2026-10-31.md) for corrections, scheduling and
-remaining decisions. The audit preserves issue states and does not close #45 or
-any implementation ticket. Later #8/#15/#29–#31 are outside the core milestone;
-required MVP and release-check tickets are included, even when owner-deferred.
+1. Same #11 workstream, next batch: Accept/Decline buttons and the group-choice
+   form in Power Apps; wire the saved response. These are not yet built.
+2. #12/#13: My groups and allowed group state/name/description/capacity controls.
+3. #16/#17/#14: compatible existing-group discovery/join and self-service leave.
+4. #49 then #21: central notification options/decision and selected implementation.
+5. Resume deferred #5/#25 and relevant #26-28 acceptance, then #48 Excel migration.
+
+No new permission/connector/licence requirement is implied by flattening.
+Production remains existing SharePoint/Power Apps/Power Automate entitlements.
+
+### Required gaps kept visible
+
+Separate participation/openness (#6), trusted caller identity and ordinary-user
+access (#18-20/#22-24/#39-42), agreed projection, catalogue/persisted-focus checks,
+bounded data access and full #47 retries/races/recovery are still required before
+wider release. This cleanup does not by itself cover interruption before a group
+ID is captured, accepted-but-unfinished retry recovery, duplicate create races
+or last-slot joins. Design supported automatic recovery where needed; ordinary
+use must not depend on admin repair. Necessary critical-case assistance remains
+allowed. No completed test is inferred from a configured guard.
+
+Detailed tests stay deferred per the owner; fix actual save/run blockers during
+construction. Keep all unexecuted cases pending and preserve earlier scoped
+evidence in TEST_RUNS.md.
+
+### Merged build checkpoints
+
+- #52: merged preparation for #5, not completed tenant acceptance.
+- #54: merged partial discovery reference/app build; #7/#9 remain open.
+- #55: merged tracking alignment.
+- #56: merged partial #10 request history/cancellation record; #10 remains open.
+
+One ticket/branch/PR per delivery batch; finish/review the current PR before
+starting the next implementation batch. Keep incomplete tickets open.

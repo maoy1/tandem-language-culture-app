@@ -148,6 +148,18 @@ Store group details in Groups and one group/participant episode link in Group
 Members. Keep personal profiles in Participants. Counts, slots and My groups
 derive from active membership links, not editable participant text or presumed
 cross-list calculated columns. Membership rows are workflow-maintained.
+Current #11/#12 implementation uses flow-managed SourceRequestId and membership
+episode MembershipKey for retry identification, plus SetupComplete (default No)
+to distinguish unfinished setup from the participant-controlled lifecycle state.
+Operational My groups/discovery/count derivations must exclude unfinished groups:
+require SetupComplete and an Accepted source request. Temporary Active rows
+during multi-record setup are not an operational membership result. Ending
+such an unfinished group after rejection is setup cleanup, not automatic
+ending of an operating group after a member leaves.
+Conditional status/setup/cleanup writes and these keys do not complete #47 or
+caller/access proof. The current sanitized export review is recorded in
+config/participant_response_flow.snapshot.json, not an importable deployment.
+
 Owner-approved group creation publishes only after memberships save successfully:
 start Open if space remains, otherwise Closed. Active members may edit name and
 description and adjust capacity within bounds, never below current member count.
