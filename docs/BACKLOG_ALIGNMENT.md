@@ -3,13 +3,50 @@
 This file maps the existing backlog to the owner's latest annotations. GitHub
 is authoritative for live status. Approved target behavior is documented in
 CURRENT_DESIGN.md. Registration schema/policy JSON now describes the POC-05
-target, explicitly pending tenant setup/tests; Discovery JSON remains the earlier
-language-only baseline. Neither file certifies live deployment.
+target, explicitly pending tenant acceptance. config/discovery_eligibility.json is
+the historical language-only baseline; config/discovery_core_build.json is the
+owner-only language/culture build fragment. Neither certifies live deployment.
 
 The [2026-10-31 full audit](BACKLOG_AUDIT_2026-10-31.md) reviews all 40 tickets and
 records the corrected live acceptance criteria and scheduling. PR #52 separately
-prepares the desired POC-05 schema/policy; it remains a draft, not deployment.
+prepared the desired POC-05 schema/policy and merged on 2026-11-07 as partial
+delivery, not completed tenant acceptance. #5 stays open.
 Owner-confirmed catalogue import does not establish participant form/flow acceptance.
+
+## Tracking checkpoint — 2026-11-07
+
+Reviewed the live backlog: 40 tickets, #1–#4 closed and 36 open. The approved
+scope remains valid; build-first scheduling does not waive acceptance or close
+partial features. This checkpoint records owner-reported configuration and
+observations, not a tenant export or inferred successful test.
+
+| Tickets | Configured or observed | Remaining |
+|---|---|---|
+| #5 | Culture setup/form guard and previously recorded Active correction/no-op evidence | Deferred registration/persistence/catalogue checks |
+| #7/#9 | TandemDiscovery app binding, MainScreen1 Discover, scrDiscovery Gallery1 and Back; owner reports empty results and working Back | Populated candidate matching, lookup mappings, bounded-query behavior, #6 availability, caller binding and final projection |
+| #10 | Connection Requests list; TandemSendRequest reads/Active-different-account check, bidirectional Pending query, create/response branches; candidate arrow connected | No actual send/persistence test; caller/compatibility/availability checks, simultaneous-submit/retry protection, sent/received views and cancellation |
+| #11 | Not started | Authorized accept/decline coordinated with #12/#47 |
+| #12/#13/#14/#16/#17 | Not implemented | Groups/memberships, My groups, lifecycle/leave and existing-group discovery/join |
+| #23 and related access tickets | Not implemented/verified by the request scaffold | Private request visibility, caller/response authority and ordinary-user evidence |
+
+**Resume at #10: TandemMyRequests is NOT STARTED.** The owner explicitly did
+not execute the flow-creation instruction. Build the in-app sent/received view
+next, then cancellation and #11 responses. Use a separate #10 branch/PR for
+request implementation; current #7 artifacts do not constitute a #10 delivery.
+
+The request list currently has Title, SenderParticipantId and
+RecipientParticipantId (required Number, zero decimals), and required Status
+Choice Pending/Accepted/Declined/Cancelled, default Pending, plus built-in
+Created. It is a person-to-person scaffold, not the final group-join/recovery
+schema. The Active check tests validation only; app-supplied IDs do not prove
+caller identity. Query-then-create checks sequential Pending duplicates only.
+
+No current app/flow versions, populated discovery response, request run or
+publication/sharing verification were supplied. Keep implementation tickets
+open. Notifications #49/#21 remain undecided; migration #48 stays last.
+Detailed tests remain deferred until the integrated core is built, with missing
+identity/state/compatibility/reliability behavior tracked as implementation,
+not merely unexecuted tests. See TEST_RUNS.md for the evidence checkpoint.
 
 ## Planning and new work
 
@@ -33,11 +70,11 @@ for later evaluation. Build completion and verified completion are tracked separ
 | Ticket | Aligned scope |
 |---|---|
 | #2/#3/#4 | Completed initial baseline. Preserve prior evidence; do not reopen just to describe target fields |
-| #5 | In progress in draft PR #52: catalogue/columns/form guard owner-confirmed; Active no-op and correction/follow-up tested, identity/selections preserved. Needs review path, culture/blank-time-zone persistence, catalogue checks and published acceptance remain pending. See POC_05_CULTURE_REGISTRATION.md |
+| #5 | In progress; preparation PR #52 merged, #5 stays open: catalogue/columns/form guard owner-confirmed; Active no-op and correction/follow-up tested, identity/selections preserved. Needs review path, culture/blank-time-zone persistence, catalogue checks and published acceptance remain pending. See POC_05_CULTURE_REGISTRATION.md |
 | #6 | Participation Active/Paused/Inactive independent of validation and migration confirmation; open-to-connections; never reactivate a paused participant through validation |
 | #7/#9 | Compatible people only; language/culture/combined fit and status/open filters. Exact display fields pending; participant fields generally eligible, admin/system-only columns excluded. No Comments notice. Blank time zone never excludes a candidate |
 | #8 | Later ranking; remove as dependency for group discovery. No required automatic location/time-zone derivation |
-| #10/#11 | Requests, recipient authority, sender status, unavailable-recipient handling and safe acceptance coordinated with #47; meet-first/expiry/bulk Later |
+| #10/#11 | #10 list/send flow/response/button configured, no actual send verified; TandemMyRequests NOT STARTED, cancellation missing; #11 responses not started. Caller/compatibility/#6 availability and #47 safeguards remain. Meet-first/expiry/bulk Later |
 | #12 | Typed groups: language 2 or 3 total; culture and combined 2–10 with valid focus relationships; membership creation on acceptance |
 | #13 | Simple Open/Closed/Ended MVP lifecycle and permitted member changes/admin override; richer states and timers Later |
 | #14 | Self-service leaving, preserved history and automatic counts/slots; keep Closed state until member reopens; hide groups lacking valid focus from Discovery. No auto-end/replacement/recovery timers; exceptional recovery can use admins |
