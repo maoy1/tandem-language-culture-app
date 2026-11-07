@@ -495,6 +495,13 @@ the app/flow versions separately.
 - Scope/criteria remain in the existing tickets; no replacement issues, closure,
   permission architecture or notification channel is selected by this checkpoint.
 
+### TRACK-20261107-01 - preparation merge, not tenant acceptance
+
+- Owner approved merging PR #52 as partial preparation under build-first delivery.
+- PR #52 merged; #5 remains open. No tenant test result changes.
+- PR #54 retargeted from the merged #52 branch to main. PR #55 remains stacked
+  on #54; both remain open. Do not infer their acceptance or merge from this step.
+
 ## New run template
 
 Copy this section for an execution. Record one row per case (or split a case into

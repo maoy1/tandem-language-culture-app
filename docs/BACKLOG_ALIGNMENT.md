@@ -9,7 +9,8 @@ owner-only language/culture build fragment. Neither certifies live deployment.
 
 The [2026-10-31 full audit](BACKLOG_AUDIT_2026-10-31.md) reviews all 40 tickets and
 records the corrected live acceptance criteria and scheduling. PR #52 separately
-prepares the desired POC-05 schema/policy; it remains a draft, not deployment.
+prepared the desired POC-05 schema/policy and merged on 2026-11-07 as partial
+delivery, not completed tenant acceptance. #5 stays open.
 Owner-confirmed catalogue import does not establish participant form/flow acceptance.
 
 ## Tracking checkpoint — 2026-11-07
@@ -69,7 +70,7 @@ for later evaluation. Build completion and verified completion are tracked separ
 | Ticket | Aligned scope |
 |---|---|
 | #2/#3/#4 | Completed initial baseline. Preserve prior evidence; do not reopen just to describe target fields |
-| #5 | In progress in draft PR #52: catalogue/columns/form guard owner-confirmed; Active no-op and correction/follow-up tested, identity/selections preserved. Needs review path, culture/blank-time-zone persistence, catalogue checks and published acceptance remain pending. See POC_05_CULTURE_REGISTRATION.md |
+| #5 | In progress; preparation PR #52 merged, #5 stays open: catalogue/columns/form guard owner-confirmed; Active no-op and correction/follow-up tested, identity/selections preserved. Needs review path, culture/blank-time-zone persistence, catalogue checks and published acceptance remain pending. See POC_05_CULTURE_REGISTRATION.md |
 | #6 | Participation Active/Paused/Inactive independent of validation and migration confirmation; open-to-connections; never reactivate a paused participant through validation |
 | #7/#9 | Compatible people only; language/culture/combined fit and status/open filters. Exact display fields pending; participant fields generally eligible, admin/system-only columns excluded. No Comments notice. Blank time zone never excludes a candidate |
 | #8 | Later ranking; remove as dependency for group discovery. No required automatic location/time-zone derivation |

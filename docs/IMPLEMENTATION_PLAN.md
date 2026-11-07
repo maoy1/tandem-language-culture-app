@@ -61,8 +61,8 @@ their own implementation and regression checks.
       still need review; no live behavior changed by these notes.
 - [ ] #5: implement controlled culture-share/interest fields; update registration
       and validation to allow empty time zone. No participant group-size field.
-      Draft PR #52 prepares the configuration, 85 culture values, setup guide and
-      tests. Owner confirms catalogue population/checks, but the latest Participants
+      PR #52 merged preparation (configuration, 85 culture values, setup guide
+      and local tests); this does not complete #5 tenant acceptance. Owner confirms catalogue population/checks, but the latest Participants
       screenshot did not show culture lookups. Owner subsequently confirms both
       optional multi-value culture lookups and removal of the Time zone required
       setting. Owner also confirms both culture cards added to Form1 after refresh
@@ -164,7 +164,7 @@ not merely unexecuted tests. See TEST_RUNS.md for the evidence checkpoint.
 
 | Order | Build output | Related tickets | State |
 |---|---|---|---|
-| 1 | Power Apps Discover screen/button and Power Apps-triggered discovery flow using existing Participants | #7/#9 | Partial build in draft PR #54 on #52; flow/app/button/gallery configured; empty gallery and Back owner-confirmed, populated matching and full acceptance unverified |
+| 1 | Power Apps Discover screen/button and Power Apps-triggered discovery flow using existing Participants | #7/#9 | Partial build in draft PR #54, now based on main after #52 merged; flow/app/button/gallery configured; empty gallery and Back owner-confirmed, populated matching and full acceptance unverified |
 | 2 | In-app received/sent requests, recipient accept/decline and sender cancel | #10/#11 | Partial #10: list/send flow/response and gallery arrow configured, not runtime verified; My requests NOT STARTED; cancel and #11 responses remain |
 | 3 | Accepted request creates Groups and Group Members; My groups displays results | #12/#13/#47 | Next; SharePoint foundation required before persistent actions run |
 | 4 | Existing-group discovery/join and member controls/leave | #16/#17/#14 | Core build after first creation path |
@@ -184,7 +184,7 @@ at their data-binding step; screens alone do not establish working persistence.
 No setup-automation capability or notification connection has been verified.
 
 PR #51 merged the reviewed contract/test documentation. #46 remains open for
-outstanding decisions. Registration progress is retained under #5/draft PR #52;
+outstanding decisions. Registration progress remains under #5; preparation PR #52 is merged;
 remaining detailed acceptance is deferred while the core app/flows are built.
 Begin owner-only Discover screen/flow construction with the current Participants
 list. Bind #6 availability fields and trusted caller identity before ordinary
@@ -222,7 +222,11 @@ Current owner evidence:
 Deferred at owner's request: empty-profile Needs review correction/no-write path,
 culture-only/optional-time-zone persistence, multiple selections, catalogue validity
 and remaining REG checks. Resume after the integrated core build; see TEST_RUNS.md.
-No new published app version confirmed. Keep #5 open and PR #52 draft.
+No new published app version confirmed. Keep #5 open; PR #52 merged partial
+preparation only, with the remaining detailed acceptance deferred.
+
+PR #52 merged on 2026-11-07 as partial preparation, with #5 still open.
+#54 now targets main; #55 stays stacked on #54. Neither is merged by this update.
 
 PR #53 merged the full 40-ticket backlog review on 2026-10-31. See
 [the complete audit](BACKLOG_AUDIT_2026-10-31.md) for corrections, scheduling and
