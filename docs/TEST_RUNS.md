@@ -376,6 +376,125 @@ the app/flow versions separately.
 - Existing owner evidence remains scoped. Wider-rollout access and other release
   checks remain open; #5/#7 and other incomplete implementation tickets stay open.
 
+### BUILD-DISC-20261031-01 — app-triggered reader configured
+
+- Owner confirms the new TandemDiscovery flow setup: Power Apps (V2), numeric
+  ParticipantId input and SharePoint Get item for Participants. Screenshot shows
+  the trigger's Number token labelled ParticipantId; owner confirms it inserted
+  in the Get item Id field and the setup saved.
+- Configuration milestone only. No reader output, app invocation, candidate query,
+  matching response or trusted ordinary-user caller binding demonstrated yet.
+- Next build: Get items Candidate source with Status Active, bounded pagination,
+  then map actual current/candidate lookup-ID arrays and matching actions. Existing
+  submission-run output can establish field shape without new acceptance testing.
+
+### BUILD-DISC-20261031-02 — lookup ID-array shape confirmed
+
+- Owner supplied a scoped existing Get item output. Learnlanguages is an array
+  of expanded lookup references (Id/Value); Learnlanguages#Id is an integer array
+  annotated Collection(Int64). Direct numeric-ID normalization is available for
+  this observed field. Timezone is a single expanded lookup object when selected.
+- Record only the shape here, not the owner's actual profile values. Equivalent
+  Teach/culture #Id mappings are based on the expected connector pattern and
+  instructed internal names; verify returned values while binding the flow.
+- Next: current My_profile_row Select + My_profile Compose, and candidate
+  Normalized_candidates Select + Candidate_profiles Compose. No matching or app
+  invocation success inferred; Candidate source configuration not yet confirmed.
+
+### BUILD-DISC-20261031-03 — normalization actions configured
+
+- Owner confirms the four requested actions are configured: My_profile_row Select
+  with eight profile/identity/status/ID-array mappings, My_profile Compose,
+  Normalized_candidates Select with the same mapping and Candidate_profiles Compose.
+- Candidate source was a prerequisite in the instructions; its complete query/
+  pagination settings and normalized runtime outputs have not been inspected.
+- Next: Eligible_candidates Filter array, minimal Candidate_fit projection and
+  the Power Apps response including explicit over-bound error/no partial result.
+- Configuration milestone only; no successful matching/app invocation or completed
+  #7 acceptance is inferred. Detailed cases remain deferred by owner.
+
+### BUILD-DISC-20261031-04 — matching and response configured
+
+- Owner confirms adding Eligible_candidates Filter array, Candidate_fit Select
+  and Respond to a Power App or flow with candidatesjson/errormessage Text outputs,
+  following the supplied expressions. Configuration report only; no new run output
+  or app response has been inspected.
+- Projection is the minimal owner preview (profileId, displayName, fitType).
+  Matching covers either language/culture exchange direction and excludes self/
+  non-Active validation. Response definitions suppress over-500 partial results
+  and provide registration feedback; runtime behavior remains unverified.
+- Next: add the saved flow to Power Apps, create scrDiscovery and colCandidates
+  gallery, and bind the Discover button. Keep unpublished/owner-only while caller
+  binding, participation/openness and broader exposure gates remain open.
+
+### BUILD-DISC-20261031-05 — app flow and Discovery screen scaffold
+
+- Owner screenshot shows TandemDiscovery listed under In your app in the Power
+  Automate pane, and a screen named scrDiscovery with a sample art-gallery layout.
+  A Blank option was not visible in the owner's screen picker; do not assume the
+  template is an empty screen or that its sample fields match candidate records.
+- Owner confirms the Back button instructions completed, with Text Back and
+  OnSelect Navigate(MainScreen1, ScreenTransition.None).
+- Discover button/collection binding and gallery replacement are not confirmed.
+  Next: add the MainScreen1 Discover button and its flow/ParseJSON collection
+  formula, then replace/rebind sample gallery content before showing results.
+- No successful app-to-flow invocation or runtime candidate display claimed.
+
+### BUILD-DISC-20261031-06 — button placement and ID-binding error
+
+- Owner screenshot shows Back and Discovery buttons together on the sample
+  results screen. Correct layout: Discover on MainScreen1, Back on scrDiscovery.
+- The copied OnSelect reports IsBlank invalid arguments around Form1.Item.ID;
+  app-to-flow invocation has not been demonstrated by this screenshot.
+- Guided correction: move only the Discovery button to MainScreen1 and replace
+  both Form1.Item.ID occurrences with RecordsGallery1.Selected.ID, the original
+  registration-gallery reference. Verify its actual name if renamed.
+- Keep Back Navigate(MainScreen1, ScreenTransition.None). Gallery candidate binding
+  and editor-error resolution remain unconfirmed; no runtime pass inferred.
+
+### BUILD-DISC-20261107-01 — resumed tracking of owner-reported app results
+
+- Recorded on 2026-11-07 from the preceding owner confirmations; actual execution
+  dates, versions, run IDs and published/sharing state were not supplied.
+- Owner corrected the selected-record reference, replaced the sample artwork with
+  Gallery1, and bound colCandidates, Title4 displayName and Subtitle4 fitType.
+- Owner reports an empty discovery gallery and working Back navigation. Owner
+  states suitable participant data is absent; no positive matching case or
+  inspected flow response was supplied. Do not infer matching correctness or
+  ordinary-user authorization from navigation/empty results.
+- #7/#9 remain partial; remaining data mapping, caller, availability, projection,
+  query bounds and tenant acceptance stay open.
+
+### BUILD-REQ-20261107-01 — request creation scaffold configured
+
+- Owner confirms the Connection Requests list and guided TandemSendRequest steps,
+  including two participant-ID inputs, Read sender/Read recipient, Active/present
+  Claims/different-account checks, bidirectional Pending query, conditional Create
+  item, result variables and one success/message response.
+- Owner confirms adding the flow to Power Apps and binding Gallery1.NextArrow4
+  to send the selected sender/candidate IDs and show the response.
+- These are configuration reports, not an observed send. No created request row,
+  actual success/duplicate/error response, versions or run IDs were supplied.
+- Query-then-create is not simultaneous-submit protection; compatibility,
+  trusted caller ownership, #6 participation/openness and relevant #47 safeguards
+  remain implementation gaps. Access is not proven by app ID references.
+- List scaffold: Title, required Number SenderParticipantId/RecipientParticipantId
+  (zero decimals), required Choice Status Pending/Accepted/Declined/Cancelled
+  with Pending default, and built-in Created. No group-target/recovery fields
+  have been confirmed.
+- #10 remains open; #11 acceptance/decline and group/membership creation are not
+  implemented by this flow.
+
+### BUILD-REQ-20261107-02 — explicit pause/resume point
+
+- Owner explicitly did NOT execute the instruction to create TandemMyRequests.
+  Record it as NOT STARTED, not configured or tested.
+- Resume under #10 with the in-app sent/received requests view; Pending
+  cancellation and #11 responses still follow. #23 visibility/authority remains
+  unimplemented/unverified. No acceptance case is newly marked passed.
+- Scope/criteria remain in the existing tickets; no replacement issues, closure,
+  permission architecture or notification channel is selected by this checkpoint.
+
 ## New run template
 
 Copy this section for an execution. Record one row per case (or split a case into

@@ -51,7 +51,8 @@ their own implementation and regression checks.
       no participant size preference, and no Comments notice are now agreed.
       culture and combined 2–10 with valid focus relationships are approved. Defaults,
       exact technical choices and remaining projection decisions need acceptance.
-      Pause real-data discovery wiring until this contract is agreed.
+      Resolve remaining decisions before their dependent release steps; owner-only
+      partial discovery binding proceeds under the documented build-first direction.
       Review progress: Active/Open defaults, culture participation, focus roles,
       any-active-member control, request cancellation/history and bounded departure
       handling are confirmed. Validation also blocks empty offer/interest saves,
@@ -122,14 +123,49 @@ The owner/admins handle explicitly flagged one-time setup, product decisions,
 test acceptance and necessary exceptional corrections. Migration mapping review
 is one-off, at the end; no routine manual matching or per-user grant queue.
 
+## Tracking checkpoint — 2026-11-07
+
+Reviewed the live backlog: 40 tickets, #1–#4 closed and 36 open. The approved
+scope remains valid; build-first scheduling does not waive acceptance or close
+partial features. This checkpoint records owner-reported configuration and
+observations, not a tenant export or inferred successful test.
+
+| Tickets | Configured or observed | Remaining |
+|---|---|---|
+| #5 | Culture setup/form guard and previously recorded Active correction/no-op evidence | Deferred registration/persistence/catalogue checks |
+| #7/#9 | TandemDiscovery app binding, MainScreen1 Discover, scrDiscovery Gallery1 and Back; owner reports empty results and working Back | Populated candidate matching, lookup mappings, bounded-query behavior, #6 availability, caller binding and final projection |
+| #10 | Connection Requests list; TandemSendRequest reads/Active-different-account check, bidirectional Pending query, create/response branches; candidate arrow connected | No actual send/persistence test; caller/compatibility/availability checks, simultaneous-submit/retry protection, sent/received views and cancellation |
+| #11 | Not started | Authorized accept/decline coordinated with #12/#47 |
+| #12/#13/#14/#16/#17 | Not implemented | Groups/memberships, My groups, lifecycle/leave and existing-group discovery/join |
+| #23 and related access tickets | Not implemented/verified by the request scaffold | Private request visibility, caller/response authority and ordinary-user evidence |
+
+**Resume at #10: TandemMyRequests is NOT STARTED.** The owner explicitly did
+not execute the flow-creation instruction. Build the in-app sent/received view
+next, then cancellation and #11 responses. Use a separate #10 branch/PR for
+request implementation; current #7 artifacts do not constitute a #10 delivery.
+
+The request list currently has Title, SenderParticipantId and
+RecipientParticipantId (required Number, zero decimals), and required Status
+Choice Pending/Accepted/Declined/Cancelled, default Pending, plus built-in
+Created. It is a person-to-person scaffold, not the final group-join/recovery
+schema. The Active check tests validation only; app-supplied IDs do not prove
+caller identity. Query-then-create checks sequential Pending duplicates only.
+
+No current app/flow versions, populated discovery response, request run or
+publication/sharing verification were supplied. Keep implementation tickets
+open. Notifications #49/#21 remain undecided; migration #48 stays last.
+Detailed tests remain deferred until the integrated core is built, with missing
+identity/state/compatibility/reliability behavior tracked as implementation,
+not merely unexecuted tests. See TEST_RUNS.md for the evidence checkpoint.
+
 ## Current focus
 
 ### Core build first — current priority
 
 | Order | Build output | Related tickets | State |
 |---|---|---|---|
-| 1 | Power Apps Discover screen/button and Power Apps-triggered discovery flow using existing Participants | #7/#9 | Current build; branch codex/issue-7-discovery-app-build based on #52 |
-| 2 | In-app received/sent requests, recipient accept/decline and sender cancel | #10/#11 | Next; connect backing Requests data when binding actions |
+| 1 | Power Apps Discover screen/button and Power Apps-triggered discovery flow using existing Participants | #7/#9 | Partial build in draft PR #54 on #52; flow/app/button/gallery configured; empty gallery and Back owner-confirmed, populated matching and full acceptance unverified |
+| 2 | In-app received/sent requests, recipient accept/decline and sender cancel | #10/#11 | Partial #10: list/send flow/response and gallery arrow configured, not runtime verified; My requests NOT STARTED; cancel and #11 responses remain |
 | 3 | Accepted request creates Groups and Group Members; My groups displays results | #12/#13/#47 | Next; SharePoint foundation required before persistent actions run |
 | 4 | Existing-group discovery/join and member controls/leave | #16/#17/#14 | Core build after first creation path |
 | 5 | Central in-app notification/request experience; evaluate Approvals at this stage | #49/#21 | Channel/connector undecided; no email or Teams assumption |
