@@ -514,6 +514,32 @@ the app/flow versions separately.
 - PR #54 and #7 updated; #54 remains draft and #7 open. Tracking PR #55 includes
   the updated discovery base. No new tenant run or published version supplied.
 
+### BUILD-REQ-20261107-03 - history and cancellation configuration
+
+- Owner confirms TandemMyRequests trigger/Read participant, Get items request
+  query, Request rows Select and requestsjson/errormessage response saved.
+- Supplied Select code confirms the actual request reader is Get_items and
+  From is outputs('Get_items')?['body/value']. Invalid Read_requests response
+  references were corrected before the owner reported a successful save.
+- Query covers either participant-ID side, newest first; the 101-row scaffold
+  returns an explicit error above the 100-request history bound. These settings
+  and runtime values have not been exported or inspected as a successful run.
+- Owner screenshot confirms scrRequests, galRequests, Title4_1/Subtitle4_1,
+  Back Button1_1, and removal of the copied send arrow. Owner confirms the
+  My requests button/flow, typed colRequests mapping and gallery bindings.
+- Owner confirms TandemCancelRequest: participant/request reads, sender-ID match,
+  Pending-state and nonempty account check, conditional Cancelled update and
+  result variables/response. Update item required both participant IDs; guided
+  fix preserves SenderParticipantId/RecipientParticipantId from Read_request.
+- Owner confirms the Cancel button inside galRequests, visible only for Sent
+  Pending, calls the flow and updates the local row only on reported success.
+- No actual loaded history, cancellation response, changed persisted row,
+  cancel/accept race, authenticated ownership or published version was supplied.
+  These are configured milestones, not new acceptance passes. Query-then-update
+  does not protect cancellation versus acceptance races; #47 still applies.
+- #10 stays open. Core construction moves to #11; TandemRespondRequest not yet
+  built. Existing caller/compatibility/availability/access gaps remain.
+
 ## New run template
 
 Copy this section for an execution. Record one row per case (or split a case into

@@ -139,7 +139,7 @@ observations, not a tenant export or inferred successful test.
 | #12/#13/#14/#16/#17 | Not implemented | Groups/memberships, My groups, lifecycle/leave and existing-group discovery/join |
 | #23 and related access tickets | Not implemented/verified by the request scaffold | Private request visibility, caller/response authority and ordinary-user evidence |
 
-**Resume at #10: TandemMyRequests is NOT STARTED.** The owner explicitly did
+**Earlier pause point (superseded by the update below): TandemMyRequests was not started.** The owner explicitly did
 not execute the flow-creation instruction. Build the in-app sent/received view
 next, then cancellation and #11 responses. Use a separate #10 branch/PR for
 request implementation; current #7 artifacts do not constitute a #10 delivery.
@@ -160,12 +160,27 @@ not merely unexecuted tests. See TEST_RUNS.md for the evidence checkpoint.
 
 ## Current focus
 
+### Latest request build update
+
+Owner confirms TandemMyRequests saved, scrRequests/galRequests and the main
+My requests button bound to colRequests; TandemCancelRequest saved and the
+Cancel button added inside the request gallery. Get items has actual internal
+name Get_items, not the instructed Read_requests; response expressions were
+corrected before saving. Required sender/recipient IDs on cancellation Update
+item are preserved from Read_request.
+
+No actual request load/cancellation or changed SharePoint row has been verified.
+Keep #10 open for caller/compatibility/#6 availability, safe state transitions
+and duplicate/retry protection. Core construction moves to #11 accept/decline;
+TandemRespondRequest is not configured yet. Detailed acceptance stays deferred.
+See src/README.md and the latest TEST_RUNS.md checkpoint.
+
 ### Core build first — current priority
 
 | Order | Build output | Related tickets | State |
 |---|---|---|---|
 | 1 | Power Apps Discover screen/button and Power Apps-triggered discovery flow using existing Participants | #7/#9 | Partial build in draft PR #54, now based on main after #52 merged; flow/app/button/gallery configured; empty gallery and Back owner-confirmed, populated matching and full acceptance unverified |
-| 2 | In-app received/sent requests, recipient accept/decline and sender cancel | #10/#11 | Partial #10: list/send flow/response and gallery arrow configured, not runtime verified; My requests NOT STARTED; cancel and #11 responses remain |
+| 2 | In-app received/sent requests, recipient accept/decline and sender cancel | #10/#11 | Partial #10: send flow, My requests flow/screen and cancel flow/button owner-confirmed configured; no request runtime pass; #11 accept/decline next |
 | 3 | Accepted request creates Groups and Group Members; My groups displays results | #12/#13/#47 | Next; SharePoint foundation required before persistent actions run |
 | 4 | Existing-group discovery/join and member controls/leave | #16/#17/#14 | Core build after first creation path |
 | 5 | Central in-app notification/request experience; evaluate Approvals at this stage | #49/#21 | Channel/connector undecided; no email or Teams assumption |

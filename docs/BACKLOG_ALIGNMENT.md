@@ -29,7 +29,7 @@ observations, not a tenant export or inferred successful test.
 | #12/#13/#14/#16/#17 | Not implemented | Groups/memberships, My groups, lifecycle/leave and existing-group discovery/join |
 | #23 and related access tickets | Not implemented/verified by the request scaffold | Private request visibility, caller/response authority and ordinary-user evidence |
 
-**Resume at #10: TandemMyRequests is NOT STARTED.** The owner explicitly did
+**Earlier pause point (superseded by the update below): TandemMyRequests was not started.** The owner explicitly did
 not execute the flow-creation instruction. Build the in-app sent/received view
 next, then cancellation and #11 responses. Use a separate #10 branch/PR for
 request implementation; current #7 artifacts do not constitute a #10 delivery.
@@ -74,7 +74,7 @@ for later evaluation. Build completion and verified completion are tracked separ
 | #6 | Participation Active/Paused/Inactive independent of validation and migration confirmation; open-to-connections; never reactivate a paused participant through validation |
 | #7/#9 | Compatible people only; language/culture/combined fit and status/open filters. Exact display fields pending; participant fields generally eligible, admin/system-only columns excluded. No Comments notice. Blank time zone never excludes a candidate |
 | #8 | Later ranking; remove as dependency for group discovery. No required automatic location/time-zone derivation |
-| #10/#11 | #10 list/send flow/response/button configured, no actual send verified; TandemMyRequests NOT STARTED, cancellation missing; #11 responses not started. Caller/compatibility/#6 availability and #47 safeguards remain. Meet-first/expiry/bulk Later |
+| #10/#11 | #10 send flow, My requests flow/screen and cancel flow/button owner-confirmed configured; no runtime request/cancellation pass. Earlier not-started checkpoint is superseded. #11 accept/decline next, not configured yet. Caller/compatibility/#6 availability and #47 safeguards remain. Meet-first/expiry/bulk Later |
 | #12 | Typed groups: language 2 or 3 total; culture and combined 2–10 with valid focus relationships; membership creation on acceptance |
 | #13 | Simple Open/Closed/Ended MVP lifecycle and permitted member changes/admin override; richer states and timers Later |
 | #14 | Self-service leaving, preserved history and automatic counts/slots; keep Closed state until member reopens; hide groups lacking valid focus from Discovery. No auto-end/replacement/recovery timers; exceptional recovery can use admins |

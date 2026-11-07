@@ -160,6 +160,57 @@ in-app sent/received requests, accept/decline/cancel and Groups/My groups path;
 attach required backing lists at those persistence steps. Core persistence is not
 implemented merely by the screen/button or expression reference.
 
+## Connection requests - configured #10 scaffold
+
+Owner-reported build, recorded 2026-11-07. No exported app/flow package or actual
+send/history/cancel run is supplied. This milestone does not complete #10.
+All three flows use the existing SharePoint connection and Power Apps (V2).
+
+| Flow | Inputs | Configured actions and response |
+|---|---|---|
+| TandemSendRequest | Number SenderParticipantId, RecipientParticipantId | Read both Participants; validate Active/present Claims/different people; bidirectional Pending query; create Pending; success/message |
+| TandemMyRequests | Number ParticipantId | Read participant; Get_items from Connection Requests where either participant ID matches; Request rows Select; requestsjson/errormessage |
+| TandemCancelRequest | Number ParticipantId, RequestId | Read participant and request; require sender-ID match, nonempty account and Pending; update Cancelled; success/message |
+
+Connection Requests uses required zero-decimal Number SenderParticipantId and
+RecipientParticipantId, required Choice Status (Pending/Accepted/Declined/
+Cancelled, default Pending), Title and built-in Created. This is the current
+person-to-person scaffold; group targets and recovery state are not yet bound.
+
+History Get_items uses the participant ID read from SharePoint, order
+Created desc, ID desc, Top Count 101. Request rows contains requestId,
+senderParticipantId, recipientParticipantId, status (Choice Value), created
+and direction (Sent if sender ID matches, otherwise Received). Both response
+expressions must reference **Get_items**, the actual internal name observed in
+the owner's Select code, rather than the original suggested Read_requests.
+Above 100 records, return [] plus an explicit bound message; no pagination UI
+or large-history acceptance is implemented. Existing history is not gated on
+validation Active.
+
+In the app, MainScreen1 My requests invokes TandemMyRequests with
+RecordsGallery1.Selected.ID, parses requestsjson into typed colRequests and
+navigates to scrRequests. galRequests.Items is colRequests; Title4_1 shows
+direction plus request number; Subtitle4_1 shows status. Back Button1_1 returns
+to MainScreen1. The copied send arrow was deleted from this screen.
+
+Cancel is inside galRequests and visible only when direction is Sent and status
+is Pending. It passes the selected profile ID and row requestId to
+TandemCancelRequest. Only success updates the local status to Cancelled and hides
+the button; failures show feedback. Cancellation Update item must preserve both
+required participant-ID fields from Read_request; do not omit them or replace
+the parties with a different identity.
+
+Core gaps remain implementation work: trusted caller ownership rather than
+app-supplied identity, #6 participation/openness and compatibility checks for new
+connections, authoritative response authority, duplicate/retry protection and
+atomic state transitions under #47. The current read/check/write cancellation
+can race an acceptance and is not concurrency-safe. UI visibility is feedback,
+not authorization. Ordinary-account access and detailed tenant tests stay pending.
+
+Next core build is #11 TandemRespondRequest accept/decline and coordinated
+Groups/Group Members creation (#12/#47). No acceptance or group creation is
+implemented by the three configured flows above.
+
 ## Discovery eligibility in Power Automate
 
 Scope update: this is the tested language-only baseline, not complete v0.2
