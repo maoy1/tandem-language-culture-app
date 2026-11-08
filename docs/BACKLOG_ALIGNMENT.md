@@ -32,10 +32,10 @@ implementation as activity or mixed several flows in one implementation ticket.
 being worked now, at most one non-overview ticket. Queued partial work is Planned
 with evidence retained. PR #60 is merged. #66 delivery is ready for review after
 owner setup/readback and final schema audit passed. Owner confirmed all five writes skipped on a new repeat; own schema tests passed.
-PR #69 is merged and #66 closed; #6 Version 19 UI accepted, PR #70 merged and #6 closed. #5 Version 19 A/B UI acceptance passed and is Ready for review; no ticket is In progress. Receiving-flow/group checks stay with #61/#7/#10/#25. Ready stages remain real handovers. Superseded is
+PR #69 is merged and #66 closed; #6 Version 19 UI accepted, PR #70 merged and #6 closed. #5 is Done after merged #71; #61 is the sole In progress scope. Receiving-flow/group checks stay with #61/#7/#10/#25. Ready stages remain real handovers. Superseded is
 closed as not planned, not Done. Closed historical #1-#4/#46 remain Done.
 
-**48 issues total:** 39 focused open tickets, 7 Done, 2 Superseded (#22/#24).
+**48 issues total:** 38 focused open tickets, 8 Done, 2 Superseded (#22/#24).
 Eight focused successors were created:
 
 | Ticket | Type | New owner |
@@ -58,7 +58,7 @@ evidence remain available; no employee payloads/raw exports are copied here.
 
 | Open ticket | Type | Queued activity | Sole scope |
 |---|---|---|---|
-| [#5](https://github.com/maoy1/tandem-language-culture-app/issues/5) | App | Ready for review | Registration form controls, validation messages and save/reopen behavior only. Backend validation is #61; list schema is #66. |
+| [#5](https://github.com/maoy1/tandem-language-culture-app/issues/5) | App | Done (closed) | Registration form controls, validation messages and save/reopen behavior only. Backend validation is #61; list schema is #66. |
 | [#6](https://github.com/maoy1/tandem-language-culture-app/issues/6) | App | Done (closed) | Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64. |
 | [#7](https://github.com/maoy1/tandem-language-culture-app/issues/7) | Flow | Planned | One flow returning approved compatible people and existing open groups. App layout is #16; rule source is #9; protected access proof is #42. |
 | [#8](https://github.com/maoy1/tandem-language-culture-app/issues/8) | Shared technical | Deferred | Future scoring policy/rule artifact; does not own a second TandemDiscovery flow. |
@@ -91,7 +91,7 @@ evidence remain available; no employee payloads/raw exports are copied here.
 | [#47](https://github.com/maoy1/tandem-language-culture-app/issues/47) | Shared technical | Planned | Minimum cross-flow decision/duplicate/capacity protection and proof; not a second acceptance engine or elaborate locking platform. |
 | [#48](https://github.com/maoy1/tandem-language-culture-app/issues/48) | Shared technical | Deferred | One-off source mapping, migration/reconciliation artifact and execution, not an ongoing intake workflow. |
 | [#49](https://github.com/maoy1/tandem-language-culture-app/issues/49) | Shared technical | Planned | Evaluate permitted central in-app/email/Teams/Approvals options and select a bounded matrix; #21 owns any resulting delivery flow. |
-| [#61](https://github.com/maoy1/tandem-language-culture-app/issues/61) | Flow | Planned | One existing created/modified validation flow; App form is #5 and schema #66. |
+| [#61](https://github.com/maoy1/tandem-language-culture-app/issues/61) | Flow | In progress | One existing created/modified validation flow; App form is #5 and schema #66. |
 | [#62](https://github.com/maoy1/tandem-language-culture-app/issues/62) | Flow | Planned | One authorized request-history reader; screen layout is #67. |
 | [#63](https://github.com/maoy1/tandem-language-culture-app/issues/63) | Flow | Planned | One sender-cancellation flow for personal and group requests; no history screen ownership. |
 | [#64](https://github.com/maoy1/tandem-language-culture-app/issues/64) | Flow | Planned | One reader for own operational groups/members/counts/free slots and membership-derived profile status. |

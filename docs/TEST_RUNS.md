@@ -1068,3 +1068,15 @@ whole-schema audit evidence above remain separately scoped.
   tests retain their prior pending/blocked status. No PASS by scope transfer.
 - Documentation/deployment metadata only: JSON parsed and diff checked; prior
   84-test code-suite result retained, not rerun or presented as tenant UI proof.
+
+### CLOSE5-START61-20261108 — merged form acceptance; validation preparation
+
+- PR #71 merged at b80f0529590f9212a1ac382a03d1af3a44db37af; #5 closed,
+  lifecycle corrected to Done. Version 19 A/B results retain their owner scope.
+- #61 is the sole In progress ticket on codex/issue-61-submission-validation.
+  Target contract/test handover prepared; current source export requested.
+  No matching current submission export found in either local checkout and no
+  connected tenant-flow read tool is available. No replacement package/live edit.
+- Target catalogue/failure/concurrency/feedback cases remain NOT RUN. Historical
+  REG-014/015 results remain scoped. Package action/nesting counts cannot yet be
+  measured; delivery gate remains 500 actions / 8 nesting levels.

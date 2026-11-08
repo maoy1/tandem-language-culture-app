@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "sourceTicket": 61,
+  "flow": "Participant submission",
+  "deliveryState": "PREPARATION_CURRENT_EXPORT_REQUIRED",
+  "runtime": "Power Automate with existing SharePoint connection; no new service or runtime",
+  "trigger": {
+    "event": "SharePoint item created or modified",
+    "listRole": "Participants",
+    "input": "Current item ID from existing trigger; source definition required to preserve exact binding",
+    "authoritativeProfile": "Read current saved item, not stale trigger field values"
+  },
+  "schemaMapping": "config/tenant_schema_mapping.json",
+  "rules": {
+    "requiredAccount": "Existing nonblank single Person lookup; never resolve or rewrite identity",
+    "requireAny": [
+      "Teachlanguages",
+      "Learnlanguages",
+      "ShareCultures",
+      "LearnCultures"
+    ],
+    "optionalTimezone": "Blank allowed; a supplied lookup must resolve to an active Timezone catalog item",
+    "catalogues": "Each supplied positive integer lookup ID must exist in its exact mapped list and be Active=true",
+    "availability": "ParticipationStatus and OpenToConnections never affect validation; never reset them",
+    "specialValues": "Any language is an existing active catalogue item; do not interpret its key as an ID or a validator bypass"
+  },
+  "writes": {
+    "allowOnly": [
+      "Status"
+    ],
+    "valid": "Active",
+    "invalid": "Needs review",
+    "unchanged": "No write",
+    "prohibited": [
+      "Participantaccount",
+      "ParticipationStatus",
+      "OpenToConnections",
+      "selections",
+      "Comments",
+      "Learningfocus",
+      "groups",
+      "memberships",
+      "requests",
+      "catalogue rows"
+    ]
+  },
+  "failureContract": {
+    "failedRead": "Explicit failed run; do not treat unavailable/malformed/incomplete reads as empty catalogues or success",
+    "concurrentEdit": "Require current-item version protection on Status-only write; conflict is not success. Exact implementation finalized against export.",
+    "postWrite": "Read back and verify Status without claiming unrelated fields were written",
+    "selfTrigger": "Follow-up reads current item and skips unchanged Status; no sustained loop"
+  },
+  "appFeedback": "Existing event-driven Save; validation remains asynchronous. Inspect actual Status/error feedback binding before promising immediate success. No Power Apps response/action invocation invented.",
+  "deploymentGate": "Inspect export, generate measured legacy import ZIP and readable definition; identify create-new/update and rollback-to-existing steps before owner imports. Never run duplicate validators concurrently.",
+  "limits": {
+    "maxActionDefinitions": 500,
+    "maxNesting": 8,
+    "measuredActions": null,
+    "measuredNesting": null
+  },
+  "tenantAcceptance": "NOT RUN for target package; historical REG-014/015 partial passes retained"
+}

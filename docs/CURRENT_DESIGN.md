@@ -85,7 +85,7 @@ backend acceptance or new hosting/connector capability is inferred from UI check
 
 ## Current registration form work - #5
 
-#5 is Ready for review. Owner confirmed Live Version 19 checks A/B passed:
+#5 is Done after merged PR #71. Owner confirmed Live Version 19 checks A/B passed:
 all four multi-lookups persist with optional time zone cleared and identity
 unchanged; all-four-empty Save retains input and leaves the saved item unchanged.
 Existing culture-only/identity evidence is retained. No app rebuild was needed.
@@ -328,3 +328,10 @@ is not confirmed in v0.2; keep #15 for later review rather than silently require
 Excluded: separate paid hosting, automatic AI matching/assignment, in-app chat/video,
 detailed scheduling, mandatory Location catalogue, required native SharePoint
 Location input, participant Role and required participant-entered identity email.
+
+## Current validation flow work — #61
+
+#61 is the sole In progress ticket. Target contract and tenant handover are in
+FLOW_61_PARTICIPANT_SUBMISSION.md and participant_submission_contract.json.
+Current export is required before preserving trigger/connection mapping and
+generating the updated package. No target flow has been imported or tested.

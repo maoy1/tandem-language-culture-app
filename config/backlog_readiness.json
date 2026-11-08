@@ -20,11 +20,11 @@
   },
   "counts": {
     "allTickets": 48,
-    "openTickets": 39,
-    "closedTickets": 9,
-    "done": 7,
+    "openTickets": 38,
+    "closedTickets": 10,
+    "done": 8,
     "superseded": 2,
-    "inProgress": 0
+    "inProgress": 1
   },
   "flowCountNote": "12 singly-owned core production flows (notification provisional), plus 1 Deferred reminder flow. Access/migration helpers remain undecided; no duplicate owners for the same production flow.",
   "flowInventory": [
@@ -147,43 +147,6 @@
     }
   ],
   "openTickets": [
-    {
-      "number": 5,
-      "title": "[App] Registration form: culture fields and optional time zone",
-      "ticketType": "App",
-      "status": "Ready for review",
-      "flowScope": "Registration form controls, validation messages and save/reopen behavior only. Backend validation is {{submission}}; list schema is {{participant_schema}}.",
-      "implementationReadiness": "Existing Live Version 19 form accepted by owner; no rebuild required.",
-      "implementationEvidence": "Historical labels/guard and language/culture-only identity-preserving save/reopen retained; owner confirmed Version 19 A/B passed.",
-      "evidence": "artifacts/registration_form/version19.owner-report.json; owner report, no timestamp/fixture IDs.",
-      "proposedExperience": [
-        "Save a language/culture profile with optional time zone.",
-        "Reject all-four-empty selections.",
-        "Validate current saved data without changing identity or participation.",
-        "Correct an invalid profile and save without organiser approval."
-      ],
-      "remainingWork": "Review and merge focused acceptance PR; receiving integration tests remain separately owned.",
-      "testReferences": [
-        "REG-001:016",
-        "PAR-002",
-        "PAR-003",
-        "DISC-005"
-      ],
-      "testStatus": "Own App acceptance PASS_OWNER_REPORTED on Live Version 19; backend/access cases not passed.",
-      "testHandoff": "POC_05 guide retains A/B regression steps and receiving boundaries; TEST_RUNS records owner report and limitations.",
-      "flows": [],
-      "scopeBoundary": "Registration form controls, validation messages and save/reopen behavior only. Backend validation is #61; list schema is #66.",
-      "prerequisites": [
-        "#66 fields/catalogue mapping before binding cards",
-        "#61 validation interface for integrated validation-feedback tests"
-      ],
-      "validity": "Valid",
-      "sourceTickets": [
-        41,
-        5
-      ],
-      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/5"
-    },
     {
       "number": 7,
       "title": "[Flow] TandemDiscovery",
@@ -1231,9 +1194,9 @@
       "number": 61,
       "title": "[Flow] Participant submission validation",
       "ticketType": "Flow",
-      "status": "Planned",
+      "status": "In progress",
       "flowScope": "One existing created/modified validation flow; App form is #5 and schema {{participant_schema}}.",
-      "implementationReadiness": "Prepare this bounded contract/package after required field mapping and verified prerequisites.",
+      "implementationReadiness": "Contract/test handover prepared; current flow export required before package generation.",
       "implementationEvidence": "Existing Participant submission current-item/four-field/change-only Status behavior has scoped owner REG-014/015 evidence. Catalogue and full create/edit/persistence acceptance remain. Split from #5.",
       "evidence": "Existing Participant submission current-item/four-field/change-only Status behavior has scoped owner REG-014/015 evidence. Catalogue and full create/edit/persistence acceptance remain. Split from #5.",
       "proposedExperience": [
@@ -1241,7 +1204,7 @@
         "The flow reads current saved values and validates catalogue selections.",
         "See validation feedback without admin approval or resetting personal choices."
       ],
-      "remainingWork": "One existing created/modified validation flow; App form is #5 and schema #66.",
+      "remainingWork": "Inspect current export; generate import package and readable definition with action/nesting limits and exact mapping; scoped target tenant acceptance remains.",
       "testReferences": [
         "REG-001:004",
         "REG-006:009",
@@ -1251,7 +1214,7 @@
         "PAR-003"
       ],
       "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
-      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "testHandoff": "docs/FLOW_61_PARTICIPANT_SUBMISSION.md; target package not available yet; NOT RUN. Historical REG-014/015 partial results retained.",
       "flows": [
         "Participant submission"
       ],
@@ -1611,16 +1574,53 @@
         6
       ],
       "url": "https://github.com/maoy1/tandem-language-culture-app/issues/6"
+    },
+    {
+      "number": 5,
+      "title": "[App] Registration form: culture fields and optional time zone",
+      "ticketType": "App",
+      "status": "Done",
+      "flowScope": "Registration form controls, validation messages and save/reopen behavior only. Backend validation is {{submission}}; list schema is {{participant_schema}}.",
+      "implementationReadiness": "Existing Live Version 19 form accepted by owner; no rebuild required.",
+      "implementationEvidence": "Historical labels/guard and language/culture-only identity-preserving save/reopen retained; owner confirmed Version 19 A/B passed.",
+      "evidence": "artifacts/registration_form/version19.owner-report.json; owner report, no timestamp/fixture IDs.",
+      "proposedExperience": [
+        "Save a language/culture profile with optional time zone.",
+        "Reject all-four-empty selections.",
+        "Validate current saved data without changing identity or participation.",
+        "Correct an invalid profile and save without organiser approval."
+      ],
+      "remainingWork": "None in own App scope; PR #71 merged and #5 closed. Receiving integration cases retained separately.",
+      "testReferences": [
+        "REG-001:016",
+        "PAR-002",
+        "PAR-003",
+        "DISC-005"
+      ],
+      "testStatus": "Own App acceptance PASS_OWNER_REPORTED on Live Version 19; backend/access cases not passed.",
+      "testHandoff": "POC_05 guide retains A/B regression steps and receiving boundaries; TEST_RUNS records owner report and limitations.",
+      "flows": [],
+      "scopeBoundary": "Registration form controls, validation messages and save/reopen behavior only. Backend validation is #61; list schema is #66.",
+      "prerequisites": [
+        "#66 fields/catalogue mapping before binding cards",
+        "#61 validation interface for integrated validation-feedback tests"
+      ],
+      "validity": "Valid",
+      "sourceTickets": [
+        41,
+        5
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/5"
     }
   ],
   "publication": {
     "status": "verified",
     "date": "2026-11-08",
     "issuesVerified": 48,
-    "openBodiesVerified": 39,
+    "openBodiesVerified": 38,
     "typeAndLifecycleExactlyOne": true,
     "uniqueProductionFlowOwners": 13,
-    "activeWork": 0,
+    "activeWork": 1,
     "stateChanges": {
       "supersededNotPlanned": [
         22,
