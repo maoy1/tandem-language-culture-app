@@ -561,3 +561,45 @@ publication, source-flow replacement or additional import is requested now.
 After implementation review/merge, retain #7's remaining tests and blocked cases
 for later handover; the next build batch is #10 personal send, #62 inbox and #63
 cancellation, with one focused production-flow ticket active at a time.
+
+
+## Parallel development batch — 2026-11-08
+
+Owner explicitly requested parallel flow development after PR #77 merged
+`a19176b5e273de56cd09f395153f1fd78f593b6b`. #10/#62/#63 are active in
+separate branches/PRs for this batch; this supersedes the one-active-ticket
+scheduling rule for this batch only. #7 is queued with remaining tests retained;
+#39 audience/IT follow-up stays queued, no privacy cutover authorized.
+
+### #10 implementation and exact bindings
+
+TandemSendRequest v2 build **381d4dd5-d5e0-4863-8ca9-f5d0ed7b8700**;
+**125 actions / depth 5**, limits 500/8.
+Original export SHA `823383a1b2941a38ebf80c3e2f0a288f72a9956d24db793767e2dda5eeff0ab8`; raw archive private/untracked.
+Preserves original SenderParticipantId `number`, RecipientParticipantId `number_1`,
+Invoker Raw connection, Boolean success and Text message outputs. Adds required
+Text `IntentId` (`text`) and report/reference/status/code outputs. The app must
+refresh/add the new flow binding and supply the retained intent; no transparent
+old-button cutover is claimed. Create as new only. Maintained #9 source unchanged.
+
+Send resolves caller before request/candidate reads; scoped server identity,
+current compatibility/availability, idempotent request receipt, native unique
+live connection key and legacy unsettled-pair guard. One POST with retries off;
+exact immutable readback reconciles lost success. Unknown stays unknown; no
+fake rollback, membership/group creation, profile update or auto-cancellation.
+26 new emitted-graph/local cases pass; tenant import/write/race/ordinary-user
+results NOT RUN. Schema prerequisites remain real integration work, not a PASS.
+
+### One metadata preflight before this batch
+
+TandemRequestSchemaPreflight build **88990545-0026-40b6-913b-fdfa3d623ef7**,
+**18 actions / depth 3**. No inputs, item reads,
+writes or permission/schema changes. Shares the expected request mapping with the
+send gate. Local valid/missing-schema cases pass; native NOT RUN.
+
+Do not enable required/unique fields or backfill existing requests blindly.
+Old exported send omits the coordination keys; old cancel only changes Status.
+Their incompatibility must be handled in the later coordinated cutover, not by
+claiming the new flows are already integrated. Request Type/TargetGroup/custom
+keys are proposed names until metadata is collected. #11/#17/#65 own their writers.
+Exact operator/test checkboxes are inline in #10; #62/#63 own their handovers.

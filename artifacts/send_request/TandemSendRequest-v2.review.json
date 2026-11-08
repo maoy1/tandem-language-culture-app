@@ -1,0 +1,29 @@
+{
+  "sourceTicket": 10,
+  "packageBuildId": "381d4dd5-d5e0-4863-8ca9-f5d0ed7b8700",
+  "flowName": "TandemSendRequest v2",
+  "actions": 125,
+  "maximumActionDepth": 5,
+  "limits": {
+    "actions": 500,
+    "nesting": 8
+  },
+  "sha256": "d8cce1c2af4f27cd52158e614395ac5960e60396e6f603113f9130fe2bab5af0",
+  "rulesSourceSha256": "dfe0dcd587a5a348080dde288183ed3dff2d02d1f652f0ae23010b2e6e649c72",
+  "connectionSource": "Invoker",
+  "ownerCredentialFallback": false,
+  "tenantResult": "NOT_IMPORTED_NOT_TESTED",
+  "ordinaryUserAccessVerified": false,
+  "requestSchemaVerifiedInTenant": false,
+  "schemaWrites": 0,
+  "membershipWrites": 0,
+  "groupWrites": 0,
+  "requestWrites": "At most one POST guarded by observed metadata and native unique SendOperationKey/ConnectionKey; retries disabled, readback reconciles exact immutable intent.",
+  "sourceExportSha256": "823383a1b2941a38ebf80c3e2f0a288f72a9956d24db793767e2dda5eeff0ab8",
+  "existingActorTargetInputsPreserved": true,
+  "existingSuccessMessageOutputsPreserved": true,
+  "addedRequiredInput": "text IntentId; client must retain same UUID for transport retries",
+  "existingSendAppBindingsPreserved": false,
+  "metadataOnly": false,
+  "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF"
+}

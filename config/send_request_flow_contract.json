@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "sourceTicket": 10,
+  "flow": "TandemSendRequest v2",
+  "state": "IMPLEMENTED_OWNER_PREVIEW_SCHEMA_AND_NATIVE_TESTS_PENDING",
+  "packageBuildId": "381d4dd5-d5e0-4863-8ca9-f5d0ed7b8700",
+  "sourceExportSha256": "823383a1b2941a38ebf80c3e2f0a288f72a9956d24db793767e2dda5eeff0ab8",
+  "input": {
+    "number": "Preserved SenderParticipantId reference, positive integer; must equal same-Invoker server-resolved participant.",
+    "number_1": "Preserved RecipientParticipantId reference, positive integer.",
+    "text": "NEW REQUIRED IntentId UUID; one ID per explicit send intent, reused unchanged after invocation/unknown failure."
+  },
+  "output": {
+    "success": "Existing Boolean retained",
+    "message": "Existing Text retained",
+    "resultjson": "Text typed report",
+    "requestid": "Text numeric request reference or 0",
+    "status": "Text saved status; REPLAY may be terminal history",
+    "resultcode": "SAVED / REPLAY / CONNECTION_EXISTS / UNSETTLED_CONNECTION_EXISTS / INTENT_CONFLICT / CREATE_OUTCOME_UNKNOWN / schema/read/availability failures",
+    "errormessage": "Sanitized Text",
+    "runreference": "Text"
+  },
+  "requestListId": "3d17485d-1dac-41f0-a1af-24e45daa4567",
+  "runtimeSchemaGate": "Before request item reads/writes validate list identity/type, complete metadata, expected types/lookup targets/choices; both keys required unique indexed Text. No schema writes.",
+  "schemaMappingStatus": "List ID observed in supplied Send export; proposed coordination/custom-field types/constraints not tenant observed. Run shared metadata preflight first.",
+  "proposedFields": {
+    "SenderParticipant": "Required single Participants Lookup",
+    "RecipientParticipant": "Optional single Participants Lookup; value required for Personal",
+    "TargetGroup": "Optional single Groups Lookup; null for Personal",
+    "RequestType": "Choice Personal/Group",
+    "Status": "Choice Pending/Accepted/Declined/Cancelled",
+    "SendOperationKey": "Required unique indexed Text",
+    "ConnectionKey": "Required unique indexed Text",
+    "WinningOperationKey": "Text",
+    "OperationComplete": "Boolean"
+  },
+  "keys": {
+    "SendOperationKey": "personal:{trusted-actor}:{lowercase-client-uuid}",
+    "ConnectionKey": "open:person:{min(actor,target)}:{max(actor,target)}; holds Pending/Accepted-incomplete; settled terminal history:request:{id}"
+  },
+  "authority": "Same Invoker SharePoint currentuser -> exactly one ParticipantaccountId match -> sender input equality before request/candidate reads. No owner fallback. Ordinary-user private access remains unverified.",
+  "send": "Replay immutable existing send before availability checks. Fresh creation requires both sides Active validation/participation/open, maintained #9 pair fit, no live connection key and no legacy Pending or Accepted-incomplete pair; no personal introduction.",
+  "writeBoundary": "One request POST only; both native unique constraints arbitrate races, automatic retry disabled. Exact immutable SendOperationKey readback can settle a lost response; failed/unknown create without exact row returns CREATE_OUTCOME_UNKNOWN, never claims no effect. No membership/group/notification/profile/permission writes.",
+  "receiptScope": "Minimal immutable personal intent has only trusted actor and target; uniquely keyed request row itself is send receipt. No separate operation store or lock platform introduced. Completed/history replay never creates a fresh request.",
+  "recovery": "Keep same intent after unknown transport outcome. Reverse concurrent send may return unknown when other intent owns live key; refresh My requests. Never make a new UUID automatically as a retry workaround.",
+  "tenantResult": "NOT_IMPORTED_NOT_TESTED",
+  "ordinaryUserAccessVerified": false,
+  "localCases": 26,
+  "limits": {
+    "actions": 125,
+    "depth": 5,
+    "maximumActions": 500,
+    "maximumDepth": 8
+  },
+  "prerequisites": [
+    "Request schema/mapping and existing rows must be reviewed; preflight is read-only and does not apply constraints/backfill.",
+    "All replacement request writers must adopt same keys/decision protocol before cutover; old exported send/cancel do not populate/rekey the new fields.",
+    "Do not alter old flows or published app while import-previewing; #11/#17/#65 integration remains separately owned.",
+    "#39/#42 audience/policy/ordinary-user privacy remain rollout gates."
+  ]
+}

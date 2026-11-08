@@ -1482,3 +1482,8 @@ Build `7c8589d0-fdea-4db8-9d44-46b7d8548acf`. Owner run `08584074350262917105745
 This proves owner-context invocation/own-reference path, Paused rejection and Active empty-result completion, not populated compatibility/projection, another candidate's availability, native tampered-ID/two-account proof, imported Run-only selector, group commitment schema or worst-case native bounds/latency. No published app/cutover claimed. #7 remains In progress / PR #77 draft. 242 local tests previously passed; only evidence/config/docs changed.
 
 Owner restated self-service access: avoid individual participant approvals/grants; use verified existing group-based app/flow access. The shown SharePoint connection consent is separate from run/data authorization. Invoker is preserved; no switch to an owner connection and no new permission changes. #42 owns the final protected-data/caller boundary; owner smoke does not resolve it. Remaining versioned tests stay unchecked in issue #7.
+
+
+## #10 generated personal-send batch — 2026-11-08
+
+LOCAL PASS only: 268 tests, including 26 send/preflight graph cases. Build 381d4dd5-d5e0-4863-8ca9-f5d0ed7b8700 (125 actions/depth 5), schema preflight 88990545-0026-40b6-913b-fdfa3d623ef7 (18/depth 3). REQ-001/002/006, AUTH-002 and duplicate/unknown/race simulations exercised locally, not tenant passes. Native import/schema/actual send/replay/availability/race/privacy cases NOT RUN. Artifacts and exact unexecuted test checkboxes are inline in issue #10; no production schema/data/permissions changed.

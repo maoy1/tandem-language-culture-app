@@ -24,7 +24,7 @@
     "closedTickets": 13,
     "done": 11,
     "superseded": 2,
-    "inProgress": 1
+    "inProgress": 3
   },
   "flowCountNote": "12 singly-owned core production flows (notification provisional), plus 1 Deferred reminder flow. Access/migration helpers remain undecided; no duplicate owners for the same production flow.",
   "flowInventory": [
@@ -151,7 +151,7 @@
       "number": 7,
       "title": "[Flow] TandemDiscovery",
       "ticketType": "Flow",
-      "status": "In progress",
+      "status": "Planned",
       "flowScope": "One flow returning approved compatible people and existing open groups. App layout is #16; rule source is #9; protected access proof is #42.",
       "implementationReadiness": "Owner-preview v2 imported/invoked: Paused own profile rejected; Active own profile completed with empty results. Populated, actual Run-only selector and ordinary access tests pending.",
       "implementationEvidence": "242 local tests; 165 actions/depth 6. Native owner Paused 08584074350262917105745395996CU25 => PROFILE_UNAVAILABLE; Active 08584074348343616902680114159CU10 => OK, 0 people/0 groups, writes=0.",
@@ -223,10 +223,10 @@
       "number": 10,
       "title": "[Flow] TandemSendRequest",
       "ticketType": "Flow",
-      "status": "Planned",
+      "status": "In progress",
       "flowScope": "Personal connection-request creation only. History is {{history}}, cancellation {{cancel}}, group-join sending #17.",
-      "implementationReadiness": "Needs bounded request/interface definition before package",
-      "implementationEvidence": "#56 merged guided history/cancel configuration; latest owner instruction requires verifying actual completion; no full request business-run pass.",
+      "implementationReadiness": "Owner-preview package generated; schema metadata/native cases pending; no cutover.",
+      "implementationEvidence": "26 send/preflight cases; 125 actions/depth 5; build 381d4dd5-d5e0-4863-8ca9-f5d0ed7b8700.",
       "evidence": "#56 merged guided history/cancel configuration; latest owner instruction requires verifying actual completion; no full request business-run pass.",
       "proposedExperience": [
         "Choose a compatible person and send a request.",
@@ -1203,7 +1203,7 @@
       "number": 62,
       "title": "[Flow] TandemMyRequests",
       "ticketType": "Flow",
-      "status": "Planned",
+      "status": "In progress",
       "flowScope": "One authorized request-history reader; screen layout is {{requests_app}}.",
       "implementationReadiness": "Prepare this bounded contract/package after required field mapping and verified prerequisites.",
       "implementationEvidence": "Guided MyRequests configuration and app references were recorded under #10/#56, but latest owner clarification requires inspecting completion before retaining versus rebuilding. No actual history/privacy pass.",
@@ -1241,7 +1241,7 @@
       "number": 63,
       "title": "[Flow] TandemCancelRequest",
       "ticketType": "Flow",
-      "status": "Planned",
+      "status": "In progress",
       "flowScope": "One sender-cancellation flow for personal and group requests; no history screen ownership.",
       "implementationReadiness": "Prepare this bounded contract/package after required field mapping and verified prerequisites.",
       "implementationEvidence": "Guided Cancel configuration and conditional-write references exist under #10/#56/#57. No whole personal/group cancellation or race test pass.",
@@ -1637,5 +1637,14 @@
       ]
     }
   },
-  "participationIntegrationHandoffs": "config/participation_integration_handoffs.json"
+  "participationIntegrationHandoffs": "config/participation_integration_handoffs.json",
+  "parallelBatchOwnerOverride": {
+    "date": "2026-11-08",
+    "tickets": [
+      10,
+      62,
+      63
+    ],
+    "scope": "Separate branches/PRs, owner-preview artifacts only; native/prerequisite gates retained."
+  }
 }
