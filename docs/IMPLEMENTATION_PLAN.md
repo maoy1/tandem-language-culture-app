@@ -81,6 +81,14 @@ technical drafting into repeated owner decisions.
 Flow ticket delivery is package-first: importable legacy ZIP, readable definition,
 input/output/connection mapping, local validation, and numbered import/smoke/
 acceptance tests. Manual action-by-action construction is not the default.
+
+Every Flow package has a structural gate: **at most 500 action definitions and
+8 nesting levels**, with measured totals included in its handover. Count all
+branches/control actions, not runtime loop iterations. Reject an over-limit
+package and flatten/redesign before import; keep headroom where practical.
+Child flows/Solutions are not an assumed workaround under the legacy-package
+and existing-entitlement constraints. Official reference:
+https://learn.microsoft.com/en-us/power-automate/limits-and-config
 Shared technical metadata/test probes may also use disposable packages if that
 reduces inspection work; they are not extra production flows.
 
