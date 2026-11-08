@@ -146,3 +146,49 @@ same guard. #19/#20/#23 and #39–#42 own authority/private data bindings; #12 a
 group/member metadata. No silent client/caller substitution or new paid dependency.
 Shared #47 can finish on its own reviewed contract and bounded proof; it does not
 wait for every consumer to finish, nor certify them from reference tests alone.
+
+## Preflight passed; native fixture handover
+
+Owner report for preflight build ffd55bdf-ce46-4327-96bc-9e0cddc09ecd, run
+08584074437966574454125674321CU01: permission metadata collected and gate passed,
+view/add/edit items and ManageLists true; readOnly=true, writes=0, fixtureCreated=false.
+Exact report retained in artifacts/coordination/results/preflight.owner-report.json.
+This verifies the prerequisite only; it is not a native coordination result.
+
+TandemCoordinationFixture.zip, build 8b82de6a-95e7-40fc-aaff-d066b168442b, has
+**321 actions / depth 6** (500/8 limits). Default Run fixture writes=false performs
+metadata only. Explicit Yes creates/reuses only **Tandem47Fixture_8b82de6a95e740fc**
+at the preflight site with exact full-build Description tag. Runtime rechecks rights,
+verified ID/title/tag/BaseTemplate/entity type and all required field properties.
+Missing/mismatched fields on a nonempty fixture stop instead of silently repairing.
+Fresh per-run row prefixes isolate reruns; list reuse requires the original tag.
+
+The fixture has unique required Title/KeyB, plain JSON Payload, OwnerToken,
+Counter/Capacity, Status and Complete. These are synthetic analogue fields, not
+the production schema proposed above. No production list, permission or app changes.
+No deletes or external notification connector. All item updates use exact ETags;
+only empty verified-fixture field setup uses unconditional field metadata updates.
+
+Ten checks: both unique columns; stale terminal CAS; parallel Accept/Decline/Cancel;
+two acceptors/one slot; capacity change versus join; Leave versus join; controlled
+partial-prefix recovery; Left episode/Closed history; committed unique event fact.
+Parallel writer branches share one captured group revision and verify physical
+membership counts, saved receipts and request completion. Failed verification GETs
+cannot prove absence. The known-prefix scenario intentionally fails a non-I/O action
+after one saved member, catches that known boundary, seals/reclaims with a new
+logical attempt, rejects the old revision and reuses the stable first row.
+
+Local fake-service/WDL tests exercise both possible writer orders, schema reuse
+with fresh run prefix, default/string-false gates, foreign tag rejection, revoked
+rights, missing-field rejection, failed absence read and receipt interruption.
+Whole suite **165 passed**. These are local simulations; **native import/run NOT RUN**.
+This fixture covers selected native primitive schedules, not all 70 native schedules,
+nor a genuine network timeout/killed-flow boundary, external delivery or production
+caller/mapping behavior. Its report keeps those limitations explicit.
+
+Current inline issue #47 gives exact import/existing-connection mapping, Run fixture
+writes=Yes, report fields, expected intentional red/rejected actions, and cleanup.
+Run may leave completed/partial synthetic writes; no rollback promised. Keep fixture
+for inspection or delete only the exact tagged fixture via normal list settings
+after evidence is retained. Never delete a similarly named/untagged list or enable
+both production validators. No production flow needs toggling for this proof.

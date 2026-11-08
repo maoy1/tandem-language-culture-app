@@ -372,3 +372,9 @@ COORDINATION_CONTRACT.md / coordination_contract.json describe un-applied metada
 consumer boundaries and assumptions. 152 local tests / 70 model schedules pass;
 native cross-item fixture proof NOT RUN. Read-only metadata preflight is ready to
 verify fixture permissions; no fixture/production schema or data change yet.
+
+#47 update: read-only permission metadata gate passed on owner run. A native
+tagged fixture package is prepared (321 actions/depth 6; 10 checks; 165 local
+tests), defaulting to no fixture writes. Explicit Yes is limited to one verified
+build-tagged synthetic list. Native runtime results, genuine unknown/killed-run
+recovery and production mapping remain unverified; no production schema applied.

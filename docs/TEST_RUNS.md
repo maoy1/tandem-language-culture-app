@@ -1385,3 +1385,35 @@ whole-schema audit evidence above remain separately scoped.
   with #49/#21 channel/idempotency proof, beyond unique committed event identity.
 - Current handover is inline in #47 with checkboxes, expected report/errors and
   explicit next native-fixture gate. #47 not Ready/Done; draft code/design review.
+
+### COORD47-PREFLIGHT-20261108 — permission metadata gate PASS
+
+- Owner report matches preflight build ffd55bdf-ce46-4327-96bc-9e0cddc09ecd,
+  run 08584074437966574454125674321CU01. permissionMetadataCollected=true,
+  fixturePermissionGatePassed=true; view/add/edit/manageLists all true.
+  readOnly=true, fixtureCreated=false, writes=0. Exact summary retained in
+  artifacts/coordination/results/preflight.owner-report.json. No native fixture
+  or production coordination PASS follows solely from permission bits.
+
+### COORD47-NATIVE-BUILD-20261108 — tagged fixture package prepared
+
+- Build 8b82de6a-95e7-40fc-aaff-d066b168442b / Tandem47Fixture_8b82de6a95e740fc.
+  **321 action definitions / depth 6**, within 500/8. Ten native checks packaged;
+  default Run fixture writes=false. Explicit boolean Yes rechecks actual rights
+  and creates/reuses only the exact full-build-tagged synthetic list/schema.
+- No production list/app/permission mutations or deletes. Fresh per-run prefixes;
+  no repair of nonempty tampered schema. Exact ETag on every data MERGE; metadata
+  wildcard limited to empty verified-fixture Title settings. No row data from
+  employee/production lists. Synthetic list remains for inspection/explicit cleanup.
+- **165 pytest passed**. New simulations exercise generated references/HTTP shapes,
+  both writer orders, metadata-only and string-true no-write cases, tagged schema
+  reuse/fresh prefix, foreign-tag collision, revoked rights, schema tampering,
+  failed absence-read handling and receipt failure retaining ownership.
+- Fake-service simulations caught/fixed a fake default-value bug and tightened
+  real collection read checks: failed GET is never equivalent to a verified empty
+  collection. Final package/hash reflects the corrected guards, not earlier
+  unpublished generated builds. JSON/diff checked.
+- Native import/run **NOT RUN**. Selected primitive/independent-branch races and
+  an intentional handled non-I/O failure/known-prefix replay are distinct from a
+  genuine network-unknown/killed-run proof. No external delivery or production
+  mapping/authority certification. #47 stays In progress; PR #75 draft.

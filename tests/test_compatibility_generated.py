@@ -11,6 +11,7 @@ from scripts.power_automate import build_compatibility_proof as proof
 
 class Runner:
     def __init__(self):self.outputs={};self.variables={}
+    def body(self,name):return self.outputs[name]
 
     def expr(self,text,context):
         tokens=re.findall(r"'(?:[^']|'')*'|-?\d+|[A-Za-z_][A-Za-z0-9_]*|[^\s]",text.lstrip('@'))
@@ -28,17 +29,22 @@ class Runner:
                     if tokens[at]==',':at+=1
                 at+=1
                 def union(a,b):return list(dict.fromkeys(a+b))
-                funcs={'body':lambda n:self.outputs[n],'outputs':lambda n:self.outputs[n],
+                funcs={'body':self.body,'outputs':lambda n:self.outputs[n],
                     'variables':lambda n:self.variables[n],'item':lambda:context['item'],
                     'items':lambda n:context['items'][n],
                     'and':lambda *v:all(v),'or':lambda *v:any(v),'not':lambda v:not v,
                     'equals':lambda a,b:a==b,'greater':lambda a,b:a>b,'greaterOrEquals':lambda a,b:a>=b,
-                    'lessOrEquals':lambda a,b:a<=b,'length':len,'empty':lambda v:v is None or v==[] or v=='',
+                    'lessOrEquals':lambda a,b:a<=b,'less':lambda a,b:a<b,'length':len,'empty':lambda v:v is None or v==[] or v=='',
                     'if':lambda c,a,b:a if c else b,'contains':lambda a,b:b in a,'union':union,
                     'intersection':lambda a,b:[v for v in union(a,a) if v in b],
                     'coalesce':lambda *v:next((x for x in v if x is not None),None),
                     'trim':lambda s:s.strip(),'toLower':lambda s:s.lower(),'json':json.loads,
-                    'first':lambda a:a[0],'workflow':lambda:{'run':{'name':'local-subset-not-a-tenant-run'}}}
+                    'first':lambda a:a[0],'workflow':lambda:{'run':{'name':'local-subset-not-a-tenant-run'}},
+                    'concat':lambda *a:''.join(str(x) for x in a),'int':int,
+                    'string':lambda v:json.dumps(v,separators=(',',':')) if isinstance(v,(dict,list,bool)) else str(v),
+                    'add':lambda a,b:a+b,'div':lambda a,b:a//b,'mod':lambda a,b:a%b,
+                    'actions':lambda n:{'status':getattr(self,'action_states',{}).get(n,'Skipped')},
+                    'triggerBody':lambda:context.get('triggerBody',{})}
                 result=funcs[t](*args)
             while at<len(tokens) and tokens[at]=='?':
                 at+=1;assert tokens[at]=='[';at+=1;key=value();assert tokens[at]==']';at+=1

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceTicket": 47,
-  "state": "REFERENCE_PROTOCOL_PASSED_NATIVE_FIXTURE_PREREQUISITES_PENDING",
+  "state": "PREFLIGHT_PASSED_NATIVE_FIXTURE_PACKAGE_PENDING_RUN",
   "source": "scripts/power_automate/coordination.py",
   "sourceSha256": "67e9268d9a0d25de32681ad0e0372a1778e50531896781f8d222a592f50c94c5",
   "runtime": "Power Automate/SharePoint only; Python is isolated local reference/test tooling",
@@ -37,7 +37,7 @@
     "65": "Same group guard + current rereads + terminal request CAS; one admitted slot, shared with #11/#13/#14."
   },
   "proof": {
-    "localSuite": 152,
+    "localSuite": 165,
     "referenceInterleavings": 70,
     "assumptions": [
       "Atomic per-row CAS",
@@ -46,10 +46,26 @@
       "Fresh authorized adapter facts",
       "Known sealed boundary has no outstanding I/O"
     ],
-    "nativeStatus": "NOT RUN; no fixture schema/data created",
+    "nativeStatus": "Package built; NOT_IMPORTED_NOT_TESTED. No fixture confirmed created yet.",
     "preflightBuildId": "ffd55bdf-ce46-4327-96bc-9e0cddc09ecd",
     "preflight": "artifacts/coordination/TandemCoordinationPreflight.zip",
-    "preflightTenantResult": "NOT_IMPORTED_NOT_TESTED"
+    "preflightTenantResult": "PASS_OWNER_REPORTED",
+    "preflightEvidence": "artifacts/coordination/results/preflight.owner-report.json",
+    "preflightRunReference": "08584074437966574454125674321CU01",
+    "nativeFixture": {
+      "package": "artifacts/coordination/TandemCoordinationFixture.zip",
+      "packageBuildId": "8b82de6a-95e7-40fc-aaff-d066b168442b",
+      "fixtureTitle": "Tandem47Fixture_8b82de6a95e740fc",
+      "actions": 321,
+      "depth": 6,
+      "caseCount": 10,
+      "writeGateDefault": false,
+      "productionWrites": 0,
+      "deletes": 0,
+      "permissionChanges": 0,
+      "tenantResult": "NOT_IMPORTED_NOT_TESTED",
+      "localSimulation": "Both race orders, no-write gate, fresh-run prefix/schema reuse, tag collision, schema tampering, revoked rights, failed read and receipt interruption verified locally; not native certification."
+    }
   },
   "gates": [
     "Read-only web permission metadata preflight before relying on fixture creation rights.",
