@@ -14,7 +14,7 @@
   "ownerCredentialFallback": false,
   "tenantResult": "NOT_IMPORTED_NOT_TESTED",
   "ordinaryUserAccessVerified": false,
-  "requestSchemaVerifiedInTenant": false,
+  "requestSchemaVerifiedInTenant": true,
   "schemaWrites": 0,
   "membershipWrites": 0,
   "groupWrites": 0,
@@ -25,5 +25,6 @@
   "addedRequiredInput": "text IntentId; client must retain same UUID for transport retries",
   "existingSendAppBindingsPreserved": false,
   "metadataOnly": false,
-  "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF"
+  "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF",
+  "requestSchemaRunReference": "08584074285601068216673996565CU29"
 }

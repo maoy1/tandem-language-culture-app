@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "sourceTicket": 10,
   "flow": "TandemSendRequest v3",
-  "state": "IMPLEMENTED_OWNER_PREVIEW_SCHEMA_AND_NATIVE_TESTS_PENDING",
+  "state": "IMPLEMENTED_OWNER_PREVIEW_SCHEMA_VERIFIED_NATIVE_TESTS_PENDING",
   "packageBuildId": "a9251019-b7a5-4170-8877-682bb71b8693",
   "sourceExportSha256": "823383a1b2941a38ebf80c3e2f0a288f72a9956d24db793767e2dda5eeff0ab8",
   "input": {
@@ -22,7 +22,7 @@
   },
   "requestListId": "3d17485d-1dac-41f0-a1af-24e45daa4567",
   "runtimeSchemaGate": "Before request item reads/writes validate list identity/type, complete metadata, observed Number party fields with Decimals=0 and expected Groups lookup/choice metadata; both keys required unique indexed Text. No schema writes.",
-  "schemaMappingStatus": "Observed Number sender/recipient fields and Status via run 08584074297422149453962972460CU27; six added fields/recipient optionality await owner setup and corrected preflight.",
+  "schemaMappingStatus": "Verified request metadata via run 08584074285601068216673996565CU29; requestSchemaMapping config authoritative. Native sender/write and ordinary access remain unverified.",
   "proposedFields": {
     "SenderParticipantId": "Existing required Number, Decimals=0; preserve field ID and name.",
     "RecipientParticipantId": "Existing Number, Decimals=0; make optional for Group requests, preserve field ID/name.",

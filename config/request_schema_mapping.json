@@ -5,28 +5,124 @@
   "observedRunReference": "08584074297422149453962972460CU27",
   "observedMapping": {
     "SenderParticipantId": {
-      "id": "{7909dcd2-f0b9-4158-9b9a-2017cb156fcd}",
+      "id": "7909dcd2-f0b9-4158-9b9a-2017cb156fcd",
       "type": "Number",
       "required": true,
+      "unique": false,
+      "indexed": false,
+      "hidden": false,
+      "readOnly": false,
+      "defaultValue": null,
       "decimals": 0
     },
     "RecipientParticipantId": {
-      "id": "{e23db904-ddb4-451d-aa37-9b59b375b1ca}",
+      "id": "e23db904-ddb4-451d-aa37-9b59b375b1ca",
       "type": "Number",
-      "required": true,
+      "required": false,
+      "unique": false,
+      "indexed": false,
+      "hidden": false,
+      "readOnly": false,
+      "defaultValue": null,
       "decimals": 0
     },
-    "Status": "Verified required Choice Pending/Accepted/Declined/Cancelled; default Pending, no fill-in"
+    "Status": {
+      "id": "9a1d79d6-44d3-4c17-8d85-c3c75e68c0df",
+      "type": "Choice",
+      "required": true,
+      "unique": false,
+      "indexed": false,
+      "hidden": false,
+      "readOnly": false,
+      "defaultValue": "Pending",
+      "choices": [
+        "Pending",
+        "Accepted",
+        "Declined",
+        "Cancelled"
+      ]
+    },
+    "RequestType": {
+      "id": "3394885a-91ad-4708-a6da-786b13c3fb7f",
+      "type": "Choice",
+      "required": true,
+      "unique": false,
+      "indexed": false,
+      "hidden": false,
+      "readOnly": false,
+      "defaultValue": "Personal",
+      "choices": [
+        "Personal",
+        "Group"
+      ]
+    },
+    "TargetGroup": {
+      "id": "72e41179-831a-42d1-b713-04d3ff07b1fb",
+      "type": "Lookup",
+      "required": false,
+      "unique": false,
+      "indexed": false,
+      "hidden": false,
+      "readOnly": false,
+      "defaultValue": null,
+      "lookupListId": "4bf1b37f-edce-40c5-8fa0-36543a2d0cd6",
+      "showField": "Title"
+    },
+    "SendOperationKey": {
+      "id": "177b42fe-c488-4e97-98a4-934db317629f",
+      "type": "Text",
+      "required": true,
+      "unique": true,
+      "indexed": true,
+      "hidden": false,
+      "readOnly": false,
+      "defaultValue": null
+    },
+    "ConnectionKey": {
+      "id": "a8c484b6-fc38-44f1-b34f-289c8f8c5545",
+      "type": "Text",
+      "required": true,
+      "unique": true,
+      "indexed": true,
+      "hidden": false,
+      "readOnly": false,
+      "defaultValue": null
+    },
+    "WinningOperationKey": {
+      "id": "a7b536b3-0330-4067-bf11-6c66a2b1fd86",
+      "type": "Text",
+      "required": false,
+      "unique": false,
+      "indexed": false,
+      "hidden": false,
+      "readOnly": false,
+      "defaultValue": null
+    },
+    "OperationComplete": {
+      "id": "7bc493d6-0d99-4ac3-97d0-972acec765eb",
+      "type": "Boolean",
+      "required": false,
+      "unique": false,
+      "indexed": false,
+      "hidden": false,
+      "readOnly": false,
+      "defaultValue": "0"
+    }
   },
-  "ownerReportedRows": "EMPTY",
-  "mappingVerified": false,
-  "reason": "Current numeric party mapping observed; six new fields and recipient optionality not applied/verified.",
+  "ownerReportedRows": "EMPTY_CONFIRMED_BY_METADATA",
+  "mappingVerified": true,
+  "reason": "All request-contract metadata inspected after owner setup; numeric column IDs preserved, six new fields/required/index/default settings verified; no row reads/writes.",
   "preserve": [
     "SenderParticipantId field 7909dcd2-f0b9-4158-9b9a-2017cb156fcd Number required Decimals=0",
     "RecipientParticipantId field e23db904-ddb4-451d-aa37-9b59b375b1ca Number Decimals=0",
     "Status choices/default/type"
   ],
-  "plannedChanges": {
+  "migration": "Not needed: ItemCount=0 in verified readback. No row writes or deletions performed by helper.",
+  "verifiedRunReference": "08584074285601068216673996565CU29",
+  "verifiedPreflightBuildId": "dd0c91b6-13b4-41e0-affd-ebafeeb87404",
+  "verifiedItemCount": 0,
+  "nativeWriterRuntimeVerified": false,
+  "completedChanges": {
     "RecipientParticipantId": "Required=false only; keep Number/Decimals=0",
     "RequestType": "Choice Personal/Group; required; default Personal",
     "TargetGroup": "Lookup Groups, Title; optional",
@@ -34,6 +130,5 @@
     "ConnectionKey": "Text, required, unique/indexed",
     "WinningOperationKey": "Text, optional blank",
     "OperationComplete": "Boolean, optional, default No"
-  },
-  "migration": "None needed for owner-confirmed empty list. If rows appear before setup, stop and re-assess; no backfill/delete is authorized by metadata collection."
+  }
 }

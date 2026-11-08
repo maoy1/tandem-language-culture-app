@@ -12,9 +12,9 @@
   "rulesSourceSha256": "dfe0dcd587a5a348080dde288183ed3dff2d02d1f652f0ae23010b2e6e649c72",
   "connectionSource": "Invoker",
   "ownerCredentialFallback": false,
-  "tenantResult": "NOT_IMPORTED_NOT_TESTED",
+  "tenantResult": "SCHEMA_METADATA_VERIFIED_OWNER_REPORT",
   "ordinaryUserAccessVerified": false,
-  "requestSchemaVerifiedInTenant": false,
+  "requestSchemaVerifiedInTenant": true,
   "schemaWrites": 0,
   "membershipWrites": 0,
   "groupWrites": 0,
@@ -25,5 +25,6 @@
   "addedRequiredInput": null,
   "existingSendAppBindingsPreserved": false,
   "metadataOnly": true,
-  "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF"
+  "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF",
+  "runReference": "08584074285601068216673996565CU29"
 }
