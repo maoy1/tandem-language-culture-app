@@ -133,20 +133,21 @@ to #48 and must be resolved before migrated profiles are exposed.
 
 One row represents one group, not one member. Its SharePoint item ID links the
 memberships and requests to it. The tables define the target contract for
-#12/#13; existing tenant lists need mapping/verification before live changes.
+#12/#13. Actual metadata and five direct settings verified by #12 audit `08584074372941101122136369836CU17`; actual IDs/properties are in config/group_schema_mapping.json. This verifies schema configuration, not consuming-flow behavior.
 
 | Internal field | Purpose and SharePoint type | Required/default | Source and maintenance | Member-facing behavior | Discovery display | State |
 |---|---|---|---|---|---|---|
 | ID | Stable group reference; SharePoint system ID | Automatic | SharePoint | Read-only reference | Internal reference, not authorization | System |
-| Title | Group name; single line text | Required; agreed at creation | Active members can edit through group form; admin exception | Editable name | Approved name display | Planned/mapping pending |
-| ExchangeType | Language / Culture / Combined; Choice | Required at creation | Initial members choose; automation validates | Fixed after creation in MVP; approved | Approved exchange-type display | Planned/mapping pending |
-| LanguageFocus | Declared languages; multi Lookup to Language catalogue | At least one for Language/Combined; empty for Culture-only | Initial members choose; automation verifies group purpose | Visible; fixed after creation in MVP | Approved focus display | Planned/mapping pending |
-| CultureFocus | Declared cultures; multi Lookup to Culture catalogue | At least one for Culture/Combined; empty for Language-only | Initial members choose; automation verifies group purpose | Visible; same change rule as LanguageFocus | Approved focus display | Planned #12 |
-| Capacity | Maximum total members; Number, integer | Required; Language 2 or 3, Culture/Combined 2–10 | Group selects within approved bounds; validate updates | Active member may propose change; never below current active member count | Show alongside current count/free slots | Planned/mapping pending |
-| State | Open / Closed / Ended; Choice | Required; initially Open if space remains, otherwise Closed, only after membership creation succeeds | Workflow sets initial state; authorized active member manages later transitions | Open/Closed can switch or become Ended; Ended is final in MVP | Open with valid focus/space is joinable; Closed/Ended not joinable | Planned/mapping pending |
-| Purpose | Brief group description; multiple lines plain text | Optional | Active members edit; admin exception | Editable | Approved description display | Proposed #12 |
-| SourceRequestId | Originating person-to-person acceptance; Number, integer, unique | Required in current new-group path; old-group migration mapping remains #48 | Workflow-managed, never participant input | Hidden technical reference | Excluded | Owner-confirmed configured; runtime uniqueness not verified |
-| SetupComplete | Technical publication/readiness marker; Yes/No | Default No | Acceptance sets Yes only after memberships and accepted result are established | Hidden; independent from Open/Closed/Ended | Gate operational group exposure; do not display raw marker | Owner-confirmed configured; export reviewed |
+| Title | Group name; single line text | Required; agreed at creation | Active members can edit through group form; admin exception | Editable name | Approved name display | Tenant metadata verified #12; runtime behavior remains consuming Flow scope |
+| ExchangeType | Language / Culture / Combined; Choice | Required at creation | Initial members choose; automation validates | Fixed after creation in MVP; approved | Approved exchange-type display | Tenant metadata verified #12; runtime behavior remains consuming Flow scope |
+| LanguageFocus | Declared languages; multi Lookup to Language catalogue | At least one for Language/Combined; empty for Culture-only | Initial members choose; automation verifies group purpose | Visible; fixed after creation in MVP | Approved focus display | Tenant metadata verified #12; runtime behavior remains consuming Flow scope |
+| CultureFocus | Declared cultures; multi Lookup to Culture catalogue | At least one for Culture/Combined; empty for Language-only | Initial members choose; automation verifies group purpose | Visible; same change rule as LanguageFocus | Approved focus display | Tenant metadata verified #12; runtime behavior remains consuming Flow scope |
+| Capacity | Maximum total members; Number, integer | Required; Language 2 or 3, Culture/Combined 2–10 | Group selects within approved bounds; validate updates | Active member may propose change; never below current active member count | Show alongside current count/free slots | Tenant metadata verified #12; runtime behavior remains consuming Flow scope |
+| State | Open / Closed / Ended; Choice | Required; initially Open if space remains, otherwise Closed, only after membership creation succeeds | Workflow sets initial state; authorized active member manages later transitions | Open/Closed can switch or become Ended; Ended is final in MVP | Open with valid focus/space is joinable; Closed/Ended not joinable | Tenant metadata verified #12; runtime behavior remains consuming Flow scope |
+| Purpose | Brief group description; multiple lines plain text | Optional | Active members edit; admin exception | Editable | Approved description display | Tenant metadata verified #12; runtime behavior remains consuming Flow scope |
+| SourceRequestId | Originating person-to-person acceptance; Number, integer, unique | Required in current new-group path; old-group migration mapping remains #48 | Workflow-managed, never participant input | Hidden technical reference | Excluded | Tenant metadata verified #12; runtime behavior remains consuming Flow scope |
+| SetupComplete | Technical publication/readiness marker; Yes/No | Default No | Acceptance sets Yes only after memberships and accepted result are established | Hidden; independent from Open/Closed/Ended | Gate operational group exposure; do not display raw marker | Tenant metadata verified #12; runtime behavior remains consuming Flow scope |
+| WriteOwner | Shared group writer ownership token; single line text, max 255 | Optional; blank default; nonunique | Consuming flows claim/release with exact ETags per #47; no automatic expiry | Hidden technical coordination | Excluded | Tenant metadata verified #12; runtime guard integration pending |
 | Created / Modified and authors | System history fields | Automatic | SharePoint | Not participant inputs | Excluded as system/admin-only metadata | System |
 
 Capacity is a group-level limit, not a registration preference. Group controls
@@ -173,12 +174,12 @@ directly; ordinary accepted joins and Leave actions maintain them automatically.
 | Internal field | Purpose and SharePoint type | Required/default | Source and maintenance | Member-facing behavior | Discovery display | State |
 |---|---|---|---|---|---|---|
 | ID | Membership reference; SharePoint system ID | Automatic | SharePoint | Read-only reference | Not exposed by default | System |
-| Group | Single Lookup to Groups item | Required | Acceptance/migration automation resolves it; immutable for that episode | Shows which group, not an editable link | Technical link, not raw membership row | Planned/mapping pending |
-| Participant | Single Lookup to Participants item | Required | Acceptance resolves approved participant; immutable for that episode | Shows member identity under agreed access rules | Approved display name and person-field allowlist | Planned/mapping pending |
-| MembershipStatus | Active / Left; Choice | Required; provisional Active during setup, operational only after accepted/completed parent | Workflow records departure or rejected-setup cleanup as Left | Join/Leave actions, not a freely editable status field | Used internally for count and validity | Planned/mapping pending |
-| MembershipKey | Request/participant episode key; single line text, unique | Required in current acceptance path | Workflow generates request:{requestId}:participant:{participantId}; immutable | Hidden | Excluded | Owner-confirmed configured; complete retry behavior remains #47 |
-| JoinedAt | Episode start; Date/time in UTC | Required for new accepted joins; migration unknown-date handling decided in #48 | Workflow timestamps; do not invent historical dates | Read-only where useful | Not exposed by default | Proposed #12 |
-| LeftAt | Episode departure; Date/time in UTC | Empty while Active; set on recorded departure | Leave workflow | Read-only history | Not exposed by default | Proposed #14 |
+| Group | Single Lookup to Groups item | Required | Acceptance/migration automation resolves it; immutable for that episode | Shows which group, not an editable link | Technical link, not raw membership row | Tenant metadata verified #12; runtime behavior remains consuming Flow scope |
+| Participant | Single Lookup to Participants item | Required | Acceptance resolves approved participant; immutable for that episode | Shows member identity under agreed access rules | Approved display name and person-field allowlist | Tenant metadata verified #12; runtime behavior remains consuming Flow scope |
+| MembershipStatus | Active / Left; Choice | Required; provisional Active during setup, operational only after accepted/completed parent | Workflow records departure or rejected-setup cleanup as Left | Join/Leave actions, not a freely editable status field | Used internally for count and validity | Tenant metadata verified #12; runtime behavior remains consuming Flow scope |
+| MembershipKey | Request/participant episode key; single line text, unique | Required in current acceptance path | Workflow generates request:{requestId}:participant:{participantId}; immutable | Hidden | Excluded | Tenant metadata verified #12; runtime behavior remains consuming Flow scope |
+| JoinedAt | Episode start; Date/time in UTC | Required for new accepted joins; migration unknown-date handling decided in #48 | Workflow timestamps; do not invent historical dates | Read-only where useful | Not exposed by default | Tenant metadata verified #12; runtime behavior remains consuming Flow scope |
+| LeftAt | Episode departure; Date/time in UTC | Empty while Active; set on recorded departure | Leave workflow | Read-only history | Not exposed by default | Tenant metadata verified #12; runtime behavior remains consuming Flow scope |
 | Created / Modified and authors | System change metadata | Automatic | SharePoint | Not participant inputs | Excluded | System |
 
 A rejoin must not erase a previous Left episode. Exact rejoin/return-from-pause
@@ -196,6 +197,8 @@ exist during partial construction; they do not represent an operational group
 until the source request is Accepted and SetupComplete is Yes.
 Retries must not create a second active membership, and acceptance must not
 report success until its required group/membership result is consistent.
+
+Actual membership Group and Participant have separate single-column indexes; SourceRequestId and MembershipKey remain unique/indexed. Groups stores the integer/type-specific Capacity validation formula from #12; native row rejection was not exercised here. `Decimals=0` is display precision, so consumers still validate integer/type constraints and current counts. Participant lookup retains ShowField ID; resolve approved profile display rather than treating raw lookup text as a display name. No setup automation or repeat-apply proof claimed for owner-selected manual settings.
 
 ## Derived group values and profile links
 

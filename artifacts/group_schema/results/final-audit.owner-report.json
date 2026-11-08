@@ -1,0 +1,1691 @@
+{
+  "kind": "TandemGroupSchemaAudit",
+  "schemaVersion": 1,
+  "sourceTicket": 12,
+  "packageBuildId": "cb49aded-f121-410e-b7df-d9646be892dd",
+  "runReference": "08584074372941101122136369836CU17",
+  "readOnly": true,
+  "rowReads": 0,
+  "writes": 0,
+  "collectionComplete": true,
+  "schemaVerified": false,
+  "writeCapability": "NOT_VERIFIED_NO_WRITES",
+  "lists": [
+    {
+      "role": "groups",
+      "id": "4bf1b37f-edce-40c5-8fa0-36543a2d0cd6",
+      "title": "Groups",
+      "baseTemplate": 100,
+      "itemCount": 0,
+      "validationFormula": "=AND(Capacity=INT(Capacity),OR(AND(ExchangeType=\"Language\",OR(Capacity=2,Capacity=3)),AND(OR(ExchangeType=\"Culture\",ExchangeType=\"Combined\"),Capacity>=2,Capacity<=10)))",
+      "validationMessage": "Capacity must be a whole number: Language groups 2 or 3; Culture/Combined groups 2 to 10.",
+      "fields": [
+        {
+          "id": "fa564e0f-0c70-4ab9-b863-0177e6ddd247",
+          "internalName": "Title",
+          "displayName": "Title",
+          "type": "Text",
+          "required": true,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": "<Field ID=\"{fa564e0f-0c70-4ab9-b863-0177e6ddd247}\" Type=\"Text\" Name=\"Title\" DisplayName=\"Title\" Required=\"TRUE\" SourceID=\"http://schemas.microsoft.com/sharepoint/v3\" StaticName=\"Title\" FromBaseType=\"TRUE\" MaxLength=\"255\" ColName=\"nvarchar1\" RowOrdinal=\"0\" CustomFormatter=\"\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" Version=\"1\" />"
+        },
+        {
+          "id": "28d9d9be-4e7a-43f2-b909-672fc888241d",
+          "internalName": "ExchangeType",
+          "displayName": "ExchangeType",
+          "type": "Choice",
+          "required": true,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": "<Field Type=\"Choice\" DisplayName=\"ExchangeType\" Required=\"TRUE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" Format=\"Dropdown\" FillInChoice=\"FALSE\" ID=\"{28d9d9be-4e7a-43f2-b909-672fc888241d}\" SourceID=\"{4bf1b37f-edce-40c5-8fa0-36543a2d0cd6}\" StaticName=\"ExchangeType\" Name=\"ExchangeType\" ColName=\"nvarchar7\" RowOrdinal=\"0\"><CHOICES><CHOICE>Language</CHOICE><CHOICE>Culture</CHOICE><CHOICE>Combined</CHOICE></CHOICES></Field>"
+        },
+        {
+          "id": "6a2b81cb-9362-4559-b5ea-cdca49fdee7b",
+          "internalName": "LanguageFocus",
+          "displayName": "LanguageFocus",
+          "type": "LookupMulti",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": "<Field Type=\"LookupMulti\" DisplayName=\"LanguageFocus\" Required=\"FALSE\" EnforceUniqueValues=\"FALSE\" List=\"{3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63}\" ShowField=\"Title\" Mult=\"TRUE\" Sortable=\"FALSE\" UnlimitedLengthInDocumentLibrary=\"FALSE\" RelationshipDeleteBehavior=\"None\" ID=\"{6a2b81cb-9362-4559-b5ea-cdca49fdee7b}\" SourceID=\"{4bf1b37f-edce-40c5-8fa0-36543a2d0cd6}\" StaticName=\"LanguageFocus\" Name=\"LanguageFocus\" ColName=\"int1\" RowOrdinal=\"0\" />"
+        },
+        {
+          "id": "3d34ba7e-01e2-4679-a9f3-bdbf725237de",
+          "internalName": "CultureFocus",
+          "displayName": "CultureFocus",
+          "type": "LookupMulti",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": "<Field Type=\"LookupMulti\" DisplayName=\"CultureFocus\" Required=\"FALSE\" EnforceUniqueValues=\"FALSE\" List=\"{cf7ed5b4-2e11-4a0a-a417-6c63ed60f614}\" ShowField=\"Title\" Mult=\"TRUE\" Sortable=\"FALSE\" UnlimitedLengthInDocumentLibrary=\"FALSE\" RelationshipDeleteBehavior=\"None\" ID=\"{3d34ba7e-01e2-4679-a9f3-bdbf725237de}\" SourceID=\"{4bf1b37f-edce-40c5-8fa0-36543a2d0cd6}\" StaticName=\"CultureFocus\" Name=\"CultureFocus\" ColName=\"int2\" RowOrdinal=\"0\" />"
+        },
+        {
+          "id": "591a62eb-69a3-4f80-bc0e-145b01d404b3",
+          "internalName": "Capacity",
+          "displayName": "Capacity",
+          "type": "Number",
+          "required": true,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": "<Field Type=\"Number\" DisplayName=\"Capacity\" Required=\"TRUE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" Min=\"2\" Max=\"10\" Decimals=\"0\" ID=\"{591a62eb-69a3-4f80-bc0e-145b01d404b3}\" SourceID=\"{4bf1b37f-edce-40c5-8fa0-36543a2d0cd6}\" StaticName=\"Capacity\" Name=\"Capacity\" ColName=\"float1\" RowOrdinal=\"0\" />"
+        },
+        {
+          "id": "c17e4c69-729a-467e-8c1a-fbbe2fab342b",
+          "internalName": "State",
+          "displayName": "State",
+          "type": "Choice",
+          "required": true,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": "Closed",
+          "schemaXml": "<Field Type=\"Choice\" DisplayName=\"State\" Required=\"TRUE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" Format=\"Dropdown\" FillInChoice=\"FALSE\" ID=\"{c17e4c69-729a-467e-8c1a-fbbe2fab342b}\" SourceID=\"{4bf1b37f-edce-40c5-8fa0-36543a2d0cd6}\" StaticName=\"State\" Name=\"State\" ColName=\"nvarchar8\" RowOrdinal=\"0\"><Default>Closed</Default><CHOICES><CHOICE>Open</CHOICE><CHOICE>Closed</CHOICE><CHOICE>Ended</CHOICE></CHOICES></Field>"
+        },
+        {
+          "id": "ddc60af8-8e3a-492e-916c-7b5272c37be4",
+          "internalName": "Purpose",
+          "displayName": "Purpose",
+          "type": "Note",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": "<Field Type=\"Note\" DisplayName=\"Purpose\" Required=\"FALSE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" NumLines=\"6\" RichText=\"FALSE\" Sortable=\"FALSE\" ID=\"{ddc60af8-8e3a-492e-916c-7b5272c37be4}\" SourceID=\"{4bf1b37f-edce-40c5-8fa0-36543a2d0cd6}\" StaticName=\"Purpose\" Name=\"Purpose\" ColName=\"ntext2\" RowOrdinal=\"0\" />"
+        },
+        {
+          "id": "3b0aea47-6529-4b73-8d00-2496d73a3f97",
+          "internalName": "SourceRequestId",
+          "displayName": "SourceRequestId",
+          "type": "Number",
+          "required": true,
+          "unique": true,
+          "indexed": true,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": "<Field Type=\"Number\" DisplayName=\"SourceRequestId\" Required=\"TRUE\" EnforceUniqueValues=\"TRUE\" Indexed=\"TRUE\" Decimals=\"0\" ID=\"{3b0aea47-6529-4b73-8d00-2496d73a3f97}\" SourceID=\"{4bf1b37f-edce-40c5-8fa0-36543a2d0cd6}\" StaticName=\"SourceRequestId\" Name=\"SourceRequestId\" ColName=\"float2\" RowOrdinal=\"0\" />"
+        },
+        {
+          "id": "c231f121-64c6-40ed-b66f-8c3c6c1d1768",
+          "internalName": "SetupComplete",
+          "displayName": "SetupComplete",
+          "type": "Boolean",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": "0",
+          "schemaXml": "<Field Type=\"Boolean\" DisplayName=\"SetupComplete\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" ID=\"{c231f121-64c6-40ed-b66f-8c3c6c1d1768}\" SourceID=\"{4bf1b37f-edce-40c5-8fa0-36543a2d0cd6}\" StaticName=\"SetupComplete\" Name=\"SetupComplete\" ColName=\"bit1\" RowOrdinal=\"0\"><Default>0</Default></Field>"
+        },
+        {
+          "id": "fa969fb4-0c23-4e6c-892c-bf4736a6312f",
+          "internalName": "WriteOwner",
+          "displayName": "WriteOwner",
+          "type": "Text",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": "<Field Type=\"Text\" DisplayName=\"WriteOwner\" Required=\"FALSE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" MaxLength=\"255\" ID=\"{fa969fb4-0c23-4e6c-892c-bf4736a6312f}\" SourceID=\"{4bf1b37f-edce-40c5-8fa0-36543a2d0cd6}\" StaticName=\"WriteOwner\" Name=\"WriteOwner\" ColName=\"nvarchar9\" RowOrdinal=\"0\" />"
+        },
+        {
+          "id": "c274cbfd-084a-4017-925f-cce50c9e3eec",
+          "internalName": "_CommentFlags",
+          "displayName": "Comment settings",
+          "type": "Lookup",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": true,
+          "readOnly": true,
+          "defaultValue": null,
+          "schemaXml": "<Field ID=\"{c274cbfd-084a-4017-925f-cce50c9e3eec}\" Name=\"_CommentFlags\" Sealed=\"TRUE\" DisplaceOnUpgrade=\"TRUE\" Hidden=\"TRUE\" ReadOnly=\"TRUE\" ShowInFileDlg=\"FALSE\" Type=\"Lookup\" DisplayName=\"Comment settings\" List=\"Docs\" FieldRef=\"ID\" ShowField=\"CommentFlags\" JoinColName=\"DoclibRowId\" JoinRowOrdinal=\"0\" JoinType=\"INNER\" SchemaVersion=\"16.0.139.0\" RecreateIfMissing=\"TRUE\" SourceID=\"http://schemas.microsoft.com/sharepoint/v3\" StaticName=\"_CommentFlags\" />"
+        },
+        {
+          "id": "d307dff3-340f-44a2-9f4b-fbfe1ba07459",
+          "internalName": "_CommentCount",
+          "displayName": "Comment count",
+          "type": "Lookup",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": true,
+          "readOnly": true,
+          "defaultValue": null,
+          "schemaXml": "<Field ID=\"{d307dff3-340f-44a2-9f4b-fbfe1ba07459}\" Name=\"_CommentCount\" Sealed=\"TRUE\" DisplaceOnUpgrade=\"TRUE\" Hidden=\"TRUE\" ReadOnly=\"TRUE\" ShowInFileDlg=\"FALSE\" Type=\"Lookup\" DisplayName=\"Comment count\" List=\"Docs\" FieldRef=\"ID\" ShowField=\"CommentCount\" JoinColName=\"DoclibRowId\" JoinRowOrdinal=\"0\" JoinType=\"INNER\" SchemaVersion=\"16.0.139.0\" RecreateIfMissing=\"TRUE\" SourceID=\"http://schemas.microsoft.com/sharepoint/v3\" StaticName=\"_CommentCount\" />"
+        }
+      ],
+      "columnIndex": [
+        {
+          "id": "03e45e84-1992-4d42-9116-26f756012634",
+          "internalName": "ContentTypeId",
+          "displayName": "Content Type ID",
+          "type": "ContentTypeId"
+        },
+        {
+          "id": "fa564e0f-0c70-4ab9-b863-0177e6ddd247",
+          "internalName": "Title",
+          "displayName": "Title",
+          "type": "Text"
+        },
+        {
+          "id": "34ad21eb-75bd-4544-8c73-0e08330291fe",
+          "internalName": "_ModerationComments",
+          "displayName": "Approver Comments",
+          "type": "Note"
+        },
+        {
+          "id": "39360f11-34cf-4356-9945-25c44e68dade",
+          "internalName": "File_x0020_Type",
+          "displayName": "File Type",
+          "type": "Text"
+        },
+        {
+          "id": "3bdab9ac-9e5d-44d4-bde9-13b37e170618",
+          "internalName": "_ColorHex",
+          "displayName": "Color",
+          "type": "Text"
+        },
+        {
+          "id": "76d13cd2-1bae-45a5-8b74-545b87b65037",
+          "internalName": "_ColorTag",
+          "displayName": "Color Tag",
+          "type": "Text"
+        },
+        {
+          "id": "d8a77d76-536b-45d2-8b9b-e4e9b00cf3dc",
+          "internalName": "_Emoji",
+          "displayName": "Emoji",
+          "type": "Text"
+        },
+        {
+          "id": "3a6b296c-3f50-445c-a13f-9c679ea9dda3",
+          "internalName": "ComplianceAssetId",
+          "displayName": "Compliance Asset Id",
+          "type": "Text"
+        },
+        {
+          "id": "28d9d9be-4e7a-43f2-b909-672fc888241d",
+          "internalName": "ExchangeType",
+          "displayName": "ExchangeType",
+          "type": "Choice"
+        },
+        {
+          "id": "6a2b81cb-9362-4559-b5ea-cdca49fdee7b",
+          "internalName": "LanguageFocus",
+          "displayName": "LanguageFocus",
+          "type": "LookupMulti"
+        },
+        {
+          "id": "3d34ba7e-01e2-4679-a9f3-bdbf725237de",
+          "internalName": "CultureFocus",
+          "displayName": "CultureFocus",
+          "type": "LookupMulti"
+        },
+        {
+          "id": "591a62eb-69a3-4f80-bc0e-145b01d404b3",
+          "internalName": "Capacity",
+          "displayName": "Capacity",
+          "type": "Number"
+        },
+        {
+          "id": "c17e4c69-729a-467e-8c1a-fbbe2fab342b",
+          "internalName": "State",
+          "displayName": "State",
+          "type": "Choice"
+        },
+        {
+          "id": "ddc60af8-8e3a-492e-916c-7b5272c37be4",
+          "internalName": "Purpose",
+          "displayName": "Purpose",
+          "type": "Note"
+        },
+        {
+          "id": "3b0aea47-6529-4b73-8d00-2496d73a3f97",
+          "internalName": "SourceRequestId",
+          "displayName": "SourceRequestId",
+          "type": "Number"
+        },
+        {
+          "id": "c231f121-64c6-40ed-b66f-8c3c6c1d1768",
+          "internalName": "SetupComplete",
+          "displayName": "SetupComplete",
+          "type": "Boolean"
+        },
+        {
+          "id": "fa969fb4-0c23-4e6c-892c-bf4736a6312f",
+          "internalName": "WriteOwner",
+          "displayName": "WriteOwner",
+          "type": "Text"
+        },
+        {
+          "id": "1d22ea11-1e32-424e-89ab-9fedbadb6ce1",
+          "internalName": "ID",
+          "displayName": "ID",
+          "type": "Counter"
+        },
+        {
+          "id": "c042a256-787d-4a6f-8a8a-cf6ab767f12d",
+          "internalName": "ContentType",
+          "displayName": "Content Type",
+          "type": "Computed"
+        },
+        {
+          "id": "28cf69c5-fa48-462a-b5cd-27b6f9d2bd5f",
+          "internalName": "Modified",
+          "displayName": "Modified",
+          "type": "DateTime"
+        },
+        {
+          "id": "8c06beca-0777-48f7-91c7-6da68bc07b69",
+          "internalName": "Created",
+          "displayName": "Created",
+          "type": "DateTime"
+        },
+        {
+          "id": "1df5e554-ec7e-46a6-901d-d85a3881cb18",
+          "internalName": "Author",
+          "displayName": "Created By",
+          "type": "User"
+        },
+        {
+          "id": "d31655d1-1d5b-4511-95a1-7a09e9b75bf2",
+          "internalName": "Editor",
+          "displayName": "Modified By",
+          "type": "User"
+        },
+        {
+          "id": "26d0756c-986a-48a7-af35-bf18ab85ff4a",
+          "internalName": "_HasCopyDestinations",
+          "displayName": "Has Copy Destinations",
+          "type": "Boolean"
+        },
+        {
+          "id": "6b4e226d-3d88-4a36-808d-a129bf52bccf",
+          "internalName": "_CopySource",
+          "displayName": "Copy Source",
+          "type": "Text"
+        },
+        {
+          "id": "d4e44a66-ee3a-4d02-88c9-4ec5ff3f4cd5",
+          "internalName": "owshiddenversion",
+          "displayName": "owshiddenversion",
+          "type": "Integer"
+        },
+        {
+          "id": "f1e020bc-ba26-443f-bf2f-b68715017bbc",
+          "internalName": "WorkflowVersion",
+          "displayName": "Workflow Version",
+          "type": "Integer"
+        },
+        {
+          "id": "7841bf41-43d0-4434-9f50-a673baef7631",
+          "internalName": "_UIVersion",
+          "displayName": "UI Version",
+          "type": "Integer"
+        },
+        {
+          "id": "dce8262a-3ae9-45aa-aab4-83bd75fb738a",
+          "internalName": "_UIVersionString",
+          "displayName": "Version",
+          "type": "Text"
+        },
+        {
+          "id": "67df98f4-9dec-48ff-a553-29bece9c5bf4",
+          "internalName": "Attachments",
+          "displayName": "Attachments",
+          "type": "Attachments"
+        },
+        {
+          "id": "fdc3b2ed-5bf2-4835-a4bc-b885f3396a61",
+          "internalName": "_ModerationStatus",
+          "displayName": "Approval Status",
+          "type": "ModStat"
+        },
+        {
+          "id": "503f1caa-358e-4918-9094-4a2cdc4bc034",
+          "internalName": "Edit",
+          "displayName": "Edit",
+          "type": "Computed"
+        },
+        {
+          "id": "bc91a437-52e7-49e1-8c4e-4698904b2b6d",
+          "internalName": "LinkTitleNoMenu",
+          "displayName": "Title",
+          "type": "Computed"
+        },
+        {
+          "id": "82642ec8-ef9b-478f-acf9-31f7d45fbc31",
+          "internalName": "LinkTitle",
+          "displayName": "Title",
+          "type": "Computed"
+        },
+        {
+          "id": "5f190d91-3dbc-4489-9878-3c092caf35b6",
+          "internalName": "LinkTitle2",
+          "displayName": "Title",
+          "type": "Computed"
+        },
+        {
+          "id": "b1f7969b-ea65-42e1-8b54-b588292635f2",
+          "internalName": "SelectTitle",
+          "displayName": "Select",
+          "type": "Computed"
+        },
+        {
+          "id": "50a54da4-1528-4e67-954a-e2d24f1e9efb",
+          "internalName": "InstanceID",
+          "displayName": "Instance ID",
+          "type": "Integer"
+        },
+        {
+          "id": "ca4addac-796f-4b23-b093-d2a3f65c0774",
+          "internalName": "Order",
+          "displayName": "Order",
+          "type": "Number"
+        },
+        {
+          "id": "ae069f25-3ac2-4256-b9c3-15dbc15da0e0",
+          "internalName": "GUID",
+          "displayName": "GUID",
+          "type": "Guid"
+        },
+        {
+          "id": "de8beacf-5505-47cd-80a6-aa44e7ffe2f4",
+          "internalName": "WorkflowInstanceID",
+          "displayName": "Workflow Instance ID",
+          "type": "Guid"
+        },
+        {
+          "id": "94f89715-e097-4e8b-ba79-ea02aa8b7adb",
+          "internalName": "FileRef",
+          "displayName": "URL Path",
+          "type": "Lookup"
+        },
+        {
+          "id": "56605df6-8fa1-47e4-a04c-5b384d59609f",
+          "internalName": "FileDirRef",
+          "displayName": "Path",
+          "type": "Lookup"
+        },
+        {
+          "id": "173f76c8-aebd-446a-9bc9-769a2bd2c18f",
+          "internalName": "Last_x0020_Modified",
+          "displayName": "Modified",
+          "type": "Lookup"
+        },
+        {
+          "id": "998b5cff-4a35-47a7-92f3-3914aa6aa4a2",
+          "internalName": "Created_x0020_Date",
+          "displayName": "Created",
+          "type": "Lookup"
+        },
+        {
+          "id": "30bb605f-5bae-48fe-b4e3-1f81d9772af9",
+          "internalName": "FSObjType",
+          "displayName": "Item Type",
+          "type": "Lookup"
+        },
+        {
+          "id": "423874f8-c300-4bfb-b7a1-42e2159e3b19",
+          "internalName": "SortBehavior",
+          "displayName": "Sort Type",
+          "type": "Lookup"
+        },
+        {
+          "id": "ba3c27ee-4791-4867-8821-ff99000bac98",
+          "internalName": "PermMask",
+          "displayName": "Effective Permissions Mask",
+          "type": "Computed"
+        },
+        {
+          "id": "dcc67ebd-247f-4bee-8626-85ff6f69fbb6",
+          "internalName": "PrincipalCount",
+          "displayName": "Principal Count",
+          "type": "Computed"
+        },
+        {
+          "id": "8553196d-ec8d-4564-9861-3dbe931050c8",
+          "internalName": "FileLeafRef",
+          "displayName": "Name",
+          "type": "File"
+        },
+        {
+          "id": "4b7403de-8d94-43e8-9f0f-137a3e298126",
+          "internalName": "UniqueId",
+          "displayName": "Unique Id",
+          "type": "Lookup"
+        },
+        {
+          "id": "3b653cee-df6b-4cd4-b66d-ad5ce875b25e",
+          "internalName": "ParentUniqueId",
+          "displayName": "Document Parent Identifier",
+          "type": "Lookup"
+        },
+        {
+          "id": "6d2c4fde-3605-428e-a236-ce5f3dc2b4d4",
+          "internalName": "SyncClientId",
+          "displayName": "Client Id",
+          "type": "Lookup"
+        },
+        {
+          "id": "c5c4b81c-f1d9-4b43-a6a2-090df32ebb68",
+          "internalName": "ProgId",
+          "displayName": "ProgId",
+          "type": "Lookup"
+        },
+        {
+          "id": "dddd2420-b270-4735-93b5-92b713d0944d",
+          "internalName": "ScopeId",
+          "displayName": "ScopeId",
+          "type": "Lookup"
+        },
+        {
+          "id": "4ef1b78f-fdba-48dc-b8ab-3fa06a0c9804",
+          "internalName": "HTML_x0020_File_x0020_Type",
+          "displayName": "HTML File Type",
+          "type": "Computed"
+        },
+        {
+          "id": "3c6303be-e21f-4366-80d7-d6d0a3b22c7a",
+          "internalName": "_EditMenuTableStart",
+          "displayName": "Edit Menu Table Start",
+          "type": "Computed"
+        },
+        {
+          "id": "1344423c-c7f9-4134-88e4-ad842e2d723c",
+          "internalName": "_EditMenuTableStart2",
+          "displayName": "Edit Menu Table Start",
+          "type": "Computed"
+        },
+        {
+          "id": "2ea78cef-1bf9-4019-960a-02c41636cb47",
+          "internalName": "_EditMenuTableEnd",
+          "displayName": "Edit Menu Table End",
+          "type": "Computed"
+        },
+        {
+          "id": "9d30f126-ba48-446b-b8f9-83745f322ebe",
+          "internalName": "LinkFilenameNoMenu",
+          "displayName": "Name",
+          "type": "Computed"
+        },
+        {
+          "id": "5cc6dc79-3710-4374-b433-61cb4a686c12",
+          "internalName": "LinkFilename",
+          "displayName": "Name",
+          "type": "Computed"
+        },
+        {
+          "id": "224ba411-da77-4050-b0eb-62d422f13d3e",
+          "internalName": "LinkFilename2",
+          "displayName": "Name",
+          "type": "Computed"
+        },
+        {
+          "id": "081c6e4c-5c14-4f20-b23e-1a71ceb6a67c",
+          "internalName": "DocIcon",
+          "displayName": "Type",
+          "type": "Computed"
+        },
+        {
+          "id": "105f76ce-724a-4bba-aece-f81f2fce58f5",
+          "internalName": "ServerUrl",
+          "displayName": "Server Relative URL",
+          "type": "Computed"
+        },
+        {
+          "id": "7177cfc7-f399-4d4d-905d-37dd51bc90bf",
+          "internalName": "EncodedAbsUrl",
+          "displayName": "Encoded Absolute URL",
+          "type": "Computed"
+        },
+        {
+          "id": "7615464b-559e-4302-b8e2-8f440b913101",
+          "internalName": "BaseName",
+          "displayName": "File Name",
+          "type": "Computed"
+        },
+        {
+          "id": "687c7f94-686a-42d3-9b67-2782eac4b4f8",
+          "internalName": "MetaInfo",
+          "displayName": "Property Bag",
+          "type": "Lookup"
+        },
+        {
+          "id": "43bdd51b-3c5b-4e78-90a8-fb2087f71e70",
+          "internalName": "_Level",
+          "displayName": "Level",
+          "type": "Integer"
+        },
+        {
+          "id": "c101c3e7-122d-4d4d-bc34-58e94a38c816",
+          "internalName": "_IsCurrentVersion",
+          "displayName": "Is Current Version",
+          "type": "Boolean"
+        },
+        {
+          "id": "b824e17e-a1b3-426e-aecf-f0184d900485",
+          "internalName": "ItemChildCount",
+          "displayName": "Item Child Count",
+          "type": "Lookup"
+        },
+        {
+          "id": "960ff01f-2b6d-4f1b-9c3f-e19ad8927341",
+          "internalName": "FolderChildCount",
+          "displayName": "Folder Child Count",
+          "type": "Lookup"
+        },
+        {
+          "id": "786099e5-d20a-4232-86e5-cfc3d6face96",
+          "internalName": "Restricted",
+          "displayName": "Restricted",
+          "type": "Lookup"
+        },
+        {
+          "id": "14ee99cd-bed9-474a-bf99-8f753fbad6b4",
+          "internalName": "OriginatorId",
+          "displayName": "Originator Id",
+          "type": "Lookup"
+        },
+        {
+          "id": "0b16648a-daff-47d4-9fda-c6038b75ed27",
+          "internalName": "NoExecute",
+          "displayName": "NoExecute",
+          "type": "Lookup"
+        },
+        {
+          "id": "d48268e5-c65d-486c-bbf1-874cf986d7d3",
+          "internalName": "ContentVersion",
+          "displayName": "Content Version",
+          "type": "Lookup"
+        },
+        {
+          "id": "ccc1037f-f65e-434a-868e-8c98af31fe29",
+          "internalName": "_ComplianceFlags",
+          "displayName": "Label setting",
+          "type": "Lookup"
+        },
+        {
+          "id": "d4b6480a-4bed-4094-9a52-30181ea38f1d",
+          "internalName": "_ComplianceTag",
+          "displayName": "Retention label",
+          "type": "Lookup"
+        },
+        {
+          "id": "92be610e-ddbb-49f4-b3b1-5c2bc768df8f",
+          "internalName": "_ComplianceTagWrittenTime",
+          "displayName": "Retention label Applied",
+          "type": "Lookup"
+        },
+        {
+          "id": "418d7676-2d6f-42cf-a16a-e43d2971252a",
+          "internalName": "_ComplianceTagUserId",
+          "displayName": "Label applied by",
+          "type": "Lookup"
+        },
+        {
+          "id": "8382d247-72a9-44b1-9794-7b177edc89f3",
+          "internalName": "_IsRecord",
+          "displayName": "Item is a Record",
+          "type": "Computed"
+        },
+        {
+          "id": "b4cb04e8-622e-4c7d-8e87-b558a1bb907b",
+          "internalName": "AccessPolicy",
+          "displayName": "Access Policy",
+          "type": "Lookup"
+        },
+        {
+          "id": "df7ffe41-81d6-46eb-8777-444d1613c803",
+          "internalName": "_VirusStatus",
+          "displayName": "VirusStatus",
+          "type": "Lookup"
+        },
+        {
+          "id": "32d407ed-15e1-4ccc-b1d4-c56f5799b256",
+          "internalName": "_VirusVendorID",
+          "displayName": "VirusVendorID",
+          "type": "Lookup"
+        },
+        {
+          "id": "c4b1727e-aca8-4bd8-ae83-f554ae3c08eb",
+          "internalName": "_VirusInfo",
+          "displayName": "VirusInfo",
+          "type": "Lookup"
+        },
+        {
+          "id": "a176c176-bc3a-405b-a1c1-9bec0f56e4d3",
+          "internalName": "_RansomwareAnomalyMetaInfo",
+          "displayName": "RansomwareAnomalyMetaInfo",
+          "type": "Lookup"
+        },
+        {
+          "id": "daff81f1-d785-4da9-8df6-5fd577f38558",
+          "internalName": "_DraftOwnerId",
+          "displayName": "Draft Owner Id",
+          "type": "Lookup"
+        },
+        {
+          "id": "5b9fa52c-509d-44aa-86b0-5a4c95716b8e",
+          "internalName": "MainLinkSettings",
+          "displayName": "Main Link settings",
+          "type": "Computed"
+        },
+        {
+          "id": "6bfaba20-36bf-44b5-a1b2-eb6346d49716",
+          "internalName": "AppAuthor",
+          "displayName": "App Created By",
+          "type": "Lookup"
+        },
+        {
+          "id": "e08400f3-c779-4ed2-a18c-ab7f34caa318",
+          "internalName": "AppEditor",
+          "displayName": "App Modified By",
+          "type": "Lookup"
+        },
+        {
+          "id": "4df6bfaf-f887-424e-8ea3-fd050113e7a9",
+          "internalName": "SMTotalSize",
+          "displayName": "Total Size",
+          "type": "Lookup"
+        },
+        {
+          "id": "d340fca5-f503-4baa-bae9-90f1447ebff6",
+          "internalName": "SMLastModifiedDate",
+          "displayName": "Last Modified Date",
+          "type": "Lookup"
+        },
+        {
+          "id": "1faa4902-9115-44b9-bba7-791441ca1d6f",
+          "internalName": "SMTotalFileStreamSize",
+          "displayName": "Total File Stream Size",
+          "type": "Lookup"
+        },
+        {
+          "id": "a261b12a-8ca2-47fa-a117-05861d637c7e",
+          "internalName": "SMTotalFileCount",
+          "displayName": "Total File Count",
+          "type": "Lookup"
+        },
+        {
+          "id": "c274cbfd-084a-4017-925f-cce50c9e3eec",
+          "internalName": "_CommentFlags",
+          "displayName": "Comment settings",
+          "type": "Lookup"
+        },
+        {
+          "id": "d307dff3-340f-44a2-9f4b-fbfe1ba07459",
+          "internalName": "_CommentCount",
+          "displayName": "Comment count",
+          "type": "Lookup"
+        }
+      ],
+      "fieldsComplete": true,
+      "metadataComplete": true,
+      "permissionEvidence": {
+        "High": "2147483647",
+        "Low": "4294705151"
+      }
+    },
+    {
+      "role": "members",
+      "id": "db611ec3-7fa3-477a-878e-effbbb195cb8",
+      "title": "Group Members",
+      "baseTemplate": 100,
+      "itemCount": 0,
+      "validationFormula": "",
+      "validationMessage": "",
+      "fields": [
+        {
+          "id": "fa564e0f-0c70-4ab9-b863-0177e6ddd247",
+          "internalName": "Title",
+          "displayName": "Title",
+          "type": "Text",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": "<Field ID=\"{fa564e0f-0c70-4ab9-b863-0177e6ddd247}\" Type=\"Text\" Name=\"Title\" DisplayName=\"Title\" Required=\"FALSE\" SourceID=\"http://schemas.microsoft.com/sharepoint/v3\" StaticName=\"Title\" FromBaseType=\"TRUE\" MaxLength=\"255\" ColName=\"nvarchar1\" RowOrdinal=\"0\" />"
+        },
+        {
+          "id": "f5d922de-fe4c-48f9-b8ba-d67d683bfd6e",
+          "internalName": "Group",
+          "displayName": "Group",
+          "type": "Lookup",
+          "required": true,
+          "unique": false,
+          "indexed": true,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": "<Field Type=\"Lookup\" DisplayName=\"Group\" Required=\"TRUE\" EnforceUniqueValues=\"FALSE\" List=\"{4bf1b37f-edce-40c5-8fa0-36543a2d0cd6}\" ShowField=\"Title\" UnlimitedLengthInDocumentLibrary=\"FALSE\" RelationshipDeleteBehavior=\"None\" ID=\"{f5d922de-fe4c-48f9-b8ba-d67d683bfd6e}\" SourceID=\"{db611ec3-7fa3-477a-878e-effbbb195cb8}\" StaticName=\"Group\" Name=\"Group\" ColName=\"int1\" RowOrdinal=\"0\" Indexed=\"TRUE\" Version=\"1\" />"
+        },
+        {
+          "id": "09e35dba-0a48-475f-a873-0c4aff5d4065",
+          "internalName": "Participant",
+          "displayName": "Participant",
+          "type": "Lookup",
+          "required": true,
+          "unique": false,
+          "indexed": true,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": "<Field Type=\"Lookup\" DisplayName=\"Participant\" Required=\"TRUE\" EnforceUniqueValues=\"FALSE\" List=\"{fd3adf46-f81d-4a7b-a80c-567fde0175dc}\" ShowField=\"ID\" UnlimitedLengthInDocumentLibrary=\"FALSE\" RelationshipDeleteBehavior=\"None\" ID=\"{09e35dba-0a48-475f-a873-0c4aff5d4065}\" SourceID=\"{db611ec3-7fa3-477a-878e-effbbb195cb8}\" StaticName=\"Participant\" Name=\"Participant\" ColName=\"int2\" RowOrdinal=\"0\" Indexed=\"TRUE\" Version=\"1\" />"
+        },
+        {
+          "id": "afed22ef-8b95-451f-be5b-15b2bdf4f922",
+          "internalName": "MembershipStatus",
+          "displayName": "MembershipStatus",
+          "type": "Choice",
+          "required": true,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": "<Field Type=\"Choice\" DisplayName=\"MembershipStatus\" Required=\"TRUE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" Format=\"Dropdown\" FillInChoice=\"FALSE\" ID=\"{afed22ef-8b95-451f-be5b-15b2bdf4f922}\" SourceID=\"{db611ec3-7fa3-477a-878e-effbbb195cb8}\" StaticName=\"MembershipStatus\" Name=\"MembershipStatus\" ColName=\"nvarchar7\" RowOrdinal=\"0\"><CHOICES><CHOICE>Active</CHOICE><CHOICE>Left</CHOICE></CHOICES></Field>"
+        },
+        {
+          "id": "b2925740-8708-4cc4-b031-9130a3881588",
+          "internalName": "JoinedAt",
+          "displayName": "JoinedAt",
+          "type": "DateTime",
+          "required": true,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": "<Field Type=\"DateTime\" DisplayName=\"JoinedAt\" Required=\"TRUE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" Format=\"DateTime\" FriendlyDisplayFormat=\"Disabled\" ID=\"{b2925740-8708-4cc4-b031-9130a3881588}\" SourceID=\"{db611ec3-7fa3-477a-878e-effbbb195cb8}\" StaticName=\"JoinedAt\" Name=\"JoinedAt\" ColName=\"datetime1\" RowOrdinal=\"0\" />"
+        },
+        {
+          "id": "918fbb9e-ad2b-49e4-8720-0ef4cf53aa65",
+          "internalName": "LeftAt",
+          "displayName": "LeftAt",
+          "type": "DateTime",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": "<Field Type=\"DateTime\" DisplayName=\"LeftAt\" Required=\"FALSE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" Format=\"DateTime\" FriendlyDisplayFormat=\"Disabled\" ID=\"{918fbb9e-ad2b-49e4-8720-0ef4cf53aa65}\" SourceID=\"{db611ec3-7fa3-477a-878e-effbbb195cb8}\" StaticName=\"LeftAt\" Name=\"LeftAt\" ColName=\"datetime2\" RowOrdinal=\"0\" />"
+        },
+        {
+          "id": "54fb6dc2-8fc0-4e72-9f50-e4ec85946acd",
+          "internalName": "MembershipKey",
+          "displayName": "MembershipKey",
+          "type": "Text",
+          "required": true,
+          "unique": true,
+          "indexed": true,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": "<Field Type=\"Text\" DisplayName=\"MembershipKey\" Required=\"TRUE\" EnforceUniqueValues=\"TRUE\" Indexed=\"TRUE\" MaxLength=\"255\" ID=\"{54fb6dc2-8fc0-4e72-9f50-e4ec85946acd}\" SourceID=\"{db611ec3-7fa3-477a-878e-effbbb195cb8}\" StaticName=\"MembershipKey\" Name=\"MembershipKey\" ColName=\"nvarchar8\" RowOrdinal=\"0\" />"
+        },
+        {
+          "id": "c274cbfd-084a-4017-925f-cce50c9e3eec",
+          "internalName": "_CommentFlags",
+          "displayName": "Comment settings",
+          "type": "Lookup",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": true,
+          "readOnly": true,
+          "defaultValue": null,
+          "schemaXml": "<Field ID=\"{c274cbfd-084a-4017-925f-cce50c9e3eec}\" Name=\"_CommentFlags\" Sealed=\"TRUE\" DisplaceOnUpgrade=\"TRUE\" Hidden=\"TRUE\" ReadOnly=\"TRUE\" ShowInFileDlg=\"FALSE\" Type=\"Lookup\" DisplayName=\"Comment settings\" List=\"Docs\" FieldRef=\"ID\" ShowField=\"CommentFlags\" JoinColName=\"DoclibRowId\" JoinRowOrdinal=\"0\" JoinType=\"INNER\" SchemaVersion=\"16.0.139.0\" RecreateIfMissing=\"TRUE\" SourceID=\"http://schemas.microsoft.com/sharepoint/v3\" StaticName=\"_CommentFlags\" />"
+        },
+        {
+          "id": "d307dff3-340f-44a2-9f4b-fbfe1ba07459",
+          "internalName": "_CommentCount",
+          "displayName": "Comment count",
+          "type": "Lookup",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": true,
+          "readOnly": true,
+          "defaultValue": null,
+          "schemaXml": "<Field ID=\"{d307dff3-340f-44a2-9f4b-fbfe1ba07459}\" Name=\"_CommentCount\" Sealed=\"TRUE\" DisplaceOnUpgrade=\"TRUE\" Hidden=\"TRUE\" ReadOnly=\"TRUE\" ShowInFileDlg=\"FALSE\" Type=\"Lookup\" DisplayName=\"Comment count\" List=\"Docs\" FieldRef=\"ID\" ShowField=\"CommentCount\" JoinColName=\"DoclibRowId\" JoinRowOrdinal=\"0\" JoinType=\"INNER\" SchemaVersion=\"16.0.139.0\" RecreateIfMissing=\"TRUE\" SourceID=\"http://schemas.microsoft.com/sharepoint/v3\" StaticName=\"_CommentCount\" />"
+        }
+      ],
+      "columnIndex": [
+        {
+          "id": "03e45e84-1992-4d42-9116-26f756012634",
+          "internalName": "ContentTypeId",
+          "displayName": "Content Type ID",
+          "type": "ContentTypeId"
+        },
+        {
+          "id": "fa564e0f-0c70-4ab9-b863-0177e6ddd247",
+          "internalName": "Title",
+          "displayName": "Title",
+          "type": "Text"
+        },
+        {
+          "id": "34ad21eb-75bd-4544-8c73-0e08330291fe",
+          "internalName": "_ModerationComments",
+          "displayName": "Approver Comments",
+          "type": "Note"
+        },
+        {
+          "id": "39360f11-34cf-4356-9945-25c44e68dade",
+          "internalName": "File_x0020_Type",
+          "displayName": "File Type",
+          "type": "Text"
+        },
+        {
+          "id": "3bdab9ac-9e5d-44d4-bde9-13b37e170618",
+          "internalName": "_ColorHex",
+          "displayName": "Color",
+          "type": "Text"
+        },
+        {
+          "id": "76d13cd2-1bae-45a5-8b74-545b87b65037",
+          "internalName": "_ColorTag",
+          "displayName": "Color Tag",
+          "type": "Text"
+        },
+        {
+          "id": "d8a77d76-536b-45d2-8b9b-e4e9b00cf3dc",
+          "internalName": "_Emoji",
+          "displayName": "Emoji",
+          "type": "Text"
+        },
+        {
+          "id": "3a6b296c-3f50-445c-a13f-9c679ea9dda3",
+          "internalName": "ComplianceAssetId",
+          "displayName": "Compliance Asset Id",
+          "type": "Text"
+        },
+        {
+          "id": "f5d922de-fe4c-48f9-b8ba-d67d683bfd6e",
+          "internalName": "Group",
+          "displayName": "Group",
+          "type": "Lookup"
+        },
+        {
+          "id": "09e35dba-0a48-475f-a873-0c4aff5d4065",
+          "internalName": "Participant",
+          "displayName": "Participant",
+          "type": "Lookup"
+        },
+        {
+          "id": "afed22ef-8b95-451f-be5b-15b2bdf4f922",
+          "internalName": "MembershipStatus",
+          "displayName": "MembershipStatus",
+          "type": "Choice"
+        },
+        {
+          "id": "b2925740-8708-4cc4-b031-9130a3881588",
+          "internalName": "JoinedAt",
+          "displayName": "JoinedAt",
+          "type": "DateTime"
+        },
+        {
+          "id": "918fbb9e-ad2b-49e4-8720-0ef4cf53aa65",
+          "internalName": "LeftAt",
+          "displayName": "LeftAt",
+          "type": "DateTime"
+        },
+        {
+          "id": "54fb6dc2-8fc0-4e72-9f50-e4ec85946acd",
+          "internalName": "MembershipKey",
+          "displayName": "MembershipKey",
+          "type": "Text"
+        },
+        {
+          "id": "1d22ea11-1e32-424e-89ab-9fedbadb6ce1",
+          "internalName": "ID",
+          "displayName": "ID",
+          "type": "Counter"
+        },
+        {
+          "id": "c042a256-787d-4a6f-8a8a-cf6ab767f12d",
+          "internalName": "ContentType",
+          "displayName": "Content Type",
+          "type": "Computed"
+        },
+        {
+          "id": "28cf69c5-fa48-462a-b5cd-27b6f9d2bd5f",
+          "internalName": "Modified",
+          "displayName": "Modified",
+          "type": "DateTime"
+        },
+        {
+          "id": "8c06beca-0777-48f7-91c7-6da68bc07b69",
+          "internalName": "Created",
+          "displayName": "Created",
+          "type": "DateTime"
+        },
+        {
+          "id": "1df5e554-ec7e-46a6-901d-d85a3881cb18",
+          "internalName": "Author",
+          "displayName": "Created By",
+          "type": "User"
+        },
+        {
+          "id": "d31655d1-1d5b-4511-95a1-7a09e9b75bf2",
+          "internalName": "Editor",
+          "displayName": "Modified By",
+          "type": "User"
+        },
+        {
+          "id": "26d0756c-986a-48a7-af35-bf18ab85ff4a",
+          "internalName": "_HasCopyDestinations",
+          "displayName": "Has Copy Destinations",
+          "type": "Boolean"
+        },
+        {
+          "id": "6b4e226d-3d88-4a36-808d-a129bf52bccf",
+          "internalName": "_CopySource",
+          "displayName": "Copy Source",
+          "type": "Text"
+        },
+        {
+          "id": "d4e44a66-ee3a-4d02-88c9-4ec5ff3f4cd5",
+          "internalName": "owshiddenversion",
+          "displayName": "owshiddenversion",
+          "type": "Integer"
+        },
+        {
+          "id": "f1e020bc-ba26-443f-bf2f-b68715017bbc",
+          "internalName": "WorkflowVersion",
+          "displayName": "Workflow Version",
+          "type": "Integer"
+        },
+        {
+          "id": "7841bf41-43d0-4434-9f50-a673baef7631",
+          "internalName": "_UIVersion",
+          "displayName": "UI Version",
+          "type": "Integer"
+        },
+        {
+          "id": "dce8262a-3ae9-45aa-aab4-83bd75fb738a",
+          "internalName": "_UIVersionString",
+          "displayName": "Version",
+          "type": "Text"
+        },
+        {
+          "id": "67df98f4-9dec-48ff-a553-29bece9c5bf4",
+          "internalName": "Attachments",
+          "displayName": "Attachments",
+          "type": "Attachments"
+        },
+        {
+          "id": "fdc3b2ed-5bf2-4835-a4bc-b885f3396a61",
+          "internalName": "_ModerationStatus",
+          "displayName": "Approval Status",
+          "type": "ModStat"
+        },
+        {
+          "id": "503f1caa-358e-4918-9094-4a2cdc4bc034",
+          "internalName": "Edit",
+          "displayName": "Edit",
+          "type": "Computed"
+        },
+        {
+          "id": "bc91a437-52e7-49e1-8c4e-4698904b2b6d",
+          "internalName": "LinkTitleNoMenu",
+          "displayName": "Title",
+          "type": "Computed"
+        },
+        {
+          "id": "82642ec8-ef9b-478f-acf9-31f7d45fbc31",
+          "internalName": "LinkTitle",
+          "displayName": "Title",
+          "type": "Computed"
+        },
+        {
+          "id": "5f190d91-3dbc-4489-9878-3c092caf35b6",
+          "internalName": "LinkTitle2",
+          "displayName": "Title",
+          "type": "Computed"
+        },
+        {
+          "id": "b1f7969b-ea65-42e1-8b54-b588292635f2",
+          "internalName": "SelectTitle",
+          "displayName": "Select",
+          "type": "Computed"
+        },
+        {
+          "id": "50a54da4-1528-4e67-954a-e2d24f1e9efb",
+          "internalName": "InstanceID",
+          "displayName": "Instance ID",
+          "type": "Integer"
+        },
+        {
+          "id": "ca4addac-796f-4b23-b093-d2a3f65c0774",
+          "internalName": "Order",
+          "displayName": "Order",
+          "type": "Number"
+        },
+        {
+          "id": "ae069f25-3ac2-4256-b9c3-15dbc15da0e0",
+          "internalName": "GUID",
+          "displayName": "GUID",
+          "type": "Guid"
+        },
+        {
+          "id": "de8beacf-5505-47cd-80a6-aa44e7ffe2f4",
+          "internalName": "WorkflowInstanceID",
+          "displayName": "Workflow Instance ID",
+          "type": "Guid"
+        },
+        {
+          "id": "94f89715-e097-4e8b-ba79-ea02aa8b7adb",
+          "internalName": "FileRef",
+          "displayName": "URL Path",
+          "type": "Lookup"
+        },
+        {
+          "id": "56605df6-8fa1-47e4-a04c-5b384d59609f",
+          "internalName": "FileDirRef",
+          "displayName": "Path",
+          "type": "Lookup"
+        },
+        {
+          "id": "173f76c8-aebd-446a-9bc9-769a2bd2c18f",
+          "internalName": "Last_x0020_Modified",
+          "displayName": "Modified",
+          "type": "Lookup"
+        },
+        {
+          "id": "998b5cff-4a35-47a7-92f3-3914aa6aa4a2",
+          "internalName": "Created_x0020_Date",
+          "displayName": "Created",
+          "type": "Lookup"
+        },
+        {
+          "id": "30bb605f-5bae-48fe-b4e3-1f81d9772af9",
+          "internalName": "FSObjType",
+          "displayName": "Item Type",
+          "type": "Lookup"
+        },
+        {
+          "id": "423874f8-c300-4bfb-b7a1-42e2159e3b19",
+          "internalName": "SortBehavior",
+          "displayName": "Sort Type",
+          "type": "Lookup"
+        },
+        {
+          "id": "ba3c27ee-4791-4867-8821-ff99000bac98",
+          "internalName": "PermMask",
+          "displayName": "Effective Permissions Mask",
+          "type": "Computed"
+        },
+        {
+          "id": "dcc67ebd-247f-4bee-8626-85ff6f69fbb6",
+          "internalName": "PrincipalCount",
+          "displayName": "Principal Count",
+          "type": "Computed"
+        },
+        {
+          "id": "8553196d-ec8d-4564-9861-3dbe931050c8",
+          "internalName": "FileLeafRef",
+          "displayName": "Name",
+          "type": "File"
+        },
+        {
+          "id": "4b7403de-8d94-43e8-9f0f-137a3e298126",
+          "internalName": "UniqueId",
+          "displayName": "Unique Id",
+          "type": "Lookup"
+        },
+        {
+          "id": "3b653cee-df6b-4cd4-b66d-ad5ce875b25e",
+          "internalName": "ParentUniqueId",
+          "displayName": "Document Parent Identifier",
+          "type": "Lookup"
+        },
+        {
+          "id": "6d2c4fde-3605-428e-a236-ce5f3dc2b4d4",
+          "internalName": "SyncClientId",
+          "displayName": "Client Id",
+          "type": "Lookup"
+        },
+        {
+          "id": "c5c4b81c-f1d9-4b43-a6a2-090df32ebb68",
+          "internalName": "ProgId",
+          "displayName": "ProgId",
+          "type": "Lookup"
+        },
+        {
+          "id": "dddd2420-b270-4735-93b5-92b713d0944d",
+          "internalName": "ScopeId",
+          "displayName": "ScopeId",
+          "type": "Lookup"
+        },
+        {
+          "id": "4ef1b78f-fdba-48dc-b8ab-3fa06a0c9804",
+          "internalName": "HTML_x0020_File_x0020_Type",
+          "displayName": "HTML File Type",
+          "type": "Computed"
+        },
+        {
+          "id": "3c6303be-e21f-4366-80d7-d6d0a3b22c7a",
+          "internalName": "_EditMenuTableStart",
+          "displayName": "Edit Menu Table Start",
+          "type": "Computed"
+        },
+        {
+          "id": "1344423c-c7f9-4134-88e4-ad842e2d723c",
+          "internalName": "_EditMenuTableStart2",
+          "displayName": "Edit Menu Table Start",
+          "type": "Computed"
+        },
+        {
+          "id": "2ea78cef-1bf9-4019-960a-02c41636cb47",
+          "internalName": "_EditMenuTableEnd",
+          "displayName": "Edit Menu Table End",
+          "type": "Computed"
+        },
+        {
+          "id": "9d30f126-ba48-446b-b8f9-83745f322ebe",
+          "internalName": "LinkFilenameNoMenu",
+          "displayName": "Name",
+          "type": "Computed"
+        },
+        {
+          "id": "5cc6dc79-3710-4374-b433-61cb4a686c12",
+          "internalName": "LinkFilename",
+          "displayName": "Name",
+          "type": "Computed"
+        },
+        {
+          "id": "224ba411-da77-4050-b0eb-62d422f13d3e",
+          "internalName": "LinkFilename2",
+          "displayName": "Name",
+          "type": "Computed"
+        },
+        {
+          "id": "081c6e4c-5c14-4f20-b23e-1a71ceb6a67c",
+          "internalName": "DocIcon",
+          "displayName": "Type",
+          "type": "Computed"
+        },
+        {
+          "id": "105f76ce-724a-4bba-aece-f81f2fce58f5",
+          "internalName": "ServerUrl",
+          "displayName": "Server Relative URL",
+          "type": "Computed"
+        },
+        {
+          "id": "7177cfc7-f399-4d4d-905d-37dd51bc90bf",
+          "internalName": "EncodedAbsUrl",
+          "displayName": "Encoded Absolute URL",
+          "type": "Computed"
+        },
+        {
+          "id": "7615464b-559e-4302-b8e2-8f440b913101",
+          "internalName": "BaseName",
+          "displayName": "File Name",
+          "type": "Computed"
+        },
+        {
+          "id": "687c7f94-686a-42d3-9b67-2782eac4b4f8",
+          "internalName": "MetaInfo",
+          "displayName": "Property Bag",
+          "type": "Lookup"
+        },
+        {
+          "id": "43bdd51b-3c5b-4e78-90a8-fb2087f71e70",
+          "internalName": "_Level",
+          "displayName": "Level",
+          "type": "Integer"
+        },
+        {
+          "id": "c101c3e7-122d-4d4d-bc34-58e94a38c816",
+          "internalName": "_IsCurrentVersion",
+          "displayName": "Is Current Version",
+          "type": "Boolean"
+        },
+        {
+          "id": "b824e17e-a1b3-426e-aecf-f0184d900485",
+          "internalName": "ItemChildCount",
+          "displayName": "Item Child Count",
+          "type": "Lookup"
+        },
+        {
+          "id": "960ff01f-2b6d-4f1b-9c3f-e19ad8927341",
+          "internalName": "FolderChildCount",
+          "displayName": "Folder Child Count",
+          "type": "Lookup"
+        },
+        {
+          "id": "786099e5-d20a-4232-86e5-cfc3d6face96",
+          "internalName": "Restricted",
+          "displayName": "Restricted",
+          "type": "Lookup"
+        },
+        {
+          "id": "14ee99cd-bed9-474a-bf99-8f753fbad6b4",
+          "internalName": "OriginatorId",
+          "displayName": "Originator Id",
+          "type": "Lookup"
+        },
+        {
+          "id": "0b16648a-daff-47d4-9fda-c6038b75ed27",
+          "internalName": "NoExecute",
+          "displayName": "NoExecute",
+          "type": "Lookup"
+        },
+        {
+          "id": "d48268e5-c65d-486c-bbf1-874cf986d7d3",
+          "internalName": "ContentVersion",
+          "displayName": "Content Version",
+          "type": "Lookup"
+        },
+        {
+          "id": "ccc1037f-f65e-434a-868e-8c98af31fe29",
+          "internalName": "_ComplianceFlags",
+          "displayName": "Label setting",
+          "type": "Lookup"
+        },
+        {
+          "id": "d4b6480a-4bed-4094-9a52-30181ea38f1d",
+          "internalName": "_ComplianceTag",
+          "displayName": "Retention label",
+          "type": "Lookup"
+        },
+        {
+          "id": "92be610e-ddbb-49f4-b3b1-5c2bc768df8f",
+          "internalName": "_ComplianceTagWrittenTime",
+          "displayName": "Retention label Applied",
+          "type": "Lookup"
+        },
+        {
+          "id": "418d7676-2d6f-42cf-a16a-e43d2971252a",
+          "internalName": "_ComplianceTagUserId",
+          "displayName": "Label applied by",
+          "type": "Lookup"
+        },
+        {
+          "id": "8382d247-72a9-44b1-9794-7b177edc89f3",
+          "internalName": "_IsRecord",
+          "displayName": "Item is a Record",
+          "type": "Computed"
+        },
+        {
+          "id": "b4cb04e8-622e-4c7d-8e87-b558a1bb907b",
+          "internalName": "AccessPolicy",
+          "displayName": "Access Policy",
+          "type": "Lookup"
+        },
+        {
+          "id": "df7ffe41-81d6-46eb-8777-444d1613c803",
+          "internalName": "_VirusStatus",
+          "displayName": "VirusStatus",
+          "type": "Lookup"
+        },
+        {
+          "id": "32d407ed-15e1-4ccc-b1d4-c56f5799b256",
+          "internalName": "_VirusVendorID",
+          "displayName": "VirusVendorID",
+          "type": "Lookup"
+        },
+        {
+          "id": "c4b1727e-aca8-4bd8-ae83-f554ae3c08eb",
+          "internalName": "_VirusInfo",
+          "displayName": "VirusInfo",
+          "type": "Lookup"
+        },
+        {
+          "id": "a176c176-bc3a-405b-a1c1-9bec0f56e4d3",
+          "internalName": "_RansomwareAnomalyMetaInfo",
+          "displayName": "RansomwareAnomalyMetaInfo",
+          "type": "Lookup"
+        },
+        {
+          "id": "daff81f1-d785-4da9-8df6-5fd577f38558",
+          "internalName": "_DraftOwnerId",
+          "displayName": "Draft Owner Id",
+          "type": "Lookup"
+        },
+        {
+          "id": "5b9fa52c-509d-44aa-86b0-5a4c95716b8e",
+          "internalName": "MainLinkSettings",
+          "displayName": "Main Link settings",
+          "type": "Computed"
+        },
+        {
+          "id": "6bfaba20-36bf-44b5-a1b2-eb6346d49716",
+          "internalName": "AppAuthor",
+          "displayName": "App Created By",
+          "type": "Lookup"
+        },
+        {
+          "id": "e08400f3-c779-4ed2-a18c-ab7f34caa318",
+          "internalName": "AppEditor",
+          "displayName": "App Modified By",
+          "type": "Lookup"
+        },
+        {
+          "id": "4df6bfaf-f887-424e-8ea3-fd050113e7a9",
+          "internalName": "SMTotalSize",
+          "displayName": "Total Size",
+          "type": "Lookup"
+        },
+        {
+          "id": "d340fca5-f503-4baa-bae9-90f1447ebff6",
+          "internalName": "SMLastModifiedDate",
+          "displayName": "Last Modified Date",
+          "type": "Lookup"
+        },
+        {
+          "id": "1faa4902-9115-44b9-bba7-791441ca1d6f",
+          "internalName": "SMTotalFileStreamSize",
+          "displayName": "Total File Stream Size",
+          "type": "Lookup"
+        },
+        {
+          "id": "a261b12a-8ca2-47fa-a117-05861d637c7e",
+          "internalName": "SMTotalFileCount",
+          "displayName": "Total File Count",
+          "type": "Lookup"
+        },
+        {
+          "id": "c274cbfd-084a-4017-925f-cce50c9e3eec",
+          "internalName": "_CommentFlags",
+          "displayName": "Comment settings",
+          "type": "Lookup"
+        },
+        {
+          "id": "d307dff3-340f-44a2-9f4b-fbfe1ba07459",
+          "internalName": "_CommentCount",
+          "displayName": "Comment count",
+          "type": "Lookup"
+        }
+      ],
+      "fieldsComplete": true,
+      "metadataComplete": true,
+      "permissionEvidence": {
+        "High": "2147483647",
+        "Low": "4294705151"
+      }
+    }
+  ],
+  "referenceLists": [
+    {
+      "role": "participants",
+      "id": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
+      "title": "Participants",
+      "baseTemplate": 100
+    },
+    {
+      "role": "language",
+      "id": "3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63",
+      "title": "Language catalogue",
+      "baseTemplate": 100
+    },
+    {
+      "role": "culture",
+      "id": "cf7ed5b4-2e11-4a0a-a417-6c63ed60f614",
+      "title": "Culture catalogue",
+      "baseTemplate": 100
+    }
+  ],
+  "listCandidates": [
+    {
+      "BaseTemplate": 125,
+      "Hidden": true,
+      "Id": "2fd4bcb0-1ed7-4328-a37b-616a3add17ac",
+      "ItemCount": 0,
+      "Title": "appdata"
+    },
+    {
+      "BaseTemplate": 126,
+      "Hidden": true,
+      "Id": "c99cd80e-200d-4db0-9c05-db3bdd2f4042",
+      "ItemCount": 0,
+      "Title": "appfiles"
+    },
+    {
+      "BaseTemplate": 124,
+      "Hidden": true,
+      "Id": "0d763230-416b-49d4-b51e-20fad53c02b5",
+      "ItemCount": 18,
+      "Title": "Composed Looks"
+    },
+    {
+      "BaseTemplate": 100,
+      "Hidden": false,
+      "Id": "3d17485d-1dac-41f0-a1af-24e45daa4567",
+      "ItemCount": 0,
+      "Title": "Connection Requests"
+    },
+    {
+      "BaseTemplate": 10102,
+      "Hidden": true,
+      "Id": "0db08cea-51e4-482b-9e8c-2c8a74c0f234",
+      "ItemCount": 0,
+      "Title": "Converted Forms"
+    },
+    {
+      "BaseTemplate": 100,
+      "Hidden": false,
+      "Id": "cf7ed5b4-2e11-4a0a-a417-6c63ed60f614",
+      "ItemCount": 85,
+      "Title": "Culture catalogue"
+    },
+    {
+      "BaseTemplate": 101,
+      "Hidden": false,
+      "Id": "6bed55c6-ab68-4a31-b10b-d0fc9ad5f493",
+      "ItemCount": 90,
+      "Title": "Documents"
+    },
+    {
+      "BaseTemplate": 106,
+      "Hidden": false,
+      "Id": "0f89c99f-291a-45f1-ab1b-dc7d420b805d",
+      "ItemCount": 0,
+      "Title": "Events"
+    },
+    {
+      "BaseTemplate": 101,
+      "Hidden": false,
+      "Id": "222a1a28-443c-41c3-bfe4-3bbca8ad63dc",
+      "ItemCount": 0,
+      "Title": "Form Templates"
+    },
+    {
+      "BaseTemplate": 100,
+      "Hidden": false,
+      "Id": "db611ec3-7fa3-477a-878e-effbbb195cb8",
+      "ItemCount": 0,
+      "Title": "Group Members"
+    },
+    {
+      "BaseTemplate": 100,
+      "Hidden": false,
+      "Id": "4bf1b37f-edce-40c5-8fa0-36543a2d0cd6",
+      "ItemCount": 0,
+      "Title": "Groups"
+    },
+    {
+      "BaseTemplate": 100,
+      "Hidden": false,
+      "Id": "7c529315-6e3e-47f2-9de8-0a7c6c61be09",
+      "ItemCount": 0,
+      "Title": "Issue tracker list"
+    },
+    {
+      "BaseTemplate": 100,
+      "Hidden": false,
+      "Id": "3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63",
+      "ItemCount": 28,
+      "Title": "Language catalogue"
+    },
+    {
+      "BaseTemplate": 114,
+      "Hidden": true,
+      "Id": "f27c43d4-2a97-486a-b9ae-32d7b3fd13b2",
+      "ItemCount": 0,
+      "Title": "List Template Gallery"
+    },
+    {
+      "BaseTemplate": 175,
+      "Hidden": true,
+      "Id": "2fa72a25-daf4-4c82-9734-fff2c1ff22b9",
+      "ItemCount": 10,
+      "Title": "Maintenance Log Library"
+    },
+    {
+      "BaseTemplate": 116,
+      "Hidden": true,
+      "Id": "6af42909-18bd-46c4-94cb-b90808b4f2f0",
+      "ItemCount": 175,
+      "Title": "Master Page Gallery"
+    },
+    {
+      "BaseTemplate": 100,
+      "Hidden": false,
+      "Id": "7464199b-5f54-461b-a981-ee0a16f987ea",
+      "ItemCount": 0,
+      "Title": "Matching Cycles"
+    },
+    {
+      "BaseTemplate": 100,
+      "Hidden": false,
+      "Id": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
+      "ItemCount": 3,
+      "Title": "Participants"
+    },
+    {
+      "BaseTemplate": 100,
+      "Hidden": false,
+      "Id": "b1fa4c20-3aed-4d3d-ba87-405ce6ba4300",
+      "ItemCount": 14,
+      "Title": "Progress tracker list"
+    },
+    {
+      "BaseTemplate": 100,
+      "Hidden": false,
+      "Id": "32cb3e3d-3b54-4752-be7a-c4c22b8cf33f",
+      "ItemCount": 0,
+      "Title": "sharepoint_schema_import_participants"
+    },
+    {
+      "BaseTemplate": 100,
+      "Hidden": false,
+      "Id": "05080448-9c1a-40df-8b71-1c63d1edef93",
+      "ItemCount": 0,
+      "Title": "sharepoint_schema_import_template"
+    },
+    {
+      "BaseTemplate": 101,
+      "Hidden": false,
+      "Id": "5b52325b-e2d1-4242-bf40-12d94803b50f",
+      "ItemCount": 22,
+      "Title": "Site Assets"
+    },
+    {
+      "BaseTemplate": 119,
+      "Hidden": false,
+      "Id": "d63fb89d-9e21-402c-9cc0-7da14ec21e9d",
+      "ItemCount": 4,
+      "Title": "Site Pages"
+    },
+    {
+      "BaseTemplate": 121,
+      "Hidden": true,
+      "Id": "da60d249-1ba8-491c-b7c7-87227b321a4b",
+      "ItemCount": 0,
+      "Title": "Solution Gallery"
+    },
+    {
+      "BaseTemplate": 101,
+      "Hidden": false,
+      "Id": "9e573b33-91fc-4f94-bfe9-95e02cc114a9",
+      "ItemCount": 0,
+      "Title": "Style Library"
+    },
+    {
+      "BaseTemplate": 100,
+      "Hidden": false,
+      "Id": "f2abada1-090f-43d5-ad6b-3694a37be206",
+      "ItemCount": 34,
+      "Title": "Tandem47Fixture_8b82de6a95e740fc"
+    },
+    {
+      "BaseTemplate": 100,
+      "Hidden": false,
+      "Id": "abade32d-8b24-4b30-b2e0-668d10238acb",
+      "ItemCount": 67,
+      "Title": "Tandem47Fixture_b54d7cee971d4af3"
+    },
+    {
+      "BaseTemplate": 100,
+      "Hidden": true,
+      "Id": "8d0b63fc-f1be-4d2e-a9fe-2871453854e1",
+      "ItemCount": 84,
+      "Title": "TaxonomyHiddenList"
+    },
+    {
+      "BaseTemplate": 123,
+      "Hidden": true,
+      "Id": "a873a155-bfe0-491c-8ddf-cbccb4cba357",
+      "ItemCount": 45,
+      "Title": "Theme Gallery"
+    },
+    {
+      "BaseTemplate": 100,
+      "Hidden": false,
+      "Id": "7beddfff-1881-4a82-8003-29933b836350",
+      "ItemCount": 18,
+      "Title": "Timezone catalog"
+    },
+    {
+      "BaseTemplate": 112,
+      "Hidden": true,
+      "Id": "c6827649-54e9-4db3-b693-09ec65122b7d",
+      "ItemCount": 17,
+      "Title": "User Information List"
+    },
+    {
+      "BaseTemplate": 113,
+      "Hidden": true,
+      "Id": "ea922abd-ad01-4c8d-8b8e-ca1295bd4ad1",
+      "ItemCount": 22,
+      "Title": "Web Part Gallery"
+    },
+    {
+      "BaseTemplate": 3415,
+      "Hidden": true,
+      "Id": "710bee20-b962-4e91-a343-6c4436f47a5d",
+      "ItemCount": 147,
+      "Title": "Web Template Extensions"
+    }
+  ],
+  "errors": [],
+  "nextStep": "Review actual field mapping, lookup targets, choices/defaults/precision/validation and list permissions. No uniqueness runtime proof, row integrity/migration pass or approved setup correction inferred."
+}

@@ -16,7 +16,7 @@
   },
   "proposedMetadataNotApplied": {
     "OperationReceipts": "Unique required OperationKey, immutable IntentJson, result/reference JSON, completion/uncertain/retry-stage metadata. One bounded receipt per intent, not a transaction service.",
-    "Groups": "WriteOwner: operation + attempt token; exact ETag claim/release; no automatic expiration.",
+    "Groups": "Groups.WriteOwner optional blank Text MaxLength=255 verified by #12 final audit 08584074372941101122136369836CU17. Runtime exact-ETag owner-token claim/release integration remains each consuming Flow; no automatic expiration.",
     "Requests": "Unique SendOperationKey/ConnectionKey, WinningOperationKey, OperationComplete. Existing Status retains Pending/Accepted/Declined/Cancelled vocabulary.",
     "ExistingGroupMemberKeys": "Verify Groups.SourceRequestId and GroupMembers.MembershipKey unique/indexed and actual mapping under #12; do not enable constraints blindly on existing rows."
   },
