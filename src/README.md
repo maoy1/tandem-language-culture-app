@@ -5,7 +5,34 @@ entitlements. No Python runtime, server, additional paid licence, premium/custom
 connector, external API or separately hosted service is part of the application.
 Local Python schema validators are development tools only.
 
-## Current core build: Discover screen and flow
+## Current focused ticket ownership (#45)
+
+Historical guided-build sections below preserve technical/evidence context; they
+are not the current ownership or a completion claim. Sole production owners:
+
+| Flow | Ticket |
+|---|---|
+| Participant submission | #61 |
+| TandemDiscovery (people/groups) | #7 |
+| TandemSendRequest | #10 |
+| TandemMyRequests | #62 |
+| TandemCancelRequest | #63 |
+| TandemRespondRequest (personal/new group) | #11 |
+| TandemMyGroups | #64 |
+| TandemUpdateGroup | #13 |
+| TandemLeaveGroup | #14 |
+| TandemSendGroupJoinRequest | #17 |
+| TandemRespondGroupJoinRequest | #65 |
+| TandemNotifyRequest (provisional) | #21 after #49 |
+
+App owners: #5 registration, #6 availability, #16 Discovery, #67 requests and
+#68 My groups. Shared owners: #66 participant/catalogue schema, #12 group/member
+schema, #9 rule source, #47 conditional/recovery proof, #19/#20/#23 guards and
+#39/#40/#42 access assessment/proofs. #41 owns protected registration App cutover.
+New flow packages must be built from their own reviewed contract; especially
+inspect actual MyRequests completion before retaining versus rebuilding it.
+
+## Historical core build: Discover screen and flow
 
 The owner prioritizes integrated app/flow construction before the remaining
 detailed tests. Build a separate **TandemDiscovery** flow from a Power Apps button;

@@ -4,74 +4,71 @@ The approved design is CURRENT_DESIGN.md. This plan reflects the owner's
 annotations to Combined Requirements v0.2. GitHub tickets hold implementation
 acceptance and status; planning completion does not imply deployment.
 
-## Current focus - #45 flow/readiness audit
+## Current focus - #45 focused-ticket restructuring (PR #60)
 
-#46 is closed and PR #59 merged. The contract is accepted; implementation is not
-reopened into #46. #45 now inventories all 35 open tickets, proposed experiences,
-flow interfaces, remaining work and versioned test handover. See
-BACKLOG_ALIGNMENT.md and config/backlog_readiness.json for every ticket.
+#46 is accepted/closed. Tracking now separates Flow, App, Shared technical and
+Overview tickets. One production flow has one owner; old partial work/evidence
+does not mean active In progress. See BACKLOG_ALIGNMENT.md and the complete
+config/ticket_scope_map.json transfer of 246 former checklist items.
 
-- [x] Read all 40 tickets, existing labels/PRs and recorded test evidence.
-- [x] Distinguish 13 core flow implementation/integration tickets from 7 shared
-      access-control tickets, tests, assessments, final migration and Later work.
-- [x] Prepare per-ticket experiences/readiness/evidence/test references and add
-      missing planned test definitions; preserve original acceptance obligations.
-- [x] Published/verified one lifecycle label on all 40 tickets and experience/test review on all 35 open tickets.
-- [ ] Review/merge this #45 audit batch before new feature implementation.
+- [x] Prepare 41 focused open scopes and 8 new successor tickets.
+- [x] Route every original acceptance item to an active focused owner.
+- [x] Published/verified all 48 types/lifecycle labels, 41 focused open bodies, 2 Superseded handoffs and WIP 0 pending review.
+- [ ] Review/merge updated PR #60 before feature implementation.
 
-Proposed production inventory (technical probes excluded):
+Sole production-flow ownership:
 
-| Flow | Owner | Current evidence |
+| Flow | Owner | Phase |
 |---|---|---|
-| Participant submission | #5 | Existing, partial owner checks |
-| TandemDiscovery | #7 | Existing scaffold |
-| TandemSendRequest | #10 | Existing scaffold |
-| TandemMyRequests | #10 | Completion uncertain; assess then retain/rebuild |
-| TandemCancelRequest | #10 | Existing scaffold |
-| TandemRespondRequest | #11 | 77-action static review; runtime pending |
-| TandemMyGroups | #12 | Proposed new |
-| TandemUpdateGroup | #13 | Proposed new |
-| TandemLeaveGroup | #14 | Proposed new |
-| TandemSendGroupJoinRequest | #17 | Proposed new |
-| TandemRespondGroupJoinRequest | #17 | Proposed new |
-| TandemNotifyRequest (provisional) | #21 | Conditional after #49 |
+| TandemDiscovery | #7 | Core |
+| TandemSendRequest | #10 | Core |
+| TandemRespondRequest | #11 | Core |
+| TandemUpdateGroup | #13 | Core |
+| TandemLeaveGroup | #14 | Core |
+| TandemSendGroupJoinRequest | #17 | Core |
+| TandemNotifyRequest (provisional) | #21 | Core |
+| TandemFreshnessReminder | #30 | Later |
+| Participant submission | #61 | Core |
+| TandemMyRequests | #62 | Core |
+| TandemCancelRequest | #63 | Core |
+| TandemMyGroups | #64 | Core |
+| TandemRespondGroupJoinRequest | #65 | Core |
 
-This is a 12-flow baseline: six existing/started plus five new business flows
-and one provisional notification flow. Existing means partial configuration,
-not completed acceptance. Access architecture or notification choice may change
-the final count. Package generation is possible for bounded owner prototypes;
-not every production contract or prerequisite is ready. No new runtime/paid
-connector is approved.
+Next focused batches (one selected non-overview ticket at a time):
 
-Ordered delivery batches (one owner ticket/branch/PR at a time):
-1. **#6 next:** verify/bind participation/openness fields and form controls;
-   preserve edits/validation and define membership-derived status integration.
-   Complete outstanding catalogue/registration validation under separate #5 work.
-2. **#47:** specify/prove minimum shared capacity/retry guard before acceptance
-   packages rely on it; keep recovery proportionate, no elaborate lock platform.
-3. **#10:** bounded request/history/cancel contract and package; assess actual
-   MyRequests before retaining versus fresh generation. Coordinate group target
-   schema with #17 without claiming group joins implemented.
-4. **#11 then #12:** finish response/app path and group/member persistence/My groups.
-5. **#13 then #14:** member-managed updates and self-service leave.
-6. **#16 then #17:** group Discovery and join/send/respond with shared history.
-7. **#49 then #21:** verify options, choose events/channel, implement notifications.
-8. **#25-#28:** scoped acceptance, synthetic scale and handover as each deployed
-   path is ready; fix actual blockers during construction, keep unrun cases open.
-9. **#48 last:** actual old-data mapping/confirmation decision and migration.
+1. **#66 Shared technical:** verify participant/catalogue field
+   mappings and availability defaults once; flag any permitted setup first.
+2. **#6 App:** participation/openness controls; **#5 App:** complete registration
+   UI. **#61 Flow** owns server validation independently.
+3. **#9 Shared technical** maintained compatibility and **#47 Shared technical**
+   minimal conditional/capacity/recovery artifact and proof. **#12 Shared
+   technical** owns actual group/member schema, not acceptance implementation.
+4. **#7 Flow** Discovery / **#16 App** screen. **#10 Flow** personal send,
+   **#62 Flow** inbox reader, **#63 Flow** cancellation,
+   **#67 App** request screen; assess current MyRequests before rebuild.
+5. **#11 Flow** personal response/new-group creation, **#64 Flow** own
+   groups reader, **#68 App** screen; then **#13 Flow** group update
+   and **#14 Flow** leave. Reuse existing saved work only if it fits the contract.
+6. **#17 Flow** group-join send and **#65 Flow** group-join response.
+7. **#49 Shared technical** notification choice, then **#21 Flow** if required.
+8. **#25-#28 Shared technical** scoped acceptance/data/scale/handover as actual
+   artifacts become testable; **#48 Shared technical** migration is final phase.
 
-Workstream gates: #7/#9 eligibility/interface completion accompanies affected
-builds. #39-#42 and #19-#24 require the verified access approach before ordinary
-integration/testing; owner deferred colleague proof, not the need for it. Do not
-silently change connections, permissions or licences. A dependency blocks its
-specific integration/test, not every preparatory task or an accepted design ticket.
-#8/#15/#29-#31 stay Later. Organiser contact remains a #45 decision before related
-guidance is published. No routine admin dispatch/individual grant work added.
+Access is its own bounded workstream: #39 assessment -> #40 isolated proof ->
+#41 App registration integration; #42 controlled-candidate adapter/proof and #19/
+#20/#23 shared guards integrate only through the verified method. Ordinary-user
+tests remain owner-deferred, not passed. Unknown permission/setting/connection/
+licence stops the dependent live change. No routine individual admin work or
+paid fallback. #18/#45 are overview rollups, never active development merely
+because children are unfinished. #8/#15/#29-#31 remain Later.
 
-Status labels: Planned, In progress, Blocked, Deferred, Ready for review,
-Ready for testing, Done. At this audit no open whole-ticket deliverable meets the
-two Ready stages; owner-only fragments may still be tested with explicit scope.
-Done is applied only to closed tickets' own accepted scope, not new-MVP behavior.
+Close each ticket on its own scoped acceptance; record concrete blocked cases
+rather than require every parent/dependency closed. Minimal app-call smoke tests
+belong to Flow tickets; full layout belongs to App tickets. Disposable proof
+harnesses belong to their explicitly scoped Shared technical evidence, not an
+untracked production service. In progress is active work only, max one. Queued
+partial work stays Planned. Superseded is not Done. After audit publish, no issue
+is active pending PR #60 review; the chosen next scope becomes active on start.
 
 ## Completed package experiment checkpoint (#28)
 

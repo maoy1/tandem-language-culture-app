@@ -37,13 +37,13 @@ an existing internal field does not imply renaming its internal identity.
 | ParticipantAccount | Authoritative single Person account | Required, unique; authenticated account | System resolves; user cannot change identity | Read-only name | Display name only; no email/raw account object | Existing |
 | TeachLanguages | Offered languages; multi Lookup to Language catalogue | Optional, empty | Participant selection | Editable | Approved display | Existing |
 | LearnLanguages | Wanted languages; multi Lookup to Language catalogue | Optional, empty | Participant selection | Editable | Approved display | Existing |
-| ShareCultures | Cultures participant can meaningfully share; multi Lookup to Culture catalogue | Optional, empty | Participant declaration/selection | Editable | Approved display | Planned #5 |
-| LearnCultures | Cultures of interest; multi Lookup to Culture catalogue | Optional, empty | Participant selection; not proof of sharing expertise | Editable | Approved display | Planned #5 |
+| ShareCultures | Cultures participant can meaningfully share; multi Lookup to Culture catalogue | Optional, empty | Participant declaration/selection | Editable | Approved display | Schema #66 / App #5 |
+| LearnCultures | Cultures of interest; multi Lookup to Culture catalogue | Optional, empty | Participant selection; not proof of sharing expertise | Editable | Approved display | Schema #66 / App #5 |
 | TimeZone | Meeting context; single Lookup to Time zone catalogue | Optional, empty allowed | Participant selection | Editable | Approved display | Existing lookup; requiredness change pending #5 |
 | LearningFocus | Exchange context; multiple lines plain text | Optional | Participant | Editable | Approved display | Existing |
 | Comments | Additional exchange information; multiple lines plain text | Optional | Participant | Editable; proposed notice removed | Approved display | Existing |
-| ParticipationStatus | Active/Paused/Inactive; Choice | Required; Active for new self-registration | Participant; exceptional admin override | Editable | Not exposed as a raw field; used to filter | Planned #6 |
-| OpenToConnections | Willing to receive new requests; Yes/No | Required; approved Yes for new self-registration | Participant | Editable | Eligibility filter only; exclude raw field from Discovery | Planned #6 |
+| ParticipationStatus | Active/Paused/Inactive; Choice | Required; Active for new self-registration | Participant; exceptional admin override | Editable | Not exposed as a raw field; used to filter | Schema #66 / App #6 |
+| OpenToConnections | Willing to receive new requests; Yes/No | Required; approved Yes for new self-registration | Participant | Editable | Eligibility filter only; exclude raw field from Discovery | Schema #66 / App #6 |
 | Status | Existing validation state Active/Needs review; Choice, proposed display label Validation status | System sets on create/edit; fail closed until validated | Validation automation only | Read-only validation feedback | Never expose raw field | Existing; retain internal name to avoid breaking flow references |
 | MigrationConfirmation | Not required/Pending confirmation/Confirmed; Choice | System default Not required for new self-registration | Migration sets Pending; successful owner review/save sets Confirmed | Banner only when Pending | Never expose raw field | Planned #48 |
 | Title | Hidden technical text | Not participant-required | System if needed | Hidden | Excluded | Existing |
@@ -190,7 +190,7 @@ The current #11/#12 build uses SourceRequestId and MembershipKey as documented
 above, plus ETag-conditional terminal/setup/cleanup writes. These are technical
 implementation choices under #47, not proof of complete idempotency or a native
 multi-column unique constraint. SourceRequestId migration mapping and group-join
-episode keys still need their dependent #48/#17 design. Built-in Title in Group
+episode keys still need their dependent #48/#17/#65 design. Built-in Title in Group
 Members is optional and unused by the current flow. Active membership rows may
 exist during partial construction; they do not represent an operational group
 until the source request is Accepted and SetupComplete is Yes.
@@ -208,7 +208,7 @@ report success until its required group/membership result is consistent.
 | My groups / Waiting / In a group | Current participant's active Group Members links | Derived app views; no manually maintained group text on Participants |
 
 These are derived values, not a claim that a native SharePoint calculated column
-can aggregate another list. #12 chooses supported flow/app queries and whether a
+can aggregate another list. #64 chooses supported flow/app queries and whether a
 display cache is worthwhile; any cache is read-only and not capacity authority.
 Acceptance must recheck actual memberships; #47 owns the concurrency design
 and its proof, neither of which is certified by this document.
@@ -289,11 +289,12 @@ automatic recovery or dissolution workflow.
 
 ## Setup flags before implementation
 
-Once accepted, #5/#6 require one-time creation of the Culture catalogue and new
-columns, form/control mappings and validation/discovery-flow updates. Identify
-actual permissions and existing connector/licence capabilities first; this PR
-changes none. Preserve existing values and map defaults deliberately; do not reset
-all existing people to Active/Open or migration-confirmed.
+#66 owns one-time verification/setup of participant/catalogue columns and exact
+mappings. #5/#6 own form/control changes; #61 owns server validation and #7
+Discovery. #12 separately owns group/member schema. Identify actual permissions
+and existing connector/licence capabilities before dependent changes; this
+contract changes none. Preserve existing values and map defaults deliberately;
+do not reset all people to Active/Open or migration-confirmed.
 
 Ordinary usage remains self-service, with necessary exceptional admin assistance.
 Notification choice (#49), colleague access test (#18) and Excel migration (#48)
@@ -329,11 +330,11 @@ runtime test assignment. Implementation tickets remain open independently.
 
 | Follow-up | Receiving tickets and finish line |
 |---|---|
-| Tenant field mapping, setup and registration/participation behavior | #5/#6; verify actual settings and create/edit acceptance before those tickets close |
-| Request type/target fields, introduction storage/length, per-flow inputs/outputs, history/cancel behavior | #10/#11/#17 (shared UI rules #9); define before each affected package, not as extra #46 scope |
-| Discovery response JSON names and implementation | #7/#9/#16/#42; implement the approved allowlist and test returned fields |
-| Minimum shared capacity protection and bounded retry/recovery | #47 coordinated with #11/#12/#17; actual conflict/failure tests belong there |
-| Caller identity, underlying permissions and ordinary-user proof | #39-#42 and #19/#20/#22-#24; verify prerequisites before dependent integration and release |
+| Participant/catalogue schema, registration UI/participation and validation | #66 schema; #5/#6 App; #61 validation Flow; verify each own scoped acceptance |
+| Request type/target, introduction and per-flow interfaces | #10 personal send, #11 personal response, #17 join send, #65 join response, #62 reader, #63 cancel; #67 App inbox; each owns its package contract |
+| Discovery response and screen | #7 Flow, #16 App; #9 shared compatibility, #42 shared access adapter/proof |
+| Minimum shared capacity protection and bounded recovery | #47 shared proof; each consuming Flow owns integration/tests; #12 schema only |
+| Caller identity, underlying permissions and ordinary-user proof | #39 assessment/#40 proof/#41 App/#42 adapter, #19 member guard/#20 membership writes/#23 request guard; #22/#24 superseded with explicit successors |
 | Migration-confirmation discoverability and old-data field/key mappings | #48; decision required before migrated data is exposed, not before core development |
 | Organiser contact route | #45 overview tracks the owner decision before publishing private-contact guidance; no route is invented here |
 | Notifications and operational delivery | #49 decision, #21 implementation; no channel selected by #46 |

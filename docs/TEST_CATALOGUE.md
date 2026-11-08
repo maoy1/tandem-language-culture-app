@@ -248,6 +248,19 @@ cases are REQUIREMENT PENDING, not approval of new policies or runtime behavior.
 | LATER-004 | Review/run reminders only after freshness/channel approved (#30) | Correct recipient/failure visibility; no automatic group ending; current status REQUIREMENT PENDING |
 | LATER-005 | Review later admin dashboard against agreed scope (#31) | Group Open/Closed/Ended and separate participant Active/Paused/Inactive; freshness/overrides only when approved; no Paused-group state inferred |
 
+## Focused-ticket coverage additions - #45
+
+These are planned verification definitions, not new runtime passes.
+
+| ID | Setup and action | Expected / owner |
+|---|---|---|
+| SCHEMA-001 | Inspect actual participant/catalogue or group/member internal names/types/lookup mapping | Exact target-versus-live map and evidence; preserve data, no silent rename; owner #66 or #12 |
+| SCHEMA-002 | Verify required/default/unique/index/multi-lookup settings and approved deltas in isolated or permitted setup | Actual settings match the scoped schema contract; unknown permission/setting blocks dependent change; no runtime flow acceptance inferred |
+| UI-001 | Open Discovery with approved person/group response fixtures or reviewed reader | Correct approved fields, blank/empty/error/navigation and request action binding; #16 owns layout, #7 owns matching |
+| UI-002 | Open request inbox, switch views, inspect introduction/history and invoke reviewed actions | Clear Sent/Received/group views, authorized available controls, truthful saved refresh; request App owns UI, each Flow owns backend behavior |
+| UI-003 | Open My groups and profile-derived membership view, invoke update/leave | Operational groups/counts and Waiting/In a group derived; no leader controls or editable group text; screen versus reader/action ownership separate |
+| DOC-002 | Verify focused ticket types, production-flow ownership, old-criterion handoffs and activity labels | One type and one lifecycle label per issue; one owner per named production flow; all old checklist items have active successors; Superseded is not Done; at most one non-overview In progress |
+
 ## Suggested regression sets
 
 - Profile/schema changes: REG-001–016, PAR-001–007 and DISC-004–005.

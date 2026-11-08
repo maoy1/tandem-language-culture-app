@@ -13,7 +13,103 @@ prepared the desired POC-05 schema/policy and merged on 2026-11-07 as partial
 delivery, not completed tenant acceptance. #5 stays open.
 Owner-confirmed catalogue import does not establish participant form/flow acceptance.
 
-## Current all-ticket readiness audit - 2026-11-08 (#45)
+## Current focused-ticket structure - #45, 2026-11-08
+
+The owner approved one focused type per ticket. Reuse is allowed only after the
+scope is made coherent. Mixed features are split/reassigned; duplicate tickets
+are retired with explicit successors, never marked delivered. Historical runs
+stay unchanged. The previous audit below is superseded where it treated partial
+implementation as activity or mixed several flows in one implementation ticket.
+
+| Type | Sole deliverable | Finish line |
+|---|---|---|
+| Flow | One named production flow: contract, package, mappings, minimal app invocation and own cases | Own acceptance passes; not every App/parent finished |
+| App | A coherent form/screen/control behavior and its bindings/UI tests | Own UI acceptance passes; backend matching remains with flow owner |
+| Shared technical | One schema/rule/guard/assessment/tool/proof artifact | Its own review/proof passes, consuming flows own integration |
+| Overview | Delivery/decision/release rollup | Agreed child outcomes; no duplicate implementation or active-WIP label |
+
+**Activity is independent of partial implementation:** In progress means actively
+being worked now, at most one non-overview ticket. Queued partial work is Planned
+with evidence retained. After this tracking batch, no issue is actively In
+progress while PR #60 awaits review; a selected next ticket becomes active only
+when implementation begins. Ready stages remain real handovers. Superseded is
+closed as not planned, not Done. Closed historical #1-#4/#46 remain Done.
+
+**48 issues total:** 41 focused open tickets, 5 Done, 2 Superseded (#22/#24).
+Eight focused successors were created:
+
+| Ticket | Type | New owner |
+|---|---|---|
+| #61 | Flow | [Flow] Participant submission validation |
+| #62 | Flow | [Flow] TandemMyRequests |
+| #63 | Flow | [Flow] TandemCancelRequest |
+| #64 | Flow | [Flow] TandemMyGroups |
+| #65 | Flow | [Flow] TandemRespondGroupJoinRequest |
+| #66 | Shared technical | [Shared technical] Participant and catalogue schema alignment |
+| #67 | App | [App] Request inbox screen and action dialogs |
+| #68 | App | [App] My groups screen and member controls |
+
+**Superseded:** #22 -> #19 current-member guard / #20 raw membership writes;
+#24 -> #47 terminal guards, #23 visibility and focused reader/action tickets.
+Their unchecked obligations are transferred, not marked passed. Every one of
+246 old checklist items has an explicit active destination in
+[ticket_scope_map.json](../config/ticket_scope_map.json). Source titles and
+evidence remain available; no employee payloads/raw exports are copied here.
+
+| Open ticket | Type | Queued activity | Sole scope |
+|---|---|---|---|
+| [#5](https://github.com/maoy1/tandem-language-culture-app/issues/5) | App | Planned | Registration form controls, validation messages and save/reopen behavior only. Backend validation is #61; list schema is #66. |
+| [#6](https://github.com/maoy1/tandem-language-culture-app/issues/6) | App | Planned | Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64. |
+| [#7](https://github.com/maoy1/tandem-language-culture-app/issues/7) | Flow | Planned | One flow returning approved compatible people and existing open groups. App layout is #16; rule source is #9; protected access proof is #42. |
+| [#8](https://github.com/maoy1/tandem-language-culture-app/issues/8) | Shared technical | Deferred | Future scoring policy/rule artifact; does not own a second TandemDiscovery flow. |
+| [#9](https://github.com/maoy1/tandem-language-culture-app/issues/9) | Shared technical | Planned | One maintained rule/normalization source and synthetic contract fixtures for package generation; no separately hosted runtime or assumed child flow. |
+| [#10](https://github.com/maoy1/tandem-language-culture-app/issues/10) | Flow | Planned | Personal connection-request creation only. History is #62, cancellation #63, group-join sending #17. |
+| [#11](https://github.com/maoy1/tandem-language-culture-app/issues/11) | Flow | Planned | Personal recipient Accept/Decline flow, including resulting new-group creation. Group-join responses belong to #65. |
+| [#12](https://github.com/maoy1/tandem-language-culture-app/issues/12) | Shared technical | Planned | One-time group/membership data contract verification/setup only. #11 owns automatic new-group creation; #64 owns reading/counts. |
+| [#13](https://github.com/maoy1/tandem-language-culture-app/issues/13) | Flow | Planned | One current-member group update flow; group screen layout is #68. |
+| [#14](https://github.com/maoy1/tandem-language-culture-app/issues/14) | Flow | Planned | One self-service leave flow; no timer, automatic reopening/ending or replacement assignment. |
+| [#15](https://github.com/maoy1/tandem-language-culture-app/issues/15) | App | Deferred | Optional warning UI only if product chooses it; no core-MVP group limit. |
+| [#16](https://github.com/maoy1/tandem-language-culture-app/issues/16) | App | Planned | Discovery screen layout/display/navigation only. #7 exclusively owns TandemDiscovery and all matching. |
+| [#17](https://github.com/maoy1/tandem-language-culture-app/issues/17) | Flow | Planned | Group join-request creation only; #65 answers, #62 reads, #63 cancels. |
+| [#18](https://github.com/maoy1/tandem-language-culture-app/issues/18) | Overview | Deferred | Roll up #39 assessment, #40 isolated proof and #41 app integration only; no implementation flow owned here. #42 is separate Discovery access. |
+| [#19](https://github.com/maoy1/tandem-language-culture-app/issues/19) | Shared technical | Blocked | Reusable current membership authorization and departure revocation for member actions; no production flow of its own. |
+| [#20](https://github.com/maoy1/tandem-language-culture-app/issues/20) | Shared technical | Blocked | Protect raw authoritative Group Members lifecycle data; request visibility/response policy belongs to #23. |
+| [#21](https://github.com/maoy1/tandem-language-culture-app/issues/21) | Flow | Blocked | One proposed request-event delivery flow, only after #49 chooses a permitted approach. No delivery runtime approved yet. |
+| [#23](https://github.com/maoy1/tandem-language-culture-app/issues/23) | Shared technical | Blocked | Reusable trusted-caller request visibility/action policy; #62 owns the production reader. |
+| [#25](https://github.com/maoy1/tandem-language-culture-app/issues/25) | Shared technical | Planned | Cross-feature test matrix, fixtures and versioned execution/report only; no production flow owned. |
+| [#26](https://github.com/maoy1/tandem-language-culture-app/issues/26) | Shared technical | Planned | Optional local reproducible fixture-generation/validation artifact; no production runtime. |
+| [#27](https://github.com/maoy1/tandem-language-culture-app/issues/27) | Shared technical | Blocked | Versioned scale measurements/report only; no separate Discovery implementation. |
+| [#28](https://github.com/maoy1/tandem-language-culture-app/issues/28) | Shared technical | Planned | Independent-owner deployment instructions/reproduction test; no additional business flow. |
+| [#29](https://github.com/maoy1/tandem-language-culture-app/issues/29) | Shared technical | Deferred | Future freshness field/event/threshold contract; consuming flows remain separately owned. |
+| [#30](https://github.com/maoy1/tandem-language-culture-app/issues/30) | Flow | Deferred | One future scheduled reminder flow, dependent on #29 and approved delivery. |
+| [#31](https://github.com/maoy1/tandem-language-culture-app/issues/31) | App | Deferred | Future admin screen/dashboard only; use existing readers or create a focused reader ticket only if later needed. |
+| [#39](https://github.com/maoy1/tandem-language-culture-app/issues/39) | Shared technical | Deferred | Read-only capability inventory and feasible-method recommendation; actual two-user proof is #40. |
+| [#40](https://github.com/maoy1/tandem-language-culture-app/issues/40) | Shared technical | Blocked | One isolated authentication/privacy capability proof, not a production flow or working-app cutover. |
+| [#41](https://github.com/maoy1/tandem-language-culture-app/issues/41) | App | Blocked | Registration app data-binding/cutover and UI regression only; if proof requires extra backend flows, create one focused ticket per flow before building them. |
+| [#42](https://github.com/maoy1/tandem-language-culture-app/issues/42) | Shared technical | Blocked | Verified data-access/response boundary for Discovery; #7 alone owns TandemDiscovery deployment. |
+| [#45](https://github.com/maoy1/tandem-language-culture-app/issues/45) | Overview | Planned | Roll up focused App/Flow/Shared technical deliverables and release decisions; not active implementation and not a second owner of child work. |
+| [#47](https://github.com/maoy1/tandem-language-culture-app/issues/47) | Shared technical | Planned | Minimum cross-flow decision/duplicate/capacity protection and proof; not a second acceptance engine or elaborate locking platform. |
+| [#48](https://github.com/maoy1/tandem-language-culture-app/issues/48) | Shared technical | Deferred | One-off source mapping, migration/reconciliation artifact and execution, not an ongoing intake workflow. |
+| [#49](https://github.com/maoy1/tandem-language-culture-app/issues/49) | Shared technical | Planned | Evaluate permitted central in-app/email/Teams/Approvals options and select a bounded matrix; #21 owns any resulting delivery flow. |
+| [#61](https://github.com/maoy1/tandem-language-culture-app/issues/61) | Flow | Planned | One existing created/modified validation flow; App form is #5 and schema #66. |
+| [#62](https://github.com/maoy1/tandem-language-culture-app/issues/62) | Flow | Planned | One authorized request-history reader; screen layout is #67. |
+| [#63](https://github.com/maoy1/tandem-language-culture-app/issues/63) | Flow | Planned | One sender-cancellation flow for personal and group requests; no history screen ownership. |
+| [#64](https://github.com/maoy1/tandem-language-culture-app/issues/64) | Flow | Planned | One reader for own operational groups/members/counts/free slots and membership-derived profile status. |
+| [#65](https://github.com/maoy1/tandem-language-culture-app/issues/65) | Flow | Planned | One active-member Accept/Decline flow for an existing-group join; new-group personal acceptance remains #11. |
+| [#66](https://github.com/maoy1/tandem-language-culture-app/issues/66) | Shared technical | Planned | One-time actual field/catalogue mapping and required delta for #5/#6/#61; no app layout or production flow ownership. |
+| [#67](https://github.com/maoy1/tandem-language-culture-app/issues/67) | App | Planned | Sent/Received/group incoming screen, display/dialogs/navigation only; each flow remains independently owned. |
+| [#68](https://github.com/maoy1/tandem-language-culture-app/issues/68) | App | Planned | Own-group display, membership-derived status and group-control UI only; reader/update/leave flows separately owned. |
+
+Production flow baseline: 12 core flows (notification provisional) plus a
+Deferred reminder flow #30. Every named production flow has one owner. Access
+proof or migration may reveal extra flows later; create a separate focused Flow
+ticket only when needed. Current schema/app/shared tickets do not assume them.
+
+Current metadata: [backlog_readiness.json](../config/backlog_readiness.json).
+Actual runtime test status is unchanged by this restructure; each ticket lists
+its own cases/readiness and source evidence. No live flow/data/permissions changed.
+
+## Previous readiness audit - 2026-11-08 (#45)
 
 40 tickets reviewed: 35 open and 5 closed (#1-#4 and #46). All open tickets remain
 valid in their stated phase. #8/#15/#29-#31 are Later, #48 is final migration,

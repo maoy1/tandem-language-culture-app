@@ -21,12 +21,20 @@ repository is reference material only.
 
 Use [the all-ticket readiness overview](docs/BACKLOG_ALIGNMENT.md) for current
 validity, implementation readiness and test handover. The machine-readable
-[matrix](config/backlog_readiness.json) covers all 40 tickets and the proposed
-12-flow baseline. These are not 12 new flows. [The implementation plan](docs/IMPLEMENTATION_PLAN.md)
+[matrix](config/backlog_readiness.json) covers the current 48 tickets and the proposed
+12-core-flow baseline plus the Deferred reminder. These are not 12 new flows. [The implementation plan](docs/IMPLEMENTATION_PLAN.md)
 sets the ordered batches; GitHub labels hold live lifecycle status.
 
+Quick filters: [Flow tickets](https://github.com/maoy1/tandem-language-culture-app/issues?q=is%3Aissue+is%3Aopen+label%3A%22type%3Aflow%22),
+[App tickets](https://github.com/maoy1/tandem-language-culture-app/issues?q=is%3Aissue+is%3Aopen+label%3A%22type%3Aapp%22),
+[Shared technical](https://github.com/maoy1/tandem-language-culture-app/issues?q=is%3Aissue+is%3Aopen+label%3A%22type%3Ashared-technical%22),
+[Overviews](https://github.com/maoy1/tandem-language-culture-app/issues?q=is%3Aissue+is%3Aopen+label%3A%22type%3Aoverview%22).
+
 Exactly one lifecycle label per ticket: Planned / In progress / Blocked /
-Deferred / Ready for review / Ready for testing / Done. A partial merged PR or
+Deferred / Ready for review / Ready for testing / Done / Superseded. In progress
+means active work, at most one non-overview ticket; partial queued work is Planned.
+Each issue has one type: Flow / App / Shared technical / Overview. One production
+flow has one owner. Superseded means replaced, not completed. A partial merged PR or
 saved flow is not a whole-ticket testing handover. Closed #46 is an accepted
 contract, not proof of deployed behavior; keep runtime tests with their owner.
 

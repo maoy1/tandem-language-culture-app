@@ -796,6 +796,25 @@ the app/flow versions separately.
 - Branch codex/issue-45-flow-readiness-audit; actual production versions unknown
   unless recorded in earlier runs. No live app/flow/list/permissions changed.
 
+### AUDIT-20261108-02 - #45 focused type/scope and activity correction
+
+- DOC-002 metadata audit PASS: 48 issues accounted for; 41 focused open tickets,
+  5 historical Done (#1-#4/#46), 2 Superseded (#22/#24) explicitly closed as
+  not planned only after their successor bodies were published. No unfinished
+  requirement is represented as delivered by retirement.
+- Remote reread verified one focused type and one lifecycle label per issue,
+  13 unique production-flow owners (12 core including provisional notification,
+  one Deferred reminder), all 41 open proposed-experience/own-AC/test sections,
+  and no active In progress issue while audit PR #60 awaits review.
+- Eight successors #61-#68 created; every one of 246 original checklist items
+  has an explicit active destination in config/ticket_scope_map.json. Partial
+  work/evidence preserved as implementation history, not activity or PASS.
+- Earlier AUDIT-20261108-01 counts/status meaning are historical and superseded
+  for current tracking, not rewritten. No runtime test, app, flow, list or
+  permission changed by this restructuring. New SCHEMA/UI definitions are NOT RUN.
+- Existing local suite rerun: 30 passed (configuration/package tests only).
+- This metadata PASS does not finish #45's MVP overview or any implementation.
+
 ## New run template
 
 Copy this section for an execution. Record one row per case (or split a case into
