@@ -1,0 +1,24 @@
+{
+  "buildId": "9533894a-20d7-46e8-a640-5af8473c3b33",
+  "packageSha256": "b9d6d1341f76af3b2d0b9e710612ff7216ab3e109c394a47531d072503cbbd61",
+  "command": "primaryRepo/.venv/Scripts/python.exe -X utf8 -m pytest -q --tb=short",
+  "cwd": "dedicated #63 worktree",
+  "fullSuitePassed": 322,
+  "newGraphTests": 80,
+  "actions": 138,
+  "maximumActionDepth": 5,
+  "globalActionNamesUnique": true,
+  "native": "NOT RUN",
+  "privacyOrdinaryUser": "NOT VERIFIED",
+  "sharedTestsEdited": false,
+  "artifactChecks": [
+    "ZIP/readable equality",
+    "generated graph equality",
+    "actual trigger exact equality",
+    "original success/message schema exact equality",
+    "package/generator hashes",
+    "contract/runtime metadata equality",
+    "global action uniqueness, count/depth, runAfter/reference validation",
+    "no raw export in worktree"
+  ]
+}
