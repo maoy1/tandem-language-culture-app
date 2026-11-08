@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "deploymentStatus": "issue6_owner_choices_and_paused_no_preservation_pass_publication_and_remaining_tests_pending",
+  "deploymentStatus": "issue6_version16_owner_core_pass_remaining_acceptance_pending",
   "list": "Participants",
   "identity": {
     "field": "ParticipantAccount",
@@ -65,5 +65,13 @@
     "validationMayReset": false,
     "membershipSideEffects": "none",
     "binding": "generated_sharepoint_data_cards"
+  },
+  "appDelivery": {
+    "ticket": 6,
+    "app": "Tandem Participant Registration",
+    "version": 16,
+    "savedAt": "2026-11-08T15:34:26+01:00",
+    "evidence": "artifacts/participation_controls/version16.owner-report.json",
+    "remainingAcceptance": "UI6 variants documented; not full tenant acceptance"
   }
 }

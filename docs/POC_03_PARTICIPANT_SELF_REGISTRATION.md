@@ -33,11 +33,14 @@ The local validator checks it against
 
 ## Current #6 app change - participation controls
 
-Issue #6 is **In progress**. #66 schema/mappings/own tests are complete, PR #69
+Issue #6 is **Ready for review** in PR #70; remaining cases go to Ready for testing after review/merge. #66 schema/mappings/own tests are complete, PR #69
 merged and #66 closed. Owner confirmed both cards added, real Participation status choices displayed,
 and Paused/No persisted after saving, validation and reopening; account and
-selections stayed unchanged (UI6-20261108-02). Studio save/publication/version
-evidence and other UI6 variants are pending; no blanket PAR/defaults PASS.
+selections stayed unchanged (UI6-20261108-02). Owner reported **Version 16**,
+saved **2026-11-08 15:34:26 Europe/Berlin**, after the requested Live-version
+check. Publishing started at 15:34:34; completion time was not supplied.
+The owner check preceded the version report; do not relabel it as a separately
+observed published-player retest. Remaining UI6 variants are not passed.
 Current form path confirmed by the owner:
 `MainScreen1 > ScreenContainer1 > BodyContainer1 > RightContainer1 > MainContainer1 > Form1`.
 
@@ -84,7 +87,10 @@ Observed pass: real choices plus basic Paused/No save/validate/reopen; see
 UI6-20261108-02. The second unrelated-edit cycle, other states, new-profile
 defaults and fixture variants below are not yet confirmed.
 
-Record the saved/published app version and tested account role. Use the owner
+Test target: **Tandem Participant Registration, Version 16**, saved
+2026-11-08 15:34:26 Europe/Berlin (owner-reported version). Use the Versions
+row marked Live and reload the player so a cached older version is not tested.
+Record the actual version and account role for each test. Use the owner
 profile/synthetic allowed fixtures; normal-colleague privacy proof remains
 deferred under #18/#39-#42. Capture its item ID and initial language/culture,
 time-zone, Comments, identity, participation and openness before changing it.
@@ -115,8 +121,9 @@ portions as Blocked/NOT RUN with the receiving ticket, not as blanket PASS.
 After tests, restore the fixture's original participation/openness/Comments through
 the app and confirm the original item ID remains. Return version/role, case IDs,
 saved values and exact errors. No new registration/group history should be deleted
-as routine cleanup. Ready labels require the actual edited app/version; repository
-policy checks alone are not #6 implementation or tenant test completion.
+as routine cleanup. The edited app version is now identified; repository policy checks alone still
+do not prove the remaining UI cases. After PR #70 review/merge, mark #6 Ready
+for testing until its own remaining variants pass; do not close it prematurely.
 
 ## Historical SharePoint setup (superseded where #66 changed metadata)
 

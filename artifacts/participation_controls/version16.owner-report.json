@@ -1,0 +1,27 @@
+{
+  "sourceTicket": 6,
+  "app": "Tandem Participant Registration",
+  "version": 16,
+  "savedAt": "2026-11-08T15:34:26+01:00",
+  "timezone": "Europe/Berlin",
+  "publishStartedAt": "2026-11-08T15:34:34+01:00",
+  "publishCompletedAt": null,
+  "evidenceSource": "Owner supplied Version 16 and its saved timestamp after being directed to the Versions row marked Live; agent did not inspect the app history.",
+  "formPath": "MainScreen1/ScreenContainer1/BodyContainer1/RightContainer1/MainContainer1/Form1",
+  "implementedControls": [
+    "ParticipationStatus",
+    "OpenToConnections"
+  ],
+  "choiceItemsPowerFx": "Choices([@Participants].'Participation status')",
+  "ownerConfirmed": [
+    "Real choices Active/Paused/Inactive appeared",
+    "Paused/No persisted after app Save, validation and reopening",
+    "Account and language/culture selections stayed unchanged"
+  ],
+  "testScope": "Owner check in Studio before reporting the saved version. Not a separately observed published-player retest or full UI6/PAR pass.",
+  "limitations": [
+    "Publish completion timestamp not supplied",
+    "No .msapp/export or live Studio session inspected by agent",
+    "New defaults, Inactive/Active and fixture variants remain unconfirmed"
+  ]
+}

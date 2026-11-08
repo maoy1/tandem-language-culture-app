@@ -945,3 +945,25 @@ whole-schema audit evidence above remain separately scoped.
 - Continue with Studio Save/Publish to the existing audience and record its
   version/time. Keep #6 In progress until actual delivery/test context is recorded;
   hand remaining acceptance to testers after review rather than close prematurely.
+
+### UI6-20261108-03 - #6 Version 16 delivery context
+
+- Owner reported **Version 16**, timestamp **08/11/2026 15:34:26** after being
+  directed to select the Live row in the app's Versions history. Record as
+  owner-supplied context, not agent-observed history. Timezone Europe/Berlin.
+- Publishing-start message: **2026-11-08 15:34:34**. Completion timestamp not
+  supplied; do not turn the start timestamp into a completed-publish time.
+- App/control context: Tandem Participant Registration, same existing Form1;
+  no new permission, connection, licence, flow or app import artifact.
+- Evidence: artifacts/participation_controls/version16.owner-report.json. No
+  .msapp/export inspected. The UI6-20261108-02 core preservation PASS was reported
+  before this version context; no extra published-player test is inferred.
+- Implementation ready for PR #70 review. Remaining own test variants are
+  UI6-001 defaults/creation; UI6-002 unrelated-edit cycle; UI6-003 Inactive;
+  UI6-004 Active/No/Yes; UI6-005 language/culture fixtures; UI6-006 no unintended
+  membership writes with a permitted fixture. Use Version 16's Live player after
+  reload for tester handover. Mark unavailable fixture/integration cases blocked
+  with the receiving owner, not passed. Separate #61/#7/#10/#64/#68 work stays owned.
+- No code changed in this evidence update; previous local suite 79 PASS retained.
+  After review/merge, #6 Ready for testing, not Done. No further field construction
+  is known missing; report any failing test before changing bindings or defaults.

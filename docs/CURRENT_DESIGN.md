@@ -70,12 +70,14 @@ See POC_SHAREPOINT_SETUP.md and TEST_RUNS.md for versions and finish line.
 
 ## Current app work - #6
 
-Only #6 is actively In progress. Add the two generated availability data cards
-to the existing Form1 using #66 verified fields. New registrations default
+#6 is Ready for review in PR #70. The two availability cards are added to
+Form1 using #66 verified fields; target app is owner-reported Version 16
+(saved 2026-11-08 15:34:26 Europe/Berlin). New registrations default
 Active/Yes; edits preserve stored choices and validation remains independent.
 Owner confirmed both cards and real choices; basic Paused/No preservation after
-save/validation/reopen passed with account/selections unchanged. Saved/published
-app-version evidence and other UI test variants are pending. No app package/update capability
+save/validation/reopen passed with account/selections unchanged. The saved version is recorded; remaining new-default/state/fixture variants
+are pending for testing after review. Publication completion time and a separate
+published-player retest were not supplied. No app package/update capability
 is inferred from successful flow imports. See POC_03_PARTICIPANT_SELF_REGISTRATION.md.
 
 ## Implemented SharePoint baseline

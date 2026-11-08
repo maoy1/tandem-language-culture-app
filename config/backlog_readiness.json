@@ -24,7 +24,7 @@
     "closedTickets": 8,
     "done": 6,
     "superseded": 2,
-    "inProgress": 1
+    "inProgress": 0
   },
   "flowCountNote": "12 singly-owned core production flows (notification provisional), plus 1 Deferred reminder flow. Access/migration helpers remain undecided; no duplicate owners for the same production flow.",
   "flowInventory": [
@@ -188,25 +188,25 @@
       "number": 6,
       "title": "[App] Participation and openness controls",
       "ticketType": "App",
-      "status": "In progress",
-      "flowScope": "Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to {{mygroups_app}} and {{mygroups}}.",
-      "implementationReadiness": "Owner confirmed controls and real choices; basic Paused/No save/validation/reopen passed. Studio save/publication/version context pending.",
-      "implementationEvidence": "UI6-20261108-02 owner PASS: real choices, Paused/No retained after save/validation/reopen, account/selections unchanged. Not all defaults/state/fixture variants confirmed.",
-      "evidence": "Core owner save-preservation PASS; app version/publication not supplied. Local suite 79 PASS; receiving flow/privacy tests separately owned.",
+      "status": "Ready for review",
+      "flowScope": "Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64.",
+      "implementationReadiness": "Both app controls implemented; core owner save-preservation passed; Version 16 recorded. PR #70 ready for review; remaining own variants testable after merge.",
+      "implementationEvidence": "Version 16 saved 2026-11-08 15:34:26 Europe/Berlin, owner supplied after Live-version query. Real choices and core Paused/No save/validate/reopen PASS; app export/player retest not inspected.",
+      "evidence": "UI6-20261108-02 core PASS; UI6-20261108-03 Version 16 context. Local 79 PASS. Remaining variants NOT RUN; no full acceptance claim.",
       "proposedExperience": [
         "Choose Active/Paused/Inactive and Yes/No in own existing profile form.",
         "New mode uses Active/Yes; edits save stored selections including No, Paused and Inactive.",
         "Existing identity, selections and memberships remain unchanged by these two form fields.",
         "Discovery/request flows consume availability under #7/#10; membership badges under #64/#68."
       ],
-      "remainingWork": "Record saved/published app version; review PR #70 and hand over remaining new-default/Inactive/Active/fixture variants. Do not rerun the already passed basic Paused/No case without a new reason.",
+      "remainingWork": "Review/merge PR #70, then Ready for testing for documented remaining default/state/fixture variants; no new field construction known missing.",
       "testReferences": [
         "PAR-001:007",
         "REG-009",
         "DISC-004"
       ],
-      "testStatus": "PASS core choice-binding and basic Paused/No preserve/save/validate/reopen variant; other UI6 variants NOT RUN/unconfirmed, published-version context pending.",
-      "testHandoff": "POC_03_PARTICIPANT_SELF_REGISTRATION.md current #6 section: UI6-001:006 exact version/role/fixtures/steps/expected persistence/errors/cleanup. Receiving flow integration remains separately scoped.",
+      "testStatus": "Core owner check PASS; Version 16 target identified. Remaining UI6 variants NOT RUN/unconfirmed; published-player test not inferred from Studio report.",
+      "testHandoff": "Tandem Participant Registration Version 16; saved 2026-11-08 15:34:26 Europe/Berlin. Reload Live player and use UI6-001:006 steps/fixtures/expected results/errors/cleanup in POC_03_PARTICIPANT_SELF_REGISTRATION.md; unavailable fixture/integration portions explicitly blocked.",
       "flows": [],
       "scopeBoundary": "Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64.",
       "prerequisites": [
@@ -1620,7 +1620,7 @@
     "openBodiesVerified": 40,
     "typeAndLifecycleExactlyOne": true,
     "uniqueProductionFlowOwners": 13,
-    "activeWork": 1,
+    "activeWork": 0,
     "stateChanges": {
       "supersededNotPlanned": [
         22,

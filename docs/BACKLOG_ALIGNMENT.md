@@ -32,7 +32,7 @@ implementation as activity or mixed several flows in one implementation ticket.
 being worked now, at most one non-overview ticket. Queued partial work is Planned
 with evidence retained. PR #60 is merged. #66 delivery is ready for review after
 owner setup/readback and final schema audit passed. Owner confirmed all five writes skipped on a new repeat; own schema tests passed.
-PR #69 is merged and #66 closed; #6 is now the sole active implementation. Ready stages remain real handovers. Superseded is
+PR #69 is merged and #66 closed; #6 implementation is ready for review in PR #70; remaining acceptance waits for testing after merge. Ready stages remain real handovers. Superseded is
 closed as not planned, not Done. Closed historical #1-#4/#46 remain Done.
 
 **48 issues total:** 40 focused open tickets, 6 Done, 2 Superseded (#22/#24).
@@ -59,7 +59,7 @@ evidence remain available; no employee payloads/raw exports are copied here.
 | Open ticket | Type | Queued activity | Sole scope |
 |---|---|---|---|
 | [#5](https://github.com/maoy1/tandem-language-culture-app/issues/5) | App | Planned | Registration form controls, validation messages and save/reopen behavior only. Backend validation is #61; list schema is #66. |
-| [#6](https://github.com/maoy1/tandem-language-culture-app/issues/6) | App | In progress | Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64. |
+| [#6](https://github.com/maoy1/tandem-language-culture-app/issues/6) | App | Ready for review | Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64. |
 | [#7](https://github.com/maoy1/tandem-language-culture-app/issues/7) | Flow | Planned | One flow returning approved compatible people and existing open groups. App layout is #16; rule source is #9; protected access proof is #42. |
 | [#8](https://github.com/maoy1/tandem-language-culture-app/issues/8) | Shared technical | Deferred | Future scoring policy/rule artifact; does not own a second TandemDiscovery flow. |
 | [#9](https://github.com/maoy1/tandem-language-culture-app/issues/9) | Shared technical | Planned | One maintained rule/normalization source and synthetic contract fixtures for package generation; no separately hosted runtime or assumed child flow. |
