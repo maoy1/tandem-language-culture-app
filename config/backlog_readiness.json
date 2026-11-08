@@ -20,9 +20,9 @@
   },
   "counts": {
     "allTickets": 48,
-    "openTickets": 40,
-    "closedTickets": 8,
-    "done": 6,
+    "openTickets": 39,
+    "closedTickets": 9,
+    "done": 7,
     "superseded": 2,
     "inProgress": 0
   },
@@ -151,26 +151,26 @@
       "number": 5,
       "title": "[App] Registration form: culture fields and optional time zone",
       "ticketType": "App",
-      "status": "Planned",
+      "status": "Ready for review",
       "flowScope": "Registration form controls, validation messages and save/reopen behavior only. Backend validation is {{submission}}; list schema is {{participant_schema}}.",
-      "implementationReadiness": "Assess existing app form; #66 schema and #61 validator are separate deliverables.",
-      "implementationEvidence": "PR #52 merged; REG-005 Preview guard/culture labels owner-confirmed; REG-014 owner-profile and REG-015 Active correction/no-op variants have scoped evidence.",
-      "evidence": "PR #52 merged; REG-005 Preview guard/culture labels owner-confirmed; REG-014 owner-profile and REG-015 Active correction/no-op variants have scoped evidence.",
+      "implementationReadiness": "Existing Live Version 19 form accepted by owner; no rebuild required.",
+      "implementationEvidence": "Historical labels/guard and language/culture-only identity-preserving save/reopen retained; owner confirmed Version 19 A/B passed.",
+      "evidence": "artifacts/registration_form/version19.owner-report.json; owner report, no timestamp/fixture IDs.",
       "proposedExperience": [
         "Save a language/culture profile with optional time zone.",
         "Reject all-four-empty selections.",
         "Validate current saved data without changing identity or participation.",
         "Correct an invalid profile and save without organiser approval."
       ],
-      "remainingWork": "Registration form controls, validation messages and save/reopen behavior only. Backend validation is #61; list schema is #66.",
+      "remainingWork": "Review and merge focused acceptance PR; receiving integration tests remain separately owned.",
       "testReferences": [
         "REG-001:016",
         "PAR-002",
         "PAR-003",
         "DISC-005"
       ],
-      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
-      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "testStatus": "Own App acceptance PASS_OWNER_REPORTED on Live Version 19; backend/access cases not passed.",
+      "testHandoff": "POC_05 guide retains A/B regression steps and receiving boundaries; TEST_RUNS records owner report and limitations.",
       "flows": [],
       "scopeBoundary": "Registration form controls, validation messages and save/reopen behavior only. Backend validation is #61; list schema is #66.",
       "prerequisites": [
@@ -183,41 +183,6 @@
         5
       ],
       "url": "https://github.com/maoy1/tandem-language-culture-app/issues/5"
-    },
-    {
-      "number": 6,
-      "title": "[App] Participation and openness controls",
-      "ticketType": "App",
-      "status": "Ready for review",
-      "flowScope": "Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64.",
-      "implementationReadiness": "Corrected Combo box initialization and own UI criteria owner-confirmed; Live Version 19 reported. PR #70 review/merge remains.",
-      "implementationEvidence": "UI6-20261108-06: New Active/open Yes, saved choices preserved, language/culture-only save/reopen without identity/unrelated changes confirmed. Working typed table defaults documented.",
-      "evidence": "Owner-reported Version 19 and own UI acceptance PASS; timestamps/fixture IDs not supplied. Flow/group integration transferred explicitly, not passed.",
-      "proposedExperience": [
-        "Choose Active/Paused/Inactive and Yes/No in own existing profile form.",
-        "New mode uses Active/Yes; edits save stored selections including No, Paused and Inactive.",
-        "Existing identity, selections and memberships remain unchanged by these two form fields.",
-        "Discovery/request flows consume availability under #7/#10; membership badges under #64/#68."
-      ],
-      "remainingWork": "Review/merge PR #70 then close #6 on its App scope. Flow validation/Discovery/request and integrated group tests stay #61/#7/#10/#25.",
-      "testReferences": [
-        "UI6-001:006 (App portions)",
-        "REG-009 (App persistence)",
-        "PAR-001:007 (split owner portions; see integration handoffs)"
-      ],
-      "testStatus": "PASS scoped App controls/defaults/persistence by owner report. Receiving-flow and operational-group integration variants remain Planned/Blocked/NOT RUN with owners.",
-      "testHandoff": "Version 19; own UI criteria owner-confirmed. POC_03 guide and participation_integration_handoffs.json retain exact regression and receiving-flow checks/blockers. No new group fixture fabricated.",
-      "flows": [],
-      "scopeBoundary": "Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64.",
-      "prerequisites": [
-        "#66 Done; availability fields verified.",
-        "Receiving-flow/group cases retained separately under #61/#7/#10/#25; not a whole-ticket completion gate for App #6."
-      ],
-      "validity": "Valid",
-      "sourceTickets": [
-        6
-      ],
-      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/6"
     },
     {
       "number": 7,
@@ -1611,13 +1576,48 @@
         5
       ],
       "url": "https://github.com/maoy1/tandem-language-culture-app/issues/66"
+    },
+    {
+      "number": 6,
+      "title": "[App] Participation and openness controls",
+      "ticketType": "App",
+      "status": "Done",
+      "flowScope": "Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64.",
+      "implementationReadiness": "Complete on scoped owner Version 19 UI acceptance",
+      "implementationEvidence": "UI6-20261108-06: New Active/open Yes, saved choices preserved, language/culture-only save/reopen without identity/unrelated changes confirmed. Working typed table defaults documented.",
+      "evidence": "Owner-reported Version 19 and own UI acceptance PASS; timestamps/fixture IDs not supplied. Flow/group integration transferred explicitly, not passed.",
+      "proposedExperience": [
+        "Choose Active/Paused/Inactive and Yes/No in own existing profile form.",
+        "New mode uses Active/Yes; edits save stored selections including No, Paused and Inactive.",
+        "Existing identity, selections and memberships remain unchanged by these two form fields.",
+        "Discovery/request flows consume availability under #7/#10; membership badges under #64/#68."
+      ],
+      "remainingWork": "None in own App scope; PR #70 merged and #6 closed. Receiving flow/group cases remain separately owned.",
+      "testReferences": [
+        "UI6-001:006 (App portions)",
+        "REG-009 (App persistence)",
+        "PAR-001:007 (split owner portions; see integration handoffs)"
+      ],
+      "testStatus": "PASS scoped App controls/defaults/persistence by owner report. Receiving-flow and operational-group integration variants remain Planned/Blocked/NOT RUN with owners.",
+      "testHandoff": "Version 19; own UI criteria owner-confirmed. POC_03 guide and participation_integration_handoffs.json retain exact regression and receiving-flow checks/blockers. No new group fixture fabricated.",
+      "flows": [],
+      "scopeBoundary": "Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64.",
+      "prerequisites": [
+        "#66 Done; availability fields verified.",
+        "Receiving-flow/group cases retained separately under #61/#7/#10/#25; not a whole-ticket completion gate for App #6."
+      ],
+      "validity": "Valid",
+      "sourceTickets": [
+        6
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/6"
     }
   ],
   "publication": {
     "status": "verified",
     "date": "2026-11-08",
     "issuesVerified": 48,
-    "openBodiesVerified": 40,
+    "openBodiesVerified": 39,
     "typeAndLifecycleExactlyOne": true,
     "uniqueProductionFlowOwners": 13,
     "activeWork": 0,

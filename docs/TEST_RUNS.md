@@ -1031,3 +1031,40 @@ whole-schema audit evidence above remain separately scoped.
 - Version 19 contract/package regression suite: **84 pytest passed**. Checks
   reject record/text initialization policy where the Combo box requires a table;
   this remains local contract protection, not Power Fx execution.
+
+### CLOSE6-20261108 - #6 completed; #5 current-release form checks start
+
+- PR #70 merged at 8f974f8d35af4be6546ca74daa0bc94e2b950f32; #6 already closed
+  when inspected, lifecycle label corrected from Ready for review to Done.
+- Own Version 19 UI acceptance and working bindings remain as reported. Flow/
+  group integration cases stay open with #61/#7/#10/#25; no new PASS by closure.
+- #5 starts on codex/issue-5-registration-form. Existing evidence: historical
+  REG-005 Preview guard and language multi-lookups, #66 schema/85 culture values,
+  owner culture-only save/reopen/identity preservation under #6. No rebuild yet.
+- Version 19 check A (blank optional zone + all-four multi-lookups persistence)
+  and B (empty guard retains input/no write) requested: **NOT RUN** until owner
+  returns actual results. No backend inactive-ID/eligibility/privacy PASS inferred.
+- No production code changed for this tracking/test-handover update. Existing
+  84-test local suite result retained; repeating it would not test the actual app.
+
+### UI5-20261108 - Live Version 19 registration-form acceptance
+
+- Owner answered the requested A/B handover: **“A and bo passed”**, interpreted
+  as both A and B passed. Evidence: artifacts/registration_form/version19.owner-report.json.
+- A **PASS (owner report)**: two selections in each of four language/culture
+  selectors persist after Save/reopen; Time zone blank; identity unchanged.
+  Covers App portions of REG-003/007/009, not all backend variants of those cases.
+- B **PASS (owner report)**: clearing all four, entering a temporary Comment and
+  clicking Save shows the required-selection message; draft values remain visible
+  and the saved item stays unchanged. Covers REG-005 UI guard in this release.
+- Earlier culture-only/identity/unrelated-value evidence under #6 remains valid
+  within its recorded scope. No new code/app rebuild was needed after A/B.
+- Cleanup was requested (cancel B, restore original values); not separately
+  reported. Exact test timestamp, fixture IDs and independent source/runtime
+  inspection were not supplied. No additional detailed guide step is inferred.
+- #5 own App acceptance is ready for review; issue stays open until merge.
+  #61 validation/catalogue enforcement, #7 blank-zone eligibility/availability,
+  #10 stale-request checks, #41 protected integration and #25 group-side-effect
+  tests retain their prior pending/blocked status. No PASS by scope transfer.
+- Documentation/deployment metadata only: JSON parsed and diff checked; prior
+  84-test code-suite result retained, not rerun or presented as tenant UI proof.

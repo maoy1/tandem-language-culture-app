@@ -68,21 +68,29 @@ Own schema acceptance passed; PR #69 is merged and #66 closed. App/flow acceptan
 stays with its separate owners. No ordinary-user privacy or rollout claim follows from owner setup.
 See POC_SHAREPOINT_SETUP.md and TEST_RUNS.md for versions and finish line.
 
-## Current app work - #6
+## Completed participation controls - #6
 
 Corrected owner-reported Live target is **Version 19**. The Participation status
 Combo box DataCardValue2 uses DefaultSelectedItems with table-returning branches:
 New filters the Active Choice; Edit wraps Parent.Default's saved Record. The
 outer card reads ThisItem.'Participation status'; inner legacy Default is Blank().
 Owner confirms Active/Yes new defaults, saved choices preserved, and language/
-culture-only save/reopen preserving identity/unrelated fields. #6 is Ready for
-review in PR #70; after merge it can close on its own UI scope.
+culture-only save/reopen preserving identity/unrelated fields. #6 is Done; PR #70 merged and the issue closed on its own UI scope.
 
 Flow revalidation stays #61, candidate exclusion #7 and stale request rejection
 #10. Group side effects need an operational fixture and #25 integrated testing;
 derived displays remain #64/#68. Exact retained cases/blockers are in
 config/participation_integration_handoffs.json. No ordinary-user privacy, full
 backend acceptance or new hosting/connector capability is inferred from UI checks.
+
+## Current registration form work - #5
+
+#5 is Ready for review. Owner confirmed Live Version 19 checks A/B passed:
+all four multi-lookups persist with optional time zone cleared and identity
+unchanged; all-four-empty Save retains input and leaves the saved item unchanged.
+Existing culture-only/identity evidence is retained. No app rebuild was needed.
+POC_05_CULTURE_REGISTRATION.md records scope and regression steps;
+backend validation remains #61 and access integration #41.
 
 ## Implemented SharePoint baseline
 

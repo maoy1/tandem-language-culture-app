@@ -33,7 +33,7 @@ The local validator checks it against
 
 ## Current #6 app change - participation controls
 
-**Ready for review, PR #70; owner-reported corrected Live target: Version 19.**
+**Completed: PR #70 merged, #6 closed/Done; corrected owner-reported Live target Version 19.**
 Owner confirms New defaults Active/open Yes, saved choices preserved on edits,
 and language/culture-only save/reopen without identity/unrelated changes. Exact
 Version 19 timestamp/fixture IDs were not supplied; no whole-backend PASS follows.
@@ -136,7 +136,7 @@ owners above. Do not convert those portions into blanket PASS.
 On failure, record the exact card/Form1.Error, selected input, saved value and
 matching flow run ID. Preserve entered data; fix the failing layer. Restore test
 participation/openness/Comments through the app; keep identity and business history.
-After PR #70 review/merge, #6 can close on its passed UI scope. Receiving flow/
+PR #70 is merged and #6 closed on its passed UI scope. Receiving flow/
 integration tickets stay open until their own packages and tests are complete.
 
 References: [Combo box defaults](https://learn.microsoft.com/en-us/power-apps/maker/canvas-apps/controls/control-combo-box),

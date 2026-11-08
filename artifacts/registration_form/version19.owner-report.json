@@ -1,0 +1,34 @@
+{
+  "ticket": 5,
+  "app": "Tandem Participant Registration",
+  "version": 19,
+  "environment": "Owner-reported Live Version 19; own permitted profile",
+  "reportedDate": "2026-11-08",
+  "ownerReply": "A and bo passed",
+  "interpretation": "Owner confirms both requested A and B passed.",
+  "checks": {
+    "A": {
+      "result": "PASS_OWNER_REPORTED",
+      "steps": "Two values in each language/culture selector; clear Time zone; Save and reopen.",
+      "expected": "All selections persist, Time zone blank, identity unchanged."
+    },
+    "B": {
+      "result": "PASS_OWNER_REPORTED",
+      "steps": "Clear all four selectors, enter temporary Comment, click Save.",
+      "expected": "Required-selection message; edits remain visible; saved item unchanged."
+    }
+  },
+  "cleanupRequested": "Cancel B and restore original profile values; no separate cleanup evidence supplied.",
+  "limitations": [
+    "No exact test timestamp or fixture IDs supplied.",
+    "No independent app-source inspection or tenant automation.",
+    "Backend validation, inactive catalogue enforcement, Discovery/request behavior and ordinary-user privacy are not certified by these UI checks."
+  ],
+  "receivingTickets": [
+    61,
+    7,
+    10,
+    41,
+    25
+  ]
+}
