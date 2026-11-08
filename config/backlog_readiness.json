@@ -1457,7 +1457,7 @@
       "ticketType": "Shared technical",
       "status": "Planned",
       "flowScope": "One-time actual field/catalogue mapping and required delta for #5/#6/{{submission}}; no app layout or production flow ownership.",
-      "implementationReadiness": "Prepare this bounded contract/package after required field mapping and verified prerequisites.",
+      "implementationReadiness": "Scope/test plan clear: read-only metadata inspection first after PR #60 review/merge; verify each capability before minimum setup delta.",
       "implementationEvidence": "Inherited recorded work from #5. Split from the existing feature tickets; no new deployed implementation or test pass is claimed.",
       "evidence": "Inherited recorded work from #5. Split from the existing feature tickets; no new deployed implementation or test pass is claimed.",
       "proposedExperience": [
@@ -1471,7 +1471,7 @@
         "SCHEMA-002"
       ],
       "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
-      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "testHandoff": "Numbered SCHEMA-001/002 steps recorded in #66. Package/version and actual schema results pending; not yet Ready for testing.",
       "flows": [],
       "scopeBoundary": "One-time actual field/catalogue mapping and required delta for #5/#6/#61; no app layout or production flow ownership.",
       "prerequisites": [],

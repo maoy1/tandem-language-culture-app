@@ -28,6 +28,15 @@ for approved rules and outstanding decisions; record executions in TEST_RUNS.md.
 - Keep screenshots/run links sanitized and restricted appropriately. Do not put
   tokens, raw Person claims, employee profiles or full flow payloads in GitHub.
 
+## Ticket-specific handover detail
+
+Before assigning a case to a tester, its owner ticket expands the catalogue row
+into numbered actions with actual artifact/version, permitted account/setup,
+inputs/fixtures, expected UI/output/persisted state, failure interpretation,
+cleanup and evidence. A case-ID list alone is not a test handover. Prefer a
+supplied package/report to manual action construction or repeated column checks;
+if unavailable, flag the exact unavoidable owner action and prerequisite first.
+
 ## Execution layers
 
 | Layer | Checks | Does not prove |

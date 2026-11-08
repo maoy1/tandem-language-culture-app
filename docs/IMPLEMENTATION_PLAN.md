@@ -70,6 +70,39 @@ untracked production service. In progress is active work only, max one. Queued
 partial work stays Planned. Superseded is not Done. After audit publish, no issue
 is active pending PR #60 review; the chosen next scope becomes active on start.
 
+## Ticket execution agreement - #45
+
+Before each ticket starts, inspect its current scope/AC and evidence, identify
+exact inputs/outputs and prerequisite gates, and refine the test description.
+Routine technical choices are the agent's work. The owner decides material
+product choices and supplies unavoidable tenant access/actions; do not turn
+technical drafting into repeated owner decisions.
+
+Flow ticket delivery is package-first: importable legacy ZIP, readable definition,
+input/output/connection mapping, local validation, and numbered import/smoke/
+acceptance tests. Manual action-by-action construction is not the default.
+Shared technical metadata/test probes may also use disposable packages if that
+reduces inspection work; they are not extra production flows.
+
+Each test handover must provide:
+
+1. Verified prerequisites, permitted account role and isolated scope.
+2. Exact artifact/version, fixture/setup and input values.
+3. Numbered actions and expected UI/output/persisted state for each case.
+4. Failure/blocked interpretation, retry/cleanup and sanitized evidence to return.
+5. What has actually passed, what is NOT RUN and what blocks own acceptance.
+
+Minimize manual owner implementation using allowed packaging/tooling. Import,
+existing-connection choice and actual tenant execution may still need the owner.
+App package/edit capabilities must be checked at the relevant App ticket; flow
+probe success does not prove automated App editing. Flag required unavoidable
+steps and verify setup before relying on them. No additional paid platform,
+permission expansion or CLI/sign-in dependency is assumed.
+
+#66 is the first scoped schema work item after PR #60 review/merge. Its detailed
+SCHEMA-001/002 plan is in the issue. Scope/test planning is clear; no live audit,
+field change, import package or schema PASS has yet been produced for #66.
+
 ## Completed package experiment checkpoint (#28)
 
 Owner approved this bounded authoring-method experiment on 2026-11-08 after
