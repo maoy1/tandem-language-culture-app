@@ -1,0 +1,140 @@
+{
+  "name": "ffd55bdf-ce46-4327-96bc-9e0cddc09ecd",
+  "id": "/providers/Microsoft.Flow/flows/ffd55bdf-ce46-4327-96bc-9e0cddc09ecd",
+  "type": "Microsoft.Flow/flows",
+  "properties": {
+    "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
+    "displayName": "TandemCoordinationPreflight",
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {},
+              "required": []
+            }
+          }
+        }
+      },
+      "actions": {
+        "Read_site_identity": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+              "parameters/method": "GET",
+              "parameters/uri": "_api/web?$select=Id",
+              "parameters/headers": {
+                "Accept": "application/json;odata=nometadata"
+              }
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline",
+              "operationId": "HttpRequest"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {}
+        },
+        "Read_web_permissions": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+              "parameters/method": "GET",
+              "parameters/uri": "_api/web/EffectiveBasePermissions",
+              "parameters/headers": {
+                "Accept": "application/json;odata=nometadata"
+              }
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline",
+              "operationId": "HttpRequest"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {
+            "Read_site_identity": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Permission_low": {
+          "type": "Compose",
+          "inputs": "@string(coalesce(body('Read_web_permissions')?['Low'],body('Read_web_permissions')?['EffectiveBasePermissions']?['Low'],''))",
+          "runAfter": {
+            "Read_web_permissions": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Permission_flags": {
+          "type": "Compose",
+          "inputs": {
+            "viewItems": "@equals(mod(div(int(if(empty(outputs('Permission_low')),'0',outputs('Permission_low'))),1),2),1)",
+            "addItems": "@equals(mod(div(int(if(empty(outputs('Permission_low')),'0',outputs('Permission_low'))),2),2),1)",
+            "editItems": "@equals(mod(div(int(if(empty(outputs('Permission_low')),'0',outputs('Permission_low'))),4),2),1)",
+            "manageLists": "@equals(mod(div(int(if(empty(outputs('Permission_low')),'0',outputs('Permission_low'))),2048),2),1)"
+          },
+          "runAfter": {
+            "Permission_low": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Preflight_report": {
+          "type": "Compose",
+          "runAfter": {
+            "Permission_flags": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "kind": "TandemCoordinationPreflight",
+            "schemaVersion": 1,
+            "sourceTicket": 47,
+            "packageBuildId": "ffd55bdf-ce46-4327-96bc-9e0cddc09ecd",
+            "runReference": "@workflow()?['run']?['name']",
+            "readOnly": true,
+            "fixtureCreated": false,
+            "writes": 0,
+            "permissionMetadataCollected": "@and(not(empty(body('Read_site_identity')?['Id'])),not(empty(outputs('Permission_low'))))",
+            "fixturePermissionGatePassed": "@and(not(empty(body('Read_site_identity')?['Id'])),not(empty(outputs('Permission_low'))),and(equals(outputs('Permission_flags')?['viewItems'],true),equals(outputs('Permission_flags')?['addItems'],true),equals(outputs('Permission_flags')?['editItems'],true),equals(outputs('Permission_flags')?['manageLists'],true)))",
+            "permissionFlags": "@outputs('Permission_flags')",
+            "scope": "Read site technical ID and effective web permission metadata only. No fixture/production data or schema changed.",
+            "nextStep": "Fixture schema/creation and native unique-key/CAS/race proof remain separate and unverified."
+          }
+        }
+      }
+    },
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "connectionName": "IMPORT_SELECT_EXISTING_SHAREPOINT_CONNECTION",
+        "source": "Embedded",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+        "tier": "NotSpecified",
+        "apiName": "sharepointonline",
+        "isProcessSimpleApiReferenceConversionAlreadyDone": false
+      }
+    },
+    "flowFailureAlertSubscribed": false,
+    "isManaged": false
+  }
+}

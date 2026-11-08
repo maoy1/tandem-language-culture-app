@@ -1,0 +1,20 @@
+{
+  "kind": "TandemCoordinationPreflight",
+  "schemaVersion": 1,
+  "sourceTicket": 47,
+  "packageBuildId": "ffd55bdf-ce46-4327-96bc-9e0cddc09ecd",
+  "runReference": "08584074437966574454125674321CU01",
+  "readOnly": true,
+  "fixtureCreated": false,
+  "writes": 0,
+  "permissionMetadataCollected": true,
+  "fixturePermissionGatePassed": true,
+  "permissionFlags": {
+    "viewItems": true,
+    "addItems": true,
+    "editItems": true,
+    "manageLists": true
+  },
+  "scope": "Read site technical ID and effective web permission metadata only. No fixture/production data or schema changed.",
+  "nextStep": "Fixture schema/creation and native unique-key/CAS/race proof remain separate and unverified."
+}

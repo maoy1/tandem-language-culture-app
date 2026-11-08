@@ -1363,3 +1363,77 @@ whole-schema audit evidence above remain separately scoped.
   proof rerun requested. No production/schema/profile state changed by proof.
 - Evidence/docs only; JSON/diff and source hash checked. Prior 121 local tests
   retained, not rerun for report/status changes. WIP 0; no issue closed yet.
+
+### CLOSE9-START47-20261108 — bounded coordination/reference and preflight
+
+- PR #73 merged at 6879bd90b1321a695143bd327e3aa3a52e9eece2; #9 closed, label
+  corrected to Done. #61 remains Ready for testing; separate cleanup #74 still open.
+- #47 sole In progress on codex/issue-47-bounded-coordination. Proposed shared
+  group token + immutable intent/result receipts, stable duplicate keys, terminal
+  CAS and completion/readback gates; no native schema/data/permission change.
+- **152 pytest passed** (31 new tests), including all **70 order-preserving
+  last-slot reference schedules**, terminal/cancel races, partial setup/retry,
+  receipt failure, episode history/capacity/state and unique committed event tests.
+- These are isolated reference scenarios assuming atomic CAS/native uniqueness,
+  trusted complete adapters, common-writer guard and known stopped retry boundary.
+  They do NOT establish native SharePoint multi-item/cross-flow certification.
+- Read-only preflight ffd55bdf-ce46-4327-96bc-9e0cddc09ecd: **5 actions / depth 1**,
+  only web identity/effective permission metadata GETs. No fixture created and no
+  live data read/write. Existing SharePoint mapping selected at import. **NOT RUN**.
+- Native fixture setup/permission/unique-key/CAS/race and unknown-write recovery
+  still gated; future proposed metadata not applied. NOT-002 delivery remains
+  with #49/#21 channel/idempotency proof, beyond unique committed event identity.
+- Current handover is inline in #47 with checkboxes, expected report/errors and
+  explicit next native-fixture gate. #47 not Ready/Done; draft code/design review.
+
+### COORD47-PREFLIGHT-20261108 — permission metadata gate PASS
+
+- Owner report matches preflight build ffd55bdf-ce46-4327-96bc-9e0cddc09ecd,
+  run 08584074437966574454125674321CU01. permissionMetadataCollected=true,
+  fixturePermissionGatePassed=true; view/add/edit/manageLists all true.
+  readOnly=true, fixtureCreated=false, writes=0. Exact summary retained in
+  artifacts/coordination/results/preflight.owner-report.json. No native fixture
+  or production coordination PASS follows solely from permission bits.
+
+### COORD47-NATIVE-BUILD-20261108 — tagged fixture package prepared
+
+- Build 8b82de6a-95e7-40fc-aaff-d066b168442b / Tandem47Fixture_8b82de6a95e740fc.
+  **321 action definitions / depth 6**, within 500/8. Ten native checks packaged;
+  default Run fixture writes=false. Explicit boolean Yes rechecks actual rights
+  and creates/reuses only the exact full-build-tagged synthetic list/schema.
+- No production list/app/permission mutations or deletes. Fresh per-run prefixes;
+  no repair of nonempty tampered schema. Exact ETag on every data MERGE; metadata
+  wildcard limited to empty verified-fixture Title settings. No row data from
+  employee/production lists. Synthetic list remains for inspection/explicit cleanup.
+- **165 pytest passed**. New simulations exercise generated references/HTTP shapes,
+  both writer orders, metadata-only and string-true no-write cases, tagged schema
+  reuse/fresh prefix, foreign-tag collision, revoked rights, schema tampering,
+  failed absence-read handling and receipt failure retaining ownership.
+- Fake-service simulations caught/fixed a fake default-value bug and tightened
+  real collection read checks: failed GET is never equivalent to a verified empty
+  collection. Final package/hash reflects the corrected guards, not earlier
+  unpublished generated builds. JSON/diff checked.
+- Native import/run **NOT RUN**. Selected primitive/independent-branch races and
+  an intentional handled non-I/O failure/known-prefix replay are distinct from a
+  genuine network-unknown/killed-run proof. No external delivery or production
+  mapping/authority certification. #47 stays In progress; PR #75 draft.
+
+
+### #47 connector duplicate-error correction — v2
+
+The owner supplied the first native report: 5/10 checks passed, allPassed=false. All five failed cases invoke the duplicate-response predicate. The Duplicate primary raw body confirms SharePoint error -2130575169 / Microsoft.SharePoint.SPDuplicateValuesFoundException wrapped by the existing SharePoint connector as HTTP 502. The original proof's 400/409-only classifier was too narrow. The five-case common cause is supported by local replay; a native v2 pass remains unverified.
+
+The classifier now requires the exact native duplicate exception/code together with HTTP 400, 409 or 502. For the wrapped form, both exact entries must exist in innerError.errors. Generic 502, unrelated 400/409, incomplete error identifiers and other statuses fail. Existing schema/row/ETag/count/readback checks remain required. All five duplicate-dependent reports now include diagnostic codes/messages. No cookie or response headers are stored.
+
+Supported package: artifacts/coordination/TandemCoordinationFixture-v2.zip, build b54d7cee-971d-4af3-924f-e81d5fefaec9, new tagged list Tandem47Fixture_b54d7cee971d4af3. Import as Create as new, display name TandemCoordinationFixture v2, existing SharePoint connection; Run fixture writes=Yes. Old fixture is retained; no deletion or production mutation. Expected Fixture report: 10 tests, allPassed=true, failedCases=[]. Return that report; expected rejected duplicate actions may still show red 502.
+
+Validation: 179 local tests passed, including wrapped native duplicate simulation in both writer orders and generic/error-negative cases; 321 actions / depth 6 (limits 500/8). V2 NOT_IMPORTED_NOT_TESTED. #47 remains In progress / PR #75 draft pending native results. No genuine timeout/killed-run, production consumer or notification-delivery proof inferred.
+
+
+### #47 native bounded proof passed — 2026-11-08
+
+Matching v2 build `b54d7cee-971d-4af3-924f-e81d5fefaec9`, owner run `08584074402025984197329193901CU08`: testCount=10, allPassed=true, failedCases=[]. Permission gate passed; existing tagged fixture `Tandem47Fixture_b54d7cee971d4af3` / `abade32d-8b24-4b30-b2e0-668d10238acb` reused (fixtureCreated=false). Summary exactly as supplied: `artifacts/coordination/results/fixture-v2.pass.owner-summary.json`; successful per-case details were not supplied and are not reconstructed. The package gates allPassed on exactly 10 results and no failed cases.
+
+History retained: original classifier build 5/10 pass; first v2 run `08584074408126043497852268406CU03` 9/10 pass (`artifacts/coordination/results/fixture-v2.first-run.owner-report.json`). Its Shrink RequestB returned the typed duplicate exception despite distinct supplied A/B keys; actual cause remains unconfirmed. A fresh run prefix passed without code/formula edits. This does not establish connector retry causation or generic unknown-write recovery.
+
+179 local tests / 70 reference schedules previously passed; final artifact remains 321 actions / depth 6, no runtime changes after owner proof. #47 **Ready for review**, PR #75 ready; no owner rerun required. Earlier pending-run entries above are historical. Own contract review/merge remains; no production schema applied, all 70 schedules are not native-proven, genuine timeout/killed-run, production consumer/access and external notification delivery remain separate. #12 group/member schema is next after merge; #61 stays Ready for testing.

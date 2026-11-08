@@ -1,0 +1,17 @@
+{
+  "sourceTicket": 47,
+  "packageBuildId": "ffd55bdf-ce46-4327-96bc-9e0cddc09ecd",
+  "flowName": "TandemCoordinationPreflight",
+  "readOnly": true,
+  "fixtureCreated": false,
+  "writes": 0,
+  "actions": 5,
+  "maximumActionDepth": 1,
+  "limits": {
+    "actions": 500,
+    "nesting": 8
+  },
+  "sha256": "a54cbe65e07dc7c6e610f270873e8af9ff85de0acf36134a6ff1e7bdcb833e75",
+  "connection": "Select existing working SharePoint connection; no new grant/connector/licence.",
+  "tenantResult": "NOT_IMPORTED_NOT_TESTED"
+}
