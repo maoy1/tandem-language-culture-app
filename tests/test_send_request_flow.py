@@ -141,3 +141,16 @@ def test_metadata_preflight_collects_missing_fields_without_item_reads_or_writes
     assert s.writes==0 and not any('/items' in q for q in s.queries)
     output=tmp_path/'schema.zip';review=send.build_package(output,source=source(),preflight=True)
     assert review['metadataOnly'] and review['requestWrites']==0
+
+
+def test_actual_export_adapter_finds_nested_request_actions_and_preserves_auth(tmp_path):
+    original=source();old=original['properties']['definition']['actions']
+    original['properties']['definition']['actions']={
+        'Read_sender':old['Get_item'],
+        'Check':{'type':'If','actions':{'Pending_requests':{'type':'OpenApiConnection','inputs':{'parameters':{'table':send.REQUESTS}}}},'else':{'actions':{}}},
+        'Respond_original':old['Respond_to_a_Power_App_or_flow']}
+    export=tmp_path/'source.zip'
+    with ZipFile(export,'w') as z:z.writestr('Microsoft.Flow/flows/source/definition.json',json.dumps(original))
+    adapted=send.original_source(export)
+    assert adapted['properties']['definition']['actions']['Get_item']['inputs']['authentication']==old['Get_item']['inputs']['authentication']
+    assert send.build_package(tmp_path/'new.zip',export)['sourceExportSha256']

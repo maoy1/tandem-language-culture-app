@@ -63,13 +63,13 @@ def build_actions(source, people, groups, build_id):
     s['Input_reference']['inputs']['content']="@triggerBody()?['number_1']"
     s['Input_actor_reference']=d.parse("@triggerBody()?['number']",{'type':'integer','minimum':1},'Input_reference')
     s['Require_own_profile']=gate('and('+d.complete('Resolve_own_profile',1)+",equals(length(coalesce(body('Resolve_own_profile')?['d']?['results'],json('[]'))),1),equals(outputs('Own_profile')?['Id'],body('Input_actor_reference')))",'UNAUTHORIZED_PROFILE','Own_profile')
-    s['Input_intent']=d.parse("@triggerBody()?['text']",{'type':'string','minLength':36,'maxLength':36},'Input_actor_reference')
+    s['Input_intent']=d.parse({'intent':"@triggerBody()?['text']"},{'type':'object','required':['intent'],'properties':{'intent':{'type':'string','minLength':36,'maxLength':36}}},'Input_actor_reference')
     # Rewire identity after strict bounded intent parsing. UUID allows only hex at fixed hyphens.
-    stripped="toLower(body('Input_intent'))"
+    stripped="toLower(body('Input_intent')?['intent'])"
     for c in '0123456789abcdef-':stripped="replace("+stripped+",'"+c+"','')"
-    uuid_test="and(equals(length(body('Input_intent')),36),empty("+stripped+"),equals(substring(body('Input_intent'),8,1),'-'),equals(substring(body('Input_intent'),13,1),'-'),equals(substring(body('Input_intent'),18,1),'-'),equals(substring(body('Input_intent'),23,1),'-'),equals(length(replace(body('Input_intent'),'-','')),32))"
+    uuid_test="and(equals(length(body('Input_intent')?['intent']),36),empty("+stripped+"),equals(substring(body('Input_intent')?['intent'],8,1),'-'),equals(substring(body('Input_intent')?['intent'],13,1),'-'),equals(substring(body('Input_intent')?['intent'],18,1),'-'),equals(substring(body('Input_intent')?['intent'],23,1),'-'),equals(length(replace(body('Input_intent')?['intent'],'-','')),32))"
     s['Require_uuid']=gate(uuid_test,'INVALID_INTENT','Input_intent');s['Read_invoker']['runAfter']=d.after('Require_uuid')
-    s['Operation_key']=d.compose("@concat('personal:',string(outputs('Own_profile')?['Id']),':',toLower(body('Input_intent')))",'Require_own_profile')
+    s['Operation_key']=d.compose("@concat('personal:',string(outputs('Own_profile')?['Id']),':',toLower(body('Input_intent')?['intent']))",'Require_own_profile')
     s['Connection_key']=d.compose("@concat('open:person:',string(if(less(outputs('Own_profile')?['Id'],body('Input_reference')),outputs('Own_profile')?['Id'],body('Input_reference'))),':',string(if(less(outputs('Own_profile')?['Id'],body('Input_reference')),body('Input_reference'),outputs('Own_profile')?['Id'])))",'Operation_key')
     s['Read_request_list']=http(base+'?$select=Id,BaseTemplate','Connection_key')
     s['Read_request_fields']=http(base+'/fields?$select=InternalName,TypeAsString,Required,Indexed,EnforceUniqueValues,SchemaXml&$top=5000','Read_request_list')

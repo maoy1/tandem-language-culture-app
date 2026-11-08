@@ -1486,4 +1486,4 @@ Owner restated self-service access: avoid individual participant approvals/grant
 
 ## #10 generated personal-send batch — 2026-11-08
 
-LOCAL PASS only: 268 tests, including 26 send/preflight graph cases. Build 381d4dd5-d5e0-4863-8ca9-f5d0ed7b8700 (125 actions/depth 5), schema preflight 88990545-0026-40b6-913b-fdfa3d623ef7 (18/depth 3). REQ-001/002/006, AUTH-002 and duplicate/unknown/race simulations exercised locally, not tenant passes. Native import/schema/actual send/replay/availability/race/privacy cases NOT RUN. Artifacts and exact unexecuted test checkboxes are inline in issue #10; no production schema/data/permissions changed.
+LOCAL PASS only: 269 tests, including 27 send/preflight graph cases. Build 66cdb66a-69d5-4a2b-ba7b-543bbfda0980 (125 actions/depth 5), schema preflight 88990545-0026-40b6-913b-fdfa3d623ef7 (18/depth 3). REQ-001/002/006, AUTH-002 and duplicate/unknown/race simulations exercised locally, not tenant passes. Native import/schema/actual send/replay/availability/race/privacy cases NOT RUN. Artifacts and exact unexecuted test checkboxes are inline in issue #10; no production schema/data/permissions changed.

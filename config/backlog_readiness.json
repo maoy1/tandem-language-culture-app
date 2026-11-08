@@ -226,7 +226,7 @@
       "status": "In progress",
       "flowScope": "Personal connection-request creation only. History is {{history}}, cancellation {{cancel}}, group-join sending #17.",
       "implementationReadiness": "Owner-preview package generated; schema metadata/native cases pending; no cutover.",
-      "implementationEvidence": "26 send/preflight cases; 125 actions/depth 5; build 381d4dd5-d5e0-4863-8ca9-f5d0ed7b8700.",
+      "implementationEvidence": "27 send/preflight cases; 125 actions/depth 5; build 66cdb66a-69d5-4a2b-ba7b-543bbfda0980.",
       "evidence": "#56 merged guided history/cancel configuration; latest owner instruction requires verifying actual completion; no full request business-run pass.",
       "proposedExperience": [
         "Choose a compatible person and send a request.",
