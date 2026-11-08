@@ -1,5 +1,6 @@
 """Execute emitted #62 WDL graph; fake connector is not native/access proof."""
 from copy import deepcopy
+from datetime import datetime, timedelta
 import json
 from pathlib import Path
 import re
@@ -50,7 +51,7 @@ def source():
 
 def request(i=1, sender=1, recipient=2, group=None, status='Pending', complete=False):
     pair = f'open:person:{min(sender, recipient or 0)}:{max(sender, recipient or 0)}' if group is None else f'open:group:{group}:participant:{sender}'
-    return {'Id': i, 'SenderParticipantId': sender, 'RecipientParticipantId': recipient, 'TargetGroupId': group,
+    return {'Id': i, 'Created': (datetime(2026, 11, 8, 12) - timedelta(seconds=i)).isoformat() + 'Z', 'SenderParticipantId': sender, 'RecipientParticipantId': recipient, 'TargetGroupId': group,
             'RequestType': 'Personal' if group is None else 'Group', 'Status': status, 'OperationComplete': complete,
             'SendOperationKey': f'send:{sender}:intent-{i}', 'ConnectionKey': pair if status == 'Pending' or status == 'Accepted' and not complete else f'history:request:{i}',
             'WinningOperationKey': None if status == 'Pending' else f'decision:{i}', 'SECRET': 'PRIVATE_REQUEST', 'Email': 'PRIVATE_EMAIL'}
@@ -85,6 +86,9 @@ class Fake:
             if '/fields?' in uri: data = self.fields[role]; role += '_fields'
             else: data = self.data[role]
         data = deepcopy(data)
+        if role == 'requests' and '/items?' in uri:
+            assert '$orderby=Created desc,ID desc' in uri
+            data.sort(key=lambda row: (str(row.get('Created', '')), row['Id']), reverse=True)
         if self.overflow == role: data = [data[0] if data else {}] * (flow.BOUNDS[role] + 1)
         d = {'results': data}
         if self.paged == role: d['__next'] = 'PRIVATE_NEXTLINK'
@@ -111,7 +115,7 @@ def test_own_sent_and_personal_received_filter_before_projection():
     assert [x['requestId'] for x in public(r)] == [1, 2]
     assert row(r, 1)['direction'] == 'Sent' and row(r, 1)['actions'] == {'cancel': True, 'accept': False, 'decline': False}
     assert row(r, 2)['direction'] == 'Received' and row(r, 2)['actions'] == {'cancel': False, 'accept': True, 'decline': True}
-    assert not any(x in json.dumps(r.response) for x in ['PRIVATE_', 'Email', 'SECRET', 'account', 'OperationKey', 'ConnectionKey', 'created'])
+    assert not any(x in json.dumps(r.response) for x in ['PRIVATE_', 'Email', 'SECRET', 'account', 'OperationKey', 'ConnectionKey'])
     assert r.response['paging'] == 'NO_PAGING_COMPLETE_BOUNDED_READ'
 
 
@@ -339,3 +343,28 @@ def test_required_request_flags_remain_exact(field, required):
 def test_request_fields_must_be_visible_and_writable_as_shared_contract(flag):
     f = Fake(); next(x for x in f.fields['requests'] if x['InternalName'] == 'Status')[flag] = True
     failure(execute(f), 'REQUEST_SCHEMA_UNVERIFIED')
+
+
+def test_original_created_field_and_descending_timestamp_then_id_order():
+    f = Fake(); f.data['requests'] = [request(1), request(2, 3, 1), request(4, 1, 3, status='Cancelled', complete=True)]
+    f.data['requests'][0]['Created'] = '2026-11-08T10:00:00Z'
+    f.data['requests'][1]['Created'] = '2026-11-08T11:00:00Z'
+    f.data['requests'][2]['Created'] = '2026-11-08T11:00:00Z'
+    r = execute(f)
+    assert r.response['resultcode'] == 'OK'
+    assert [x['requestId'] for x in public(r)] == [4, 2, 1]
+    assert row(r, 1)['created'] == '2026-11-08T10:00:00Z'
+    original = {'requestId', 'senderParticipantId', 'recipientParticipantId', 'status', 'created', 'direction'}
+    assert all(original <= set(x) for x in public(r))
+    reads = [q for q in f.queries if '/items?' in q and flow.REQUESTS in q]
+    assert len(reads) == 1 and '$select=Id,Created,' in reads[0] and '$orderby=Created desc,ID desc' in reads[0]
+    profile_reads = [q for q in f.queries if '/items?' in q and PEOPLE['lists']['participants']['listId'] in q]
+    assert all('Created' not in q and 'Email' not in q and 'DisplayName' not in q for q in profile_reads)
+
+
+@pytest.mark.parametrize('missing', [True, False])
+def test_missing_or_nonstring_created_rejects_incomplete_history(missing):
+    f = Fake()
+    if missing: del f.data['requests'][0]['Created']
+    else: f.data['requests'][0]['Created'] = 123
+    failure(execute(f), 'REQUEST_DATA_INCOMPLETE')

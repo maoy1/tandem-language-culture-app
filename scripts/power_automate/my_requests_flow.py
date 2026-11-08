@@ -151,13 +151,13 @@ def build_actions(original, people, groups, build_id):
     s['Own_match'] = gate('Own_match', "and(equals(length(" + rows('Read_own') + "),1),equals(first(union(" + rows('Read_own') + ",createArray(json('{}'))))?['Id'],triggerBody()?['number']))", 'UNAUTHORIZED_PROFILE', 'Own_complete')
     s['Actor'] = compose("@triggerBody()?['number']", 'Own_match'); prev = 'Actor'
     selects = {
-        'requests': 'Id,SenderParticipantId,RecipientParticipantId,TargetGroupId,RequestType,Status,SendOperationKey,ConnectionKey,WinningOperationKey,OperationComplete',
+        'requests': 'Id,Created,SenderParticipantId,RecipientParticipantId,TargetGroupId,RequestType,Status,SendOperationKey,ConnectionKey,WinningOperationKey,OperationComplete',
         'profiles': 'Id,Status,ParticipationStatus,OpenToConnections',
         'groups': 'Id,SourceRequestId,SetupComplete,State,Capacity,WriteOwner',
         'memberships': 'Id,GroupId,ParticipantId,MembershipStatus,MembershipKey,LeftAt',
     }
     schemas = {
-        'requests': obj({'Id': integer(), 'SenderParticipantId': integer(), 'RecipientParticipantId': integer(True), 'TargetGroupId': integer(True),
+        'requests': obj({'Id': integer(), 'Created': text(), 'SenderParticipantId': integer(), 'RecipientParticipantId': integer(True), 'TargetGroupId': integer(True),
                          'RequestType': choice('Personal', 'Group'), 'Status': choice('Pending', 'Accepted', 'Declined', 'Cancelled'),
                          'SendOperationKey': text(), 'ConnectionKey': text(), 'WinningOperationKey': {'type': ['string', 'null']}, 'OperationComplete': {'type': 'boolean'}}),
         'profiles': obj({'Id': integer(), 'Status': {'type': 'string'}, 'ParticipationStatus': choice('Active', 'Paused', 'Inactive'), 'OpenToConnections': {'type': 'boolean'}}),
@@ -166,7 +166,8 @@ def build_actions(original, people, groups, build_id):
     }
     for role in selects:
         read = 'Read_' + role; bound = role + '_complete'; parsed = 'Data_' + role
-        s[read] = http(base(role) + '/items?$select=' + selects[role] + '&$orderby=Id asc&$top=' + str(BOUNDS[role] + 1), prev)
+        order = 'Created desc,ID desc' if role == 'requests' else 'Id asc'
+        s[read] = http(base(role) + '/items?$select=' + selects[role] + '&$orderby=' + order + '&$top=' + str(BOUNDS[role] + 1), prev)
         s[bound] = gate(bound, complete(read, BOUNDS[role]), 'READ_BOUND_OR_INCOMPLETE', read)
         code = 'REQUEST_DATA_INCOMPLETE' if role == 'requests' else 'DATA_INTEGRITY'
         s[role + '_parse_code'] = setvar('ErrorCode', code, bound)
@@ -223,7 +224,7 @@ def build_actions(original, people, groups, build_id):
     visible['Visible_parties_exist'] = gate('Visible_parties_exist', f"and(equals(length(body('Request_sender')),1),if(equals({r}?['RequestType'],'Personal'),equals(length(body('Request_recipient')),1),equals(length(body('Request_group')),1)))", 'REQUEST_DATA_INCOMPLETE', 'Request_available')
     canrespond = f"and(not({own}),or(and(equals({r}?['RequestType'],'Personal'),equals({r}?['RecipientParticipantId'],outputs('Actor'))),and(equals({r}?['RequestType'],'Group'),contains(variables('OperationalGroups'),{r}?['TargetGroupId']))))"
     visible['Append_public_request'] = append('Requests', {
-        'requestId': '@' + r + "?['Id']", 'senderParticipantId': '@' + r + "?['SenderParticipantId']", 'recipientParticipantId': '@' + r + "?['RecipientParticipantId']",
+        'requestId': '@' + r + "?['Id']", 'created': '@' + r + "?['Created']", 'senderParticipantId': '@' + r + "?['SenderParticipantId']", 'recipientParticipantId': '@' + r + "?['RecipientParticipantId']",
         'targetGroupId': '@' + r + "?['TargetGroupId']", 'requestType': '@' + r + "?['RequestType']", 'status': '@' + r + "?['Status']",
         'direction': '@if(' + own + ",'Sent','Received')",
         'processing': f"@and(equals({r}?['Status'],'Accepted'),equals({r}?['OperationComplete'],false))",
@@ -277,7 +278,7 @@ def build_package(source, output):
               'ownerCredentialFallback': False, 'paging': 'NO_PAGING_COMPLETE_BOUNDED_READ',
               'sourceExportSha256': hashlib.sha256(source.read_bytes()).hexdigest(), 'sourceExportName': source.name,
               'sourcePublicShape': list(original['properties']['definition']['actions']['Request_rows']['inputs']['select']),
-              'sourceShapeChange': 'Retain requestId/senderParticipantId/recipientParticipantId/status/direction; omit system created; add group/type/completion/availability/actions.',
+              'sourceShapeChange': 'Retain every original Request_rows field including created and Created desc, ID desc ordering; add group/type/completion/availability/actions. Full UI binding pending.',
               'packageSha256': hashlib.sha256(output.read_bytes()).hexdigest(), 'generatorSha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
               'tenantResult': 'NOT_IMPORTED_NOT_TESTED', 'ordinaryUserAccessVerified': False, 'requestSchema': 'PROPOSED_RUNTIME_FAIL_CLOSED',
               'limits': {'actions': 500, 'maximumActionDepth': 8}, 'globalActionNamesUnique': True}

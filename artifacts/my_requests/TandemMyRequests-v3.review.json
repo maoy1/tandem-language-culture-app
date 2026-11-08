@@ -1,6 +1,6 @@
 {
   "sourceTicket": 62,
-  "packageBuildId": "cc596793-1183-473f-a679-2eac64893eec",
+  "packageBuildId": "502f62a4-9373-4c4a-aa4e-dfae5c1334d0",
   "actions": 223,
   "maximumActionDepth": 4,
   "bounds": {
@@ -27,9 +27,9 @@
     "created",
     "direction"
   ],
-  "sourceShapeChange": "Retain requestId/senderParticipantId/recipientParticipantId/status/direction; omit system created; add group/type/completion/availability/actions.",
-  "packageSha256": "c7bd5c29ab23822aba43c6b8a25239432c6a2ae5382800801ec3fce9b0bb75ef",
-  "generatorSha256": "8e5975857d4e84998763668a27718e86836e0b50630f8e7823f5b6d52185cc67",
+  "sourceShapeChange": "Retain every original Request_rows field including created and Created desc, ID desc ordering; add group/type/completion/availability/actions. Full UI binding pending.",
+  "packageSha256": "b11443edf732dcecbdb6d5085d3bd10ff4ecbbf4f1ef33ba7954da37dda8015f",
+  "generatorSha256": "d480c6c2c301c3f7e514dbc676ab621542b4f0f866067d541bdf61e192b51bb6",
   "tenantResult": "NOT_IMPORTED_NOT_TESTED",
   "ordinaryUserAccessVerified": false,
   "requestSchema": "PROPOSED_RUNTIME_FAIL_CLOSED",

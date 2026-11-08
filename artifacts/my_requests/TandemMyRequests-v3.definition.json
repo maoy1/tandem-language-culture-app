@@ -1,6 +1,6 @@
 {
-  "name": "7de2f49b-24d8-4d46-878e-39723337abe3",
-  "id": "/providers/Microsoft.Flow/flows/7de2f49b-24d8-4d46-878e-39723337abe3",
+  "name": "34dfe5d8-19d7-4687-a378-51e4dfd1f6e9",
+  "id": "/providers/Microsoft.Flow/flows/34dfe5d8-19d7-4687-a378-51e4dfd1f6e9",
   "type": "Microsoft.Flow/flows",
   "properties": {
     "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
@@ -1610,7 +1610,7 @@
                 "parameters": {
                   "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
                   "parameters/method": "GET",
-                  "parameters/uri": "_api/web/lists(guid'3d17485d-1dac-41f0-a1af-24e45daa4567')/items?$select=Id,SenderParticipantId,RecipientParticipantId,TargetGroupId,RequestType,Status,SendOperationKey,ConnectionKey,WinningOperationKey,OperationComplete&$orderby=Id asc&$top=501",
+                  "parameters/uri": "_api/web/lists(guid'3d17485d-1dac-41f0-a1af-24e45daa4567')/items?$select=Id,Created,SenderParticipantId,RecipientParticipantId,TargetGroupId,RequestType,Status,SendOperationKey,ConnectionKey,WinningOperationKey,OperationComplete&$orderby=Created desc,ID desc&$top=501",
                   "parameters/headers": {
                     "Accept": "application/json;odata=verbose"
                   }
@@ -1679,6 +1679,7 @@
                     "type": "object",
                     "required": [
                       "Id",
+                      "Created",
                       "SenderParticipantId",
                       "RecipientParticipantId",
                       "TargetGroupId",
@@ -1693,6 +1694,10 @@
                       "Id": {
                         "type": "integer",
                         "minimum": 1
+                      },
+                      "Created": {
+                        "type": "string",
+                        "minLength": 1
                       },
                       "SenderParticipantId": {
                         "type": "integer",
@@ -2787,6 +2792,7 @@
                     "name": "Requests",
                     "value": {
                       "requestId": "@items('Each_visible_request')?['Id']",
+                      "created": "@items('Each_visible_request')?['Created']",
                       "senderParticipantId": "@items('Each_visible_request')?['SenderParticipantId']",
                       "recipientParticipantId": "@items('Each_visible_request')?['RecipientParticipantId']",
                       "targetGroupId": "@items('Each_visible_request')?['TargetGroupId']",

@@ -1,9 +1,9 @@
 {
   "sourceTicket": 62,
-  "packageBuildId": "cc596793-1183-473f-a679-2eac64893eec",
-  "packageSha256": "c7bd5c29ab23822aba43c6b8a25239432c6a2ae5382800801ec3fce9b0bb75ef",
-  "localNewTests": 101,
-  "fullWorktreeSuite": 343,
+  "packageBuildId": "502f62a4-9373-4c4a-aa4e-dfae5c1334d0",
+  "packageSha256": "b11443edf732dcecbdb6d5085d3bd10ff4ecbbf4f1ef33ba7954da37dda8015f",
+  "localNewTests": 104,
+  "fullWorktreeSuite": 346,
   "testsResult": "PASS",
   "command": "C:/projects/small_projects/tandem-language-culture-app/.venv/Scripts/python.exe -X utf8 -m pytest -q",
   "testsCwd": "Dedicated #62 managed worktree",
@@ -28,6 +28,8 @@
     "Request required/nullable flags and exact vocabulary are proposed until report.",
     "Compatibility/guard/CAS/action runtime belongs to action flows; availability/actions are hints."
   ],
-  "packageVersion": "v2",
-  "reviewFix": "Permit extra benign Requests indexes while retaining required true key indexes/uniqueness, exact required flags, and Hidden=false/ReadOnlyField=false."
+  "packageVersion": "v3",
+  "reviewFix": "Permit extra benign Requests indexes while retaining required true key indexes/uniqueness, exact required flags, and Hidden=false/ReadOnlyField=false.",
+  "fullUIBinding": "PENDING #67; local shape compatibility does not prove UI binding",
+  "compatibilityFix": "Original request created timestamp and Created desc, ID desc order retained; no additional profile fields."
 }

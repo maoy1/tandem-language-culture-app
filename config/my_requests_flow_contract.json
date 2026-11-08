@@ -47,9 +47,10 @@
       "cancel": "Own Pending only.",
       "decline": "Pending personal recipient or current operational active group member; own sender cannot respond.",
       "accept": "Same responder plus current profile/group availability; hints only, action flow rechecks compatibility, full validity, capacity and shared guard."
-    }
+    },
+    "created": "Original request Created timestamp string, preserved for existing history labels."
   },
-  "projection": "Audience query runs before public projection. Original approved references/status/direction retained; original created omitted because system history is outside minimal allowlist. No names are needed; no profile/account/email/raw request/technical operation fields are public.",
+  "projection": "Audience query runs before public projection. Every original Request_rows public field is retained, including created from Created, references/status/direction. No names are needed; no profile/account/email/raw request/technical operation fields are public.",
   "caller": "Preserved Invoker Raw auth -> _api/web/currentuser Id -> required unique indexed Participantaccount lookup -> own positive integer reference equality. No supplied actor or owner fallback.",
   "connections": {
     "source": "Invoker",
@@ -244,7 +245,7 @@
       "fields": 500,
       "responseChars": 250000
     },
-    "order": "Request Id ascending through native $orderby; no cursor or paging inputs.",
+    "order": "Original request Created desc, ID desc through native $orderby; no cursor or paging inputs.",
     "complete": "Request bound+1; reject null collection, __next and either odata nextLink spelling or count overflow. All collections complete before projection. Metadata bound 500, own account lookup bound 1 with top 2.",
     "wholeListGate": "Conservative full bounded list reads; any malformed/legacy incomplete request or invalid data can block the whole response. No silent skip, partial success, truncation, migration, deletions or schema writes.",
     "errors": "Clear all partial public rows; never return raw connector text, account identities or backend errors. Generic 502 is a read failure; reader has no writes/duplicate recovery path."
@@ -268,10 +269,11 @@
     "Use parent metadata-only RequestSchemaPreflight once for this batch; compare actual report before dependent smoke. Report mismatch as blocked mapping; do not silently repair.",
     "Refresh/rebind #67 Power Apps flow connection/output schema; call TandemMyRequests.Run(ownParticipantId), parse requestsjson only when resultcode=OK. Existing requestsjson/errormessage preserved.",
     "Action buttons call #63/#11/#65 with their own stable intent contracts and refresh this reader after outcome.",
-    "Owner import/smoke is still required. #39 audience/ordinary participant access/privacy remain postponed."
+    "Owner import/smoke is still required. #39 audience/ordinary participant access/privacy remain postponed.",
+    "Full UI binding under #67 remains explicitly PENDING; preserved shape/order do not prove existing screen, labels, output refresh or action binding works."
   ],
   "nativeStatus": "NOT_IMPORTED_NOT_TESTED; neither native runtime nor privacy certified.",
-  "packageVersion": "v2",
-  "packageBuildId": "cc596793-1183-473f-a679-2eac64893eec",
-  "packageSha256": "c7bd5c29ab23822aba43c6b8a25239432c6a2ae5382800801ec3fce9b0bb75ef"
+  "packageVersion": "v3",
+  "packageBuildId": "502f62a4-9373-4c4a-aa4e-dfae5c1334d0",
+  "packageSha256": "b11443edf732dcecbdb6d5085d3bd10ff4ecbbf4f1ef33ba7954da37dda8015f"
 }
