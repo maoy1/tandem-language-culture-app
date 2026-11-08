@@ -90,7 +90,7 @@ prompts when reproducing in another environment.
 
 The optional local builder is scripts/power_automate/build_import_probe.py;
 --sharepoint-site with --output selects the second probe. Python is development
-tooling only. The current suite has 194 passing local tests (including #6/#66/#61/#9 and #47 protocol reference checks); app execution is separate. Owner chose legacy packages for now, keeping
+tooling only. The current suite has 242 passing local tests (including #6/#66/#61/#9 and #47 protocol reference checks); app execution is separate. Owner chose legacy packages for now, keeping
 SharePoint data and existing entitlements. Neither probe establishes complex-flow
 import, ordinary-participant access or full reproducibility. Generated ZIPs are
 experimental, not officially certified ALM packages. See the current

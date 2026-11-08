@@ -1,0 +1,32 @@
+{
+  "sourceTicket": 7,
+  "packageBuildId": "7c8589d0-fdea-4db8-9d44-46b7d8548acf",
+  "flowName": "TandemDiscovery v2",
+  "actions": 165,
+  "maximumActionDepth": 6,
+  "limits": {
+    "actions": 500,
+    "nesting": 8
+  },
+  "bounds": {
+    "profiles": 500,
+    "peopleResults": 50,
+    "groups": 100,
+    "groupWorkUnits": 100,
+    "memberships": 2000,
+    "requests": 500,
+    "catalogue": 5000,
+    "responseChars": 250000
+  },
+  "rulesSourceSha256": "dfe0dcd587a5a348080dde288183ed3dff2d02d1f652f0ae23010b2e6e649c72",
+  "sourceExportSha256": "7b4dc1e5df96769615088d897cf86030a2622a47dc7db56a414dbe75f41085a9",
+  "packageSha256": "1426f58fff139c39c7f39b4de84938e2a9128808dddd3f498951278af73309e0",
+  "sourceTriggerPreserved": true,
+  "connectionSource": "Invoker",
+  "ownerCredentialFallback": false,
+  "writes": 0,
+  "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF",
+  "tenantResult": "NOT_IMPORTED_NOT_TESTED",
+  "ordinaryUserAccessVerified": false,
+  "groupDependency": "Connection Requests OperationComplete Boolean must exist when groups exist; accepted/complete source and member episodes required. Missing schema yields explicit error, never partial success."
+}

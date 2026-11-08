@@ -20,11 +20,11 @@
   },
   "counts": {
     "allTickets": 48,
-    "openTickets": 36,
-    "closedTickets": 12,
-    "done": 10,
+    "openTickets": 35,
+    "closedTickets": 13,
+    "done": 11,
     "superseded": 2,
-    "inProgress": 0
+    "inProgress": 1
   },
   "flowCountNote": "12 singly-owned core production flows (notification provisional), plus 1 Deferred reminder flow. Access/migration helpers remain undecided; no duplicate owners for the same production flow.",
   "flowInventory": [
@@ -33,7 +33,7 @@
       "ownerTicket": 7,
       "ticketType": "Flow",
       "phase": "Core",
-      "state": "Queued; existing partial evidence retained",
+      "state": "Owner-preview v2 package built; native invocation/access/group schema proof pending",
       "inputOutputContract": "Defined and reviewed in this sole flow-owner ticket before package generation",
       "openTechnicalWork": "One flow returning approved compatible people and existing open groups. App layout is #16; rule source is #9; protected access proof is #42."
     },
@@ -151,26 +151,26 @@
       "number": 7,
       "title": "[Flow] TandemDiscovery",
       "ticketType": "Flow",
-      "status": "Planned",
+      "status": "In progress",
       "flowScope": "One flow returning approved compatible people and existing open groups. App layout is #16; rule source is #9; protected access proof is #42.",
-      "implementationReadiness": "Owner-only package completion can start; mapping/bounds needed",
-      "implementationEvidence": "#54 merged; historical BASE-005-009 synthetic checks and owner empty-gallery/Back checks; no populated target matching pass.",
-      "evidence": "#54 merged; historical BASE-005-009 synthetic checks and owner empty-gallery/Back checks; no populated target matching pass.",
+      "implementationReadiness": "Owner-preview v2 package built from actual export; preserves Invoker/number input, binds own profile before candidates; native proof/access boundary pending.",
+      "implementationEvidence": "242 local tests (48 generated Discovery cases); 165 actions/depth 6. Maintained #9 source hash unchanged. #12 verified mapping and #47 proof merged. Source export inspected, not copied to Git.",
+      "evidence": "config/discovery_flow_contract.json and artifacts/tandem_discovery/TandemDiscovery-v2 ZIP/definition/review. NOT_IMPORTED_NOT_TESTED; ordinary-user access false; no owner credential fallback.",
       "proposedExperience": [
         "Click Discovery from your saved profile.",
         "See compatible people, excluding self/unavailable/invalid profiles.",
         "See approved profile fields including Comments/optional time zone, without email/system data.",
         "Discovery creates no membership or request."
       ],
-      "remainingWork": "One flow returning approved compatible people and existing open groups. App layout is #16; rule source is #9; protected access proof is #42.",
+      "remainingWork": "Verify imported run-only Invoker connection, owner Studio invocation/current-user binding/data-shape/response smoke. Populated group commitment schema/fixtures and #42 protected two-account ordinary-user proof remain explicit gates. Keep owner-only.",
       "testReferences": [
         "DISC-001:011",
         "GRP-005:007",
         "LEAVE-003",
         "LEAVE-004"
       ],
-      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
-      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "testStatus": "Local generated-flow PASS: own/tampered references, unavailable/blank-zone/culture/Any entries, committed groups/history/availability, typed allowlist, reads/count/paging/render/work/response bounds. Native DISC/GRP/LEAVE integration NOT RUN.",
+      "testHandoff": "Inline #7 exact owner-preview import/Run-only check/temporary Studio test button/report and checklist. Preserve old flow/published app; no ordinary-user rollout or automatic schema/data writes.",
       "flows": [
         "TandemDiscovery"
       ],
@@ -302,9 +302,9 @@
       "number": 12,
       "title": "[Shared technical] Groups and Group Members schema and field mapping",
       "ticketType": "Shared technical",
-      "status": "Ready for review",
+      "status": "Done",
       "flowScope": "One-time group/membership data contract verification/setup only. #11 owns automatic new-group creation; {{mygroups}} owns reading/counts.",
-      "implementationReadiness": "Actual Groups/Group Members mapping verified; five manual settings read back, PR #76 source/data-contract review pending.",
+      "implementationReadiness": "Own schema mapping/manual settings accepted; PR #76 merged 39ebc0cd48c428602a0434a12db0c99ac77a9de5; issue closed.",
       "implementationEvidence": "194 local tests previously passed. Complete final audit 08584074372941101122136369836CU17; required Title, WriteOwner, capacity formula and separate Group/Participant indexes verified. Both lists itemCount=0.",
       "evidence": "artifacts/group_schema/results/final-audit.owner-report.json; config/group_schema_mapping.json. SourceRequestId/MembershipKey uniqueness/indexes, lookups/defaults/history metadata verified; no production-flow or ordinary-user pass inferred.",
       "proposedExperience": [
@@ -313,7 +313,7 @@
         "Open My groups for operational groups, members, counts and free slots.",
         "Hide unfinished setup."
       ],
-      "remainingWork": "Review/merge PR #76 for own data/schema scope. No owner rerun needed. #11/#13/#14/#17/#65/#64 own runtime integration; #48 migration exceptions stay separate.",
+      "remainingWork": "Own data deliverable complete. Consuming Flow/access/migration tickets retain their runtime acceptance.",
       "testReferences": [
         "SCHEMA-001",
         "SCHEMA-002"

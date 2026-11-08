@@ -28,7 +28,11 @@ class Runner:
                     args.append(value())
                     if tokens[at]==',':at+=1
                 at+=1
-                def union(a,b):return list(dict.fromkeys(a+b))
+                def union(a,b):
+                    result=[]
+                    for entry in a+b:
+                        if entry not in result:result.append(entry)
+                    return result
                 funcs={'body':self.body,'outputs':lambda n:self.outputs[n],
                     'variables':lambda n:self.variables[n],'item':lambda:context['item'],
                     'items':lambda n:context['items'][n],
@@ -42,7 +46,7 @@ class Runner:
                     'first':lambda a:a[0],'workflow':lambda:{'run':{'name':'local-subset-not-a-tenant-run'}},
                     'concat':lambda *a:''.join(str(x) for x in a),'int':int,
                     'string':lambda v:json.dumps(v,separators=(',',':')) if isinstance(v,(dict,list,bool)) else str(v),
-                    'add':lambda a,b:a+b,'div':lambda a,b:a//b,'mod':lambda a,b:a%b,
+                    'sub':lambda a,b:a-b,'createArray':lambda *v:list(v),'add':lambda a,b:a+b,'div':lambda a,b:a//b,'mod':lambda a,b:a%b,
                     'actions':lambda n:{'status':getattr(self,'action_states',{}).get(n,'Skipped')},
                     'triggerBody':lambda:context.get('triggerBody',{})}
                 result=funcs[t](*args)

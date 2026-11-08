@@ -1,6 +1,6 @@
 {
   "sourceTicket": 12,
-  "status": "VERIFIED_METADATA_AND_MANUAL_SETTINGS_READY_FOR_REVIEW",
+  "status": "VERIFIED_METADATA_AND_MANUAL_SETTINGS_ACCEPTED",
   "mappingRecorded": true,
   "mappingVerified": true,
   "changesAppliedByAgent": false,
@@ -547,5 +547,7 @@
       "Participant"
     ],
     "separatePrimaryIndexes": true
-  }
+  },
+  "schemaPullRequest": 76,
+  "mergeCommit": "39ebc0cd48c428602a0434a12db0c99ac77a9de5"
 }
