@@ -1,59 +1,55 @@
 {
-  "validationKind": "LOCAL_COMBINED_GENERATED_GRAPH",
-  "combinedSuite": {
-    "passed": 455,
-    "failed": 0
+  "kind": "TandemRequestFlowDevelopmentBatch",
+  "revision": 2,
+  "date": "2026-11-08",
+  "validation": {
+    "combinedLocalTestsPassed": 493,
+    "includesCrossFlowContractCheck": true,
+    "native": "NOT_VERIFIED"
   },
-  "additionalContractCheck": {
-    "passed": 1,
-    "case": "Generated send Pending -> authorized Cancelled CAS -> reader preserves created/history/actions -> same send intent replay does not create another row"
-  },
-  "native": "NOT_RUN",
+  "observedMapping": "SenderParticipantId/RecipientParticipantId existing Number Decimals=0; preserve columns. Initial report run08584074297422149453962972460CU27; owner reports empty.",
+  "setup": "See issue10: six new fields, RecipientParticipantId Required=false only; do not change numeric types. Old send cannot supply required keys. Fresh corrected preflight required before writes.",
+  "delivery": "Extract outer archive. Import individual inner ZIPs Create as new; first schema preflight v2. Retires the earlier Lookup-assumption bundle.",
   "packages": [
     {
-      "name": "TandemRequestSchemaPreflight",
+      "name": "TandemRequestSchemaPreflight-v2",
       "ticket": 10,
-      "pr": "https://github.com/maoy1/tandem-language-culture-app/pull/78",
-      "buildId": "f7fd078d-740a-4d68-a8fe-31ca2abc9e54",
-      "sha256": "8ab3fa1966468525a169c3c608a3b00cd065f6db02292971460bc3dca615eb10",
+      "pr": 78,
+      "buildId": "dd0c91b6-13b4-41e0-affd-ebafeeb87404",
+      "sha256": "a5ee3a2590acad54c23979f373c93d2f54a8c8b9fcab30a52c18c00f6e24440a",
       "actions": 18,
       "maximumActionDepth": 3,
-      "sourceCommit": "22fb50fa4fb431d1f1885d1421c2276c5f42d8cd",
-      "nativeResult": "NOT_IMPORTED_NOT_TESTED"
+      "sourceCommit": "cb869103841cf4a66277294f51fea2574022f66a"
     },
     {
-      "name": "TandemSendRequest-v2",
+      "name": "TandemSendRequest-v3",
       "ticket": 10,
-      "pr": "https://github.com/maoy1/tandem-language-culture-app/pull/78",
-      "buildId": "50e14992-a69a-4001-93f4-1ac8ed57dfe2",
-      "sha256": "e31669dd774aca845effe6bfa867093b1938ae0cb5087b6604c17b843e664359",
+      "pr": 78,
+      "buildId": "a9251019-b7a5-4170-8877-682bb71b8693",
+      "sha256": "af154393528ca065480d92d0aaf31851d443e08034c19c0ea0953e7c521c7d32",
       "actions": 125,
       "maximumActionDepth": 5,
-      "sourceCommit": "22fb50fa4fb431d1f1885d1421c2276c5f42d8cd",
-      "nativeResult": "NOT_IMPORTED_NOT_TESTED"
+      "sourceCommit": "cb869103841cf4a66277294f51fea2574022f66a"
     },
     {
-      "name": "TandemMyRequests-v3",
+      "name": "TandemMyRequests-v4",
       "ticket": 62,
-      "pr": "https://github.com/maoy1/tandem-language-culture-app/pull/80",
-      "buildId": "502f62a4-9373-4c4a-aa4e-dfae5c1334d0",
-      "sha256": "b11443edf732dcecbdb6d5085d3bd10ff4ecbbf4f1ef33ba7954da37dda8015f",
-      "actions": 223,
+      "pr": 80,
+      "buildId": "36bebc35-e946-411a-ac3f-dd244bf3dd9a",
+      "sha256": "f84ea923fca0813fbb775eaed4d493ba17c1f66ea5b00dd4d83899c41369ef9a",
+      "actions": 228,
       "maximumActionDepth": 4,
-      "sourceCommit": "92c20a5f81f14b29fc628cbef83465a5a08e4ecc",
-      "nativeResult": "NOT_IMPORTED_NOT_TESTED"
+      "sourceCommit": "34b4e83a976e904febf812a9451f6d499bfc1213"
     },
     {
-      "name": "TandemCancelRequest-v2",
+      "name": "TandemCancelRequest-v3",
       "ticket": 63,
-      "pr": "https://github.com/maoy1/tandem-language-culture-app/pull/79",
-      "buildId": "9533894a-20d7-46e8-a640-5af8473c3b33",
-      "sha256": "b9d6d1341f76af3b2d0b9e710612ff7216ab3e109c394a47531d072503cbbd61",
+      "pr": 79,
+      "buildId": "30ff0d83-3895-4a0e-89c2-939b360fc5e7",
+      "sha256": "252c97b0ac33c6094f928efb72a86d13742ec543cc7e2edca178a6245959c7cb",
       "actions": 138,
       "maximumActionDepth": 5,
-      "sourceCommit": "396a40a6f5c90bf39746ca347f5096576d99e60d",
-      "nativeResult": "NOT_IMPORTED_NOT_TESTED"
+      "sourceCommit": "de15ff1fbecbb3cda4e22f7ce405b3adcbfab9cd"
     }
-  ],
-  "sourceScope": "Combined disposable checkout of each referenced source commit. Native schema/API/caller/race/latency proof remains separate."
+  ]
 }
