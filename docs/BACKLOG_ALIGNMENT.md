@@ -32,7 +32,7 @@ implementation as activity or mixed several flows in one implementation ticket.
 being worked now, at most one non-overview ticket. Queued partial work is Planned
 with evidence retained. PR #60 is merged. #66 delivery is ready for review after
 owner setup/readback and final schema audit passed. Owner confirmed all five writes skipped on a new repeat; own schema tests passed.
-PR #69 is merged and #66 closed; #6 Version 19 UI accepted, PR #70 merged and #6 closed. #5 is Done after merged #71; #61 is Ready for testing on owner direction; no active In progress scope. Receiving-flow/group checks stay with #61/#7/#10/#25. Ready stages remain real handovers. Superseded is
+PR #69 is merged and #66 closed; #6 Version 19 UI accepted, PR #70 merged and #6 closed. #5 is Done after merged #71; #61 is Ready for testing on owner direction; #9 is Ready for review; no active In progress scope. Receiving-flow/group checks stay with #61/#7/#10/#25. Ready stages remain real handovers. Superseded is
 closed as not planned, not Done. Closed historical #1-#4/#46 remain Done.
 
 **48 issues total:** 38 focused open tickets, 8 Done, 2 Superseded (#22/#24).
@@ -62,7 +62,7 @@ evidence remain available; no employee payloads/raw exports are copied here.
 | [#6](https://github.com/maoy1/tandem-language-culture-app/issues/6) | App | Done (closed) | Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64. |
 | [#7](https://github.com/maoy1/tandem-language-culture-app/issues/7) | Flow | Planned | One flow returning approved compatible people and existing open groups. App layout is #16; rule source is #9; protected access proof is #42. |
 | [#8](https://github.com/maoy1/tandem-language-culture-app/issues/8) | Shared technical | Deferred | Future scoring policy/rule artifact; does not own a second TandemDiscovery flow. |
-| [#9](https://github.com/maoy1/tandem-language-culture-app/issues/9) | Shared technical | Planned | One maintained rule/normalization source and synthetic contract fixtures for package generation; no separately hosted runtime or assumed child flow. |
+| [#9](https://github.com/maoy1/tandem-language-culture-app/issues/9) | Shared technical | Ready for review | One maintained rule/normalization source and synthetic contract fixtures for package generation; no separately hosted runtime or assumed child flow. |
 | [#10](https://github.com/maoy1/tandem-language-culture-app/issues/10) | Flow | Planned | Personal connection-request creation only. History is #62, cancellation #63, group-join sending #17. |
 | [#11](https://github.com/maoy1/tandem-language-culture-app/issues/11) | Flow | Planned | Personal recipient Accept/Decline flow, including resulting new-group creation. Group-join responses belong to #65. |
 | [#12](https://github.com/maoy1/tandem-language-culture-app/issues/12) | Shared technical | Planned | One-time group/membership data contract verification/setup only. #11 owns automatic new-group creation; #64 owns reading/counts. |

@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 1,
+  "ownerTicket": 9,
+  "rulesVersion": 1,
+  "state": "OWN_SYNTHETIC_PROOF_PASSED_READY_FOR_REVIEW",
+  "source": "scripts/power_automate/compatibility.py",
+  "sourceSha256": "dfe0dcd587a5a348080dde288183ed3dff2d02d1f652f0ae23010b2e6e649c72",
+  "runtime": "Generated Power Automate expressions/actions; Python is local build/test only",
+  "anyLanguagePolicy": "deferred_exclude_from_matching_and_focus",
+  "ownerDecision": "Any language is nice-to-have, deferred on 2026-11-08. Remove its known catalogue ID from matching sets; never wildcard; reject it as group focus. No catalogue/registration changes.",
+  "profileInputSchema": {
+    "type": "array",
+    "maxItems": 500,
+    "items": {
+      "type": "object",
+      "required": [
+        "profileId",
+        "accountKey",
+        "status",
+        "participationStatus",
+        "openToConnections"
+      ],
+      "properties": {
+        "profileId": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "accountKey": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "participationStatus": {
+          "type": "string",
+          "enum": [
+            "Active",
+            "Paused",
+            "Inactive"
+          ]
+        },
+        "openToConnections": {
+          "type": "boolean"
+        },
+        "timezoneId": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "teachIds": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "learnIds": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "shareCultureIds": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "learnCultureIds": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      }
+    }
+  },
+  "groupInputSchema": {
+    "type": "object",
+    "required": [
+      "groupId",
+      "exchangeType",
+      "state",
+      "capacity",
+      "setupComplete",
+      "focusSharersAvailable",
+      "languageFocusIds",
+      "cultureFocusIds",
+      "memberProfileIds"
+    ],
+    "properties": {
+      "groupId": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "exchangeType": {
+        "type": "string"
+      },
+      "state": {
+        "type": "string",
+        "enum": [
+          "Open",
+          "Closed",
+          "Ended"
+        ]
+      },
+      "capacity": {
+        "type": "integer"
+      },
+      "setupComplete": {
+        "type": "boolean"
+      },
+      "focusSharersAvailable": {
+        "type": "boolean"
+      },
+      "languageFocusIds": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "cultureFocusIds": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "memberProfileIds": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  },
+  "catalogueContext": "Complete trusted active language/culture/timezone ID arrays; anyLanguageId must be resolved by actual catalogue key or explicitly null if absent.",
+  "normalization": "Strict positive integers; optional role arrays missing/null -> []; deduplicate role arrays; canonical account trim/lower; unknown/inactive IDs, duplicate account/profile IDs or missing availability rejected. Blank time zone valid; max 500 profiles per batch, no silent truncation.",
+  "entryPoints": {
+    "normalization_actions": "Generate at top level/outside foreach; all consumers depend on <prefix>_Catalogues (after Require_valid_input), not the intermediate Profiles Select.",
+    "pair_expression_projection": "Internal matching booleans/type and directed matching IDs only; no UI/customer identity fields projected.",
+    "group_action_fragment": "Parse groupInputSchema first; caller initializes and resets its private focus-check array, runs loops sequentially. Derives role/purpose/capacity/candidate fit; never alters membership or state."
+  },
+  "groupAvailabilityBoundary": "focusSharersAvailable is mandatory trusted server evidence covering every declared focus. Unverified/missing evidence must not default true. Consumers own current availability binding/authority proof; this is not an app-provided permission or a member-count shortcut.",
+  "consumers": {
+    "7": "Fresh authorized profile/group reader -> canonical batch; pair/group fragments -> approved field projection (#42).",
+    "10": "Reread actor/recipient at Send; normalize, pair fragment; no cached Discovery result accepted as current fit.",
+    "11": "Reread personal recipient/actor; pair fit plus proposed roster focus/capacity fragment; #47 handles conditional persistence.",
+    "17": "Fresh candidate/group/current membership read; group fragment; authorization/duplicate request rules remain consumer-owned.",
+    "65": "Fresh candidate/group/current active membership read at acceptance; group fragment; #47 conditional capacity/membership writes remain separate."
+  },
+  "proof": {
+    "artifact": "artifacts/compatibility/TandemCompatibilityProof.zip",
+    "buildId": "57fa2bc6-2b02-4068-9999-fe46f3747d4a",
+    "caseCount": 39,
+    "actions": 45,
+    "depth": 4,
+    "connectors": 0,
+    "liveReads": 0,
+    "writes": 0,
+    "tenantResult": "PASS_OWNER_REPORTED_39_CASES",
+    "runReference": "08584074461495133197897516907CU19",
+    "evidence": "artifacts/compatibility/results/proof39.owner-report.json"
+  },
+  "remainingAcceptance": "Review/merge shared-source PR #73. Own isolated proof passed; consuming production flows retain independent deployment/integration acceptance."
+}

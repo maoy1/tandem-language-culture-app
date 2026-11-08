@@ -4,7 +4,7 @@ The approved design is CURRENT_DESIGN.md. This plan reflects the owner's
 annotations to Combined Requirements v0.2. GitHub tickets hold implementation
 acceptance and status; planning completion does not imply deployment.
 
-## Current checkpoint - #61 Ready for testing; implementation may move on
+## Current checkpoint - #9 proof passed, review pending; #61 Ready for testing
 
 #46 is accepted/closed. Tracking now separates Flow, App, Shared technical and
 Overview tickets. One production flow has one owner; old partial work/evidence
@@ -48,7 +48,7 @@ Sole production-flow ownership:
 | TandemMyGroups | #64 | Core |
 | TandemRespondGroupJoinRequest | #65 | Core |
 
-Next focused batches (one selected non-overview ticket at a time; #61 is current):
+Next focused batches (one selected non-overview ticket at a time; #9 is current):
 
 1. **#66 Shared technical:** verify participant/catalogue field
    mappings and availability defaults once; flag any permitted setup first.
@@ -81,7 +81,7 @@ rather than require every parent/dependency closed. Minimal app-call smoke tests
 belong to Flow tickets; full layout belongs to App tickets. Disposable proof
 harnesses belong to their explicitly scoped Shared technical evidence, not an
 untracked production service. In progress is active work only, max one. Queued
-partial work stays Planned. Superseded is not Done. PR #60 is merged. #66 and #6 are Done after merged PRs #69/#70. #5 is Done after merged #71. #61 is the sole In progress scope.
+partial work stays Planned. Superseded is not Done. PR #60 is merged. #66 and #6 are Done after merged PRs #69/#70. #5 is Done after merged #71. #61 remains Ready for testing; #9 is Ready for review; no active In progress scope.
 
 ## Ticket execution agreement - #45
 
@@ -434,4 +434,20 @@ starting the next implementation batch. Keep incomplete tickets open.
 Owner asks to merge #72 and mark #61 Ready for testing so other authorized testers
 can cover the remaining cases. TEST_HANDOVER_61.md preserves passed/pending/blocked
 variants and access/fixture gates. #61 stays open, not Done; no full-test pass
-required from the owner before moving implementation forward. No active WIP.
+required from the owner before moving implementation forward. #9 own proof is passed and awaits review.
+
+## #9 implementation — 2026-11-08
+
+Reusable typed normalization/person/group source, 39 synthetic expected cases and
+connector-free import proof built; 121 local tests pass, proof 45 actions/depth 4.
+Owner defers Any language; no wildcard/focus support. Tenant proof import/run and
+source review pending. Detailed current test handover/check boxes live in issue #9.
+Next #47 shared conditional-write/recovery proof, then #12 group schema, followed
+by #7 Discovery per ordered batch. #61 remains open Ready for testing.
+
+## #9 proof acceptance — 2026-11-08
+
+Matching-build/source-hash tenant proof run 08584074461495133197897516907CU19
+reports 39 cases, allPassed true, no failures. Own bounded proof passed; #9 Ready
+for review in #73, no owner rerun needed. Consumer integrations remain separate.
+#61 remains Ready for testing. Next implementation after this review is #47.

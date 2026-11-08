@@ -331,7 +331,7 @@ Location input, participant Role and required participant-entered identity email
 
 ## Validation flow testing handover — #61
 
-#61 is Ready for testing on owner direction; no non-overview ticket is In progress. Target contract and tenant handover are in
+#61 is Ready for testing on owner direction; #9 is Ready for review; no non-overview ticket is In progress. Target contract and tenant handover are in
 FLOW_61_PARTICIPANT_SUBMISSION.md and participant_submission_contract.json.
 Current owner export inspected; event/connection alias mapping preserved in a
 new import package (26 actions / depth 3), with active-catalogue checks and
@@ -343,3 +343,20 @@ Owner chooses PR #72 merge and tester handover with remaining acceptance retaine
 See TEST_HANDOVER_61.md for Live-26/build context, role/setup, steps/expected
 results, cleanup and blocked cases. #61 stays open; no whole acceptance or
 ordinary-user access pass is implied.
+
+## Shared compatibility implementation — #9
+
+compatibility.py is the maintained rule/normalization source for package builders;
+config/compatibility_contract.json and COMPATIBILITY_RULES.md define adapters and
+boundaries. Person fits support one-way language/culture sharing/learning; groups
+require distinct sharer/learner per focus and every member relevant to a focus.
+Owner defers Any language matching; exclude sentinel from matching/group focus
+without changing catalogue or registration. Concrete selections remain supported.
+39 synthetic fixture cases / 121 local tests pass; isolated connector-free proof
+45 actions/depth 4. Tenant proof import/run NOT RUN; live consumer/caller/group
+availability mapping remains each consuming flow's evidence, not assumed here.
+
+#9 update: matching source/build tenant run 08584074461495133197897516907CU19
+passed all 39 synthetic cases with no failures. Own shared proof accepted; #73
+review/merge pending. No live consumer/authorization/group-availability certification
+is inferred. Any language remains deferred; no further proof rerun requested.
