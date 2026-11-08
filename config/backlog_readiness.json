@@ -20,9 +20,9 @@
   },
   "counts": {
     "allTickets": 48,
-    "openTickets": 41,
-    "closedTickets": 7,
-    "done": 5,
+    "openTickets": 40,
+    "closedTickets": 8,
+    "done": 6,
     "superseded": 2,
     "inProgress": 0
   },
@@ -188,30 +188,30 @@
       "number": 6,
       "title": "[App] Participation and openness controls",
       "ticketType": "App",
-      "status": "Planned",
-      "flowScope": "Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to {{mygroups_app}} and {{mygroups}}.",
-      "implementationReadiness": "Controls can be prepared after #66 mapping; no separate production flow here.",
-      "implementationEvidence": "#46/#59 contract accepted; no deployed #6 controls or PAR passes recorded.",
-      "evidence": "#46/#59 contract accepted; no deployed #6 controls or PAR passes recorded.",
+      "status": "Ready for review",
+      "flowScope": "Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64.",
+      "implementationReadiness": "Corrected Combo box initialization and own UI criteria owner-confirmed; Live Version 19 reported. PR #70 review/merge remains.",
+      "implementationEvidence": "UI6-20261108-06: New Active/open Yes, saved choices preserved, language/culture-only save/reopen without identity/unrelated changes confirmed. Working typed table defaults documented.",
+      "evidence": "Owner-reported Version 19 and own UI acceptance PASS; timestamps/fixture IDs not supplied. Flow/group integration transferred explicitly, not passed.",
       "proposedExperience": [
-        "Choose Active/Paused/Inactive and openness to new connections.",
-        "Save edits without validation resetting these choices.",
-        "Availability affects new discovery/requests, preserving membership/history.",
-        "Waiting/In a group derives from completed operational memberships."
+        "Choose Active/Paused/Inactive and Yes/No in own existing profile form.",
+        "New mode uses Active/Yes; edits save stored selections including No, Paused and Inactive.",
+        "Existing identity, selections and memberships remain unchanged by these two form fields.",
+        "Discovery/request flows consume availability under #7/#10; membership badges under #64/#68."
       ],
-      "remainingWork": "Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64.",
+      "remainingWork": "Review/merge PR #70 then close #6 on its App scope. Flow validation/Discovery/request and integrated group tests stay #61/#7/#10/#25.",
       "testReferences": [
-        "PAR-001:007",
-        "REG-009",
-        "DISC-004"
+        "UI6-001:006 (App portions)",
+        "REG-009 (App persistence)",
+        "PAR-001:007 (split owner portions; see integration handoffs)"
       ],
-      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
-      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "testStatus": "PASS scoped App controls/defaults/persistence by owner report. Receiving-flow and operational-group integration variants remain Planned/Blocked/NOT RUN with owners.",
+      "testHandoff": "Version 19; own UI criteria owner-confirmed. POC_03 guide and participation_integration_handoffs.json retain exact regression and receiving-flow checks/blockers. No new group fixture fabricated.",
       "flows": [],
       "scopeBoundary": "Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64.",
       "prerequisites": [
-        "#66 availability fields",
-        "#61 for validation-preservation variants; #7 for discovery integration"
+        "#66 Done; availability fields verified.",
+        "Receiving-flow/group cases retained separately under #61/#7/#10/#25; not a whole-ticket completion gate for App #6."
       ],
       "validity": "Valid",
       "sourceTickets": [
@@ -1452,36 +1452,6 @@
       "url": "https://github.com/maoy1/tandem-language-culture-app/issues/65"
     },
     {
-      "number": 66,
-      "title": "[Shared technical] Participant and catalogue schema alignment",
-      "ticketType": "Shared technical",
-      "status": "Ready for review",
-      "flowScope": "One-time actual field/catalogue mapping and required delta for #5/#6/#61; no app layout or production flow ownership.",
-      "implementationReadiness": "Implementation and own schema acceptance passed; PR #69 ready for review/merge.",
-      "implementationEvidence": "SCHEMA-20261108-01 final audit Verified/no findings; preview/apply and repeat summaries passed. Owner confirms five writes skipped in a new repeat with SETUP_VERIFIED; screenshot retained.",
-      "evidence": "Own schema tests passed, including safe-repeat confirmation. New repeat run reference not supplied; screenshot/owner statement retained. PR #69 review/merge pending.",
-      "proposedExperience": [
-        "Import/run supplied metadata helper with the existing owner SharePoint connection.",
-        "Preview verified permissions and bounded missing settings, then explicitly apply the prepared delta.",
-        "Use exact observed mappings; repeat safely and confirm whole schema before closing this ticket."
-      ],
-      "remainingWork": "Review/merge PR #69, then close #66 on its own completed scope; no remaining schema test or implementation required.",
-      "testReferences": [
-        "SCHEMA-001",
-        "SCHEMA-002"
-      ],
-      "testStatus": "PASS for own schema acceptance: metadata/mapping, permission preview, five-setting apply/readback, final full audit and idempotent repeat. App/flow/private-access tests remain separately owned.",
-      "testHandoff": "All own schema acceptance checks passed; results and screenshot in artifacts/schema_alignment/results and TEST_RUNS.md. Ready for review; after merge close Done rather than leave Ready for testing.",
-      "flows": [],
-      "scopeBoundary": "One-time actual field/catalogue mapping and required delta for #5/#6/#61; no app layout or production flow ownership.",
-      "prerequisites": [],
-      "validity": "Valid",
-      "sourceTickets": [
-        5
-      ],
-      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/66"
-    },
-    {
       "number": 67,
       "title": "[App] Request inbox screen and action dialogs",
       "ticketType": "App",
@@ -1611,13 +1581,43 @@
       "ticketType": "Shared technical",
       "status": "Done",
       "scope": "Historical accepted baseline/design, not new-MVP runtime proof"
+    },
+    {
+      "number": 66,
+      "title": "[Shared technical] Participant and catalogue schema alignment",
+      "ticketType": "Shared technical",
+      "status": "Done",
+      "flowScope": "One-time actual field/catalogue mapping and required delta for #5/#6/#61; no app layout or production flow ownership.",
+      "implementationReadiness": "Complete",
+      "implementationEvidence": "SCHEMA-20261108-01 final audit Verified/no findings; preview/apply and repeat summaries passed. Owner confirms five writes skipped in a new repeat with SETUP_VERIFIED; screenshot retained.",
+      "evidence": "Own schema tests passed, including safe-repeat confirmation. New repeat run reference not supplied; screenshot/owner statement retained. PR #69 review/merge pending.",
+      "proposedExperience": [
+        "Import/run supplied metadata helper with the existing owner SharePoint connection.",
+        "Preview verified permissions and bounded missing settings, then explicitly apply the prepared delta.",
+        "Use exact observed mappings; repeat safely and confirm whole schema before closing this ticket."
+      ],
+      "remainingWork": "None in own schema scope; PR #69 merged and issue closed.",
+      "testReferences": [
+        "SCHEMA-001",
+        "SCHEMA-002"
+      ],
+      "testStatus": "Own schema acceptance passed; see SCHEMA-20261108-01/03.",
+      "testHandoff": "All own schema acceptance checks passed; results and screenshot in artifacts/schema_alignment/results and TEST_RUNS.md. Ready for review; after merge close Done rather than leave Ready for testing.",
+      "flows": [],
+      "scopeBoundary": "One-time actual field/catalogue mapping and required delta for #5/#6/#61; no app layout or production flow ownership.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        5
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/66"
     }
   ],
   "publication": {
     "status": "verified",
     "date": "2026-11-08",
     "issuesVerified": 48,
-    "openBodiesVerified": 41,
+    "openBodiesVerified": 40,
     "typeAndLifecycleExactlyOne": true,
     "uniqueProductionFlowOwners": 13,
     "activeWork": 0,
@@ -1634,5 +1634,6 @@
         46
       ]
     }
-  }
+  },
+  "participationIntegrationHandoffs": "config/participation_integration_handoffs.json"
 }

@@ -64,9 +64,25 @@ were corrected. Existing values, legacy Status choices and IANA_ID lookup displa
 were preserved; optional Windows conversion metadata is absent and unused.
 Final full audit is Verified (zero findings); setup repeat returned SETUP_VERIFIED.
 Owner confirmed all five writes skipped on a new repeat with SETUP_VERIFIED.
-Own schema acceptance passed; PR #69 review/merge remains. App/flow acceptance
+Own schema acceptance passed; PR #69 is merged and #66 closed. App/flow acceptance
 stays with its separate owners. No ordinary-user privacy or rollout claim follows from owner setup.
 See POC_SHAREPOINT_SETUP.md and TEST_RUNS.md for versions and finish line.
+
+## Current app work - #6
+
+Corrected owner-reported Live target is **Version 19**. The Participation status
+Combo box DataCardValue2 uses DefaultSelectedItems with table-returning branches:
+New filters the Active Choice; Edit wraps Parent.Default's saved Record. The
+outer card reads ThisItem.'Participation status'; inner legacy Default is Blank().
+Owner confirms Active/Yes new defaults, saved choices preserved, and language/
+culture-only save/reopen preserving identity/unrelated fields. #6 is Ready for
+review in PR #70; after merge it can close on its own UI scope.
+
+Flow revalidation stays #61, candidate exclusion #7 and stale request rejection
+#10. Group side effects need an operational fixture and #25 integrated testing;
+derived displays remain #64/#68. Exact retained cases/blockers are in
+config/participation_integration_handoffs.json. No ordinary-user privacy, full
+backend acceptance or new hosting/connector capability is inferred from UI checks.
 
 ## Implemented SharePoint baseline
 

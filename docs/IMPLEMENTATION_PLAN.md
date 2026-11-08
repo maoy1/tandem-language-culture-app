@@ -4,7 +4,7 @@ The approved design is CURRENT_DESIGN.md. This plan reflects the owner's
 annotations to Combined Requirements v0.2. GitHub tickets hold implementation
 acceptance and status; planning completion does not imply deployment.
 
-## Current focus - #66 schema alignment; PR #60 merged
+## Current checkpoint - #6 Version 19 UI accepted, ready for review
 
 #46 is accepted/closed. Tracking now separates Flow, App, Shared technical and
 Overview tickets. One production flow has one owner; old partial work/evidence
@@ -18,10 +18,16 @@ config/ticket_scope_map.json transfer of 246 former checklist items.
 - [x] #66: metadata inspection, permission preview and five-setting apply/readback succeeded.
 - [x] #66: fresh whole-schema audit Verified with no findings; repeat setup returned SETUP_VERIFIED.
 - [x] #66: owner confirmed all five writes Skipped on a new repeat, SETUP_VERIFIED; own schema tests passed.
-- [ ] #66: review/merge PR #69, then close this completed scoped ticket.
-- [ ] Next selected implementation: #6 participation controls; #5 registration UI and #61 submission remain separately owned.
+- [x] PR #69 merged; #66 closed and labelled Done.
+- [x] #6: owner confirmed both fields added to Form1.
+- [x] #6: real choices and basic Paused/No save/validation/reopen preservation passed; account/selections unchanged.
+- [x] #6: owner reported Version 16, saved 2026-11-08 15:34:26 Europe/Berlin; implementation context recorded.
+- [x] #6: working Combo box table-default binding; owner confirms New Active/open Yes, edit preservation and language/culture-only save/reopen; corrected Live Version 19 recorded.
+- [ ] Review/merge PR #70, then close #6 on its passed App scope. Backend integration checks retained under #61/#7/#10/#25, not waived or used to hold #6 indefinitely.
+- [ ] Next implementation after #6 review: #5 registration UI, then #61 submission validation per the ordered batch. Do not claim #7/#10 availability integration passed before those flows are implemented.
 
-See POC_SHAREPOINT_SETUP.md for exact #66 packages, mappings and remaining tests.
+See POC_03_PARTICIPANT_SELF_REGISTRATION.md for #6 Studio steps and UI6 tests.
+POC_SHAREPOINT_SETUP.md retains the completed #66 package/mapping evidence.
 
 Sole production-flow ownership:
 
@@ -41,7 +47,7 @@ Sole production-flow ownership:
 | TandemMyGroups | #64 | Core |
 | TandemRespondGroupJoinRequest | #65 | Core |
 
-Next focused batches (one selected non-overview ticket at a time):
+Next focused batches (one selected non-overview ticket at a time; #6 review is the current checkpoint):
 
 1. **#66 Shared technical:** verify participant/catalogue field
    mappings and availability defaults once; flag any permitted setup first.
@@ -75,7 +81,7 @@ belong to Flow tickets; full layout belongs to App tickets. Disposable proof
 harnesses belong to their explicitly scoped Shared technical evidence, not an
 untracked production service. In progress is active work only, max one. Queued
 partial work stays Planned. Superseded is not Done. PR #60 is merged. #66 is
-ready for delivery review; own schema checks passed; only PR #69 review/merge remains.
+ready for delivery review; own schema checks passed; PR #69 is merged and #66 closed. #6 is the sole active scope.
 
 ## Ticket execution agreement - #45
 
@@ -116,7 +122,7 @@ permission expansion or CLI/sign-in dependency is assumed.
 
 #66 packages are implemented/imported. Owner supplied metadata collection, dry
 preview and successful apply/readback evidence on 2026-11-08. Final full audit is Verified; owner confirmed the five writes skipped on a new
-repeat with SETUP_VERIFIED. All own schema tests passed; only review/merge remains. See TEST_RUNS.md and PR #69.
+repeat with SETUP_VERIFIED. All own schema tests passed; PR #69 merged and #66 closed. See TEST_RUNS.md and PR #69.
 
 ## Completed package experiment checkpoint (#28)
 

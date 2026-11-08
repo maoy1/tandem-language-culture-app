@@ -1,0 +1,28 @@
+{
+  "sourceTicket": 6,
+  "app": "Tandem Participant Registration",
+  "version": 19,
+  "reportedDate": "2026-11-08",
+  "timezone": "Europe/Berlin",
+  "savedAt": null,
+  "publishCompletedAt": null,
+  "evidenceSource": "Owner supplied Version 19 in response to Save/Publish and new Live-version request; no exact timestamp or app export supplied.",
+  "controlObserved": "COMBO BOX DataCardValue2; Parent.Default data type Record in owner screenshots",
+  "bindings": {
+    "outerCardDefault": "artifacts/participation_controls/ParticipationStatus.Card.Default.powerfx",
+    "DataCardValue2.Default": "artifacts/participation_controls/ParticipationStatus.Combo.Default.powerfx",
+    "DataCardValue2.DefaultSelectedItems": "artifacts/participation_controls/ParticipationStatus.Combo.DefaultSelectedItems.powerfx"
+  },
+  "ownerConfirmed": [
+    "Default Active now appears",
+    "Default new self-registration Active/open Yes and edits preserve saved choices",
+    "Save/reopen language/culture-only profiles without changing identity or unrelated values"
+  ],
+  "evidenceLimits": "Owner confirms the scoped criteria; detailed per-state sequence/fixture IDs not separately supplied. No full receiving-flow/group/privacy acceptance claimed.",
+  "integrationHandoffs": {
+    "validation": 61,
+    "discovery": 7,
+    "request": 10,
+    "groupSideEffects": 25
+  }
+}

@@ -8,7 +8,7 @@ design authority wins.
 The #46 contract is accepted. #66 has now inspected the actual participant and
 catalogue schema, applied the bounded changes below and verified the final full
 audit. Owner confirmed five skipped writes on a new successful repeat.
-All own schema checks passed; PR #69 review/merge remains. Discovery display is approved in MVP_FIELD_CONTRACT.md;
+All own schema checks passed; PR #69 is merged and #66 closed. Discovery display is approved in MVP_FIELD_CONTRACT.md;
 notifications remain undecided (#49). Catalogue time zone is optional for
 participants; migration is the final phase (#48).
 
@@ -21,7 +21,7 @@ readback. It is not an export of employee registrations. Final audit
 `08584074601682073516023990276cU14` analyzed **Verified**, zero findings. Repeat
 `08584074600200045376372808433CU02` returned **SETUP_VERIFIED**. Owner subsequently confirmed all five writes Skipped on a new repeat with
 SETUP_VERIFIED; its screenshot/statement are retained, new run reference not
-supplied. All own schema checks passed; delivery review/merge remains. Runtime app behavior stays
+supplied. All own schema checks passed; PR #69 is merged and #66 closed. Runtime app behavior stays
 with #5/#6/#61; ordinary-user access remains a separate deferred proof.
 
 ### Packages and prerequisites
@@ -81,7 +81,7 @@ desired schema. Analysis returned Verified with zero findings.
    no truncation, both required new fields/defaults, correct catalogue
    required/unique/index settings and preserved identity/optional lookups. No new
    audit/import is requested. Repeat summary reports SETUP_VERIFIED/true.
-3. Review/merge **PR #69**, then close #66 on its own passed acceptance.
+3. **Completed:** PR #69 merged and #66 closed on its own passed acceptance.
    No schema tests remain. App/flow save behavior and privacy proof stay with
    their owners; do not leave #66 waiting for unrelated tests.
 4. For a future reproduction: run setup with ApplyChanges = No first; expect

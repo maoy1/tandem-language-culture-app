@@ -909,3 +909,125 @@ whole-schema audit evidence above remain separately scoped.
   permission preview, apply/readback and final full audit had already passed.
 - All own #66 schema checks passed. Review/merge PR #69, then close #66. Ordinary
   app/flow/privacy tests remain separately owned. No business-row cleanup required.
+
+### UI6-20261108-01 - #6 preparation and owner card-add checkpoint
+
+- Branch codex/issue-6-participation-controls. Schema dependency #66 Done;
+  PR #69 merged. Existing app/connection; no new permission or connector.
+- Owner confirmed Form1 path and both availability cards added in Studio.
+- Participation status shows Item 1/Item 2 sample items. Binding correction
+  supplied: Items = Choices([@Participants].'Participation status'), display
+  Value, single selection. Result not yet confirmed; save test paused.
+- Local pytest: **79 passed** (16 new contract mutation/default-preservation
+  checks plus existing 63). No Power Apps execution proof follows from local tests.
+- UI6-001:006 / own PAR variants: NOT RUN. App saved/published version not supplied.
+  First pending check: actual three Choice values, then save/reopen Paused/No
+  without resetting identity/unrelated selections. No fixture cleanup yet.
+- #61 revalidation / #7/#10 availability exclusion / #64/#68 derived membership
+  integration portions remain separately owned; do not mark their outcomes passed.
+
+### UI6-20261108-02 - #6 owner save-preservation PASS (bounded variant)
+
+- Owner explicitly confirmed: real choices appeared, Paused/No persisted after
+  saving, validation and reopening; participant account and selections unchanged.
+- **PASS:** choice-binding correction and basic save/validation/reopen portion of
+  UI6-002 / PAR-002 / REG-009. This supersedes the sample-choice issue, not every
+  scenario in the full test catalogue. No new permission/connector introduced.
+- App: Tandem Participant Registration, existing Form1; account role: owner.
+  Exact app version/publish time, fixture item ID and flow run reference were
+  not supplied. Publication is pending confirmation; do not call this a verified
+  published-version run. No actual new-profile creation/default pass is claimed.
+- **NOT RUN / unconfirmed:** UI6-001 new defaults/creation; UI6-002 second
+  unrelated-edit cycle; UI6-003 Inactive; UI6-004 Active/No/Yes; UI6-005 language/
+  culture fixture variants; UI6-006 group/membership side effects. Full #61/#7/#10
+  integration acceptance remains with those owners. Prior local suite: 79 PASS;
+  no rerun needed for this documentation-only evidence update.
+- Continue with Studio Save/Publish to the existing audience and record its
+  version/time. Keep #6 In progress until actual delivery/test context is recorded;
+  hand remaining acceptance to testers after review rather than close prematurely.
+
+### UI6-20261108-03 - #6 Version 16 delivery context
+
+- Owner reported **Version 16**, timestamp **08/11/2026 15:34:26** after being
+  directed to select the Live row in the app's Versions history. Record as
+  owner-supplied context, not agent-observed history. Timezone Europe/Berlin.
+- Publishing-start message: **2026-11-08 15:34:34**. Completion timestamp not
+  supplied; do not turn the start timestamp into a completed-publish time.
+- App/control context: Tandem Participant Registration, same existing Form1;
+  no new permission, connection, licence, flow or app import artifact.
+- Evidence: artifacts/participation_controls/version16.owner-report.json. No
+  .msapp/export inspected. The UI6-20261108-02 core preservation PASS was reported
+  before this version context; no extra published-player test is inferred.
+- Implementation ready for PR #70 review. Remaining own test variants are
+  UI6-001 defaults/creation; UI6-002 unrelated-edit cycle; UI6-003 Inactive;
+  UI6-004 Active/No/Yes; UI6-005 language/culture fixtures; UI6-006 no unintended
+  membership writes with a permitted fixture. Use Version 16's Live player after
+  reload for tester handover. Mark unavailable fixture/integration cases blocked
+  with the receiving owner, not passed. Separate #61/#7/#10/#64/#68 work stays owned.
+- No code changed in this evidence update; previous local suite 79 PASS retained.
+  After review/merge, #6 Ready for testing, not Done. No further field construction
+  is known missing; report any failing test before changing bindings or defaults.
+
+### UI6-20261108-04 - #6 new-registration default FAIL; correction pending
+
+- Owner reported: for a new registration Participation status defaults to None.
+  **FAIL: UI6-001 new-mode rendering / PAR-001 default portion.** Version 16
+  is the latest supplied context; exact failing runtime/version not separately
+  restated. Earlier Paused/No preservation PASS remains historical, not invalidated.
+- Schema #66 had verified the Choice default Active, but that metadata did not
+  prove this app selector's New-mode initialization. Prior local tests do not
+  execute Power Fx or catch runtime card/control binding failures.
+- Correction supplied for the outer data card Default: Form1.Mode New returns
+  LookUp(Choices([@Participants].'Participation status'), Value="Active"); Edit
+  returns ThisItem.'Participation status'. Both branches return Choice records.
+  Formula is retained as ParticipationStatus.Card.Default.powerfx.
+- Apply/retest still pending: New displays Active; existing Paused remains
+  Paused; saved Paused/No remains unchanged; new openness displays Yes. Keep
+  inner selector binding until its actual property/type indicates otherwise.
+- #6 returns In progress and PR #70 draft. Do not claim the defect fixed, publish
+  a new version number, or restore Ready labels until owner correction evidence.
+
+### UI6-20261108-05 - #6 outer-card default attempt still FAIL
+
+- Owner applied the supplied outer-card Default change, saved and ran the app,
+  but still could not see default Active. **FAIL remains UI6-001.** Corrected app
+  version/control property evidence not supplied; no fix PASS claimed.
+- Next required evidence: inner selector control type and actual Default or
+  DefaultSelectedItems formula, plus New-button OnSelect. Modern/classic controls
+  require different default value shapes; do not guess an additional override.
+- Source contract checks now require explicit New-mode card initialization with
+  a Choice record and preserved stored record on edits. **82 local tests passed**;
+  these guards still do not execute Power Fx or prove UI selection initialization.
+- #6 is In progress; PR #70 is draft again. Earlier Paused/No edit-preservation
+  PASS remains historical and must be retested if a default binding changes.
+
+### UI6-20261108-06 - corrected Combo box default and own UI acceptance PASS
+
+- Screenshots identified the selector as Combo box DataCardValue2 and its parent
+  default as Record. Earlier formulas mixed text/Record or targeted the legacy
+  Default property. Final working bindings: outer card Default =
+  ThisItem.'Participation status'; inner Default = Blank(); inner
+  DefaultSelectedItems = If(Form1.Mode=FormMode.New, Filter(Choices(...),
+  Value="Active"), [Parent.Default]). Both branches return tables of Choice records.
+- Owner confirmed Active now appears and explicitly verified (a) new Active/open
+  Yes and edits preserving saved choices, (b) language/culture-only save/reopen
+  without identity or unrelated-value changes. **Own #6 UI criteria PASS**, owner
+  reported. Exact detailed per-state sequences/fixture IDs were not supplied.
+- Owner supplied **Version 19** in response to Save/Publish and corrected Live
+  version request. Exact save/publish time not supplied; do not reuse Version 16's
+  timestamp for the correction. Evidence: version19.owner-report.json.
+- This supersedes UI6-20261108-04/05 failures for the corrected controls while
+  retaining their history. Existing Paused/No baseline save/validation/reopen
+  evidence remains scoped; it is not full #61 acceptance.
+- Receiving integration checks remain pending: #61 current validation preservation,
+  #7 Discovery exclusion, #10 stale/unavailable request rejection, #25 group side
+  effects with an operational fixture and #64/#68 derived displays. All were
+  retained in participation_integration_handoffs.json and receiving issues; no test
+  was marked passed by transfer. Their Planned/fixture gates are explicit blockers
+  for those integration variants, not a reason to keep the UI-control ticket open.
+- PR #70 review/merge remains for #6. No new role grant, connector, paid runtime,
+  group/member write or manual row fabrication. Local checks recorded separately.
+
+- Version 19 contract/package regression suite: **84 pytest passed**. Checks
+  reject record/text initialization policy where the Combo box requires a table;
+  this remains local contract protection, not Power Fx execution.

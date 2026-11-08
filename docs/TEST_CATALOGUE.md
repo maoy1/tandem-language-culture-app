@@ -129,6 +129,18 @@ run and elapsed time rather than inventing a timing guarantee.
 | PAR-006 | Pause or reactivate someone already in a group | No silent membership deletion, automatic rejoin or group reopening; derived information matches actual membership records |
 | PAR-007 | Member changes personal openness, then group openness | Personal and group fields remain independent; no unintended cross-update |
 
+### Participation case ownership after #6 UI implementation
+
+Case IDs remain stable. #6 owns the control/default/edit-persistence portions,
+owner-confirmed for corrected Version 19. New profile creation belongs to #5/#61;
+flow revalidation preservation to #61; unavailable-profile Discovery exclusion to
+#7; stale/unavailable request rejection to #10. Group side-effect checks are #25
+integrated tests once an operational fixture exists; derived displays stay #64/#68.
+See config/participation_integration_handoffs.json for exact steps and blockers.
+The transfer does not mark backend/group cases passed or require them to keep
+the finished App-control ticket open. Unknown fixtures/target flow versions are
+explicit Blocked/NOT RUN, not UI test failures.
+
 ## Compatible discovery
 
 Issues #7/#9/#16/#42. Profile/group display is approved by #46/PR #59.

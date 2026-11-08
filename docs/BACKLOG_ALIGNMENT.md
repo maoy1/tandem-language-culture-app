@@ -32,10 +32,10 @@ implementation as activity or mixed several flows in one implementation ticket.
 being worked now, at most one non-overview ticket. Queued partial work is Planned
 with evidence retained. PR #60 is merged. #66 delivery is ready for review after
 owner setup/readback and final schema audit passed. Owner confirmed all five writes skipped on a new repeat; own schema tests passed.
-Only PR #69 review/merge remains for #66. Ready stages remain real handovers. Superseded is
+PR #69 is merged and #66 closed; #6 corrected UI accepted by owner for Version 19; PR #70 ready for review. Receiving-flow/group checks stay with #61/#7/#10/#25. Ready stages remain real handovers. Superseded is
 closed as not planned, not Done. Closed historical #1-#4/#46 remain Done.
 
-**48 issues total:** 41 focused open tickets, 5 Done, 2 Superseded (#22/#24).
+**48 issues total:** 40 focused open tickets, 6 Done, 2 Superseded (#22/#24).
 Eight focused successors were created:
 
 | Ticket | Type | New owner |
@@ -59,7 +59,7 @@ evidence remain available; no employee payloads/raw exports are copied here.
 | Open ticket | Type | Queued activity | Sole scope |
 |---|---|---|---|
 | [#5](https://github.com/maoy1/tandem-language-culture-app/issues/5) | App | Planned | Registration form controls, validation messages and save/reopen behavior only. Backend validation is #61; list schema is #66. |
-| [#6](https://github.com/maoy1/tandem-language-culture-app/issues/6) | App | Planned | Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64. |
+| [#6](https://github.com/maoy1/tandem-language-culture-app/issues/6) | App | Ready for review | Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64. |
 | [#7](https://github.com/maoy1/tandem-language-culture-app/issues/7) | Flow | Planned | One flow returning approved compatible people and existing open groups. App layout is #16; rule source is #9; protected access proof is #42. |
 | [#8](https://github.com/maoy1/tandem-language-culture-app/issues/8) | Shared technical | Deferred | Future scoring policy/rule artifact; does not own a second TandemDiscovery flow. |
 | [#9](https://github.com/maoy1/tandem-language-culture-app/issues/9) | Shared technical | Planned | One maintained rule/normalization source and synthetic contract fixtures for package generation; no separately hosted runtime or assumed child flow. |
@@ -96,7 +96,7 @@ evidence remain available; no employee payloads/raw exports are copied here.
 | [#63](https://github.com/maoy1/tandem-language-culture-app/issues/63) | Flow | Planned | One sender-cancellation flow for personal and group requests; no history screen ownership. |
 | [#64](https://github.com/maoy1/tandem-language-culture-app/issues/64) | Flow | Planned | One reader for own operational groups/members/counts/free slots and membership-derived profile status. |
 | [#65](https://github.com/maoy1/tandem-language-culture-app/issues/65) | Flow | Planned | One active-member Accept/Decline flow for an existing-group join; new-group personal acceptance remains #11. |
-| [#66](https://github.com/maoy1/tandem-language-culture-app/issues/66) | Shared technical | Ready for review | One-time actual field/catalogue mapping and required delta for #5/#6/#61; no app layout or production flow ownership. |
+| [#66](https://github.com/maoy1/tandem-language-culture-app/issues/66) | Shared technical | Done (closed) | One-time actual field/catalogue mapping and required delta for #5/#6/#61; no app layout or production flow ownership. |
 | [#67](https://github.com/maoy1/tandem-language-culture-app/issues/67) | App | Planned | Sent/Received/group incoming screen, display/dialogs/navigation only; each flow remains independently owned. |
 | [#68](https://github.com/maoy1/tandem-language-culture-app/issues/68) | App | Planned | Own-group display, membership-derived status and group-control UI only; reader/update/leave flows separately owned. |
 

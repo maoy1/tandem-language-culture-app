@@ -90,7 +90,7 @@ prompts when reproducing in another environment.
 
 The optional local builder is scripts/power_automate/build_import_probe.py;
 --sharepoint-site with --output selects the second probe. Python is development
-tooling only. The current suite has 63 passing local tests (including #66). Owner chose legacy packages for now, keeping
+tooling only. The current suite has 84 passing local tests (including #6/#66 contract checks); app execution is separate. Owner chose legacy packages for now, keeping
 SharePoint data and existing entitlements. Neither probe establishes complex-flow
 import, ordinary-participant access or full reproducibility. Generated ZIPs are
 experimental, not officially certified ALM packages. See the current
@@ -101,7 +101,7 @@ experimental, not officially certified ALM packages. See the current
 The [schema handover](docs/POC_SHAREPOINT_SETUP.md) includes the imported
 TandemSchemaAudit and TandemSchemaSetup-v2 packages, actual field mapping and
 passed safe-repeat evidence. Setup-v2 owner preview/apply/readback, five-write
-skip confirmation and final whole-schema audit passed. PR #69 is ready for review. These are one-time helpers, not participant production flows.
+skip confirmation and final whole-schema audit passed. PR #69 is merged; #66 is complete. These are one-time helpers, not participant production flows.
 
 ## Local Python environment
 

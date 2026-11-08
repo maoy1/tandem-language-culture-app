@@ -102,6 +102,36 @@ def validate(policy: dict[str, Any], schema: dict[str, Any]) -> list[str]:
     if validation.get("rejectInactiveSelections") is not True:
         errors.append("Inactive catalogue selections must be rejected by validation.")
 
+    participation = policy.get("participation", {})
+    required_policy = {
+        "field": "ParticipationStatus", "opennessField": "OpenToConnections",
+        "newProfileDefault": "Active", "newProfileOpenDefault": True,
+        "defaultSource": "explicit_combo_box_new_mode",
+        "newProfileDefaultType": "choice_table",
+        "existingProfileDefaultSource": "stored_choice_record_table",
+        "defaultsApplyOnlyToNewProfiles": True, "preserveExistingChoices": True,
+        "validationMayReset": False, "membershipSideEffects": "none",
+        "binding": "generated_sharepoint_data_cards",
+    }
+    for key, expected in required_policy.items():
+        actual = participation.get(key)
+        if actual != expected or (isinstance(expected, bool) and type(actual) is not bool):
+            errors.append(f"Participation contract {key} must be {expected!r}; edits must preserve stored choices.")
+    allowed = ["Active", "Paused", "Inactive"]
+    if participation.get("allowedValues") != allowed:
+        errors.append("Participation values must be Active, Paused and Inactive; validation Status is separate.")
+    state = fields.get("ParticipationStatus", {})
+    if (state.get("type") != "Choice" or state.get("required") is not True
+            or state.get("choices") != allowed or state.get("defaultValue") != "Active"):
+        errors.append("ParticipationStatus must be a required Choice with Active/Paused/Inactive and new-profile default Active.")
+    openness = fields.get("OpenToConnections", {})
+    if (openness.get("type") != "Boolean" or openness.get("required") is not True
+            or openness.get("defaultValue") is not True):
+        errors.append("OpenToConnections must be a required Boolean with new-profile default Yes.")
+    for name in ("ParticipationStatus", "OpenToConnections"):
+        if name not in visible or name in hidden:
+            errors.append(f"Participation control must be visible/editable: {name}.")
+
     return errors
 
 

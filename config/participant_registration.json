@@ -1,6 +1,6 @@
 {
-  "version": 2,
-  "deploymentStatus": "poc05_pending_tenant_setup_and_tests",
+  "version": 3,
+  "deploymentStatus": "issue6_version19_owner_ui_acceptance_pass_integration_with_receiving_tickets_pending",
   "list": "Participants",
   "identity": {
     "field": "ParticipantAccount",
@@ -28,7 +28,9 @@
       "LearnCultures",
       "TimeZone",
       "LearningFocus",
-      "Comments"
+      "Comments",
+      "ParticipationStatus",
+      "OpenToConnections"
     ],
     "hiddenFields": [
       "Title",
@@ -36,8 +38,47 @@
     ]
   },
   "validation": {
-    "requireAnyOf": ["TeachLanguages", "LearnLanguages", "ShareCultures", "LearnCultures"],
-    "optionalCatalogueFields": ["TimeZone"],
+    "requireAnyOf": [
+      "TeachLanguages",
+      "LearnLanguages",
+      "ShareCultures",
+      "LearnCultures"
+    ],
+    "optionalCatalogueFields": [
+      "TimeZone"
+    ],
     "rejectInactiveSelections": true
+  },
+  "participation": {
+    "field": "ParticipationStatus",
+    "opennessField": "OpenToConnections",
+    "allowedValues": [
+      "Active",
+      "Paused",
+      "Inactive"
+    ],
+    "newProfileDefault": "Active",
+    "newProfileOpenDefault": true,
+    "defaultSource": "explicit_combo_box_new_mode",
+    "defaultsApplyOnlyToNewProfiles": true,
+    "preserveExistingChoices": true,
+    "validationMayReset": false,
+    "membershipSideEffects": "none",
+    "binding": "generated_sharepoint_data_cards",
+    "newProfileDefaultType": "choice_table",
+    "existingProfileDefaultSource": "stored_choice_record_table",
+    "defaultFormulaArtifact": "artifacts/participation_controls/ParticipationStatus.Combo.DefaultSelectedItems.powerfx",
+    "controlDefaultBindings": {
+      "outerCardDefault": "artifacts/participation_controls/ParticipationStatus.Card.Default.powerfx",
+      "DataCardValue2.Default": "artifacts/participation_controls/ParticipationStatus.Combo.Default.powerfx",
+      "DataCardValue2.DefaultSelectedItems": "artifacts/participation_controls/ParticipationStatus.Combo.DefaultSelectedItems.powerfx"
+    }
+  },
+  "appDelivery": {
+    "ticket": 6,
+    "app": "Tandem Participant Registration",
+    "version": 19,
+    "evidence": "artifacts/participation_controls/version19.owner-report.json",
+    "remainingAcceptance": "Own UI criteria owner-confirmed; PR review pending. Flow/group integration checks retained under #61/#7/#10/#25, not implied passed."
   }
 }
