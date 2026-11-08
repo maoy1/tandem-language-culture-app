@@ -25,6 +25,6 @@
   "latestConfirmedLiveVersion": 19,
   "headerAppearance": "Owner reports other header elements look good; actual tree parent SelectedRecordHeaderContainer1.",
   "headerExtraLabel": "Label1 displays Signed in as plus User().Email; guided hide duplicate because top blue banner already displays identity. Hidden state not separately confirmed.",
-  "validationLabel": "Previous long Active/background/earlier-edit wording observed; owner finds it confusing. New two-line Last profile check wording prepared.",
+  "validationLabel": "Final wording owner accepted/applied: Last profile check: Passed alone; Needs attention plus Review your profile details and save again. No background/earlier-edit/refresh helper sentence for Passed.",
   "refreshClick": "Owner confirms Refreshing validation status notification appears after click."
 }

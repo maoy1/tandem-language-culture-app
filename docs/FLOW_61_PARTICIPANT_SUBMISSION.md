@@ -292,3 +292,14 @@ Next: owner apply/accept the shorter wording, Save/Publish, and supply the new
 Live app version. Last confirmed Live is 19. Invalid no-op follow-up, catalogue,
 creation and failure/conflict target variants remain pending under their existing
 gates; they are not marked passed by this wording or broader owner “all fine”.
+
+## Final accepted label copy — supersedes earlier helper wording
+
+Owner confirms the final copy is done. Passed displays only “Last profile check:
+Passed”. Needs attention adds only “Review your profile details and save again.”
+The normal result has no background, earlier-edit or refresh-helper sentence. Text
+artifact is synchronized; underlying saved Status lookup/Refresh behavior remains.
+
+Next owner step: Save/Publish and return the new Live version. Publication is not
+inferred from wording acceptance; last confirmed release remains 19. Prior tests
+retain their exact scope and remaining case gates are unchanged.

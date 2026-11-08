@@ -13,11 +13,10 @@ If(
                     "Active", "Passed",
                     "Needs review", "Needs attention",
                     "Not yet confirmed"
-                ) & Char(10) &
-                If(
+                ) & If(
                     savedProfile.Status.Value = "Needs review",
-                    "Review your profile details, save, then refresh.",
-                    "Changes are checked after saving. Refresh for the latest result."
+                    Char(10) & "Review your profile details and save again.",
+                    ""
                 )
             )
         ),

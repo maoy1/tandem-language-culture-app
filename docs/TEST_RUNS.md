@@ -1271,3 +1271,19 @@ whole-schema audit evidence above remain separately scoped.
   yet supplied. Last confirmed published app remains 19. #61 In progress / PR #72
   draft. No new import/flow/schema/permission change. JSON/diff checked; no new
   tests for this low-impact copy/evidence change; prior 101 local tests retained.
+
+### UI61-WORDING-FINAL-20261108 — final copy applied/accepted
+
+- Owner rejects all background/earlier-edit/refresh explanatory text on the normal
+  result and confirms “ok, done” after final wording guidance. Accept as owner
+  application/wording confirmation: “Last profile check: Passed” alone. Invalid
+  result: “Last profile check: Needs attention” plus “Review your profile details
+  and save again.” Keep existing Refresh button and prior tested data binding.
+- Text artifact synchronized; no normal-result helper line. Lookup/error handling
+  and validation/availability separation retained. This is presentation copy only,
+  not a new validation-completion marker or tenant-flow change.
+- Save/Publish/new Live version still pending. Latest confirmed release remains
+  19. Prior changed-value Refresh and invalid/restore owner passes retained; other
+  scoped cases retain existing pending gates. #61 In progress / PR #72 draft.
+- JSON/diff checked. No tests added/rerun for copy-only change; prior 101 local
+  code tests retained. No whole-ticket completion claimed.

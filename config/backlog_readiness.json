@@ -1204,7 +1204,7 @@
         "The flow reads current saved values and validates catalogue selections.",
         "See validation feedback without admin approval or resetting personal choices."
       ],
-      "remainingWork": "Apply/accept shortened feedback wording; Save/Publish and record new Live version. Retain invalid no-op follow-up, catalogue/creation/failure/conflict target gates; invalid-run IDs not provided.",
+      "remainingWork": "Save/Publish accepted feedback and record new Live version; retain invalid no-op follow-up, catalogue/creation/failure/conflict target gates (invalid-run IDs not supplied).",
       "testReferences": [
         "REG-001:004",
         "REG-006:009",
