@@ -16,7 +16,8 @@
     "openness"
   ],
   "correlation": "RESOLVED_OWNER_CLARIFICATION: 3 meant third row, not SharePoint ID. Supplied reports retain itemId 38.",
-  "scope": "Owner preservation confirmation linked to selected profile and supplied item-38 run sequence. SharePoint ID column not independently inspected.",
+  "scope": "Owner visually confirmed selected third row has SharePoint ID 38; preservation confirmation correlates with the supplied run sequence. No independent agent tenant inspection.",
   "ownerSelectedRow": 3,
-  "reportedSharePointItemId": 38
+  "reportedSharePointItemId": 38,
+  "sharePointIdOwnerVisuallyConfirmed": true
 }

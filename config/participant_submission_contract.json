@@ -64,7 +64,7 @@
   "runtimeEvidence": {
     "validNoChange": "artifacts/participant_submission/results/valid-no-change.owner-report.json",
     "originalValidatorDisabled": "Owner confirmed original off and only v2 enabled",
-    "participantFieldPreservation": "Owner confirmed identity, selections, participation/openness unchanged on selected third row; 3 was row position, not ID. Supplied runs identify item 38.",
+    "participantFieldPreservation": "Owner visually confirmed third row is SharePoint ID 38 and confirmed identity/selections/participation/openness preserved across tested sequence.",
     "activeCorrection": "artifacts/participant_submission/results/active-correction.owner-report.json",
     "activeCorrectionFollowup": "artifacts/participant_submission/results/active-correction-followup.owner-report.json",
     "profileCorrelation": "artifacts/participant_submission/results/owner-cutover-and-correlation.json"

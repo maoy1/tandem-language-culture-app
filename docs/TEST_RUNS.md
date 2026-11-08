@@ -1203,3 +1203,18 @@ whole-schema audit evidence above remain separately scoped.
   #61 In progress, PR #72 draft. Earlier unresolved-correlation notes are history.
 - Evidence metadata/docs only; JSON parsed/diff checked; prior 101 local tests
   retained. No package, flow, app or permission change.
+
+### UI61-NEXT-20261108 — ID visually confirmed; feedback handover continues
+
+- Owner displayed SharePoint ID and confirms the selected third row is item 38.
+  Correlation is now visually owner-confirmed, beyond the earlier row clarification.
+  No new run needed; the supplied sequence and preservation confirmation match.
+- Next bounded #61 implementation step: existing prepared Form1.OnSuccess,
+  latest-stored validation label and Refresh button. Only original save notification
+  has been observed so far; Studio application/layout/formula test, publication,
+  new Live version and scoped feedback result remain pending. Version 19 remains
+  the last confirmed published app version. No tenant action taken by agent.
+- Guide reconciled to current smoke results; historical notes retained here.
+  Remaining detailed negative cases remain unexecuted, respecting build-first
+  priority; no full acceptance or Ready/Done claim. Metadata/docs-only change;
+  JSON/diff checked, prior 101 code tests retained without rerun.

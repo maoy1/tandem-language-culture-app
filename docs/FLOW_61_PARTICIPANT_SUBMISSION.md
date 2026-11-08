@@ -98,13 +98,17 @@ its item ID, Comments, Status, participation/openness and selections first.
    Validation_report JSON plus write/follow-up status, or the first exact import/
    action error. No need to run all negative cases before reporting first smoke.
 
-Source checks and 101 local tests passed; import/smoke is **NOT RUN**. The pure
-expression evaluator tests policy cases locally, not Power Automate execution.
+Source checks and 101 local tests passed. The owner has imported v2 and passed
+the valid/no-change, necessary Active correction/readback and follow-up sequence.
+These smoke steps are retained for regression, not requested again. The pure
+expression evaluator is local protection, not Power Automate execution.
 
 ## Detailed target tenant acceptance — after import/smoke
 
 Account: existing permitted owner/synthetic fixtures; ordinary-user access remains
-deferred. Version: the build above, not yet imported; these cases remain NOT RUN.
+deferred. Version: the imported build above. The Active/no-op/correction/follow-up
+portion is owner-passed; remaining variants below stay pending unless explicitly
+recorded in TEST_RUNS.md.
 Capture original item ID, identity, selections, Comments, Status and availability.
 Use existing test profiles; never delete a real profile to force a new identity.
 
@@ -202,47 +206,25 @@ edit. It never claims a particular save passed merely because an old Status is
 Active. No timer, automatic retry or extra tracking column is introduced. Detailed
 read-error/race and creation fixtures remain explicitly pending when unavailable.
 
-## Observed target run — 2026-11-08
+## Current tenant evidence and next step
 
-Owner returned run 08584074536792033395422259203CU09, item 38, matching build:
-valid=true, Active, statusChanged=false, NO_CHANGE. This passes the valid/no-change
-smoke only. Source build review's NOT_IMPORTED_NOT_TESTED reflects its historical
-generation time; current runtime evidence is recorded in results/ and TEST_RUNS.
-Original-validator disabled state and saved-field preservation were not explicitly
-reported. Necessary-write/readback/follow-up and feedback checks remain pending.
-No new import or app edit is needed merely to repeat this successful no-change run.
+Owner visually confirmed the selected third row has SharePoint **ID 38**. The
+original validator is off; only v2 is enabled. Identity, selections, participation
+status and openness stayed unchanged on this profile.
 
-### Necessary-write target run — 2026-11-08
+| Run | Result | Scope |
+|---|---|---|
+| 08584074536792033395422259203CU09 | NO_CHANGE | Valid Active no-op |
+| 08584074534387722777188625214CU11 | STATUS_UPDATED | Necessary Active correction/readback |
+| 08584074534064918346698562621CU26 | NO_CHANGE | Subsequent no-write follow-up |
 
-Run 08584074534387722777188625214CU11 / item 38 returned valid=true, Active,
-statusChanged=true, STATUS_UPDATED for the matching build. This passes the
-necessary Active correction and readback path. The earlier NO_CHANGE run was
-before this correction; the subsequent matching-item NO_CHANGE run is still
-needed for the follow-up test. Saved-field preservation and original-validator
-disabled state are not explicitly confirmed. See RUN61-20261108-02.
+All reports match build 88637754-4c91-4833-9dcf-5116d8bfb77e / item 38. No repeat
+of this passed sequence is needed. Raw reports and clarification are in results/;
+chronological failed/pending/resolved notes remain in TEST_RUNS.md.
 
-### Active correction follow-up — 2026-11-08
-
-Owner returned requested subsequent run 08584074534064918346698562621CU26,
-same item 38/build: valid=true, Active, statusChanged=false, NO_CHANGE. The
-observed necessary Active correction/readback and follow-up now pass. No repeat
-edit is needed for this sequence. The invalid branch, catalogue negatives,
-field-preservation confirmation, cutover confirmation and applied/published app
-feedback remain pending. This is bounded owner evidence, not global loop proof.
-
-### Owner clarification — selected item versus run ID
-
-Owner confirms only v2 enabled and fields preserved on the selected profile, but
-identifies that profile as item 3. All supplied report JSONs say itemId 38. Resolve
-actual built-in SharePoint ID versus UI row/profile selection before linking the
-run sequence to the preservation statement. Raw reports remain unchanged; no
-new test edit is requested yet. This supersedes earlier unconfirmed-cutover text
-and qualifies the fixture attribution in earlier run notes. See CORRELATE61.
-
-### Row clarification resolved
-
-Owner clarified that 3 means the third row, not SharePoint ID 3. The supplied
-run sequence still identifies item 38. Field-preservation and v2-only confirmations
-are accepted as bounded owner evidence for the tested profile; no repeat required.
-This resolves the earlier correlation question. Other scoped acceptance and
-applied/published app feedback remain pending; #61 is not complete.
+Next bounded implementation step is the Studio feedback handover above. Apply the
+three prepared bindings, verify a valid save plus manual Refresh displays latest
+stored Active, then Save/Publish and report the new Live version. No new import,
+connection or schema change is required. Failed-read and Needs review feedback
+variants retain their unexecuted status until actually exercised. Detailed negative
+cases follow the owner's build-first priority; none are marked passed by deferral.
