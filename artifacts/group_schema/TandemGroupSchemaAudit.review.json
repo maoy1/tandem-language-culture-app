@@ -1,0 +1,20 @@
+{
+  "sourceTicket": 12,
+  "flowName": "TandemGroupSchemaAudit",
+  "packageBuildId": "cb49aded-f121-410e-b7df-d9646be892dd",
+  "actions": 51,
+  "maximumActionDepth": 3,
+  "limits": {
+    "actions": 500,
+    "nesting": 8
+  },
+  "readOnly": true,
+  "rowReads": 0,
+  "writes": 0,
+  "schemaVerified": false,
+  "sha256": "7b781522d8361d770875ed9f7b7bd20aa61deca1b9802430ed9bd587e020b713",
+  "tenantResult": "NOT_IMPORTED_NOT_TESTED",
+  "scope": "List metadata inventory; Groups/Group Members field and effective list permission metadata; known participant/language/culture list identities. No items, principals/ACLs or permission writes.",
+  "truncation": "Fail incomplete for any next link, missing array, missing/ambiguous role or failed read. No silent first-page success.",
+  "connection": "Existing working owner SharePoint connection only; no ordinary-user access or change capability inferred."
+}

@@ -1,0 +1,889 @@
+{
+  "name": "cb49aded-f121-410e-b7df-d9646be892dd",
+  "id": "/providers/Microsoft.Flow/flows/cb49aded-f121-410e-b7df-d9646be892dd",
+  "type": "Microsoft.Flow/flows",
+  "properties": {
+    "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
+    "displayName": "TandemGroupSchemaAudit",
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {},
+              "required": []
+            }
+          }
+        }
+      },
+      "actions": {
+        "Initialize_AuditLists": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditLists",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "Initialize_AuditErrors": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditErrors",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_AuditLists": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Initialize_ReferenceLists": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ReferenceLists",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_AuditErrors": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Read_list_index": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+              "parameters/method": "GET",
+              "parameters/uri": "_api/web/lists?$select=Id,Title,BaseTemplate,Hidden,ItemCount&$top=5000",
+              "parameters/headers": {
+                "Accept": "application/json;odata=nometadata"
+              }
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline",
+              "operationId": "HttpRequest"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {
+            "Initialize_ReferenceLists": [
+              "Succeeded"
+            ]
+          }
+        },
+        "List_index_status": {
+          "type": "Compose",
+          "inputs": {
+            "complete": "@and(not(equals(body('Read_list_index')?['value'],null)),empty(coalesce(body('Read_list_index')?['@odata.nextLink'],body('Read_list_index')?['odata.nextLink'],'')))"
+          },
+          "runAfter": {
+            "Read_list_index": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          }
+        },
+        "Inspect_reference_participants": {
+          "type": "Scope",
+          "actions": {
+            "Read_reference_participants": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'fd3adf46-f81d-4a7b-a80c-567fde0175dc')?$select=Id,Title,BaseTemplate",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=nometadata"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runAfter": {}
+            },
+            "Require_reference_participants": {
+              "type": "If",
+              "expression": "@and(equals(body('Read_reference_participants')?['Id'],'fd3adf46-f81d-4a7b-a80c-567fde0175dc'),equals(body('Read_reference_participants')?['BaseTemplate'],100),not(empty(body('Read_reference_participants')?['Title'])))",
+              "actions": {
+                "Record_reference_participants": {
+                  "type": "AppendToArrayVariable",
+                  "inputs": {
+                    "name": "ReferenceLists",
+                    "value": {
+                      "role": "participants",
+                      "id": "@body('Read_reference_participants')?['Id']",
+                      "title": "@body('Read_reference_participants')?['Title']",
+                      "baseTemplate": "@body('Read_reference_participants')?['BaseTemplate']"
+                    }
+                  },
+                  "runAfter": {}
+                }
+              },
+              "else": {
+                "actions": {
+                  "Invalid_reference_participants": {
+                    "type": "AppendToArrayVariable",
+                    "inputs": {
+                      "name": "AuditErrors",
+                      "value": {
+                        "role": "participants",
+                        "code": "REFERENCE_IDENTITY_INVALID"
+                      }
+                    },
+                    "runAfter": {}
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_reference_participants": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "List_index_status": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          }
+        },
+        "Reference_failure_participants": {
+          "type": "AppendToArrayVariable",
+          "inputs": {
+            "name": "AuditErrors",
+            "value": {
+              "role": "participants",
+              "code": "REFERENCE_METADATA_READ_FAILED",
+              "message": "Known catalogue/participant list identity could not be read; no rows read or changes made."
+            }
+          },
+          "runAfter": {
+            "Inspect_reference_participants": [
+              "Failed",
+              "TimedOut"
+            ]
+          }
+        },
+        "Inspect_reference_language": {
+          "type": "Scope",
+          "actions": {
+            "Read_reference_language": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63')?$select=Id,Title,BaseTemplate",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=nometadata"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runAfter": {}
+            },
+            "Require_reference_language": {
+              "type": "If",
+              "expression": "@and(equals(body('Read_reference_language')?['Id'],'3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63'),equals(body('Read_reference_language')?['BaseTemplate'],100),not(empty(body('Read_reference_language')?['Title'])))",
+              "actions": {
+                "Record_reference_language": {
+                  "type": "AppendToArrayVariable",
+                  "inputs": {
+                    "name": "ReferenceLists",
+                    "value": {
+                      "role": "language",
+                      "id": "@body('Read_reference_language')?['Id']",
+                      "title": "@body('Read_reference_language')?['Title']",
+                      "baseTemplate": "@body('Read_reference_language')?['BaseTemplate']"
+                    }
+                  },
+                  "runAfter": {}
+                }
+              },
+              "else": {
+                "actions": {
+                  "Invalid_reference_language": {
+                    "type": "AppendToArrayVariable",
+                    "inputs": {
+                      "name": "AuditErrors",
+                      "value": {
+                        "role": "language",
+                        "code": "REFERENCE_IDENTITY_INVALID"
+                      }
+                    },
+                    "runAfter": {}
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_reference_language": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Reference_failure_participants": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          }
+        },
+        "Reference_failure_language": {
+          "type": "AppendToArrayVariable",
+          "inputs": {
+            "name": "AuditErrors",
+            "value": {
+              "role": "language",
+              "code": "REFERENCE_METADATA_READ_FAILED",
+              "message": "Known catalogue/participant list identity could not be read; no rows read or changes made."
+            }
+          },
+          "runAfter": {
+            "Inspect_reference_language": [
+              "Failed",
+              "TimedOut"
+            ]
+          }
+        },
+        "Inspect_reference_culture": {
+          "type": "Scope",
+          "actions": {
+            "Read_reference_culture": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'cf7ed5b4-2e11-4a0a-a417-6c63ed60f614')?$select=Id,Title,BaseTemplate",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=nometadata"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runAfter": {}
+            },
+            "Require_reference_culture": {
+              "type": "If",
+              "expression": "@and(equals(body('Read_reference_culture')?['Id'],'cf7ed5b4-2e11-4a0a-a417-6c63ed60f614'),equals(body('Read_reference_culture')?['BaseTemplate'],100),not(empty(body('Read_reference_culture')?['Title'])))",
+              "actions": {
+                "Record_reference_culture": {
+                  "type": "AppendToArrayVariable",
+                  "inputs": {
+                    "name": "ReferenceLists",
+                    "value": {
+                      "role": "culture",
+                      "id": "@body('Read_reference_culture')?['Id']",
+                      "title": "@body('Read_reference_culture')?['Title']",
+                      "baseTemplate": "@body('Read_reference_culture')?['BaseTemplate']"
+                    }
+                  },
+                  "runAfter": {}
+                }
+              },
+              "else": {
+                "actions": {
+                  "Invalid_reference_culture": {
+                    "type": "AppendToArrayVariable",
+                    "inputs": {
+                      "name": "AuditErrors",
+                      "value": {
+                        "role": "culture",
+                        "code": "REFERENCE_IDENTITY_INVALID"
+                      }
+                    },
+                    "runAfter": {}
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_reference_culture": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Reference_failure_language": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          }
+        },
+        "Reference_failure_culture": {
+          "type": "AppendToArrayVariable",
+          "inputs": {
+            "name": "AuditErrors",
+            "value": {
+              "role": "culture",
+              "code": "REFERENCE_METADATA_READ_FAILED",
+              "message": "Known catalogue/participant list identity could not be read; no rows read or changes made."
+            }
+          },
+          "runAfter": {
+            "Inspect_reference_culture": [
+              "Failed",
+              "TimedOut"
+            ]
+          }
+        },
+        "Inspect_groups": {
+          "type": "Scope",
+          "actions": {
+            "Find_groups": {
+              "type": "Query",
+              "inputs": {
+                "from": "@coalesce(body('Read_list_index')?['value'],json('[]'))",
+                "where": "@and(equals(replace(replace(toLower(string(item()?['Title'])),' ',''),'_',''),'groups'),equals(item()?['BaseTemplate'],100))"
+              },
+              "runAfter": {}
+            },
+            "Choose_groups": {
+              "type": "If",
+              "expression": "@and(equals(length(body('Find_groups')),1),outputs('List_index_status')?['complete'])",
+              "actions": {
+                "Id_groups": {
+                  "type": "Compose",
+                  "inputs": "@first(body('Find_groups'))?['Id']",
+                  "runAfter": {}
+                },
+                "Read_groups_list": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "@concat('_api/web/lists(guid''',outputs('Id_groups'),''')?$select=Id,Title,BaseTemplate,ItemCount,ValidationFormula,ValidationMessage')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=nometadata"
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {
+                    "Id_groups": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Read_groups_fields": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "@concat('_api/web/lists(guid''',outputs('Id_groups'),''')/fields?$select=Id,Title,InternalName,TypeAsString,Required,Hidden,ReadOnlyField,EnforceUniqueValues,Indexed,DefaultValue,SchemaXml,FromBaseType&$top=5000')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=nometadata"
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {
+                    "Read_groups_list": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Read_groups_permissions": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "@concat('_api/web/lists(guid''',outputs('Id_groups'),''')/EffectiveBasePermissions')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=nometadata"
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {
+                    "Read_groups_fields": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Filter_groups_fields": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@coalesce(body('Read_groups_fields')?['value'],json('[]'))",
+                    "where": "@or(equals(item()?['InternalName'],'Title'),equals(item()?['FromBaseType'],false))"
+                  },
+                  "runAfter": {
+                    "Read_groups_permissions": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Select_groups_fields": {
+                  "type": "Select",
+                  "inputs": {
+                    "from": "@body('Filter_groups_fields')",
+                    "select": {
+                      "id": "@item()?['Id']",
+                      "internalName": "@item()?['InternalName']",
+                      "displayName": "@item()?['Title']",
+                      "type": "@item()?['TypeAsString']",
+                      "required": "@item()?['Required']",
+                      "unique": "@item()?['EnforceUniqueValues']",
+                      "indexed": "@item()?['Indexed']",
+                      "hidden": "@item()?['Hidden']",
+                      "readOnly": "@item()?['ReadOnlyField']",
+                      "defaultValue": "@item()?['DefaultValue']",
+                      "schemaXml": "@item()?['SchemaXml']"
+                    }
+                  },
+                  "runAfter": {
+                    "Filter_groups_fields": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Index_groups": {
+                  "type": "Select",
+                  "inputs": {
+                    "from": "@coalesce(body('Read_groups_fields')?['value'],json('[]'))",
+                    "select": {
+                      "id": "@item()?['Id']",
+                      "internalName": "@item()?['InternalName']",
+                      "displayName": "@item()?['Title']",
+                      "type": "@item()?['TypeAsString']"
+                    }
+                  },
+                  "runAfter": {
+                    "Select_groups_fields": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Record_groups": {
+                  "type": "AppendToArrayVariable",
+                  "inputs": {
+                    "name": "AuditLists",
+                    "value": {
+                      "role": "groups",
+                      "id": "@body('Read_groups_list')?['Id']",
+                      "title": "@body('Read_groups_list')?['Title']",
+                      "baseTemplate": "@body('Read_groups_list')?['BaseTemplate']",
+                      "itemCount": "@body('Read_groups_list')?['ItemCount']",
+                      "validationFormula": "@body('Read_groups_list')?['ValidationFormula']",
+                      "validationMessage": "@body('Read_groups_list')?['ValidationMessage']",
+                      "fields": "@body('Select_groups_fields')",
+                      "columnIndex": "@body('Index_groups')",
+                      "fieldsComplete": "@and(not(equals(body('Read_groups_fields')?['value'],null)),empty(coalesce(body('Read_groups_fields')?['@odata.nextLink'],body('Read_groups_fields')?['odata.nextLink'],'')))",
+                      "metadataComplete": "@and(equals(body('Read_groups_list')?['Id'],outputs('Id_groups')),equals(body('Read_groups_list')?['BaseTemplate'],100),not(empty(body('Read_groups_list')?['Title'])),not(equals(coalesce(body('Read_groups_permissions')?['High'],body('Read_groups_permissions')?['EffectiveBasePermissions']?['High']),null)),not(equals(coalesce(body('Read_groups_permissions')?['Low'],body('Read_groups_permissions')?['EffectiveBasePermissions']?['Low']),null)))",
+                      "permissionEvidence": {
+                        "High": "@coalesce(body('Read_groups_permissions')?['High'],body('Read_groups_permissions')?['EffectiveBasePermissions']?['High'])",
+                        "Low": "@coalesce(body('Read_groups_permissions')?['Low'],body('Read_groups_permissions')?['EffectiveBasePermissions']?['Low'])"
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Index_groups": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "Unresolved_groups": {
+                    "type": "AppendToArrayVariable",
+                    "inputs": {
+                      "name": "AuditErrors",
+                      "value": {
+                        "role": "groups",
+                        "code": "LIST_MISSING_AMBIGUOUS_OR_UNSAFE",
+                        "message": "Expected exactly one ordinary list with normalized title Groups or Group Members; inspect listCandidates. No guessed target read."
+                      }
+                    },
+                    "runAfter": {}
+                  }
+                }
+              },
+              "runAfter": {
+                "Find_groups": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Reference_failure_culture": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          }
+        },
+        "Failure_groups": {
+          "type": "AppendToArrayVariable",
+          "inputs": {
+            "name": "AuditErrors",
+            "value": {
+              "role": "groups",
+              "code": "LIST_METADATA_READ_FAILED",
+              "message": "Inspect failed metadata action; no item reads, schema/data writes or permission changes."
+            }
+          },
+          "runAfter": {
+            "Inspect_groups": [
+              "Failed",
+              "TimedOut"
+            ]
+          }
+        },
+        "Inspect_members": {
+          "type": "Scope",
+          "actions": {
+            "Find_members": {
+              "type": "Query",
+              "inputs": {
+                "from": "@coalesce(body('Read_list_index')?['value'],json('[]'))",
+                "where": "@and(equals(replace(replace(toLower(string(item()?['Title'])),' ',''),'_',''),'groupmembers'),equals(item()?['BaseTemplate'],100))"
+              },
+              "runAfter": {}
+            },
+            "Choose_members": {
+              "type": "If",
+              "expression": "@and(equals(length(body('Find_members')),1),outputs('List_index_status')?['complete'])",
+              "actions": {
+                "Id_members": {
+                  "type": "Compose",
+                  "inputs": "@first(body('Find_members'))?['Id']",
+                  "runAfter": {}
+                },
+                "Read_members_list": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "@concat('_api/web/lists(guid''',outputs('Id_members'),''')?$select=Id,Title,BaseTemplate,ItemCount,ValidationFormula,ValidationMessage')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=nometadata"
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {
+                    "Id_members": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Read_members_fields": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "@concat('_api/web/lists(guid''',outputs('Id_members'),''')/fields?$select=Id,Title,InternalName,TypeAsString,Required,Hidden,ReadOnlyField,EnforceUniqueValues,Indexed,DefaultValue,SchemaXml,FromBaseType&$top=5000')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=nometadata"
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {
+                    "Read_members_list": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Read_members_permissions": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "@concat('_api/web/lists(guid''',outputs('Id_members'),''')/EffectiveBasePermissions')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=nometadata"
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {
+                    "Read_members_fields": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Filter_members_fields": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@coalesce(body('Read_members_fields')?['value'],json('[]'))",
+                    "where": "@or(equals(item()?['InternalName'],'Title'),equals(item()?['FromBaseType'],false))"
+                  },
+                  "runAfter": {
+                    "Read_members_permissions": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Select_members_fields": {
+                  "type": "Select",
+                  "inputs": {
+                    "from": "@body('Filter_members_fields')",
+                    "select": {
+                      "id": "@item()?['Id']",
+                      "internalName": "@item()?['InternalName']",
+                      "displayName": "@item()?['Title']",
+                      "type": "@item()?['TypeAsString']",
+                      "required": "@item()?['Required']",
+                      "unique": "@item()?['EnforceUniqueValues']",
+                      "indexed": "@item()?['Indexed']",
+                      "hidden": "@item()?['Hidden']",
+                      "readOnly": "@item()?['ReadOnlyField']",
+                      "defaultValue": "@item()?['DefaultValue']",
+                      "schemaXml": "@item()?['SchemaXml']"
+                    }
+                  },
+                  "runAfter": {
+                    "Filter_members_fields": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Index_members": {
+                  "type": "Select",
+                  "inputs": {
+                    "from": "@coalesce(body('Read_members_fields')?['value'],json('[]'))",
+                    "select": {
+                      "id": "@item()?['Id']",
+                      "internalName": "@item()?['InternalName']",
+                      "displayName": "@item()?['Title']",
+                      "type": "@item()?['TypeAsString']"
+                    }
+                  },
+                  "runAfter": {
+                    "Select_members_fields": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Record_members": {
+                  "type": "AppendToArrayVariable",
+                  "inputs": {
+                    "name": "AuditLists",
+                    "value": {
+                      "role": "members",
+                      "id": "@body('Read_members_list')?['Id']",
+                      "title": "@body('Read_members_list')?['Title']",
+                      "baseTemplate": "@body('Read_members_list')?['BaseTemplate']",
+                      "itemCount": "@body('Read_members_list')?['ItemCount']",
+                      "validationFormula": "@body('Read_members_list')?['ValidationFormula']",
+                      "validationMessage": "@body('Read_members_list')?['ValidationMessage']",
+                      "fields": "@body('Select_members_fields')",
+                      "columnIndex": "@body('Index_members')",
+                      "fieldsComplete": "@and(not(equals(body('Read_members_fields')?['value'],null)),empty(coalesce(body('Read_members_fields')?['@odata.nextLink'],body('Read_members_fields')?['odata.nextLink'],'')))",
+                      "metadataComplete": "@and(equals(body('Read_members_list')?['Id'],outputs('Id_members')),equals(body('Read_members_list')?['BaseTemplate'],100),not(empty(body('Read_members_list')?['Title'])),not(equals(coalesce(body('Read_members_permissions')?['High'],body('Read_members_permissions')?['EffectiveBasePermissions']?['High']),null)),not(equals(coalesce(body('Read_members_permissions')?['Low'],body('Read_members_permissions')?['EffectiveBasePermissions']?['Low']),null)))",
+                      "permissionEvidence": {
+                        "High": "@coalesce(body('Read_members_permissions')?['High'],body('Read_members_permissions')?['EffectiveBasePermissions']?['High'])",
+                        "Low": "@coalesce(body('Read_members_permissions')?['Low'],body('Read_members_permissions')?['EffectiveBasePermissions']?['Low'])"
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Index_members": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "Unresolved_members": {
+                    "type": "AppendToArrayVariable",
+                    "inputs": {
+                      "name": "AuditErrors",
+                      "value": {
+                        "role": "members",
+                        "code": "LIST_MISSING_AMBIGUOUS_OR_UNSAFE",
+                        "message": "Expected exactly one ordinary list with normalized title Groups or Group Members; inspect listCandidates. No guessed target read."
+                      }
+                    },
+                    "runAfter": {}
+                  }
+                }
+              },
+              "runAfter": {
+                "Find_members": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Failure_groups": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          }
+        },
+        "Failure_members": {
+          "type": "AppendToArrayVariable",
+          "inputs": {
+            "name": "AuditErrors",
+            "value": {
+              "role": "members",
+              "code": "LIST_METADATA_READ_FAILED",
+              "message": "Inspect failed metadata action; no item reads, schema/data writes or permission changes."
+            }
+          },
+          "runAfter": {
+            "Inspect_members": [
+              "Failed",
+              "TimedOut"
+            ]
+          }
+        },
+        "Incomplete_fields": {
+          "type": "Query",
+          "inputs": {
+            "from": "@variables('AuditLists')",
+            "where": "@or(not(equals(item()?['fieldsComplete'],true)),not(equals(item()?['metadataComplete'],true)))"
+          },
+          "runAfter": {
+            "Failure_members": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          }
+        },
+        "Audit_report": {
+          "type": "Compose",
+          "inputs": {
+            "kind": "TandemGroupSchemaAudit",
+            "schemaVersion": 1,
+            "sourceTicket": 12,
+            "packageBuildId": "cb49aded-f121-410e-b7df-d9646be892dd",
+            "runReference": "@workflow()?['run']?['name']",
+            "readOnly": true,
+            "rowReads": 0,
+            "writes": 0,
+            "collectionComplete": "@and(outputs('List_index_status')?['complete'],equals(length(variables('AuditLists')),2),equals(length(variables('ReferenceLists')),3),empty(variables('AuditErrors')),empty(body('Incomplete_fields')))",
+            "schemaVerified": false,
+            "writeCapability": "NOT_VERIFIED_NO_WRITES",
+            "lists": "@variables('AuditLists')",
+            "referenceLists": "@variables('ReferenceLists')",
+            "listCandidates": "@coalesce(body('Read_list_index')?['value'],json('[]'))",
+            "errors": "@variables('AuditErrors')",
+            "nextStep": "Review actual field mapping, lookup targets, choices/defaults/precision/validation and list permissions. No uniqueness runtime proof, row integrity/migration pass or approved setup correction inferred."
+          },
+          "runAfter": {
+            "Incomplete_fields": [
+              "Succeeded"
+            ]
+          }
+        }
+      }
+    },
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "connectionName": "IMPORT_SELECT_EXISTING_SHAREPOINT_CONNECTION",
+        "source": "Embedded",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+        "tier": "NotSpecified",
+        "apiName": "sharepointonline",
+        "isProcessSimpleApiReferenceConversionAlreadyDone": false
+      }
+    },
+    "flowFailureAlertSubscribed": false,
+    "isManaged": false
+  }
+}

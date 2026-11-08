@@ -38,7 +38,7 @@ class Runner:
                     'if':lambda c,a,b:a if c else b,'contains':lambda a,b:b in a,'union':union,
                     'intersection':lambda a,b:[v for v in union(a,a) if v in b],
                     'coalesce':lambda *v:next((x for x in v if x is not None),None),
-                    'trim':lambda s:s.strip(),'toLower':lambda s:s.lower(),'json':json.loads,
+                    'replace':lambda s,old,new:s.replace(old,new),'trim':lambda s:s.strip(),'toLower':lambda s:s.lower(),'json':json.loads,
                     'first':lambda a:a[0],'workflow':lambda:{'run':{'name':'local-subset-not-a-tenant-run'}},
                     'concat':lambda *a:''.join(str(x) for x in a),'int':int,
                     'string':lambda v:json.dumps(v,separators=(',',':')) if isinstance(v,(dict,list,bool)) else str(v),

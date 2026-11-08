@@ -1,0 +1,13 @@
+{
+  "sourceTicket": 12,
+  "status": "AUDIT_PACKAGE_PENDING_TENANT_RUN",
+  "packageBuildId": "cb49aded-f121-410e-b7df-d9646be892dd",
+  "package": "artifacts/group_schema/TandemGroupSchemaAudit.zip",
+  "mappingVerified": false,
+  "changesApplied": false,
+  "scope": "Groups and Group Members only; production flow behavior remains with respective consumers.",
+  "expectedContract": "docs/MVP_FIELD_CONTRACT.md#groups-field-contract",
+  "historicalEvidence": "config/participant_response_flow.snapshot.json is source evidence, not observed current tenant schema.",
+  "referenceListsSource": "config/tenant_schema_mapping.json (verified #66 participant/language/culture IDs; inspector rechecks identities)",
+  "nextStep": "Owner read-only Audit_report required before mapping or change proposal; no row migration/deletion/renaming permitted by this inspector."
+}

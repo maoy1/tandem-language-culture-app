@@ -20,9 +20,9 @@
   },
   "counts": {
     "allTickets": 48,
-    "openTickets": 37,
-    "closedTickets": 11,
-    "done": 9,
+    "openTickets": 36,
+    "closedTickets": 12,
+    "done": 10,
     "superseded": 2,
     "inProgress": 1
   },
@@ -302,24 +302,24 @@
       "number": 12,
       "title": "[Shared technical] Groups and Group Members schema and field mapping",
       "ticketType": "Shared technical",
-      "status": "Planned",
+      "status": "In progress",
       "flowScope": "One-time group/membership data contract verification/setup only. #11 owns automatic new-group creation; {{mygroups}} owns reading/counts.",
-      "implementationReadiness": "Ready for focused one-time group-schema verification; flag changes before applying.",
-      "implementationEvidence": "Owner reports Group/Group Members lists and SourceRequestId/SetupComplete/MembershipKey configured. #57 snapshot is source evidence, not complete schema/settings/uniqueness proof. Runtime creation now belongs to #11.",
-      "evidence": "Owner reports Group/Group Members lists and SourceRequestId/SetupComplete/MembershipKey configured. #57 snapshot is source evidence, not complete schema/settings/uniqueness proof. Runtime creation now belongs to #11.",
+      "implementationReadiness": "Read-only group/member metadata inspector built; actual tenant audit/mapping and any scoped setup still pending.",
+      "implementationEvidence": "194 local tests pass; TandemGroupSchemaAudit build cb49aded-f121-410e-b7df-d9646be892dd, 51 actions/depth 3. No list item reads or writes. PR #75 merged; #47 shared bounded proof complete.",
+      "evidence": "Owner historical setup/#57 snapshot retained. New audit NOT_IMPORTED_NOT_TESTED; no observed group/member mapping/settings or correction capability inferred.",
       "proposedExperience": [
         "Accept a valid connection to form a typed group.",
         "Publish only after required request/membership setup agrees.",
         "Open My groups for operational groups, members, counts and free slots.",
         "Hide unfinished setup."
       ],
-      "remainingWork": "One-time group/membership data contract verification/setup only. #11 owns automatic new-group creation; #64 owns reading/counts.",
+      "remainingWork": "Run read-only inspector, resolve actual field mapping/types/defaults/lookups/unique/index/schema/list rights; flag any bounded corrections before applying. Preserve existing rows and route migration exceptions to #48.",
       "testReferences": [
         "SCHEMA-001",
         "SCHEMA-002"
       ],
-      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
-      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "testStatus": "194 local tests PASS, including 15 generated-inspector/package/failure-path cases. #12 tenant SCHEMA-001/SCHEMA-002 NOT RUN.",
+      "testHandoff": "Partial metadata collection handover only; exact build/package/connection/read scope/steps/expected report/failure handling and checkboxes inline in #12. No production schema apply package until actual audit reviewed.",
       "flows": [],
       "scopeBoundary": "One-time group/membership data contract verification/setup only. #11 owns automatic new-group creation; #64 owns reading/counts.",
       "prerequisites": [
@@ -1065,9 +1065,9 @@
       "number": 47,
       "title": "[Shared technical] Shared conditional writes and bounded recovery",
       "ticketType": "Shared technical",
-      "status": "Ready for review",
+      "status": "Done",
       "flowScope": "Minimum cross-flow decision/duplicate/capacity protection and proof; not a second acceptance engine or elaborate locking platform.",
-      "implementationReadiness": "Bounded shared contract/reference helpers, permission preflight and selected native fixture proof complete; PR #75 source/contract review pending.",
+      "implementationReadiness": "Own shared-technical deliverable accepted/merged; not production deployment certification.",
       "implementationEvidence": "179 local tests and 70 reference schedules passed. Native v2 run 08584074402025984197329193901CU08 reports 10 cases/allPassed=true/no failed cases; existing fixture reused.",
       "evidence": "Build b54d7cee-971d-4af3-924f-e81d5fefaec9; artifacts/coordination/results/fixture-v2.pass.owner-summary.json. Earlier 5/10 and 9/10 failures retained; no production or unknown-I/O recovery certification.",
       "proposedExperience": [
@@ -1076,7 +1076,7 @@
         "Protect last slot across every capacity-changing writer.",
         "Hide incomplete setup/report truthfully; rare support may be exceptional."
       ],
-      "remainingWork": "Review/merge PR #75 for own shared-technical scope. #12 verifies production metadata; each consuming Flow integrates guards and proves authority/runtime behavior separately.",
+      "remainingWork": "Own bounded contract/proof accepted; PR #75 merged be278a1cc7a72b862154ae8ffe201acdf998f019, #47 closed. Each consumer owns its integration and #12 owns group/member schema.",
       "testReferences": [
         "REQ-002",
         "REQ-007:011",
