@@ -269,3 +269,26 @@ Return invalid-run Validation_report and both label outcomes (or first error).
 Capture the invalid follow-up NO_CHANGE if present; do not infer it without a
 report. Restoration is required even if the test fails. Do not alter shared
 catalogue rows, other profiles, connections or permissions for this check.
+
+## Changed-value refresh passed; final wording handover
+
+Owner reports all directed empty-profile Needs review / restored Active and App
+Refresh steps passed. Raw invalid-run report IDs were not supplied; this is bounded
+owner evidence. No repeat needed merely to re-prove the label can reload Status.
+
+Replace ValidationLabel.Text with the revised artifact. It displays:
+
+    Last profile check: Passed
+    Changes are checked after saving. Refresh for the latest result.
+
+Needs review displays “Last profile check: Needs attention” with “Review your
+profile details, save, then refresh.” Blank/legacy Status displays “Not yet
+confirmed”; load errors display “Profile check unavailable. Try Refresh validation.”
+Keep AutoHeight/Wrap enabled. “Passed” describes validation Status Active, not
+ParticipationStatus: Paused/Inactive users can have a passed profile check.
+No new per-edit completion claim, timer, schema field or behaviour is introduced.
+
+Next: owner apply/accept the shorter wording, Save/Publish, and supply the new
+Live app version. Last confirmed Live is 19. Invalid no-op follow-up, catalogue,
+creation and failure/conflict target variants remain pending under their existing
+gates; they are not marked passed by this wording or broader owner “all fine”.

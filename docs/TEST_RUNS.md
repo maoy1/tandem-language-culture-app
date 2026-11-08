@@ -1254,3 +1254,20 @@ whole-schema audit evidence above remain separately scoped.
   wait for Active, Refresh again. Preserve identity/availability. No new import.
 - New Live version not supplied; last confirmed 19. #61 In progress / PR #72
   draft. No code/package change; JSON/diff checked, prior 101 local tests retained.
+
+### UI61-TRANSITIONS-20261108 — changed-value refresh owner PASS; wording revision
+
+- Owner responds “all fine” to the directed item-38 clear-four-selections -> v2
+  Needs review -> App Refresh Needs review -> restore exact originals -> v2 Active
+  -> Refresh Active check. **PASS (owner report)** for that invalid/restore and
+  changed-value UI sequence. Raw invalid Validation_report/run IDs not supplied;
+  no invalid no-op follow-up or catalogue-negative proof inferred.
+- Owner quotes the full latest-stored Active/background/earlier-edit text and
+  finds it confusing. Revised Text artifact only: “Last profile check: Passed” or
+  “Needs attention” / “Not yet confirmed”, plus one short contextual helper line.
+  Data lookup, status selection and Refresh behavior unchanged. “Last” preserves
+  the existing limitation: this is not a per-edit completion marker.
+- Shortened wording application/appearance acceptance and new Live version not
+  yet supplied. Last confirmed published app remains 19. #61 In progress / PR #72
+  draft. No new import/flow/schema/permission change. JSON/diff checked; no new
+  tests for this low-impact copy/evidence change; prior 101 local tests retained.

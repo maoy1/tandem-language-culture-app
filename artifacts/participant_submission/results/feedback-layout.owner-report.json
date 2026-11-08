@@ -21,10 +21,10 @@
     ]
   },
   "headerLayout": "Next guided step; actual header parent name/auto-layout properties not yet inspected.",
-  "runtimeFeedbackTest": "Active display and button click observed; changed stored Status -> refreshed label not yet demonstrated.",
+  "runtimeFeedbackTest": "Owner reports all fine for directed Needs review -> restore Active sequence and both Refresh label changes; no run JSON/version supplied.",
   "latestConfirmedLiveVersion": 19,
   "headerAppearance": "Owner reports other header elements look good; actual tree parent SelectedRecordHeaderContainer1.",
   "headerExtraLabel": "Label1 displays Signed in as plus User().Email; guided hide duplicate because top blue banner already displays identity. Hidden state not separately confirmed.",
-  "validationLabel": "Owner screenshot shows complete Latest stored validation: Active plus asynchronous/earlier-edit note.",
+  "validationLabel": "Previous long Active/background/earlier-edit wording observed; owner finds it confusing. New two-line Last profile check wording prepared.",
   "refreshClick": "Owner confirms Refreshing validation status notification appears after click."
 }

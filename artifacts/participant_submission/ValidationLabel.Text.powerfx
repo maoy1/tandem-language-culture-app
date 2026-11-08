@@ -6,17 +6,21 @@ If(
             { savedProfile: LookUp([@Participants], ID = varValidationParticipantId) },
             If(
                 IsBlank(savedProfile.ID),
-                "The saved profile could not be loaded. Try Refresh validation.",
-                "Latest stored validation: " &
+                "Profile check unavailable. Try Refresh validation.",
+                "Last profile check: " &
                 Switch(
                     savedProfile.Status.Value,
-                    "Active", "Active",
-                    "Needs review", "Needs review — check your language and culture selections and any selected time zone",
-                    "not yet confirmed"
-                ) &
-                ". Validation runs in the background; this status may reflect an earlier edit. Use Refresh validation to check again."
+                    "Active", "Passed",
+                    "Needs review", "Needs attention",
+                    "Not yet confirmed"
+                ) & Char(10) &
+                If(
+                    savedProfile.Status.Value = "Needs review",
+                    "Review your profile details, save, then refresh.",
+                    "Changes are checked after saving. Refresh for the latest result."
+                )
             )
         ),
-        "Validation status could not be loaded. Try Refresh validation."
+        "Profile check unavailable. Try Refresh validation."
     )
 )

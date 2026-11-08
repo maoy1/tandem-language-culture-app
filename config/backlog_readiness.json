@@ -1204,7 +1204,7 @@
         "The flow reads current saved values and validates catalogue selections.",
         "See validation feedback without admin approval or resetting personal choices."
       ],
-      "remainingWork": "Verify changed stored Status is reloaded in feedback label (bounded empty-profile invalid/restore test); Save/Publish and record Live version; retain catalogue/creation/failure/conflict target gates.",
+      "remainingWork": "Apply/accept shortened feedback wording; Save/Publish and record new Live version. Retain invalid no-op follow-up, catalogue/creation/failure/conflict target gates; invalid-run IDs not provided.",
       "testReferences": [
         "REG-001:004",
         "REG-006:009",
@@ -1213,7 +1213,7 @@
         "PAR-002",
         "PAR-003"
       ],
-      "testStatus": "Owner target PASS: initial no-change, Active correction/readback/follow-up, v2-only cutover and field preservation. Row-versus-ID discrepancy resolved by owner; other scoped acceptance pending.",
+      "testStatus": "Owner target passes: valid Active sequence/preservation, v2-only, directed empty-profile invalid/restore and changed-value Refresh. Shortened wording/new Live version and other scoped variants pending.",
       "testHandoff": "docs/FLOW_61_PARTICIPANT_SUBMISSION.md: exact package/build, one-validator cutover/recovery, owner smoke and detailed cases. Target tenant NOT RUN; source ZIP remains local.",
       "flows": [
         "Participant submission"

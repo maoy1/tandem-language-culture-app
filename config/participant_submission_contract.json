@@ -50,7 +50,7 @@
     "postWrite": "Read back and verify Status without claiming unrelated fields were written",
     "selfTrigger": "Follow-up reads current item and skips unchanged Status; no sustained loop"
   },
-  "appFeedback": "Owner screenshot confirms latest-stored Active label; layout accepted, refresh click notification observed. Changed-status refresh proof and new published Live version remain pending.",
+  "appFeedback": "Owner confirms label changed Needs review -> Active after Refresh during invalid/restore test. Shorter Last profile check: Passed/Needs attention wording prepared; UI application/acceptance and new Live version pending. No per-edit completion marker claimed.",
   "deploymentGate": "Generated Create-as-new package; stop existing validator before import, select existing SharePoint connection, ensure only v2 enabled, run owner smoke. Source export retained locally for recovery.",
   "limits": {
     "maxActionDefinitions": 500,
@@ -58,7 +58,7 @@
     "measuredActions": 26,
     "measuredNesting": 3
   },
-  "tenantAcceptance": "Owner-reported item-38 no-change, Active correction/readback/follow-up and identity/selections/availability preservation PASS; only v2 enabled. Owner clarifies 3 meant third row, not ID. Invalid/catalogue/creation/failure/conflict and applied app-feedback acceptance remain pending.",
+  "tenantAcceptance": "Owner passes item-38 no-change/correction/readback/follow-up and preservation, v2-only cutover, plus directed empty-profile Needs review/restoration and changed-value UI Refresh. New invalid-run IDs not supplied; invalid no-op follow-up, catalogue/creation/failure/conflict variants and new Live version pending.",
   "packageBuildId": "88637754-4c91-4833-9dcf-5116d8bfb77e",
   "artifact": "artifacts/participant_submission/TandemParticipantSubmission-v2.zip",
   "runtimeEvidence": {
@@ -67,6 +67,7 @@
     "participantFieldPreservation": "Owner visually confirmed third row is SharePoint ID 38 and confirmed identity/selections/participation/openness preserved across tested sequence.",
     "activeCorrection": "artifacts/participant_submission/results/active-correction.owner-report.json",
     "activeCorrectionFollowup": "artifacts/participant_submission/results/active-correction-followup.owner-report.json",
-    "profileCorrelation": "artifacts/participant_submission/results/owner-cutover-and-correlation.json"
+    "profileCorrelation": "artifacts/participant_submission/results/owner-cutover-and-correlation.json",
+    "invalidRestoreAndRefresh": "artifacts/participant_submission/results/feedback-transitions.owner-report.json"
   }
 }
