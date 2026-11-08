@@ -1,0 +1,17 @@
+{
+  "sourceTicket": 61,
+  "app": "Tandem Participant Registration",
+  "version": 26,
+  "releaseState": "Live \u2014 owner reported after Save/Publish request",
+  "reportedDate": "2026-11-08",
+  "exactSaveTime": null,
+  "exactPublishTime": null,
+  "ownerReply": "version 26",
+  "feedback": "Owner accepted/applied minimal Last profile check: Passed text; Needs attention plus correction hint.",
+  "priorTests": "Owner passed Preview invalid/restore -> refreshed Needs review/Active, and original Active correction/readback/follow-up target runs.",
+  "limitations": [
+    "No separate replay in Live Version 26 reported.",
+    "Publication does not certify pending target catalogue/creation/failure/conflict or invalid follow-up cases."
+  ],
+  "flowBuildId": "88637754-4c91-4833-9dcf-5116d8bfb77e"
+}

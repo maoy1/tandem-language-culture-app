@@ -303,3 +303,18 @@ artifact is synchronized; underlying saved Status lookup/Refresh behavior remain
 Next owner step: Save/Publish and return the new Live version. Publication is not
 inferred from wording acceptance; last confirmed release remains 19. Prior tests
 retain their exact scope and remaining case gates are unchanged.
+
+## Current release — owner-reported Live Version 26
+
+Owner confirms Save/Publish complete and supplies Version 26. This completes the
+feedback publication handover; no exact publish timestamp or separate Live-player
+replay supplied. Earlier publication-pending notes are historical and superseded.
+See version26.owner-report.json. Flow remains build 88637754-4c91-4833-9dcf-5116d8bfb77e.
+
+Core item-38 flow/feedback/preservation results retain their bounded owner scope.
+Remaining target cases: invalid follow-up no-op/report, catalogue negatives,
+creation and failure/conflict plus unexecuted account/availability variants.
+Retain these gates under build-first priority, not as delivered acceptance.
+If available, retrieve the already-executed Needs review report and its next
+matching-item follow-up from run history without making another profile edit.
+#61 stays In progress and PR #72 draft while own acceptance remains incomplete.

@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "deploymentStatus": "version19_issue5_and_issue6_done",
+  "deploymentStatus": "version26_issue61_feedback_published_remaining_tenant_acceptance_pending",
   "list": "Participants",
   "identity": {
     "field": "ParticipantAccount",
@@ -80,5 +80,11 @@
     "version": 19,
     "evidence": "artifacts/participation_controls/version19.owner-report.json",
     "remainingAcceptance": "Own App scopes #5/#6 complete after merged #71/#70. Backend and protected integration remain with receiving tickets."
+  },
+  "currentRelease": {
+    "app": "Tandem Participant Registration",
+    "version": 26,
+    "state": "Live_owner_reported",
+    "evidence": "artifacts/participant_submission/results/version26.owner-report.json"
   }
 }

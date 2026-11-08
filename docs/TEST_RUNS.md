@@ -1287,3 +1287,21 @@ whole-schema audit evidence above remain separately scoped.
   scoped cases retain existing pending gates. #61 In progress / PR #72 draft.
 - JSON/diff checked. No tests added/rerun for copy-only change; prior 101 local
   code tests retained. No whole-ticket completion claimed.
+
+### UI61-LIVE26-20261108 — feedback release published, owner reported
+
+- In response to Save/Publish and Live-version request, owner confirms done and
+  supplies **Version 26**. Accept as Live publication evidence for Tandem
+  Participant Registration with final feedback wording. Exact save/publish times
+  not supplied; no timestamps copied from earlier Version 16/19 releases.
+- Versioned evidence: artifacts/participant_submission/results/version26.owner-report.json.
+  Existing Preview changed-value Refresh/invalid-restore, wording/layout and target
+  flow sequence passes retain their scope. No separate Live-26 replay reported.
+- Original validator off / only v2 and profile ID 38 correlation/preservation
+  remain confirmed. No new flow build/import necessary for the copy publication.
+- Target invalid follow-up, catalogue negatives, creation, failure/conflict and
+  unexecuted account/availability variants retain pending/fixture gates. #61 stays
+  open/In progress; PR #72 draft. No whole acceptance or broader access claim.
+- Evidence/deployment metadata only; JSON and diff checked; 101 local code-test
+  result retained without rerun. A passed Preview variant is not retroactively
+  labelled as a separately executed Live-version test.

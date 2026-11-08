@@ -1196,7 +1196,7 @@
       "ticketType": "Flow",
       "status": "In progress",
       "flowScope": "One existing created/modified validation flow; App form is #5 and schema {{participant_schema}}.",
-      "implementationReadiness": "Imported package: initial no-change, Active correction/readback and requested subsequent no-change owner passes for item 38; remaining scoped acceptance and applied feedback pending.",
+      "implementationReadiness": "Package imported (26 actions / depth 3); final feedback published as owner-reported Live app Version 26. Core owner tests passed; remaining target acceptance evidence pending.",
       "implementationEvidence": "Existing event mapping inspected/preserved; complete active-catalogue reads, typed ID validation, ETag-protected Status-only MERGE, failed-read gates/readback. 101 local tests passed, not tenant certification.",
       "evidence": "Build 88637754-4c91-4833-9dcf-5116d8bfb77e, item 38: initial NO_CHANGE CU09, STATUS_UPDATED CU11, requested follow-up NO_CHANGE run 08584074534064918346698562621CU26. No global race/loop or field-preservation inference.",
       "proposedExperience": [
@@ -1204,7 +1204,7 @@
         "The flow reads current saved values and validates catalogue selections.",
         "See validation feedback without admin approval or resetting personal choices."
       ],
-      "remainingWork": "Save/Publish accepted feedback and record new Live version; retain invalid no-op follow-up, catalogue/creation/failure/conflict target gates (invalid-run IDs not supplied).",
+      "remainingWork": "Retain target invalid no-op follow-up, catalogue-negative, creation, failure/conflict and unexecuted account/availability variants; no independent replay in Live 26 reported. Issue remains open; draft PR is not whole-ticket acceptance.",
       "testReferences": [
         "REG-001:004",
         "REG-006:009",
@@ -1213,7 +1213,7 @@
         "PAR-002",
         "PAR-003"
       ],
-      "testStatus": "Owner target passes: valid Active sequence/preservation, v2-only, directed empty-profile invalid/restore and changed-value Refresh. Shortened wording/new Live version and other scoped variants pending.",
+      "testStatus": "Owner flow/core profile preservation and invalid/restore Refresh passes; final copy accepted and Live 26 reported. Remaining target variants pending.",
       "testHandoff": "docs/FLOW_61_PARTICIPANT_SUBMISSION.md: exact package/build, one-validator cutover/recovery, owner smoke and detailed cases. Target tenant NOT RUN; source ZIP remains local.",
       "flows": [
         "Participant submission"
