@@ -43,7 +43,7 @@
   "writeBoundary": "One request POST only; both native unique constraints arbitrate races, automatic retry disabled. Exact immutable SendOperationKey readback can settle a lost response; failed/unknown create without exact row returns CREATE_OUTCOME_UNKNOWN, never claims no effect. No membership/group/notification/profile/permission writes.",
   "receiptScope": "Minimal immutable personal intent has only trusted actor and target; uniquely keyed request row itself is send receipt. No separate operation store or lock platform introduced. Completed/history replay never creates a fresh request.",
   "recovery": "Keep same intent after unknown transport outcome. Reverse concurrent send may return unknown when other intent owns live key; refresh My requests. Never make a new UUID automatically as a retry workaround.",
-  "tenantResult": "NOT_IMPORTED_NOT_TESTED",
+  "tenantResult": "OWNER_REPORTED_MATCHED_SAVED_PENDING_AND_UNMATCHED_REJECTION; REPLAY_STORED_ROW_AND_WIDER_ACCEPTANCE_PENDING",
   "ordinaryUserAccessVerified": false,
   "localCases": 34,
   "limits": {

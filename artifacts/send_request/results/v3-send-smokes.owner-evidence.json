@@ -1,0 +1,15 @@
+{
+  "sourceTicket": 10,
+  "expectedPackageBuildId": "a9251019-b7a5-4170-8877-682bb71b8693",
+  "packageVersion": "v3",
+  "evidenceType": "owner verbal confirmation; successful response/run references not supplied",
+  "matchedSend": "PASS_REPORTED_SAVED_PENDING",
+  "unmatchedSend": "PASS_REPORTED_REJECTED_AFTER_NEW_INTENT_GUIDANCE",
+  "priorConflictRunReference": "08584074252930158987892330133CU13",
+  "remaining": [
+    "exact stored row parties/keys and request ID",
+    "same-intent replay and duplicate prevention",
+    "native cancellation/history integration",
+    "races, app integration and ordinary-user access"
+  ]
+}
