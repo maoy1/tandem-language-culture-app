@@ -1,6 +1,6 @@
 # Participant submission validation — #61
 
-Status: **In progress; imported valid/no-change smoke passed; Status-write and app-feedback acceptance pending**.
+Status: **In progress; valid/no-change and Active correction/readback passed; post-write follow-up and app feedback pending**.
 The owner supplied the current export. Inspection confirms GetOnUpdatedItems,
 one-minute recurrence, splitOn body/value, current Get_item using triggerBody ID,
 four-field nonempty OR and changed-only Status patches. Catalogue validity and
@@ -211,3 +211,12 @@ generation time; current runtime evidence is recorded in results/ and TEST_RUNS.
 Original-validator disabled state and saved-field preservation were not explicitly
 reported. Necessary-write/readback/follow-up and feedback checks remain pending.
 No new import or app edit is needed merely to repeat this successful no-change run.
+
+### Necessary-write target run — 2026-11-08
+
+Run 08584074534387722777188625214CU11 / item 38 returned valid=true, Active,
+statusChanged=true, STATUS_UPDATED for the matching build. This passes the
+necessary Active correction and readback path. The earlier NO_CHANGE run was
+before this correction; the subsequent matching-item NO_CHANGE run is still
+needed for the follow-up test. Saved-field preservation and original-validator
+disabled state are not explicitly confirmed. See RUN61-20261108-02.

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "sourceTicket": 61,
   "flow": "Participant submission",
-  "deliveryState": "IMPORTED_VALID_NO_CHANGE_PASS_WRITE_AND_FEEDBACK_PENDING",
+  "deliveryState": "VALID_NO_CHANGE_AND_ACTIVE_CORRECTION_PASS_FOLLOWUP_PENDING",
   "runtime": "Power Automate with existing SharePoint connection; no new service or runtime",
   "trigger": {
     "event": "SharePoint item created or modified",
@@ -58,12 +58,13 @@
     "measuredActions": 26,
     "measuredNesting": 3
   },
-  "tenantAcceptance": "Owner report: item 38 valid Active NO_CHANGE smoke PASS; changed-write/readback/follow-up, invalid catalogue/profile, preservation and app-feedback cases pending.",
+  "tenantAcceptance": "Owner reports for item 38: initial valid/no-change and necessary Active correction/readback PASS. Post-write follow-up, invalid catalogue/profile, preservation, conflict/failure and app-feedback cases pending.",
   "packageBuildId": "88637754-4c91-4833-9dcf-5116d8bfb77e",
   "artifact": "artifacts/participant_submission/TandemParticipantSubmission-v2.zip",
   "runtimeEvidence": {
     "validNoChange": "artifacts/participant_submission/results/valid-no-change.owner-report.json",
     "originalValidatorDisabled": "Not explicitly confirmed",
-    "participantFieldPreservation": "Not explicitly confirmed for this v2 run"
+    "participantFieldPreservation": "Not explicitly confirmed for this v2 run",
+    "activeCorrection": "artifacts/participant_submission/results/active-correction.owner-report.json"
   }
 }

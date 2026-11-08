@@ -1132,3 +1132,22 @@ whole-schema audit evidence above remain separately scoped.
   status. Compare identity/selections/availability; retain original data.
 - No production code or package changed. Prior 101-test local result retained;
   JSON and diff checked for this evidence-only update. #61 remains In progress.
+
+### RUN61-20261108-02 — necessary Active correction/readback PASS
+
+- Owner supplied matching build 88637754-4c91-4833-9dcf-5116d8bfb77e,
+  run 08584074534387722777188625214CU11, item 38: valid=true, Status Active,
+  statusChanged=true, STATUS_UPDATED. Exact report in
+  artifacts/participant_submission/results/active-correction.owner-report.json.
+- **PASS (owner report)**: target necessary Status-write path and successful
+  readback for the tested profile. Validation_report is reached only after
+  Update_validation_status, Verify_status and Require_status_readback succeed.
+- Initial NO_CHANGE run preceded this correction; it is not the post-write
+  follow-up. Follow-up NO_CHANGE/update Skipped remains pending. No sustained-loop,
+  independent field-preservation or original-validator-disabled pass inferred.
+- Invalid/unknown/inactive selections, creation, failure/conflict, and applied/
+  published app feedback retain prior pending states. No full REG/PAR case family
+  or whole #61 completion claimed. No new import, package or app change required
+  to inspect the already-triggered next matching-item run.
+- Evidence/metadata only: JSON and diff checked; prior 101 local tests retained,
+  not rerun. #61 remains In progress; PR #72 remains draft.

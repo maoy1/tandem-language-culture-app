@@ -1196,15 +1196,15 @@
       "ticketType": "Flow",
       "status": "In progress",
       "flowScope": "One existing created/modified validation flow; App form is #5 and schema {{participant_schema}}.",
-      "implementationReadiness": "Target package imported and valid Active NO_CHANGE owner smoke passed for item 38; Status-write path, app-feedback application and remaining scoped tenant acceptance pending.",
+      "implementationReadiness": "Imported package: valid/no-change and necessary Active correction/readback owner passes for item 38; post-write follow-up and app feedback pending.",
       "implementationEvidence": "Existing event mapping inspected/preserved; complete active-catalogue reads, typed ID validation, ETag-protected Status-only MERGE, failed-read gates/readback. 101 local tests passed, not tenant certification.",
-      "evidence": "Run 08584074536792033395422259203CU09 / build 88637754-4c91-4833-9dcf-5116d8bfb77e: valid=true, statusChanged=false, NO_CHANGE. No write-path or preservation inference.",
+      "evidence": "Build 88637754-4c91-4833-9dcf-5116d8bfb77e, item 38: run 08584074536792033395422259203CU09 NO_CHANGE; run 08584074534387722777188625214CU11 STATUS_UPDATED. No subsequent no-loop or field-preservation inference.",
       "proposedExperience": [
         "Save or correct your profile.",
         "The flow reads current saved values and validates catalogue selections.",
         "See validation feedback without admin approval or resetting personal choices."
       ],
-      "remainingWork": "Confirm original validator disabled and profile fields preserved; exercise necessary Status correction/readback/no-op follow-up; apply/test/publish feedback and retain remaining case gates.",
+      "remainingWork": "Confirm post-write follow-up NO_CHANGE, original validator disabled and profile fields preserved; apply/test/publish feedback; remaining scoped tenant case gates retained.",
       "testReferences": [
         "REG-001:004",
         "REG-006:009",
@@ -1213,7 +1213,7 @@
         "PAR-002",
         "PAR-003"
       ],
-      "testStatus": "Partial target tenant PASS: valid/no-change only. Other scoped cases pending; historical partial results retained.",
+      "testStatus": "Partial target tenant PASS: valid/no-change and necessary Active correction/readback. Post-write follow-up and other scoped cases pending.",
       "testHandoff": "docs/FLOW_61_PARTICIPANT_SUBMISSION.md: exact package/build, one-validator cutover/recovery, owner smoke and detailed cases. Target tenant NOT RUN; source ZIP remains local.",
       "flows": [
         "Participant submission"
