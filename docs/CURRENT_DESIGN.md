@@ -39,7 +39,7 @@ operational dependencies before relying on them.
 | Time zone | Optional single selection from the Time zone catalogue; blank never blocks registration/discovery | Requiredness change pending #5 |
 | Location derivation | Lower priority; reconsider only when cheap and supported | Later; no profile-location dependency |
 | Discovery audience | Present compatible available profiles/groups, not all profiles | #7, #16, #42 |
-| Discovery fields / Comments | Exact display fields undecided; participant fields generally eligible, admin/system-only fields excluded; no Comments notice for now | Decide in #7/#42 |
+| Discovery fields / Comments | Person/group display approved 2026-11-08; email/admin/system data excluded; no Comments notice | #46 contract; implement/test #7/#16/#42 |
 | Private organiser notes | Participant emails organisers; no new private-Comments split | Contact route to identify; separate from notification-channel decision |
 | Language groups | 1-to-1 or 1-to-2, meaning 2 or 3 people total | #12/#13 |
 | Culture groups | 2–10 total members, including at least one relevant culture sharer | Owner approved; #12/#13 |
@@ -83,7 +83,7 @@ The reviewable field matrix is [MVP_FIELD_CONTRACT.md](MVP_FIELD_CONTRACT.md).
 It now includes separate Groups and Group Members tables, field ownership,
 editability and derived count/slot/joinability rules. These are target contracts,
 not proof that any existing tenant group lists have the proposed structure.
-Group limits are approved; proposed technical names/defaults/projections still
+Group limits and Discovery display are approved; target technical field tables
 need acceptance. #46 remains open and no schema/form is changed by this proposal.
 
 Finalize exact types, requiredness, defaults, field ownership and exposure in #46
@@ -112,12 +112,11 @@ Culture-only validation must accept useful culture selections without requiring
 Teach/Learn languages. Culture discovery needs a genuine sharer; interest alone
 must not imply sharing expertise. Agree how combined interests are represented.
 
-Exact Discovery profile display fields remain undecided. Participant-provided
-fields, including Comments, are generally eligible; admin/system-only columns
-must not be shared. Remove the proposed Comments notice for now. Finalize an
-explicit response projection with Discovery (#7/#42), based on this project's
-contract rather than the old Excel sheet. Do not treat this general eligibility
-as confirmation that every profile field is already displayed.
+Discovery display is approved in MVP_FIELD_CONTRACT.md (2026-11-08): include
+the proposed person fields, group description/member names and approved
+member profile details. Exclude email and raw account/identity/admin/system data.
+This decision does not establish deployed projection or verified access. Comments
+are included; the proposed Comments notice remains removed.
 
 ## Discovery and baseline test evidence
 
@@ -197,6 +196,32 @@ leaving, not a new pause/Inactive membership cascade.
 #47 covers duplicate accepts, simultaneous last-slot joins, retries and partial
 multi-record failure. It is shared acceptance logic/testing for #11/#12/#17,
 not a second matching implementation. Ordinary successful processing is automatic.
+
+## Contract ticket boundary - #46
+
+#46 delivers the field/ownership and approved Discovery exposure specification;
+owner review/merge accepts its target field tables. Runtime implementation,
+permissions, flow interfaces, migration decisions and reliability tests have
+explicit receiving tickets in MVP_FIELD_CONTRACT.md. They do not prevent #46
+closing once its document review/merge is complete. All prerequisites remain
+mandatory before their dependent integration/release work.
+
+## Contract review decisions - 2026-11-08
+
+The final owner choice removes the proposed group leader/contact role. All active
+members can see incoming group join requests and accept/decline or manage allowed
+controls. Requests target the group; no contact appointment/replacement fields or
+exclusive authority. First valid saved response wins with #47 safeguards.
+An optional introduction message is approved for group join requests; technical
+request/payload mapping is still to specify under #46/#17.
+
+Concurrency is expected to be rare: prefer basic prevention plus simple safe
+retry/recovery and necessary exceptional admin help. Do not build an elaborate
+lock/reconciliation platform. Duplicate membership, over-capacity success and
+false success remain unacceptable; shared write protection still needs its
+bounded #47 proof. Identity/access and detailed error/pagination decisions may
+be reviewed later, with owner/synthetic construction only until required access
+prerequisites pass. No ordinary-user rollout is approved by this deferral.
 
 ## Intake migration and notifications
 

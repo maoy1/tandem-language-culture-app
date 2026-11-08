@@ -159,6 +159,7 @@ row insert is fixture setup and not proof of automatic creation.
 | GRP-011 | Open/Closed to Ended, then try ordinary reopening/joining | Ended final in MVP; no new joins or ordinary reopening |
 | GRP-012 | Open group becomes full; Closed group has free slots | Neither can accept new joins; free space alone does not reopen Closed |
 | GRP-013 | One participant belongs to multiple groups | Separate membership links; My groups correct; participant profile contains no manual group text |
+| GRP-014 | Two different active members view/respond to group join requests and manage permitted controls | Both authorized through verified access; no leader/contact prerequisite; non-members denied; conflicting responses follow REQ-009 |
 
 ## Requests retries and simultaneous actions
 

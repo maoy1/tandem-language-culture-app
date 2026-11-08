@@ -4,7 +4,38 @@ The approved design is CURRENT_DESIGN.md. This plan reflects the owner's
 annotations to Combined Requirements v0.2. GitHub tickets hold implementation
 acceptance and status; planning completion does not imply deployment.
 
-## Current focus - disposable import experiment (#28)
+## Current focus - #46 contract review and merge
+
+PR #58 merged; package experiments passed at their recorded scope. #46 now has
+a bounded finish line: target field/ownership tables and approved Discovery
+exposure documented, receiving tickets identified, owner reviews/merges the PR.
+No flow deployment, concurrency proof or ordinary-user test blocks its closure.
+
+- [x] Product rules, optional time zone and independent participation agreed.
+- [x] No leader/contact role; all active members see/respond/manage.
+- [x] Optional group-join introduction; no approved length limit yet (#17).
+- [x] Full Discovery display accepted; email/admin/system fields excluded.
+- [x] Scope audit assigns remaining implementation/decisions to existing tickets.
+- [ ] Owner reviews the target technical field tables and merges the #46 PR.
+
+After #46 closes, review per-flow interfaces in the affected implementation
+batches (#10/#11/#17 etc.), not by reopening/extending #46. #47 owns bounded
+capacity/conflict/recovery design and proof. #39-#42 own deferred identity/access;
+#48 owns migration confirmation; #49 then #21 own notifications. #45 is the
+owner overview and holds the organiser-contact decision before related guidance.
+See MVP_FIELD_CONTRACT.md, '#46 scope audit and handoff', for exact boundaries.
+
+For each implementation ticket, distinguish Ready for review, Ready for testing
+(with version, steps/expected results and blocked cases) and Done (its own AC
+passed). A dependency may block a particular test/integration without reopening
+an already accepted design ticket. Never close implementation from design-only
+evidence or claim blocked tests passed.
+
+TandemMyRequests is not assumed complete. Under #10, compare its current work
+with the interface contract: preserve if complete/small follow-up, otherwise
+build a fresh package. No replacement is deployed by this planning batch.
+
+## Completed package experiment checkpoint (#28)
 
 Owner approved this bounded authoring-method experiment on 2026-11-08 after
 pausing the #11 app-controls batch. No team assignments or app-control steps
@@ -100,18 +131,11 @@ their own implementation and regression checks.
 ## Revised delivery sequence
 
 - [ ] #45: approve and track this MVP scope alignment; planning only.
-- [ ] #46: field matrix in MVP_FIELD_CONTRACT.md for review; optional time zone,
-      no participant size preference, and no Comments notice are now agreed.
-      culture and combined 2–10 with valid focus relationships are approved. Defaults,
-      exact technical choices and remaining projection decisions need acceptance.
-      Resolve remaining decisions before their dependent release steps; owner-only
-      partial discovery binding proceeds under the documented build-first direction.
-      Review progress: Active/Open defaults, culture participation, focus roles,
-      any-active-member control, request cancellation/history and bounded departure
-      handling are confirmed. Validation also blocks empty offer/interest saves,
-      excludes invalid records and revalidates without resetting participation.
-      Exact technical names, migration and display choices
-      still need review; no live behavior changed by these notes.
+- [ ] #46: final owner review/merge of the field/ownership and approved Discovery
+      display contract. Product rules are agreed; target technical field tables
+      are reviewable. Do not keep this design ticket open for per-flow payloads,
+      tenant setup/tests, #47 proof, #48 migration or #39-#42 access verification.
+      The scope audit in MVP_FIELD_CONTRACT.md names each receiving ticket.
 - [ ] #5: implement controlled culture-share/interest fields; update registration
       and validation to allow empty time zone. No participant group-size field.
       PR #52 merged preparation (configuration, 85 culture values, setup guide

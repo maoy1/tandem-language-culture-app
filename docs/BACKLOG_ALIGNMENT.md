@@ -13,7 +13,26 @@ prepared the desired POC-05 schema/policy and merged on 2026-11-07 as partial
 delivery, not completed tenant acceptance. #5 stays open.
 Owner-confirmed catalogue import does not establish participant form/flow acceptance.
 
-## Current authoring experiment - 2026-11-08
+## Current contract decisions - 2026-11-08
+
+#58 merged; #46 is ready for final contract review. Its closure requires owner
+review/merge of the target field/ownership/display tables, not other tickets
+finishing. The scope audit in MVP_FIELD_CONTRACT.md assigns each follow-up to
+#5/#6/#7/#9-#17/#39-#42/#47/#48/#49/#21 and #45 as applicable.
+Final owner choice removes the leader/contact role; all active members can see
+and respond to group join requests/manage permitted controls. Optional join
+introduction message approved.
+Full proposed Discovery display approved, including optional person/group fields;
+exclude email and admin/system data. Exact JSON/mappings remain to review.
+#47 is bounded to proportionate safeguards and simple safe recovery; low expected
+concurrency does not waive capacity, duplicate and truthful-success requirements.
+#45 is the overview; no issue per question. Group-join schema/payloads and per-flow interfaces belong to #10/#11/#17
+implementation batches; the minimum capacity guard/proof belongs to #47. Identity and
+detailed error/pagination decisions are deferred at their integration gates.
+TandemMyRequests existing work is assessed against the contract, not presumed
+complete or discarded automatically. No live configuration changes here.
+
+## Completed authoring experiment - 2026-11-08
 
 Owner approved one disposable generated-package import probe under #28. #11 app
 controls stay paused; no developer/tester assignments or flow permissions changed.
