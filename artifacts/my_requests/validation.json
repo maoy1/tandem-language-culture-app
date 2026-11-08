@@ -1,0 +1,31 @@
+{
+  "sourceTicket": 62,
+  "packageBuildId": "00a00014-7b10-4a25-9a6c-9fb46ea8eeee",
+  "packageSha256": "bde0689ded2d474be338f7aa71752f04b7b9a243949e33fc8c7323fba6c23705",
+  "localNewTests": 88,
+  "fullWorktreeSuite": 330,
+  "testsResult": "PASS",
+  "command": "C:/projects/small_projects/tandem-language-culture-app/.venv/Scripts/python.exe -X utf8 -m pytest -q",
+  "testsCwd": "Dedicated #62 managed worktree",
+  "structure": {
+    "actions": 223,
+    "maximumActionDepth": 4,
+    "globalActionNamesUnique": true,
+    "connectorReadDefinitions": 14,
+    "writes": 0
+  },
+  "exactOriginalTriggerAuthSiteAndConnectionMetadataVerifiedLocally": true,
+  "connectionName": "Import-select-existing placeholder",
+  "readableDefinitionEqualsZip": true,
+  "createAsNew": true,
+  "rawSourceCommitted": false,
+  "nativeImportSmoke": "NOT RUN",
+  "ordinaryUserPrivacy": "NOT RUN; postponed #39",
+  "actualRequestMetadata": "UNVERIFIED; batch preflight comparison required",
+  "limitations": [
+    "Local WDL-subset graph execution with synthetic connector, not native certification.",
+    "Full-list bounds and conservative malformed/legacy gates can block all rows.",
+    "Request required/nullable flags and exact vocabulary are proposed until report.",
+    "Compatibility/guard/CAS/action runtime belongs to action flows; availability/actions are hints."
+  ]
+}

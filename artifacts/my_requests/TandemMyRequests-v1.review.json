@@ -1,0 +1,41 @@
+{
+  "sourceTicket": 62,
+  "packageBuildId": "00a00014-7b10-4a25-9a6c-9fb46ea8eeee",
+  "actions": 223,
+  "maximumActionDepth": 4,
+  "bounds": {
+    "requests": 500,
+    "memberships": 2000,
+    "profiles": 500,
+    "groups": 100,
+    "fields": 500,
+    "responseChars": 250000
+  },
+  "writes": 0,
+  "connectionSource": "Invoker",
+  "rawAuthenticationPreserved": true,
+  "sourceTriggerPreserved": true,
+  "ownerCredentialFallback": false,
+  "paging": "NO_PAGING_COMPLETE_BOUNDED_READ",
+  "sourceExportSha256": "34befb29df105e601ee32dfaf321c307938ed15a82884f1c2c1df794958e574f",
+  "sourceExportName": "TandemMyRequests_20261108220317.zip",
+  "sourcePublicShape": [
+    "requestId",
+    "senderParticipantId",
+    "recipientParticipantId",
+    "status",
+    "created",
+    "direction"
+  ],
+  "sourceShapeChange": "Retain requestId/senderParticipantId/recipientParticipantId/status/direction; omit system created; add group/type/completion/availability/actions.",
+  "packageSha256": "bde0689ded2d474be338f7aa71752f04b7b9a243949e33fc8c7323fba6c23705",
+  "generatorSha256": "9164554aa40bed58e8b01cc2a513db72c1cfeb33e36189f6ff1714ef4e729e4f",
+  "tenantResult": "NOT_IMPORTED_NOT_TESTED",
+  "ordinaryUserAccessVerified": false,
+  "requestSchema": "PROPOSED_RUNTIME_FAIL_CLOSED",
+  "limits": {
+    "actions": 500,
+    "maximumActionDepth": 8
+  },
+  "globalActionNamesUnique": true
+}
