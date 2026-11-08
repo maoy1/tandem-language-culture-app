@@ -1,0 +1,29 @@
+{
+  "sourceTicket": 63,
+  "packageBuildId": "30ff0d83-3895-4a0e-89c2-939b360fc5e7",
+  "flowName": "TandemCancelRequest v3",
+  "actions": 138,
+  "maximumActionDepth": 5,
+  "sourceSha256": "082a12ceeb9c47f94abdbba59898028e34776f61cbc26209de69c2e23a7191c8",
+  "generatorSha256": "8368ca0a56e450c22a3326c167708be9491ee608869d02da0620a4e3a2615db6",
+  "packageSha256": "252c97b0ac33c6094f928efb72a86d13742ec543cc7e2edca178a6245959c7cb",
+  "sourceTriggerPreserved": true,
+  "triggerDelta": "none",
+  "connectionSource": "Invoker",
+  "rawAuthenticationPreserved": true,
+  "ownerCredentialFallback": false,
+  "globalActionNamesUnique": true,
+  "writeActionDefinitions": 1,
+  "maximumWritesPerInvocation": 1,
+  "writeRetries": "none",
+  "requestMapping": "PROPOSED_NOT_TENANT_VERIFIED_RUNTIME_GATED",
+  "operationKey": "cancel:{trustedParticipantId}:request:{requestId}",
+  "receipt": "Atomic immutable terminal request row; no new receipt list.",
+  "limits": {
+    "actions": 500,
+    "depth": 8
+  },
+  "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF",
+  "tenantResult": "NOT_IMPORTED_NOT_TESTED",
+  "ordinaryUserAccessVerified": false
+}

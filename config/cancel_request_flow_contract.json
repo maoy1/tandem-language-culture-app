@@ -1,0 +1,218 @@
+{
+  "schemaVersion": 1,
+  "sourceTicket": 63,
+  "flowName": "TandemCancelRequest v3",
+  "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF",
+  "state": "OWNER_PREVIEW_PACKAGE_LOCAL_GRAPH_TESTED_NATIVE_NOT_RUN",
+  "input": {
+    "trigger": "PowerAppV2",
+    "sourceTriggerPreserved": true,
+    "triggerDelta": "none",
+    "number": {
+      "title": "ParticipantId",
+      "type": "positive integer <=2147483647",
+      "authority": "Reference only; must equal server-resolved unique own Participant Id."
+    },
+    "number_1": {
+      "title": "RequestId",
+      "type": "positive integer <=2147483647"
+    },
+    "additionalProperties": false,
+    "intentArgument": "None. Deterministic cancel:{trustedParticipantId}:request:{requestId}, explicitly authorized in this batch."
+  },
+  "identity": {
+    "connection": "shared_sharepointonline",
+    "source": "Invoker",
+    "authentication": "Original Raw expression preserved; no fallback.",
+    "caller": "GET _api/web/currentuser?$select=Id, then required unique indexed Participantaccount User match by ParticipantaccountId; exactly one complete bounded own-profile row.",
+    "authorization": "Supplied ParticipantId must match own resolved participant; request sender must match before any terminal result is returned or write attempted.",
+    "availabilityGate": false
+  },
+  "sourceExport": {
+    "sha256": "082a12ceeb9c47f94abdbba59898028e34776f61cbc26209de69c2e23a7191c8",
+    "committed": false,
+    "purpose": "Trigger and source site/authentication/connection metadata only; old implementation is replaced, not certified.",
+    "filename": "TandemCancelRequest_20261108220416.zip"
+  },
+  "baselineFallback": "Checked-in artifacts/tandem_discovery/TandemDiscovery-v2.definition.json suffices; emits fresh documented two-number PowerAppV2 trigger when original export is absent.",
+  "mapping": {
+    "requestsListId": "3d17485d-1dac-41f0-a1af-24e45daa4567",
+    "status": "NUMBER_REFERENCES_OBSERVED_CUSTOM_FIELDS_MISSING_RECIPIENT_OPTIONAL_SETUP_PENDING",
+    "participantsListId": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
+    "groupsListId": "4bf1b37f-edce-40c5-8fa0-36543a2d0cd6",
+    "fields": {
+      "SenderParticipantId": {
+        "type": "Number",
+        "required": true,
+        "decimals": 0
+      },
+      "RecipientParticipantId": {
+        "type": "Number",
+        "required": false,
+        "decimals": 0
+      },
+      "TargetGroup": {
+        "type": "Lookup",
+        "required": false,
+        "target": "4bf1b37f-edce-40c5-8fa0-36543a2d0cd6"
+      },
+      "RequestType": {
+        "type": "Choice",
+        "required": true,
+        "choices": [
+          "Personal",
+          "Group"
+        ]
+      },
+      "Status": {
+        "type": "Choice",
+        "required": true,
+        "choices": [
+          "Pending",
+          "Accepted",
+          "Declined",
+          "Cancelled"
+        ]
+      },
+      "SendOperationKey": {
+        "type": "Text",
+        "required": true,
+        "unique": true
+      },
+      "ConnectionKey": {
+        "type": "Text",
+        "required": true,
+        "unique": true
+      },
+      "WinningOperationKey": {
+        "type": "Text",
+        "required": false
+      },
+      "OperationComplete": {
+        "type": "Boolean",
+        "required": false
+      }
+    },
+    "gates": "Exact internal names/types/Required; not hidden/read-only. SenderParticipantId and RecipientParticipantId are existing Number columns with XML Decimals=0, not lookups. Row values must be positive mathematically whole Numbers (recipient may be null for Group), checked by equals(value,int(value)); normalize integers before live-key string construction. Id/TargetGroupId retain integer validation. Both send/live keys required unique indexed; TargetGroup lookup exact Groups GUID; choices exact/count/no fill-in; Participantaccount required unique indexed User; complete bounded reads only.",
+    "operationCompleteRequiredExpectation": false,
+    "mismatch": "REQUEST_SCHEMA_UNVERIFIED; do not guess/rename/autocreate/backfill. Parent #10 shared metadata preflight supplies evidence; no extra audit package.",
+    "observedPreflight": {
+      "packageBuildId": "f7fd078d-740a-4d68-a8fe-31ca2abc9e54",
+      "runReference": "08584074297422149453962972460CU27",
+      "collectionComplete": true,
+      "schemaVerified": false,
+      "writes": 0,
+      "sender": {
+        "internalName": "SenderParticipantId",
+        "fieldId": "7909dcd2-f0b9-4158-9b9a-2017cb156fcd",
+        "type": "Number",
+        "required": true,
+        "xmlDecimals": 0
+      },
+      "recipient": {
+        "internalName": "RecipientParticipantId",
+        "fieldId": "e23db904-ddb4-451d-aa37-9b59b375b1ca",
+        "type": "Number",
+        "required": true,
+        "xmlDecimals": 0
+      },
+      "missingFields": [
+        "RequestType",
+        "TargetGroup",
+        "SendOperationKey",
+        "ConnectionKey",
+        "WinningOperationKey",
+        "OperationComplete"
+      ],
+      "ownerConfirmedEmpty": true,
+      "migrationOrBackfillRequired": false,
+      "gate": "Owner adds six fields and toggles existing RecipientParticipantId Required off, preserving existing Number columns/IDs, then runs corrected shared preflight. OperationComplete optional Boolean defaults No. No tenant changes performed here."
+    }
+  },
+  "reads": {
+    "fieldBoundPerList": 500,
+    "fieldFetchTop": 501,
+    "actorFetchTop": 2,
+    "actorExpectedExactly": 1,
+    "paging": "Reject __next/noncomplete/overbound arrays; never partial success.",
+    "request": "One exact GUID/item-id read before write and one exact outcome read after an attempted CAS; no request scans, membership/group reads or writes."
+  },
+  "receipt": {
+    "key": "cancel:{trustedParticipantId}:request:{requestId}",
+    "whySufficient": "One lifetime sender cancellation decision, no payload and no reopening. Row Id + immutable sender/parties/type/send key bind intent. Pending-only exact-ETag CAS atomically saves Status, history key, winner and completion. Changing target yields a different explicit operation identity. One same-request retry reads saved terminal winner; no second logical result or fresh UUID is created.",
+    "scope": "Bounded request decision receipt only, not cross-list acceptance/group coordination, reusable operation platform, notification receipt or schema migration. All consumers must preserve terminal history/parties and prohibit reopening; source legacy rows lacking keys/completion are not repaired.",
+    "newOperationReceiptsList": false,
+    "winningKeyUniqueRequired": false
+  },
+  "write": {
+    "maximumPerInvocation": 1,
+    "method": "POST with X-HTTP-Method MERGE",
+    "ifMatch": "Exact verbose read __metadata.etag; quoted numeric ETag, never wildcard.",
+    "body": {
+      "Status": "Cancelled",
+      "ConnectionKey": "history:request:{requestId}",
+      "WinningOperationKey": "cancel:{trustedParticipantId}:request:{requestId}",
+      "OperationComplete": true
+    },
+    "retryPolicy": "none",
+    "afterWriteRunAfter": [
+      "Succeeded",
+      "Failed",
+      "TimedOut"
+    ],
+    "verification": "Reread exact row, typed snapshot, unchanged Id/sender/recipient/group/type/SendOperationKey, coherent live/history key, winner/completion and caller binding. Only exact own complete Cancelled is success.",
+    "forbidden": [
+      "membership/group/notification writes",
+      "schema writes/autocreate",
+      "permission changes",
+      "owner credential fallback",
+      "terminal reversal",
+      "receipt platform"
+    ]
+  },
+  "outputs": {
+    "success": "Boolean: true only for proved own saved cancellation; ALREADY_DECIDED is false.",
+    "message": "Text: constant sanitized user wording; original output field types preserved.",
+    "resultcode": "CANCELLED | ALREADY_DECIDED | ACCEPTED_INCOMPLETE | RETRY_REQUIRED | OUTCOME_UNKNOWN | REQUEST_INTEGRITY | REQUEST_SCHEMA_UNVERIFIED | UNAUTHORIZED | INVALID_INPUT | READ_OR_DATA_FAILED",
+    "currentstatus": "Authorized coherent current status only; blank on validation/read/authority error.",
+    "operationcomplete": "Boolean: observed saved completion; Accepted-incomplete remains false.",
+    "replay": "Boolean: true only for pre-existing same-key saved cancellation.",
+    "writeattempted": "Boolean: flow entered the single write attempt.",
+    "outcomeunknown": "Boolean: attempted write lacks reliable proof, including failed post-write integrity checks; never interpret failure as no effect.",
+    "runreference": "Text flow run name",
+    "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF"
+  },
+  "recovery": {
+    "412": "Always reread exact outcome. Saved same-key cancel -> CANCELLED; other coherent terminal -> ALREADY_DECIDED or ACCEPTED_INCOMPLETE. Still Pending -> RETRY_REQUIRED, no automatic reissue.",
+    "502timeout": "No duplicate-code shortcut. Exact positive readback can prove cancellation. Otherwise OUTCOME_UNKNOWN; typed duplicate exception alone is also insufficient and is not classified as success/no-effect.",
+    "uncertain": "Refresh/retry same request. If outcome/record remains inconsistent, exceptional owner assistance checks settled runs and history. No rollback, alternate key or TTL steal."
+  },
+  "legacy": "Missing/malformed/incomplete keys, parties, ETag, status or marker -> REQUEST_INTEGRITY; preserve row unchanged. Blank/whitespace send key rejected. Canonical send UUID issuance remains Send scope, not guessed for #17 by cancellation.",
+  "package": {
+    "zip": "artifacts/cancel_request/TandemCancelRequest-v3.zip",
+    "buildId": "30ff0d83-3895-4a0e-89c2-939b360fc5e7",
+    "sha256": "252c97b0ac33c6094f928efb72a86d13742ec543cc7e2edca178a6245959c7cb",
+    "import": "Create as new only, existing SharePoint connection, Invoker; never update original.",
+    "actions": 138,
+    "maximumActionDepth": 5,
+    "globalActionNamesUnique": true
+  },
+  "validation": {
+    "newGraphCases": 98,
+    "fullSuitePassed": 340,
+    "tenantImportRun": "NOT RUN",
+    "privacyOrdinaryUser": "NOT VERIFIED",
+    "limits": {
+      "actions": 500,
+      "maximumActionDepth": 8
+    }
+  },
+  "integration": [
+    "Separate #63 branch/PR; handover inline in issue #63; shared batch tracking in PR #78.",
+    "Compare #10 shared schema preflight with every expected Required/type/nullable/choice/lookup/unique/index setting; mapping disagreement blocks native cancellation. No schema changes from this package.",
+    "Owner imports fresh package and checks Run-only Invoker configuration without permission/licence/connector changes.",
+    "Minimal app call: TandemCancelRequestV3.Run(varOwnParticipantId, ThisItem.ID); refresh inbox/history after every outcome. Button enablement is convenience only; flow reauthorizes.",
+    "Original ordinary-user caller/access boundary #23/#42 remains unverified/deferred; no public rollout.",
+    "Preserve existing SenderParticipantId/RecipientParticipantId Number columns and IDs; do not rename/convert or add duplicate participant lookups. Six missing custom fields and Recipient Optional are owner setup, followed by corrected preflight; runtime NOT VERIFIED."
+  ]
+}
