@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "ownerTicket": 9,
   "rulesVersion": 1,
-  "state": "SYNTHETIC_PROOF_IMPORT_PENDING",
+  "state": "OWN_SYNTHETIC_PROOF_PASSED_READY_FOR_REVIEW",
   "source": "scripts/power_automate/compatibility.py",
   "sourceSha256": "dfe0dcd587a5a348080dde288183ed3dff2d02d1f652f0ae23010b2e6e649c72",
   "runtime": "Generated Power Automate expressions/actions; Python is local build/test only",
@@ -178,7 +178,9 @@
     "connectors": 0,
     "liveReads": 0,
     "writes": 0,
-    "tenantResult": "NOT_IMPORTED_NOT_TESTED"
+    "tenantResult": "PASS_OWNER_REPORTED_39_CASES",
+    "runReference": "08584074461495133197897516907CU19",
+    "evidence": "artifacts/compatibility/results/proof39.owner-report.json"
   },
-  "remainingAcceptance": "Import/run the isolated proof or record blocked error; source review. Consuming production flows own their deployment/integration, no dependency on all consumers finishing."
+  "remainingAcceptance": "Review/merge shared-source PR #73. Own isolated proof passed; consuming production flows retain independent deployment/integration acceptance."
 }

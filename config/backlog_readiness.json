@@ -24,7 +24,7 @@
     "closedTickets": 10,
     "done": 8,
     "superseded": 2,
-    "inProgress": 1
+    "inProgress": 0
   },
   "flowCountNote": "12 singly-owned core production flows (notification provisional), plus 1 Deferred reminder flow. Access/migration helpers remain undecided; no duplicate owners for the same production flow.",
   "flowInventory": [
@@ -222,24 +222,24 @@
       "number": 9,
       "title": "[Shared technical] Reusable compatibility rules for generated flows",
       "ticketType": "Shared technical",
-      "status": "In progress",
+      "status": "Ready for review",
       "flowScope": "One maintained rule/normalization source and synthetic contract fixtures for package generation; no separately hosted runtime or assumed child flow.",
-      "implementationReadiness": "Shared source, typed adapter contract, 39 synthetic fixtures and connector-free proof package built. Own tenant proof import/run pending.",
+      "implementationReadiness": "Shared source/normalization/adapters and 39-case connector-free proof complete; matching-build tenant proof owner-passed. Review/merge pending.",
       "implementationEvidence": "compatibility.py builds reusable normalization/person/group expressions; 121 local tests pass including generated-action subset execution; proof 45 actions/depth 4, no connectors/data operations.",
-      "evidence": "Rules v1 / proof build 57fa2bc6-2b02-4068-9999-fe46f3747d4a; Any language deferred by owner and excluded from matching/focus; tenant proof NOT RUN.",
+      "evidence": "Run 08584074461495133197897516907CU19 / matching build and source SHA: testCount=39, allPassed=true, failedCases=[]. Summary retained; no production integration inferred.",
       "proposedExperience": [
         "The app requests candidates from a flow.",
         "The flow owns normalization, eligibility and projection.",
         "Participant/group paths use one maintained compatibility source rather than UI formulas."
       ],
-      "remainingWork": "Import/run isolated proof or record exact blocked error; shared-source review. Consuming flows own live integration; no wait for every consumer to finish.",
+      "remainingWork": "Review/merge PR #73 to complete own Shared technical scope. Production #7/#10/#11/#17/#65 own separate deployment/authority/availability/mapping tests.",
       "testReferences": [
         "DISC-001:011",
         "REQ-001",
         "REQ-003"
       ],
-      "testStatus": "39 reference fixture cases pass locally; 121 full suite tests pass. Tenant proof NOT_IMPORTED_NOT_TESTED; no production integration inferred.",
-      "testHandoff": "Full import/run prerequisites, outputs, cleanup and per-case verification checkboxes directly in issue #9. No connection mapping/tenant data needed.",
+      "testStatus": "Own synthetic reference and target proof PASS (39 cases); 121 local tests previously passed. Consumer integration not certified.",
+      "testHandoff": "Issue #9 contains full handover, now-verified synthetic case checkboxes and exact matching-build run. No further owner proof rerun needed.",
       "flows": [],
       "scopeBoundary": "One maintained rule/normalization source and synthetic contract fixtures for package generation; no separately hosted runtime or assumed child flow.",
       "prerequisites": [],
@@ -1620,7 +1620,7 @@
     "openBodiesVerified": 38,
     "typeAndLifecycleExactlyOne": true,
     "uniqueProductionFlowOwners": 13,
-    "activeWork": 1,
+    "activeWork": 0,
     "stateChanges": {
       "supersededNotPlanned": [
         22,

@@ -116,3 +116,18 @@ all branch/loop definitions. Recheck 500-action/8-depth limits in every consumer
 Current import/test steps and verification checkboxes are directly in issue #9.
 No full rule/runtime or consumer PASS is inferred from local checks. No employee
 fixtures, live profile changes or additional setup permission is needed for proof.
+
+## Observed tenant proof — own acceptance passed
+
+Owner supplied Proof_report summary for build 57fa2bc6-2b02-4068-9999-fe46f3747d4a,
+matching source SHA, run 08584074461495133197897516907CU19: testCount 39,
+allPassed true, failedCases empty, zero connectors/writes. Summary preserved at
+artifacts/compatibility/results/proof39.owner-report.json (per-case result objects
+not requested/supplied). The known proof computes allPassed from expected/actual
+case equality and exact case count. Own 39-case synthetic runtime proof PASS.
+
+The generated build review's NOT_IMPORTED_NOT_TESTED remains its creation-time
+record; current acceptance is in compatibility_contract.json / results / TEST_RUNS.
+Shared artifact is Ready for review; no need to rerun this proof. Live consumer,
+authority, availability-adapter, projection, pagination and conditional-write cases
+remain with #7/#10/#11/#17/#65/#42/#47. No overall deployment/privacy claim.

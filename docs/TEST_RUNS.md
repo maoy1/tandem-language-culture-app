@@ -1344,3 +1344,22 @@ whole-schema audit evidence above remain separately scoped.
   paging/scale or ordinary-user group availability pass inferred. Full current
   test handover and verification boxes are directly in issue #9; production
   #7/#10/#11/#17/#65 own their integration; #12 actual group mapping, #47 writes.
+
+### COMP9-RUN-20261108 — matching-build 39-case tenant proof PASS
+
+- Owner supplied Proof_report summary: kind TandemCompatibilityProof, rules v1,
+  build 57fa2bc6-2b02-4068-9999-fe46f3747d4a, source SHA
+  dfe0dcd587a5a348080dde288183ed3dff2d02d1f652f0ae23010b2e6e649c72,
+  run 08584074461495133197897516907CU19. Build/source/hash match generated artifact.
+- **PASS (owner report)**: testCount=39, allPassed=true, failedCases=[], synthetic
+  only, connectors=0, writes=0. Summary retained in results/proof39.owner-report.json;
+  full per-case result objects not supplied/requested. Proof source requires all
+  case equality results and exact case count before allPassed=true.
+- Check corresponding 39 synthetic verification boxes in #9. All passes bounded
+  to this isolated proof; no production reader/caller/availability/projection/
+  pagination/request or atomic-admission acceptance inferred for consumers.
+- #9 Ready for review, PR #73 ready, own scope finishes on review/merge; consumer
+  tickets do not hold it open. #61 remains Ready for testing. No further owner
+  proof rerun requested. No production/schema/profile state changed by proof.
+- Evidence/docs only; JSON/diff and source hash checked. Prior 121 local tests
+  retained, not rerun for report/status changes. WIP 0; no issue closed yet.
