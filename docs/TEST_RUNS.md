@@ -1151,3 +1151,21 @@ whole-schema audit evidence above remain separately scoped.
   to inspect the already-triggered next matching-item run.
 - Evidence/metadata only: JSON and diff checked; prior 101 local tests retained,
   not rerun. #61 remains In progress; PR #72 remains draft.
+
+### RUN61-20261108-03 — Active correction follow-up no-op PASS
+
+- Owner returned the requested subsequent run after the STATUS_UPDATED run:
+  08584074534064918346698562621CU26, item 38, same build
+  88637754-4c91-4833-9dcf-5116d8bfb77e; valid=true, Active,
+  statusChanged=false, NO_CHANGE. Raw report retained in
+  artifacts/participant_submission/results/active-correction-followup.owner-report.json.
+- **PASS (owner report)**: observed Active correction -> readback -> requested
+  follow-up no-op, following RUN61-20261108-02. This is the target REG-015 Active
+  correction/follow-up portion; it does not certify global loop/race safety or
+  the invalid/Needs review branch. Exact timestamps not supplied.
+- Original-validator disabled state and preserved identity/selections/availability
+  still lack explicit owner confirmation. App feedback application/publication,
+  invalid/catalogue/creation/failure/conflict target cases retain pending scope.
+- No package/code change; JSON parsed and diff checked. Prior 101 local tests
+  retained, not rerun. #61 In progress; PR #72 draft. No repeat edit needed for
+  this now-passed Active correction/follow-up sequence.

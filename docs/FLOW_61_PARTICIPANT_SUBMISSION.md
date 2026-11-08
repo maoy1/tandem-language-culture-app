@@ -1,6 +1,6 @@
 # Participant submission validation — #61
 
-Status: **In progress; valid/no-change and Active correction/readback passed; post-write follow-up and app feedback pending**.
+Status: **In progress; valid/no-change and Active correction/readback/follow-up passed; remaining acceptance and app feedback pending**.
 The owner supplied the current export. Inspection confirms GetOnUpdatedItems,
 one-minute recurrence, splitOn body/value, current Get_item using triggerBody ID,
 four-field nonempty OR and changed-only Status patches. Catalogue validity and
@@ -220,3 +220,12 @@ necessary Active correction and readback path. The earlier NO_CHANGE run was
 before this correction; the subsequent matching-item NO_CHANGE run is still
 needed for the follow-up test. Saved-field preservation and original-validator
 disabled state are not explicitly confirmed. See RUN61-20261108-02.
+
+### Active correction follow-up — 2026-11-08
+
+Owner returned requested subsequent run 08584074534064918346698562621CU26,
+same item 38/build: valid=true, Active, statusChanged=false, NO_CHANGE. The
+observed necessary Active correction/readback and follow-up now pass. No repeat
+edit is needed for this sequence. The invalid branch, catalogue negatives,
+field-preservation confirmation, cutover confirmation and applied/published app
+feedback remain pending. This is bounded owner evidence, not global loop proof.
