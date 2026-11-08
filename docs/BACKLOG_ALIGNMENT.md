@@ -13,7 +13,83 @@ prepared the desired POC-05 schema/policy and merged on 2026-11-07 as partial
 delivery, not completed tenant acceptance. #5 stays open.
 Owner-confirmed catalogue import does not establish participant form/flow acceptance.
 
-## Current contract decisions - 2026-11-08
+## Current all-ticket readiness audit - 2026-11-08 (#45)
+
+40 tickets reviewed: 35 open and 5 closed (#1-#4 and #46). All open tickets remain
+valid in their stated phase. #8/#15/#29-#31 are Later, #48 is final migration,
+and access tests remain owner-deferred. #31's obsolete Paused-group wording is
+corrected to Closed; participant Paused is independent. No issue is closed by
+this audit. #46 remains Done and is not reopened for implementation work.
+
+Use exactly one lifecycle label per issue. Ready for review means the whole
+ticket deliverable is reviewable, not merely a partial PR. Ready for testing
+requires an actual reviewed/imported/deployed version and required test context;
+saved fragments without mandatory implementation are not a whole-ticket handover.
+Done follows that ticket's own acceptance and closure (document review for a
+design ticket). Planned/In progress/Blocked/Deferred distinguish earlier stages.
+Preserve unrelated priority/area/type labels.
+
+At this audit, no open ticket meets whole-ticket Ready for review or Ready for
+testing. This does not forbid scoped owner smoke tests: #5 has explicit partial
+owner passes, #11 has bounded static review, and #28 has two import-probe passes.
+None establishes the remaining whole-ticket implementation/ordinary-user AC.
+
+Source matrix: [config/backlog_readiness.json](../config/backlog_readiness.json).
+Tests: [catalogue](TEST_CATALOGUE.md), actual immutable [runs](TEST_RUNS.md).
+The table is the current snapshot; earlier checkpoint sections below are history
+where they conflict. Live labels/bodies must be verified after the audit publish.
+
+| Ticket | Label | Flow scope | Can implementation start? |
+|---|---|---|---|
+| [#5](https://github.com/maoy1/tandem-language-culture-app/issues/5) | In progress | Core flow change | Can start bounded completion after deployed mapping check |
+| [#6](https://github.com/maoy1/tandem-language-culture-app/issues/6) | Planned | Core integration; no standalone flow required | Ready for bounded owner build; verify actual columns first |
+| [#7](https://github.com/maoy1/tandem-language-culture-app/issues/7) | In progress | Core flow change | Owner-only package completion can start; mapping/bounds needed |
+| [#8](https://github.com/maoy1/tandem-language-culture-app/issues/8) | Deferred | Later flow change | Not an MVP package |
+| [#9](https://github.com/maoy1/tandem-language-culture-app/issues/9) | In progress | Shared core flow implementation | Can start shared-source/interface work |
+| [#10](https://github.com/maoy1/tandem-language-culture-app/issues/10) | In progress | Core flow changes | Needs bounded request/interface definition before package |
+| [#11](https://github.com/maoy1/tandem-language-culture-app/issues/11) | In progress | Core flow change | Needs response/app interface and bounded #47 integration |
+| [#12](https://github.com/maoy1/tandem-language-culture-app/issues/12) | In progress | Core persistence plus new reader | Complete owner scaffolds after live field/member mapping |
+| [#13](https://github.com/maoy1/tandem-language-culture-app/issues/13) | Planned | New core flow | Ready for owner prototype after field mapping |
+| [#14](https://github.com/maoy1/tandem-language-culture-app/issues/14) | Planned | New core flow | Ready for owner prototype after membership mapping |
+| [#15](https://github.com/maoy1/tandem-language-culture-app/issues/15) | Deferred | Later product/UI decision; no core flow | Not an MVP package |
+| [#16](https://github.com/maoy1/tandem-language-culture-app/issues/16) | Planned | Extend existing core reader | Owner group-reader design can start; mapping required |
+| [#17](https://github.com/maoy1/tandem-language-culture-app/issues/17) | Planned | Two new core flows plus history/cancel extensions | Needs request/interface schema and minimum #47 guard |
+| [#18](https://github.com/maoy1/tandem-language-culture-app/issues/18) | Deferred | Access parent; no assumed new flow | Owner deferred access work |
+| [#19](https://github.com/maoy1/tandem-language-culture-app/issues/19) | Blocked | Shared flow authorization | Protected integration blocked on verified access |
+| [#20](https://github.com/maoy1/tandem-language-culture-app/issues/20) | Blocked | Shared flow authorization | Protected integration blocked on verified access |
+| [#21](https://github.com/maoy1/tandem-language-culture-app/issues/21) | Blocked | Provisional new notification flow | Blocked on #49 decision and prerequisites |
+| [#22](https://github.com/maoy1/tandem-language-culture-app/issues/22) | Blocked | Shared flow authorization; ACL flow not assumed | Protected integration blocked on verified access |
+| [#23](https://github.com/maoy1/tandem-language-culture-app/issues/23) | Blocked | Shared reader/action authorization | Protected integration blocked on verified access |
+| [#24](https://github.com/maoy1/tandem-language-culture-app/issues/24) | Blocked | Shared terminal-state controls | Conditional logic review possible; protected integration blocked |
+| [#25](https://github.com/maoy1/tandem-language-culture-app/issues/25) | Planned | Acceptance work; no production flow | Test planning ready; full execution needs deployed paths |
+| [#26](https://github.com/maoy1/tandem-language-culture-app/issues/26) | Planned | Optional local test tooling; no runtime flow | Local generator can start; tenant loading separate |
+| [#27](https://github.com/maoy1/tandem-language-culture-app/issues/27) | Blocked | Scale tests; no extra production flow | Measurements blocked on dataset/deployed reader |
+| [#28](https://github.com/maoy1/tandem-language-culture-app/issues/28) | In progress | Deployment/handover tests; no business flow | Probe checks passed; full handover not ready |
+| [#29](https://github.com/maoy1/tandem-language-culture-app/issues/29) | Deferred | Later flow/data change | Not an MVP package |
+| [#30](https://github.com/maoy1/tandem-language-culture-app/issues/30) | Deferred | Later scheduled flow | Not an MVP package |
+| [#31](https://github.com/maoy1/tandem-language-culture-app/issues/31) | Deferred | Later dashboard; reader reuse possible | Not an MVP package; obsolete state wording corrected |
+| [#39](https://github.com/maoy1/tandem-language-culture-app/issues/39) | Deferred | Access assessment; no assumed new flow | Assessment can resume; owner deferred access work |
+| [#40](https://github.com/maoy1/tandem-language-culture-app/issues/40) | Blocked | Isolated access proof; temporary flow only if chosen | Blocked on #39 approach and ordinary accounts |
+| [#41](https://github.com/maoy1/tandem-language-culture-app/issues/41) | Blocked | Conditional registration flow changes | Blocked on passing #40 proof |
+| [#42](https://github.com/maoy1/tandem-language-culture-app/issues/42) | Blocked | Controlled Discovery flow integration | Blocked on proven registration access path |
+| [#45](https://github.com/maoy1/tandem-language-culture-app/issues/45) | In progress | Delivery overview; no production flow | Audit/coordination in progress; MVP parent not complete |
+| [#47](https://github.com/maoy1/tandem-language-culture-app/issues/47) | In progress | Shared core safeguards; no separate engine | Needs bounded shared-capacity/recovery design and proof |
+| [#48](https://github.com/maoy1/tandem-language-culture-app/issues/48) | Deferred | Final migration; one-off method pending | Final phase; source mappings not reviewed |
+| [#49](https://github.com/maoy1/tandem-language-culture-app/issues/49) | Planned | Notification decision; no flow yet | Ready to assess options at notification block |
+
+**Production-flow baseline:** 12 proposed flows, not 12 new ones: six
+existing/started, five new business flows, one provisional notification flow.
+Access/channel decisions may change this; do not assume an ACL/permission flow
+or a notification connector. Technical helper/probe flows are excluded.
+
+**Core flow implementation/integration tickets:** #5/#6/#7/#9/#10/#11/#12/#13/
+#14/#16/#17/#21/#47. **Shared access controls affecting those flows:** #19/#20/
+#22/#23/#24/#41/#42. These seven do not imply seven new flows. Later possible
+flow changes: #8/#29/#30; #31 may reuse readers. #18/#39/#40/#49 are assessment/
+proof/decision tickets, not preselected production flows. #25-#28 are tests or
+optional local tooling. #48's one-off migration method remains to decide.
+
+## Historical contract-review checkpoint - 2026-11-08
 
 #58 merged; #46 is ready for final contract review. Its closure requires owner
 review/merge of the target field/ownership/display tables, not other tickets

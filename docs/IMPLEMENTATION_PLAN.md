@@ -4,36 +4,74 @@ The approved design is CURRENT_DESIGN.md. This plan reflects the owner's
 annotations to Combined Requirements v0.2. GitHub tickets hold implementation
 acceptance and status; planning completion does not imply deployment.
 
-## Current focus - #46 contract review and merge
+## Current focus - #45 flow/readiness audit
 
-PR #58 merged; package experiments passed at their recorded scope. #46 now has
-a bounded finish line: target field/ownership tables and approved Discovery
-exposure documented, receiving tickets identified, owner reviews/merges the PR.
-No flow deployment, concurrency proof or ordinary-user test blocks its closure.
+#46 is closed and PR #59 merged. The contract is accepted; implementation is not
+reopened into #46. #45 now inventories all 35 open tickets, proposed experiences,
+flow interfaces, remaining work and versioned test handover. See
+BACKLOG_ALIGNMENT.md and config/backlog_readiness.json for every ticket.
 
-- [x] Product rules, optional time zone and independent participation agreed.
-- [x] No leader/contact role; all active members see/respond/manage.
-- [x] Optional group-join introduction; no approved length limit yet (#17).
-- [x] Full Discovery display accepted; email/admin/system fields excluded.
-- [x] Scope audit assigns remaining implementation/decisions to existing tickets.
-- [ ] Owner reviews the target technical field tables and merges the #46 PR.
+- [x] Read all 40 tickets, existing labels/PRs and recorded test evidence.
+- [x] Distinguish 13 core flow implementation/integration tickets from 7 shared
+      access-control tickets, tests, assessments, final migration and Later work.
+- [x] Prepare per-ticket experiences/readiness/evidence/test references and add
+      missing planned test definitions; preserve original acceptance obligations.
+- [x] Published/verified one lifecycle label on all 40 tickets and experience/test review on all 35 open tickets.
+- [ ] Review/merge this #45 audit batch before new feature implementation.
 
-After #46 closes, review per-flow interfaces in the affected implementation
-batches (#10/#11/#17 etc.), not by reopening/extending #46. #47 owns bounded
-capacity/conflict/recovery design and proof. #39-#42 own deferred identity/access;
-#48 owns migration confirmation; #49 then #21 own notifications. #45 is the
-owner overview and holds the organiser-contact decision before related guidance.
-See MVP_FIELD_CONTRACT.md, '#46 scope audit and handoff', for exact boundaries.
+Proposed production inventory (technical probes excluded):
 
-For each implementation ticket, distinguish Ready for review, Ready for testing
-(with version, steps/expected results and blocked cases) and Done (its own AC
-passed). A dependency may block a particular test/integration without reopening
-an already accepted design ticket. Never close implementation from design-only
-evidence or claim blocked tests passed.
+| Flow | Owner | Current evidence |
+|---|---|---|
+| Participant submission | #5 | Existing, partial owner checks |
+| TandemDiscovery | #7 | Existing scaffold |
+| TandemSendRequest | #10 | Existing scaffold |
+| TandemMyRequests | #10 | Completion uncertain; assess then retain/rebuild |
+| TandemCancelRequest | #10 | Existing scaffold |
+| TandemRespondRequest | #11 | 77-action static review; runtime pending |
+| TandemMyGroups | #12 | Proposed new |
+| TandemUpdateGroup | #13 | Proposed new |
+| TandemLeaveGroup | #14 | Proposed new |
+| TandemSendGroupJoinRequest | #17 | Proposed new |
+| TandemRespondGroupJoinRequest | #17 | Proposed new |
+| TandemNotifyRequest (provisional) | #21 | Conditional after #49 |
 
-TandemMyRequests is not assumed complete. Under #10, compare its current work
-with the interface contract: preserve if complete/small follow-up, otherwise
-build a fresh package. No replacement is deployed by this planning batch.
+This is a 12-flow baseline: six existing/started plus five new business flows
+and one provisional notification flow. Existing means partial configuration,
+not completed acceptance. Access architecture or notification choice may change
+the final count. Package generation is possible for bounded owner prototypes;
+not every production contract or prerequisite is ready. No new runtime/paid
+connector is approved.
+
+Ordered delivery batches (one owner ticket/branch/PR at a time):
+1. **#6 next:** verify/bind participation/openness fields and form controls;
+   preserve edits/validation and define membership-derived status integration.
+   Complete outstanding catalogue/registration validation under separate #5 work.
+2. **#47:** specify/prove minimum shared capacity/retry guard before acceptance
+   packages rely on it; keep recovery proportionate, no elaborate lock platform.
+3. **#10:** bounded request/history/cancel contract and package; assess actual
+   MyRequests before retaining versus fresh generation. Coordinate group target
+   schema with #17 without claiming group joins implemented.
+4. **#11 then #12:** finish response/app path and group/member persistence/My groups.
+5. **#13 then #14:** member-managed updates and self-service leave.
+6. **#16 then #17:** group Discovery and join/send/respond with shared history.
+7. **#49 then #21:** verify options, choose events/channel, implement notifications.
+8. **#25-#28:** scoped acceptance, synthetic scale and handover as each deployed
+   path is ready; fix actual blockers during construction, keep unrun cases open.
+9. **#48 last:** actual old-data mapping/confirmation decision and migration.
+
+Workstream gates: #7/#9 eligibility/interface completion accompanies affected
+builds. #39-#42 and #19-#24 require the verified access approach before ordinary
+integration/testing; owner deferred colleague proof, not the need for it. Do not
+silently change connections, permissions or licences. A dependency blocks its
+specific integration/test, not every preparatory task or an accepted design ticket.
+#8/#15/#29-#31 stay Later. Organiser contact remains a #45 decision before related
+guidance is published. No routine admin dispatch/individual grant work added.
+
+Status labels: Planned, In progress, Blocked, Deferred, Ready for review,
+Ready for testing, Done. At this audit no open whole-ticket deliverable meets the
+two Ready stages; owner-only fragments may still be tested with explicit scope.
+Done is applied only to closed tickets' own accepted scope, not new-MVP behavior.
 
 ## Completed package experiment checkpoint (#28)
 

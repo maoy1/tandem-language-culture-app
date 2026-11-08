@@ -21,7 +21,7 @@ Target scenarios without explicit execution evidence remain NOT RUN or deferred.
 | Tests | State | Reason / linked work |
 |---|---|---|
 | ACC-001–002, ACC-005 | DEFERRED | Owner will arrange normal colleague testing; #18/#39–#42 remain open |
-| DISC-008 | REQUIREMENT PENDING | Exact Discovery display fields not agreed |
+| DISC-008 | DEFERRED / NOT RUN | #46/PR #59 approved display; live projection implementation/execution still pending |
 | NOT-001 | REQUIREMENT PENDING | #49 must select event/channel/recipient behavior |
 | MIG-001–002 | DEFERRED | Actual Excel inspection/migration is final phase #48 |
 | Remaining registration/flow cases and unexecuted case portions | DEFERRED | Owner explicitly prioritizes integrated app/flow construction before the remaining detailed tests (2026-10-31); preserve prior passes/failures and resume after core build |
@@ -777,6 +777,24 @@ the app/flow versions separately.
   group workflow or full #28 reproducibility acceptance inferred.
 - Both disposable probes passed at their stated scope; 30 local tests passed.
   Next is review/merge of the experiment batch, then the next feature batch.
+
+### AUDIT-20261108-01 - #45 backlog/readiness metadata audit
+
+- DOC-001 audit variant PASS: all 40 issues inventoried; 35 open bodies each have
+  proposed experience, flow/readiness assessment, preserved AC and defined case
+  references; remote GitHub reread verified exactly one lifecycle label each.
+- 5 closed issues (#1-#4/#46) labeled Done for their historical/accepted scope.
+  Open: 9 In progress, 8 Planned, 10 Blocked, 8 Deferred; none falsely marked
+  whole-ticket Ready for review/testing. No issue state changed.
+- Source snapshot and per-body before/after comparison retained locally; user
+  edits were checked before mutation. Unrelated labels retained. #31's obsolete
+  Paused-group wording corrected to Closed under the existing approved model.
+- Added planned request/access/data/scale/handover/notification/Later test IDs.
+  Existing local pytest rerun: 30 passed; configuration/package checks only.
+  No new tenant runtime case executed/passed by this audit. Earlier registration,
+  synthetic baseline and import-probe results retain their original scope.
+- Branch codex/issue-45-flow-readiness-audit; actual production versions unknown
+  unless recorded in earlier runs. No live app/flow/list/permissions changed.
 
 ## New run template
 

@@ -17,6 +17,19 @@ repository is reference material only.
 - `docs/` — architecture, operating instructions, and the living implementation plan
 - `.github/` — repository automation and contribution settings
 
+## Ticket readiness and implementation plan
+
+Use [the all-ticket readiness overview](docs/BACKLOG_ALIGNMENT.md) for current
+validity, implementation readiness and test handover. The machine-readable
+[matrix](config/backlog_readiness.json) covers all 40 tickets and the proposed
+12-flow baseline. These are not 12 new flows. [The implementation plan](docs/IMPLEMENTATION_PLAN.md)
+sets the ordered batches; GitHub labels hold live lifecycle status.
+
+Exactly one lifecycle label per ticket: Planned / In progress / Blocked /
+Deferred / Ready for review / Ready for testing / Done. A partial merged PR or
+saved flow is not a whole-ticket testing handover. Closed #46 is an accepted
+contract, not proof of deployed behavior; keep runtime tests with their owner.
+
 ## Working method
 
 Production is SharePoint + Power Apps + Power Automate within existing licences:

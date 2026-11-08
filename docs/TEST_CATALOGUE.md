@@ -122,8 +122,9 @@ run and elapsed time rather than inventing a timing guarantee.
 
 ## Compatible discovery
 
-Issues #7/#9/#16/#42. Profile field projection is still undecided; DISC-008 cannot
-pass until that decision exists. Use derived group validity, not names alone.
+Issues #7/#9/#16/#42. Profile/group display is approved by #46/PR #59.
+DISC-008 still needs implementation/execution evidence. Use derived group
+validity, not names alone; exclude email and admin/system fields.
 
 | ID | Setup and action | Expected |
 |---|---|---|
@@ -134,7 +135,7 @@ pass until that decision exists. Use derived group validity, not names alone.
 | DISC-005 | Compatible profile has no time zone | Remains eligible; no UTC inference or implicit missing-zone exclusion |
 | DISC-006 | Search compatible Open group with valid focus and a free slot | Group shown as joinable with correct count/slots; unrelated group excluded |
 | DISC-007 | Repeat for Closed, Ended, full and invalid-focus groups | None appear as joinable; no automatic changes to stored group state |
-| DISC-008 | Inspect app response/UI after field projection is agreed | Only approved profile/group fields shown; admin/system-only metadata excluded; Comments treatment matches decision |
+| DISC-008 | Inspect app response/UI against the approved #46 field allowlist | Only approved profile/group fields shown; admin/system-only metadata excluded; Comments treatment matches decision |
 | DISC-009 | No compatible candidates | Empty result is handled clearly; no automatic assignment or unsolicited alternative-matching feature |
 | DISC-010 | Search after profile/member changes | Results reflect current authoritative eligibility; stale displayed result cannot bypass acceptance recheck |
 | DISC-011 | Dataset exceeds one default query page or chosen flow bound | Verified pagination/bounds behavior; no silent partial-result success; no paid fallback |
@@ -213,12 +214,46 @@ inventing an expected channel, field allowlist or migration-confirmation rule.
 | MIG-001 | Final-phase dry run of actual source mappings | Exception report for ambiguous/missing/duplicate data; no silent dropping or guessing; DEFERRED to #48 |
 | MIG-002 | Repeat accepted migration; reconcile profiles/groups/memberships | No duplicates, preserved source, correct links/counts and explicit confirmation state; DEFERRED to #48 |
 
+## Audit coverage additions - 2026-11-08 (#45)
+
+These definitions close test-plan gaps found in the all-ticket audit. They are
+NOT RUN unless TEST_RUNS.md records an actual versioned execution. Later/decision
+cases are REQUIREMENT PENDING, not approval of new policies or runtime behavior.
+
+| ID | Setup and action | Expected / gate |
+|---|---|---|
+| REQ-012 | Inspect own Sent/Received history and attempt an unrelated request | Only authorized rows/actions; tampered inputs denied under verified access; stable terminal history |
+| REQ-013 | Two active group members, a non-member and a departed member inspect group inbox/respond | Current active members see/respond; no leader role; others denied; detailed departed-history projection follows the reader contract |
+| REQ-014 | Submit group join with blank/nonblank introduction; inspect retained request | Introduction optional, stored/displayed as plain text only to authorized request audience; final length boundary awaits #17 approval |
+| REQ-015 | Inspect Accepted/Declined/Cancelled history and retry old action buttons | Agreed history retained; no second conflicting decision or membership; no rollback on permission failure |
+| AUTH-001 | Active member edits permitted group controls; non-member tries same | Membership checked against current authoritative data through verified access; non-member denied |
+| AUTH-002 | Direct/tampered flow invocation with another participant/request/group reference | Authenticated caller binding enforced; input IDs/email are not authorization; no private data leak |
+| AUTH-003 | Ordinary user attempts direct Active membership creation/update | Controlled lifecycle path enforced; no arbitrary active membership manufacture; admins retain necessary support |
+| AUTH-004 | Member leaves, then retries a stale management/respond call | Current membership revocation respected; remaining members still authorized; no routine individual grants |
+| AUTH-005 | Review access prerequisite inventory and selected method before proof | Evidence marks actual capability available/unknown/unavailable; unverified prerequisite blocks dependent configuration; no silent paid fallback |
+| DATA-001 | Generate isolated fictional sets near 200/1,000/5,000 profiles | Reproducible counts and expected language/culture/state/blank-zone coverage; no real employee data required |
+| DATA-002 | Validate dataset links/uniqueness and proposed tenant loading | Group/member/request references consistent; verify isolated loading and account-identity representation first; fake records do not simulate authentication |
+| SCALE-001 | Measure versioned Discovery on 200-profile fixture | Record latency, query/paging completeness and delegation; no silent truncation |
+| SCALE-002 | Repeat on 1,000-profile fixture | Same completeness/measurement evidence; explicit bound failure is not successful scale support |
+| SCALE-003 | Repeat on 5,000-profile fixture | Same completeness/measurement evidence; a 500-candidate guard alone does not pass 5,000 support |
+| DEP-001 | Second permitted developer reproduces app/business-flow setup from repository | Documented one-time steps and allowed connection selection work; published/imported versions and results recorded |
+| DEP-002 | Review handover configuration and required credentials | No original workstation/local-only secret/runtime required; mappings and connection ownership explicit; existing entitlements only |
+| DEP-003 | Exercise supported missing/denied connection/configuration case in isolated deployment | Understandable safe diagnostics, no false success or inadvertent working-flow/data replacement |
+| DOC-001 | Audit issue inventory/status/experiences/test mappings and repository overview | Every issue accounted for, one lifecycle label each, no open Done/closed ready label, proposed experience on open tickets, case IDs defined and evidence scope preserved; no runtime claim |
+| NOT-002 | Retry selected notification event or simulate allowed delivery failure | Deduplicate logical delivery under approved policy; failure visible; request/membership state not rolled back; REQUIREMENT PENDING until #49 |
+| NOT-003 | Review notification options/prerequisites/event-recipient matrix | Explicit permitted choice or documented constraint; no assumed email/Teams/Approvals connection, paid upgrade or ordinary admin dispatch; decision evidence, not delivery test |
+| LATER-001 | Review/run ranking only after future policy approval (#8) | Only eligible results ranked under approved policy; blank time zone supported; current status REQUIREMENT PENDING |
+| LATER-002 | Review/run multi-group warning only if selected (#15) | Agreed warning behavior, no unapproved hard limit/routine approval; current status REQUIREMENT PENDING |
+| LATER-003 | Review/run freshness only after fields/thresholds approved (#29) | Identify agreed stale records without auto deletion; current status REQUIREMENT PENDING |
+| LATER-004 | Review/run reminders only after freshness/channel approved (#30) | Correct recipient/failure visibility; no automatic group ending; current status REQUIREMENT PENDING |
+| LATER-005 | Review later admin dashboard against agreed scope (#31) | Group Open/Closed/Ended and separate participant Active/Paused/Inactive; freshness/overrides only when approved; no Paused-group state inferred |
+
 ## Suggested regression sets
 
 - Profile/schema changes: REG-001–016, PAR-001–007 and DISC-004–005.
 - Eligibility/projection changes: DISC-001–011, GRP-005–007, LEAVE-003–004,
   plus ACC-001–003 after access prerequisites exist.
-- Group/request/flow changes: GRP-001–013, REQ-001–011 and LEAVE-001–006.
+- Group/request/flow changes: GRP-001–014, REQ-001–015 and LEAVE-001–006.
 - Deployment/sharing changes: affected behavior cases plus ACC-001–005 and OPS.
 - Notification changes: NOT-001 and retry/acceptance cases after #49.
 - Final migration: MIG-001–002 and affected profile/group regression sets.

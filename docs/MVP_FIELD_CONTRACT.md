@@ -1,7 +1,7 @@
-# MVP field contract for review
+# Accepted MVP field contract
 
 Issue #46; planning parent #45. This is the target field/ownership and Discovery
-exposure contract for final document review. The field tables specify target
+exposure contract accepted through merged PR #59 and closed #46. The field tables specify target
 technical names, types, requiredness and defaults; owner review/merge accepts
 those definitions. Existing tenant mappings must be checked by implementation
 owners without silently renaming existing columns. Product rules and display
@@ -317,7 +317,7 @@ are separate pending items. No additional paid platform or hosting is permitted.
 - [x] Optional group-join introduction approved; technical field/length review belongs to #17.
 - [x] Full person/group display approved; exclude email and admin/system data.
 - [x] Implementation and deferred decisions have explicit receiving tickets below.
-- [ ] Owner reviews target field names/types/defaults and merges the contract PR.
+- [x] Owner accepted the target field tables; PR #59 merged and #46 closed on 2026-11-08.
 
 ## #46 scope audit and handoff - 2026-11-08
 
