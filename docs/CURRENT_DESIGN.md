@@ -64,9 +64,18 @@ were corrected. Existing values, legacy Status choices and IANA_ID lookup displa
 were preserved; optional Windows conversion metadata is absent and unused.
 Final full audit is Verified (zero findings); setup repeat returned SETUP_VERIFIED.
 Owner confirmed all five writes skipped on a new repeat with SETUP_VERIFIED.
-Own schema acceptance passed; PR #69 review/merge remains. App/flow acceptance
+Own schema acceptance passed; PR #69 is merged and #66 closed. App/flow acceptance
 stays with its separate owners. No ordinary-user privacy or rollout claim follows from owner setup.
 See POC_SHAREPOINT_SETUP.md and TEST_RUNS.md for versions and finish line.
+
+## Current app work - #6
+
+Only #6 is actively In progress. Add the two generated availability data cards
+to the existing Form1 using #66 verified fields. New registrations default
+Active/Yes; edits preserve stored choices and validation remains independent.
+The form contract/checks and exact UI handover are prepared; live card addition,
+save/reopen and app-version evidence are pending. No app package/update capability
+is inferred from successful flow imports. See POC_03_PARTICIPANT_SELF_REGISTRATION.md.
 
 ## Implemented SharePoint baseline
 

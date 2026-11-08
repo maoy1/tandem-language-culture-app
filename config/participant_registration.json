@@ -1,6 +1,6 @@
 {
-  "version": 2,
-  "deploymentStatus": "poc05_pending_tenant_setup_and_tests",
+  "version": 3,
+  "deploymentStatus": "issue6_studio_cards_added_choice_binding_and_tests_pending",
   "list": "Participants",
   "identity": {
     "field": "ParticipantAccount",
@@ -28,7 +28,9 @@
       "LearnCultures",
       "TimeZone",
       "LearningFocus",
-      "Comments"
+      "Comments",
+      "ParticipationStatus",
+      "OpenToConnections"
     ],
     "hiddenFields": [
       "Title",
@@ -36,8 +38,32 @@
     ]
   },
   "validation": {
-    "requireAnyOf": ["TeachLanguages", "LearnLanguages", "ShareCultures", "LearnCultures"],
-    "optionalCatalogueFields": ["TimeZone"],
+    "requireAnyOf": [
+      "TeachLanguages",
+      "LearnLanguages",
+      "ShareCultures",
+      "LearnCultures"
+    ],
+    "optionalCatalogueFields": [
+      "TimeZone"
+    ],
     "rejectInactiveSelections": true
+  },
+  "participation": {
+    "field": "ParticipationStatus",
+    "opennessField": "OpenToConnections",
+    "allowedValues": [
+      "Active",
+      "Paused",
+      "Inactive"
+    ],
+    "newProfileDefault": "Active",
+    "newProfileOpenDefault": true,
+    "defaultSource": "sharepoint_form_new_mode",
+    "defaultsApplyOnlyToNewProfiles": true,
+    "preserveExistingChoices": true,
+    "validationMayReset": false,
+    "membershipSideEffects": "none",
+    "binding": "generated_sharepoint_data_cards"
   }
 }

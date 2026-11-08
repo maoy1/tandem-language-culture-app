@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 3,
-  "deploymentStatus": "poc05_pending_tenant_setup_and_tests",
-  "description": "Desired POC-05 registration schema: controlled culture fields and optional time zone. Repository preparation only; tenant setup, culture values and tests remain pending. Participation/status extensions (#6) and group schema are not included.",
+  "schemaVersion": 4,
+  "deploymentStatus": "schema66_verified_app_flow_acceptance_pending",
+  "description": "Logical registration schema including participation/openness verified under #66. Actual tenant names/display fields are in tenant_schema_mapping.json; this is not a raw tenant export. #6 app controls, #5 registration and #61 server validation acceptance remain separate.",
   "lists": [
     {
       "name": "Language catalogue",
@@ -54,7 +54,9 @@
         },
         { "internalName": "LearningFocus", "displayName": "Learning focus", "type": "Note" },
         { "internalName": "Comments", "displayName": "Comments", "type": "Note" },
-        { "internalName": "Status", "displayName": "Status", "type": "Choice", "choices": ["Active", "Needs review"] }
+        { "internalName": "Status", "displayName": "Status", "type": "Choice", "choices": ["Active", "Needs review"] },
+        {"internalName": "ParticipationStatus", "displayName": "Participation status", "type": "Choice", "required": true, "choices": ["Active", "Paused", "Inactive"], "defaultValue": "Active"},
+        {"internalName": "OpenToConnections", "displayName": "Open to new connections", "type": "Boolean", "required": true, "defaultValue": true}
       ],
       "indexes": ["Status", "ParticipantAccount"]
     }

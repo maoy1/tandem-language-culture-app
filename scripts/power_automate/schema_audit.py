@@ -31,11 +31,13 @@ def expected_schema(root=None):
     root = Path(root) if root else Path(__file__).resolve().parents[2]
     schema = deepcopy(json.loads((root/'config/sharepoint_schema.json').read_text(encoding='utf-8')))
     people = next(x for x in schema['lists'] if x['name']=='Participants')
-    people['fields'] += [
+    extensions = [
         {'internalName':'ParticipationStatus','displayName':'Participation status','type':'Choice','required':True,
          'choices':['Active','Paused','Inactive'],'defaultValue':'Active'},
         {'internalName':'OpenToConnections','displayName':'Open to new connections','type':'Boolean','required':True,'defaultValue':True},
     ]
+    existing = {f['internalName'] for f in people['fields']}
+    people['fields'] += [f for f in extensions if f['internalName'] not in existing]
     return schema
 
 

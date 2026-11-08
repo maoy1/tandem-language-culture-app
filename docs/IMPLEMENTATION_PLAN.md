@@ -4,7 +4,7 @@ The approved design is CURRENT_DESIGN.md. This plan reflects the owner's
 annotations to Combined Requirements v0.2. GitHub tickets hold implementation
 acceptance and status; planning completion does not imply deployment.
 
-## Current focus - #66 schema alignment; PR #60 merged
+## Current focus - #6 participation controls; #66 complete
 
 #46 is accepted/closed. Tracking now separates Flow, App, Shared technical and
 Overview tickets. One production flow has one owner; old partial work/evidence
@@ -18,10 +18,13 @@ config/ticket_scope_map.json transfer of 246 former checklist items.
 - [x] #66: metadata inspection, permission preview and five-setting apply/readback succeeded.
 - [x] #66: fresh whole-schema audit Verified with no findings; repeat setup returned SETUP_VERIFIED.
 - [x] #66: owner confirmed all five writes Skipped on a new repeat, SETUP_VERIFIED; own schema tests passed.
-- [ ] #66: review/merge PR #69, then close this completed scoped ticket.
-- [ ] Next selected implementation: #6 participation controls; #5 registration UI and #61 submission remain separately owned.
+- [x] PR #69 merged; #66 closed and labelled Done.
+- [x] #6: owner confirmed both fields added to Form1.
+- [ ] #6 In progress: correct Participation status sample Items to SharePoint Choices; verify three real choices, new defaults, save/reopen preservation and actual app version.
+- [ ] #5 registration UI and #61 submission remain separately owned; do not claim Discovery integration before #7/#10 implementation.
 
-See POC_SHAREPOINT_SETUP.md for exact #66 packages, mappings and remaining tests.
+See POC_03_PARTICIPANT_SELF_REGISTRATION.md for #6 Studio steps and UI6 tests.
+POC_SHAREPOINT_SETUP.md retains the completed #66 package/mapping evidence.
 
 Sole production-flow ownership:
 
@@ -75,7 +78,7 @@ belong to Flow tickets; full layout belongs to App tickets. Disposable proof
 harnesses belong to their explicitly scoped Shared technical evidence, not an
 untracked production service. In progress is active work only, max one. Queued
 partial work stays Planned. Superseded is not Done. PR #60 is merged. #66 is
-ready for delivery review; own schema checks passed; only PR #69 review/merge remains.
+ready for delivery review; own schema checks passed; PR #69 is merged and #66 closed. #6 is the sole active scope.
 
 ## Ticket execution agreement - #45
 
@@ -116,7 +119,7 @@ permission expansion or CLI/sign-in dependency is assumed.
 
 #66 packages are implemented/imported. Owner supplied metadata collection, dry
 preview and successful apply/readback evidence on 2026-11-08. Final full audit is Verified; owner confirmed the five writes skipped on a new
-repeat with SETUP_VERIFIED. All own schema tests passed; only review/merge remains. See TEST_RUNS.md and PR #69.
+repeat with SETUP_VERIFIED. All own schema tests passed; PR #69 merged and #66 closed. See TEST_RUNS.md and PR #69.
 
 ## Completed package experiment checkpoint (#28)
 

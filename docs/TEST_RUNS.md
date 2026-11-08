@@ -909,3 +909,19 @@ whole-schema audit evidence above remain separately scoped.
   permission preview, apply/readback and final full audit had already passed.
 - All own #66 schema checks passed. Review/merge PR #69, then close #66. Ordinary
   app/flow/privacy tests remain separately owned. No business-row cleanup required.
+
+### UI6-20261108-01 - #6 preparation and owner card-add checkpoint
+
+- Branch codex/issue-6-participation-controls. Schema dependency #66 Done;
+  PR #69 merged. Existing app/connection; no new permission or connector.
+- Owner confirmed Form1 path and both availability cards added in Studio.
+- Participation status shows Item 1/Item 2 sample items. Binding correction
+  supplied: Items = Choices([@Participants].'Participation status'), display
+  Value, single selection. Result not yet confirmed; save test paused.
+- Local pytest: **79 passed** (16 new contract mutation/default-preservation
+  checks plus existing 63). No Power Apps execution proof follows from local tests.
+- UI6-001:006 / own PAR variants: NOT RUN. App saved/published version not supplied.
+  First pending check: actual three Choice values, then save/reopen Paused/No
+  without resetting identity/unrelated selections. No fixture cleanup yet.
+- #61 revalidation / #7/#10 availability exclusion / #64/#68 derived membership
+  integration portions remain separately owned; do not mark their outcomes passed.
