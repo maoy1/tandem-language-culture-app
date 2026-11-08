@@ -1233,3 +1233,24 @@ whole-schema audit evidence above remain separately scoped.
 - Evidence: results/feedback-layout.owner-report.json. #61 In progress; PR #72
   draft; runtime feedback and remaining scoped negative cases remain pending.
   Evidence/docs only; JSON/diff checked; 101 local code tests retained, not rerun.
+
+### UI61-REFRESH-20261108 — Active label and click acknowledgment observed
+
+- Owner screenshot shows full latest-stored validation Active text and Refresh
+  button after footer layout work; owner accepts other header arrangement.
+  Actual header parent SelectedRecordHeaderContainer1 observed in supplied tree.
+- Label1 formula is Signed in as plus User().Email; guided hide duplicate header
+  identity label because top blue banner already shows it. Exact hidden state not
+  separately confirmed. Existing action/visibility logic otherwise retained.
+- Owner confirms the added “Refreshing validation status…” notification appears
+  on clicking Refresh. This proves the action fires, not that changed server data
+  was fetched. An unchanged Active label was previously over-described as a
+  feedback PASS; that claim is qualified here. Changed-value refresh proof pending.
+- Refresh artifact synchronized to the owner-applied Notify; Refresh sequence.
+  It acknowledges a request, not completed validation or a successful data read.
+- Next one bounded owner test: capture four original lookup selections for item
+  38, clear them through SharePoint (bypassing App guard), wait for v2 Needs review,
+  then click App Refresh and observe Needs review. Restore original selections,
+  wait for Active, Refresh again. Preserve identity/availability. No new import.
+- New Live version not supplied; last confirmed 19. #61 In progress / PR #72
+  draft. No code/package change; JSON/diff checked, prior 101 local tests retained.

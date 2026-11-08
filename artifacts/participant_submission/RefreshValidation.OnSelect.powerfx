@@ -1,1 +1,2 @@
+Notify("Refreshing validation status…", NotificationType.Information);
 Refresh([@Participants])

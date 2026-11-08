@@ -50,7 +50,7 @@
     "postWrite": "Read back and verify Status without claiming unrelated fields were written",
     "selfTrigger": "Follow-up reads current item and skips unchanged Status; no sustained loop"
   },
-  "appFeedback": "Owner OnSuccess only notifies Registration saved. Prepared informational OnSuccess plus latest-stored Status label/manual refresh artifacts; Studio application/publication pending. No per-edit completion marker or immediate validation-success claim.",
+  "appFeedback": "Owner screenshot confirms latest-stored Active label; layout accepted, refresh click notification observed. Changed-status refresh proof and new published Live version remain pending.",
   "deploymentGate": "Generated Create-as-new package; stop existing validator before import, select existing SharePoint connection, ensure only v2 enabled, run owner smoke. Source export retained locally for recovery.",
   "limits": {
     "maxActionDefinitions": 500,

@@ -248,3 +248,24 @@ inspect it before applying auto-layout settings; do not insert a guessed wrapper
 Preview narrower/wider: title readable, My requests single-line, navigation/actions
 grouped right without overlap; footer text readable and Refresh accessible. Then
 run the documented save/Refresh functional smoke and publish/report Live version.
+
+## Current feedback evidence and changed-value check
+
+Owner screenshot shows the complete latest-stored Active label; layout is accepted.
+Owner confirms button click shows the Refreshing notification. This acknowledges
+the click only: unchanged Active cannot prove changed server data was loaded.
+The Refresh artifact now includes the observed notification before Refresh.
+No new Live version has been reported (last confirmed 19).
+
+One bounded next test combines the target invalid branch and changed-value refresh.
+Keep the app open after saving own item 38 so the feedback uses its saved ID.
+Capture exact original selections in Teach languages, Learn languages, Cultures
+I can share and Cultures of interest. In SharePoint edit only those four fields
+to blank on the same own item; Save. Wait for matching v2 run valid=false /
+Needs review. In the app click Refresh validation and expect Needs review text.
+Restore the exact four selections in SharePoint, leaving identity/participation/
+openness untouched. Wait for v2 Active and click Refresh again; expect Active.
+Return invalid-run Validation_report and both label outcomes (or first error).
+Capture the invalid follow-up NO_CHANGE if present; do not infer it without a
+report. Restoration is required even if the test fails. Do not alter shared
+catalogue rows, other profiles, connections or permissions for this check.
