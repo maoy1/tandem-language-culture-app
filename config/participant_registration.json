@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "deploymentStatus": "version26_issue61_feedback_published_remaining_tenant_acceptance_pending",
+  "deploymentStatus": "version26_issue61_ready_for_testing_acceptance_pending",
   "list": "Participants",
   "identity": {
     "field": "ParticipantAccount",

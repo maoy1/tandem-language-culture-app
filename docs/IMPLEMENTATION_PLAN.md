@@ -4,7 +4,7 @@ The approved design is CURRENT_DESIGN.md. This plan reflects the owner's
 annotations to Combined Requirements v0.2. GitHub tickets hold implementation
 acceptance and status; planning completion does not imply deployment.
 
-## Current focus - #61 Participant submission; #5/#6 complete
+## Current checkpoint - #61 Ready for testing; implementation may move on
 
 #46 is accepted/closed. Tracking now separates Flow, App, Shared technical and
 Overview tickets. One production flow has one owner; old partial work/evidence
@@ -25,7 +25,7 @@ config/ticket_scope_map.json transfer of 246 former checklist items.
 - [x] #6: working Combo box table-default binding; owner confirms New Active/open Yes, edit preservation and language/culture-only save/reopen; corrected Live Version 19 recorded.
 - [x] PR #70 merged; #6 closed/Done on owner-confirmed Version 19 UI scope. Backend integration checks remain #61/#7/#10/#25.
 - [x] #5: owner confirmed Live Version 19 A/B PASS for blank-zone/multi-selection persistence and all-four-empty guard/input retention/no saved-item change. PR #71 merged; #5 closed/Done.
-- [ ] #61 In progress: current export inspected; 26-action/depth-3 package generated; 101 local tests passed. Owner valid/no-change and necessary Active correction/readback/follow-up passed (item 38); feedback accepted/published as owner-reported Live Version 26; remaining scoped target acceptance pending.
+- [x] #61 implementation/testing handover: current export inspected; 26-action/depth-3 package generated; 101 local tests passed. Owner valid/no-change and necessary Active correction/readback/follow-up passed (item 38); feedback accepted/published as owner-reported Live Version 26; remaining scoped target acceptance pending.
 
 See POC_03_PARTICIPANT_SELF_REGISTRATION.md for #6 Studio steps and UI6 tests.
 POC_SHAREPOINT_SETUP.md retains the completed #66 package/mapping evidence.
@@ -428,3 +428,10 @@ evidence in TEST_RUNS.md.
 
 One ticket/branch/PR per delivery batch; finish/review the current PR before
 starting the next implementation batch. Keep incomplete tickets open.
+
+## Owner testing handover decision — 2026-11-08
+
+Owner asks to merge #72 and mark #61 Ready for testing so other authorized testers
+can cover the remaining cases. TEST_HANDOVER_61.md preserves passed/pending/blocked
+variants and access/fixture gates. #61 stays open, not Done; no full-test pass
+required from the owner before moving implementation forward. No active WIP.

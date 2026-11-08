@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "sourceTicket": 61,
   "flow": "Participant submission",
-  "deliveryState": "VERSION26_FEEDBACK_PUBLISHED_REMAINING_TENANT_ACCEPTANCE_PENDING",
+  "deliveryState": "READY_FOR_TESTING_OWNER_REQUESTED_HANDOVER",
   "runtime": "Power Automate with existing SharePoint connection; no new service or runtime",
   "trigger": {
     "event": "SharePoint item created or modified",
@@ -75,5 +75,7 @@
     "state": "Live_owner_reported",
     "evidence": "artifacts/participant_submission/results/version26.owner-report.json",
     "exactPublishTime": null
-  }
+  },
+  "testHandover": "docs/TEST_HANDOVER_61.md",
+  "acceptanceDecision": "Owner requests merge and Ready for testing rather than personally completing full acceptance. Issue stays open; remaining cases not waived/passed."
 }

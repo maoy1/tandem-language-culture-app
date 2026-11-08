@@ -1305,3 +1305,19 @@ whole-schema audit evidence above remain separately scoped.
 - Evidence/deployment metadata only; JSON and diff checked; 101 local code-test
   result retained without rerun. A passed Preview variant is not retroactively
   labelled as a separately executed Live-version test.
+
+### HANDOVER61-20261108 — owner requests merge and Ready for testing
+
+- Owner explicitly prefers moving on and asking others to test rather than
+  personally completing #61 acceptance. Prepare #72 merge and testing handover.
+- Implementation is imported/owner-smoked, final feedback published Live 26;
+  101 local tests and 26 actions/depth 3 remain recorded. No code/package change.
+- TEST_HANDOVER_61.md records passed owner cases, remaining target variants,
+  operator versus authorized app-tester roles, exact steps/outcomes/cleanup,
+  reporting and access/fixture/harness blockers. No send/invitation/grant action.
+- Lifecycle Ready for testing; issue remains open, not Done. Counts retain 38
+  open / 10 closed / 8 Done, WIP 0. Merge does not turn unexecuted tests into PASS.
+- Ordinary-user access not implied by publication. Already authorized testers may
+  use their own profiles; unavailable/unverified access is a blocked case under
+  #39/#40/#41. Detailed tests handed over, not silently removed from #61 scope.
+- JSON/diff checked for handover-only changes; prior 101-test result retained.

@@ -1,6 +1,6 @@
 # Participant submission validation — #61
 
-Status: **In progress; valid/no-change and Active correction/readback/follow-up passed; remaining acceptance and app feedback pending**.
+Status: **Ready for testing — implementation imported / Live app 26; remaining acceptance retained**.
 The owner supplied the current export. Inspection confirms GetOnUpdatedItems,
 one-minute recurrence, splitOn body/value, current Get_item using triggerBody ID,
 four-field nonempty OR and changed-only Status patches. Catalogue validity and
@@ -318,3 +318,13 @@ Retain these gates under build-first priority, not as delivered acceptance.
 If available, retrieve the already-executed Needs review report and its next
 matching-item follow-up from run history without making another profile edit.
 #61 stays In progress and PR #72 draft while own acceptance remains incomplete.
+
+## Owner decision — merge and delegate remaining testing
+
+Owner explicitly asks to merge #72 and set #61 Ready for testing rather than
+complete full acceptance personally. TEST_HANDOVER_61.md is the current handover
+for authorized testers/operators: exact versions, role/setup, procedures, expected
+results, cleanup/report template and blocked access/fixture/harness cases.
+Issue remains open until its own acceptance passes; no tests waived or marked
+passed by merge. Earlier In progress/draft notes are chronological history.
+No invitations/messages/access changes were performed by the agent.

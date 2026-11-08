@@ -24,7 +24,7 @@
     "closedTickets": 10,
     "done": 8,
     "superseded": 2,
-    "inProgress": 1
+    "inProgress": 0
   },
   "flowCountNote": "12 singly-owned core production flows (notification provisional), plus 1 Deferred reminder flow. Access/migration helpers remain undecided; no duplicate owners for the same production flow.",
   "flowInventory": [
@@ -105,7 +105,7 @@
       "ownerTicket": 61,
       "ticketType": "Flow",
       "phase": "Core",
-      "state": "Queued; existing partial evidence retained",
+      "state": "Ready for testing; imported v2 and Live app 26; own remaining acceptance retained",
       "inputOutputContract": "Defined and reviewed in this sole flow-owner ticket before package generation",
       "openTechnicalWork": "One existing created/modified validation flow; App form is #5 and schema #66."
     },
@@ -1194,9 +1194,9 @@
       "number": 61,
       "title": "[Flow] Participant submission validation",
       "ticketType": "Flow",
-      "status": "In progress",
+      "status": "Ready for testing",
       "flowScope": "One existing created/modified validation flow; App form is #5 and schema {{participant_schema}}.",
-      "implementationReadiness": "Package imported (26 actions / depth 3); final feedback published as owner-reported Live app Version 26. Core owner tests passed; remaining target acceptance evidence pending.",
+      "implementationReadiness": "Whole implementation imported and owner-smoked; feedback Live Version 26. Owner requests merge and tester handover; full acceptance pending.",
       "implementationEvidence": "Existing event mapping inspected/preserved; complete active-catalogue reads, typed ID validation, ETag-protected Status-only MERGE, failed-read gates/readback. 101 local tests passed, not tenant certification.",
       "evidence": "Build 88637754-4c91-4833-9dcf-5116d8bfb77e, item 38: initial NO_CHANGE CU09, STATUS_UPDATED CU11, requested follow-up NO_CHANGE run 08584074534064918346698562621CU26. No global race/loop or field-preservation inference.",
       "proposedExperience": [
@@ -1204,7 +1204,7 @@
         "The flow reads current saved values and validates catalogue selections.",
         "See validation feedback without admin approval or resetting personal choices."
       ],
-      "remainingWork": "Retain target invalid no-op follow-up, catalogue-negative, creation, failure/conflict and unexecuted account/availability variants; no independent replay in Live 26 reported. Issue remains open; draft PR is not whole-ticket acceptance.",
+      "remainingWork": "Tester execution/results for remaining scoped cases; issue stays open until own acceptance. docs/TEST_HANDOVER_61.md retains pending/blocked access/fixture/harness variants.",
       "testReferences": [
         "REG-001:004",
         "REG-006:009",
@@ -1214,7 +1214,7 @@
         "PAR-003"
       ],
       "testStatus": "Owner flow/core profile preservation and invalid/restore Refresh passes; final copy accepted and Live 26 reported. Remaining target variants pending.",
-      "testHandoff": "docs/FLOW_61_PARTICIPANT_SUBMISSION.md: exact package/build, one-validator cutover/recovery, owner smoke and detailed cases. Target tenant NOT RUN; source ZIP remains local.",
+      "testHandoff": "docs/TEST_HANDOVER_61.md: Live app 26 / flow build 88637754-4c91-4833-9dcf-5116d8bfb77e; exact owner/synthetic setup, steps, expected outcomes, cleanup and blocked ordinary-user/negative fixtures.",
       "flows": [
         "Participant submission"
       ],
@@ -1620,7 +1620,7 @@
     "openBodiesVerified": 38,
     "typeAndLifecycleExactlyOne": true,
     "uniqueProductionFlowOwners": 13,
-    "activeWork": 1,
+    "activeWork": 0,
     "stateChanges": {
       "supersededNotPlanned": [
         22,
