@@ -1,9 +1,12 @@
 # MVP field contract for review
 
-Issue #46; planning parent #45. Group limits below are owner-approved. Exact
-technical names, defaults, requiredness and projection choices below are proposals
-for review, not claims of new tenant configuration or owner approval of every row.
-Keep #46 open until this contract is accepted. #5/#6 implement the accepted rows.
+Issue #46; planning parent #45. This is the target field/ownership and Discovery
+exposure contract for final document review. The field tables specify target
+technical names, types, requiredness and defaults; owner review/merge accepts
+those definitions. Existing tenant mappings must be checked by implementation
+owners without silently renaming existing columns. Product rules and display
+choices are approved; this document does not certify deployed configuration.
+#46 closes after document review/merge, not after runtime implementation/tests.
 
 Acceptance scenarios and stable bug-report references are in
 [TEST_CATALOGUE.md](TEST_CATALOGUE.md); execution evidence and pending checks
@@ -24,23 +27,23 @@ are in [TEST_RUNS.md](TEST_RUNS.md). These checks do not imply implementation.
   see member count and available slots, decide whether to request joining, and
   the group accepts or declines. No participant size-preference field is needed.
 
-## Proposed participant fields
+## Participant field contract
 
 Baseline fields exist in config/sharepoint_schema.json. A new display label on
 an existing internal field does not imply renaming its internal identity.
 
-| Internal field | Purpose and SharePoint type | Required/default | Source and maintenance | Own form | Discovery display (not finalized) | State |
+| Internal field | Purpose and SharePoint type | Required/default | Source and maintenance | Own form | Discovery display | State |
 |---|---|---|---|---|---|---|
-| ParticipantAccount | Authoritative single Person account | Required, unique; authenticated account | System resolves; user cannot change identity | Read-only name | To decide; no raw claims/account object | Existing |
-| TeachLanguages | Offered languages; multi Lookup to Language catalogue | Optional, empty | Participant selection | Editable | Generally eligible; exact display to decide | Existing |
-| LearnLanguages | Wanted languages; multi Lookup to Language catalogue | Optional, empty | Participant selection | Editable | Generally eligible; exact display to decide | Existing |
-| ShareCultures | Cultures participant can meaningfully share; multi Lookup to Culture catalogue | Optional, empty | Participant declaration/selection | Editable | Generally eligible; exact display to decide | Planned #5 |
-| LearnCultures | Cultures of interest; multi Lookup to Culture catalogue | Optional, empty | Participant selection; not proof of sharing expertise | Editable | Generally eligible; exact display to decide | Planned #5 |
-| TimeZone | Meeting context; single Lookup to Time zone catalogue | Optional, empty allowed | Participant selection | Editable | To decide with Discovery | Existing lookup; requiredness change pending #5 |
-| LearningFocus | Exchange context; multiple lines plain text | Optional | Participant | Editable | Generally eligible; exact display to decide | Existing |
-| Comments | Additional exchange information; multiple lines plain text | Optional | Participant | Editable; proposed notice removed | To decide with Discovery like other profile fields | Existing |
+| ParticipantAccount | Authoritative single Person account | Required, unique; authenticated account | System resolves; user cannot change identity | Read-only name | Display name only; no email/raw account object | Existing |
+| TeachLanguages | Offered languages; multi Lookup to Language catalogue | Optional, empty | Participant selection | Editable | Approved display | Existing |
+| LearnLanguages | Wanted languages; multi Lookup to Language catalogue | Optional, empty | Participant selection | Editable | Approved display | Existing |
+| ShareCultures | Cultures participant can meaningfully share; multi Lookup to Culture catalogue | Optional, empty | Participant declaration/selection | Editable | Approved display | Planned #5 |
+| LearnCultures | Cultures of interest; multi Lookup to Culture catalogue | Optional, empty | Participant selection; not proof of sharing expertise | Editable | Approved display | Planned #5 |
+| TimeZone | Meeting context; single Lookup to Time zone catalogue | Optional, empty allowed | Participant selection | Editable | Approved display | Existing lookup; requiredness change pending #5 |
+| LearningFocus | Exchange context; multiple lines plain text | Optional | Participant | Editable | Approved display | Existing |
+| Comments | Additional exchange information; multiple lines plain text | Optional | Participant | Editable; proposed notice removed | Approved display | Existing |
 | ParticipationStatus | Active/Paused/Inactive; Choice | Required; Active for new self-registration | Participant; exceptional admin override | Editable | Not exposed as a raw field; used to filter | Planned #6 |
-| OpenToConnections | Willing to receive new requests; Yes/No | Required; approved Yes for new self-registration | Participant | Editable | Used to filter; exact display remains undecided | Planned #6 |
+| OpenToConnections | Willing to receive new requests; Yes/No | Required; approved Yes for new self-registration | Participant | Editable | Eligibility filter only; exclude raw field from Discovery | Planned #6 |
 | Status | Existing validation state Active/Needs review; Choice, proposed display label Validation status | System sets on create/edit; fail closed until validated | Validation automation only | Read-only validation feedback | Never expose raw field | Existing; retain internal name to avoid breaking flow references |
 | MigrationConfirmation | Not required/Pending confirmation/Confirmed; Choice | System default Not required for new self-registration | Migration sets Pending; successful owner review/save sets Confirmed | Banner only when Pending | Never expose raw field | Planned #48 |
 | Title | Hidden technical text | Not participant-required | System if needed | Hidden | Excluded | Existing |
@@ -54,7 +57,7 @@ No participant-entered email identity field, native Location dependency, languag
 level field, private organiser note field or separate per-participant exchange-type
 selector is proposed. A person can have language and culture selections together.
 
-## Proposed Culture catalogue
+## Culture catalogue contract
 
 | Field | Type/rule | Owner |
 |---|---|---|
@@ -62,33 +65,40 @@ selector is proposed. A person can have language and culture selections together
 | CultureKey | Required unique indexed text key, not assumed to be an ISO country code | Approved catalogue maintenance |
 | Active | Yes/No; default Yes | Approved catalogue maintenance |
 
-Initial values and labels need product review in #5. Do not infer culture sharing
-from nationality, identity or historical free-text interests. Existing inactive
-values may be retained for history but cannot be chosen for new selections.
-This catalogue is planned, not created by the contract PR.
+Catalogue population/setup has owner-reported evidence in #5; remaining live
+acceptance stays there. Do not infer culture sharing from nationality, identity
+or historical free-text interests. Existing inactive values may be retained for
+history but cannot be chosen for new selections. This contract does not create
+or certify tenant lists.
 
-## Discovery display decision deferred
+## Approved Discovery display - 2026-11-08
 
-The exact participant-profile fields shown in Discovery are not agreed yet.
-Participant-provided profile information, including Comments, is generally
-eligible for display; admin/system-only information must not be displayed.
-The participant-row projection entries above are suggestions only, not an
-approved allowlist. Finalize the actual fields during Discovery work (#7/#42).
-Remove the proposed Comments notice for now; no field-specific disclosure or
-private-Comments model is approved. Revisit any explanatory UI only after the
-actual Discovery display is agreed.
+Owner approved the full proposed participant-facing display, including the
+previously optional fields. Approved does not mean deployed or permission-tested.
 
-For groups, show current member count, derived free slots and Open/Closed/Ended
-state so people can choose whether to request joining. Exact member-name and
-other profile display choices remain pending. Profile references never authorize
-generic record access; do not return raw list objects as a display shortcut.
+| Result | Approved display |
+|---|---|
+| Person | Display name; matching languages/cultures and match explanation; offered/wanted languages and cultures; optional time zone; learning focus; Comments |
+| Group | Name; exchange type; language/culture focus; member count; capacity/free slots; join availability; description; other member names and their approved participant-facing profile details |
 
-## State and validation behavior proposal
+Email is excluded from Discovery display and responses. Never serialize raw
+Person/account objects, identity claims, audit/validation/migration fields,
+processing markers, operation keys or other admin/system-only data. Internal
+record references may support actions but do not grant generic record access.
+Group member profile details use the same person-field allowlist above; do not
+expand every SharePoint column. Member identities display names only.
+Blank optional fields are allowed; time zone is not a discovery eligibility gate.
+The proposed Comments notice remains removed. Exact JSON keys are still part of
+the affected flow implementation contracts (#7/#9/#16/#42), not a #46 closure
+condition. Those tickets implement/test this approved display.
+
+## State and validation contract
 
 The owner approved Active and OpenToConnections = Yes for new registrations.
 Edits preserve these choices. Culture-only, language-only, combined and share-only
 participation and the at-least-one-interest/offer validation rule are approved.
-Technical field names and migration-specific behavior remain under review.
+Target technical names are in the tables. Migration-specific choices belong
+to #48 and must be resolved before migrated profiles are exposed.
 
 - A valid profile has a required account and at least
   one TeachLanguages/LearnLanguages/ShareCultures/LearnCultures selection.
@@ -119,22 +129,22 @@ Technical field names and migration-specific behavior remain under review.
   An unavailable person cannot be newly requested; group candidates depend on
   actual group Open state, space and relevant sharer availability.
 
-## Proposed Groups list
+## Groups field contract
 
 One row represents one group, not one member. Its SharePoint item ID links the
-memberships and requests to it. All rows below are a contract proposal for
-#12/#13; existing tenant lists, if any, need mapping/verification before changes.
+memberships and requests to it. The tables define the target contract for
+#12/#13; existing tenant lists need mapping/verification before live changes.
 
 | Internal field | Purpose and SharePoint type | Required/default | Source and maintenance | Member-facing behavior | Discovery display | State |
 |---|---|---|---|---|---|---|
 | ID | Stable group reference; SharePoint system ID | Automatic | SharePoint | Read-only reference | Internal reference, not authorization | System |
-| Title | Group name; single line text | Required; agreed at creation | Active members can edit through group form; admin exception | Editable name | Exact text/display to decide | Planned/mapping pending |
-| ExchangeType | Language / Culture / Combined; Choice | Required at creation | Initial members choose; automation validates | Fixed after creation in MVP; approved | Eligibility uses it; exact display to decide | Planned/mapping pending |
-| LanguageFocus | Declared languages; multi Lookup to Language catalogue | At least one for Language/Combined; empty for Culture-only | Initial members choose; automation verifies group purpose | Visible; fixed after creation in MVP | Compatible-focus matching; display to decide | Planned/mapping pending |
-| CultureFocus | Declared cultures; multi Lookup to Culture catalogue | At least one for Culture/Combined; empty for Language-only | Initial members choose; automation verifies group purpose | Visible; same change rule as LanguageFocus | Compatible-focus matching; display to decide | Planned #12 |
+| Title | Group name; single line text | Required; agreed at creation | Active members can edit through group form; admin exception | Editable name | Approved name display | Planned/mapping pending |
+| ExchangeType | Language / Culture / Combined; Choice | Required at creation | Initial members choose; automation validates | Fixed after creation in MVP; approved | Approved exchange-type display | Planned/mapping pending |
+| LanguageFocus | Declared languages; multi Lookup to Language catalogue | At least one for Language/Combined; empty for Culture-only | Initial members choose; automation verifies group purpose | Visible; fixed after creation in MVP | Approved focus display | Planned/mapping pending |
+| CultureFocus | Declared cultures; multi Lookup to Culture catalogue | At least one for Culture/Combined; empty for Language-only | Initial members choose; automation verifies group purpose | Visible; same change rule as LanguageFocus | Approved focus display | Planned #12 |
 | Capacity | Maximum total members; Number, integer | Required; Language 2 or 3, Culture/Combined 2–10 | Group selects within approved bounds; validate updates | Active member may propose change; never below current active member count | Show alongside current count/free slots | Planned/mapping pending |
 | State | Open / Closed / Ended; Choice | Required; initially Open if space remains, otherwise Closed, only after membership creation succeeds | Workflow sets initial state; authorized active member manages later transitions | Open/Closed can switch or become Ended; Ended is final in MVP | Open with valid focus/space is joinable; Closed/Ended not joinable | Planned/mapping pending |
-| Purpose | Brief group description; multiple lines plain text | Optional | Active members edit; admin exception | Editable | Exact projection to decide with Discovery | Proposed #12 |
+| Purpose | Brief group description; multiple lines plain text | Optional | Active members edit; admin exception | Editable | Approved description display | Proposed #12 |
 | SourceRequestId | Originating person-to-person acceptance; Number, integer, unique | Required in current new-group path; old-group migration mapping remains #48 | Workflow-managed, never participant input | Hidden technical reference | Excluded | Owner-confirmed configured; runtime uniqueness not verified |
 | SetupComplete | Technical publication/readiness marker; Yes/No | Default No | Acceptance sets Yes only after memberships and accepted result are established | Hidden; independent from Open/Closed/Ended | Gate operational group exposure; do not display raw marker | Owner-confirmed configured; export reviewed |
 | Created / Modified and authors | System history fields | Automatic | SharePoint | Not participant inputs | Excluded as system/admin-only metadata | System |
@@ -154,7 +164,7 @@ creation in MVP; changing purpose later needs separate scope review. Necessary
 exceptional admin corrections do not introduce routine approvals or an ordinary
 reopen-Ended workflow. No automatic reopening on departure is added.
 
-## Proposed Group Members list
+## Group Members field contract
 
 One row links a participant to a group for a membership episode. It is not a
 second participant profile. Participants do not add or edit membership rows
@@ -164,7 +174,7 @@ directly; ordinary accepted joins and Leave actions maintain them automatically.
 |---|---|---|---|---|---|---|
 | ID | Membership reference; SharePoint system ID | Automatic | SharePoint | Read-only reference | Not exposed by default | System |
 | Group | Single Lookup to Groups item | Required | Acceptance/migration automation resolves it; immutable for that episode | Shows which group, not an editable link | Technical link, not raw membership row | Planned/mapping pending |
-| Participant | Single Lookup to Participants item | Required | Acceptance resolves approved participant; immutable for that episode | Shows member identity under agreed access rules | Member-name exposure still to decide | Planned/mapping pending |
+| Participant | Single Lookup to Participants item | Required | Acceptance resolves approved participant; immutable for that episode | Shows member identity under agreed access rules | Approved display name and person-field allowlist | Planned/mapping pending |
 | MembershipStatus | Active / Left; Choice | Required; provisional Active during setup, operational only after accepted/completed parent | Workflow records departure or rejected-setup cleanup as Left | Join/Leave actions, not a freely editable status field | Used internally for count and validity | Planned/mapping pending |
 | MembershipKey | Request/participant episode key; single line text, unique | Required in current acceptance path | Workflow generates request:{requestId}:participant:{participantId}; immutable | Hidden | Excluded | Owner-confirmed configured; complete retry behavior remains #47 |
 | JoinedAt | Episode start; Date/time in UTC | Required for new accepted joins; migration unknown-date handling decided in #48 | Workflow timestamps; do not invent historical dates | Read-only where useful | Not exposed by default | Proposed #12 |
@@ -200,7 +210,8 @@ report success until its required group/membership result is consistent.
 These are derived values, not a claim that a native SharePoint calculated column
 can aggregate another list. #12 chooses supported flow/app queries and whether a
 display cache is worthwhile; any cache is read-only and not capacity authority.
-Acceptance rechecks actual memberships using #47's verified concurrency design.
+Acceptance must recheck actual memberships; #47 owns the concurrency design
+and its proof, neither of which is certified by this document.
 Count membership rows rather than silently dropping paused people; detailed
 pause/Inactive recovery rules remain deferred.
 
@@ -222,6 +233,33 @@ state does not automatically remove memberships or send unchosen notifications.
 - Any active group member can accept/decline join requests and set Open, Closed
   or Ended. Admin intervention is allowed in necessary exceptional cases.
 - An Open group must still have capacity and valid purpose to appear as joinable.
+
+## Shared group responsibility - final owner choice
+
+Owner removed the proposed leader/contact role. No GroupContact field, leader
+appointment, replacement or exclusive response permission is required. All active
+members can see group join requests, accept/decline and manage permitted group
+controls. A request targets the group, not a designated contact. The first valid
+successfully persisted response wins, subject to #47 conflict protection.
+
+Group join requests may contain an optional introduction message (owner-approved).
+Its technical field name, app input/output mapping and request schema remain to
+be specified before #17 package generation. Personal-request message scope is
+not expanded by this group-join decision.
+
+## Proportionate conflict and recovery scope - 2026-11-08
+
+Owner expects low concurrency and prefers simple safe recovery. Keep conditional
+updates, stable duplicate-prevention keys, write-time eligibility/capacity checks,
+and a saved operation result so a retry cannot create another logical result.
+Detect conflicts and incomplete setup; do not report success or expose an
+unfinished group. Normal user retry should be supported; rare unresolved cases
+may use documented exceptional admin assistance, not routine repair/approvals.
+No general transaction/lock platform or elaborate background reconciliation is
+approved. The minimum shared capacity guard across join/leave/capacity writers
+still needs a concrete design/proof under #47; independent per-request version
+checks do not establish last-slot safety. No guaranteed automatic recovery of
+every failure is promised. Agree bounded recovery before package generation.
 
 ## Confirmed request behavior
 
@@ -274,10 +312,36 @@ are separate pending items. No additional paid platform or hosting is permitted.
 - [x] Any active group member may respond/manage state; request cancellation/history rules confirmed.
 - [x] Leaving/count updates, Closed-state preservation and invalid-focus discovery suppression accepted; automatic recovery remains Later.
 - [x] Empty offer/interest form blocks save; invalid existing records excluded until corrected; self-service revalidation preserves participation/open choices.
-- [ ] Owner accepts exact technical names, remaining group projection and
-      migration-confirmation discovery gate.
 - [x] Combined minimum 2 confirmed.
-- [ ] Identify organiser contact route before publishing private-contact guidance.
-- [ ] Reconcile accepted choices with #46, then let #5/#6 implement and retest.
+- [x] Final choice removes leader/contact role; all active members see/respond/manage.
+- [x] Optional group-join introduction approved; technical field/length review belongs to #17.
+- [x] Full person/group display approved; exclude email and admin/system data.
+- [x] Implementation and deferred decisions have explicit receiving tickets below.
+- [ ] Owner reviews target field names/types/defaults and merges the contract PR.
+
+## #46 scope audit and handoff - 2026-11-08
+
+#46 delivers a reviewed field/ownership and Discovery exposure specification.
+Document review/merge accepts the target field definitions above. No live flow,
+permission configuration or tenant test is an acceptance requirement for this
+contract ticket. Documentation review is its verification/handover, not a
+runtime test assignment. Implementation tickets remain open independently.
+
+| Follow-up | Receiving tickets and finish line |
+|---|---|
+| Tenant field mapping, setup and registration/participation behavior | #5/#6; verify actual settings and create/edit acceptance before those tickets close |
+| Request type/target fields, introduction storage/length, per-flow inputs/outputs, history/cancel behavior | #10/#11/#17 (shared UI rules #9); define before each affected package, not as extra #46 scope |
+| Discovery response JSON names and implementation | #7/#9/#16/#42; implement the approved allowlist and test returned fields |
+| Minimum shared capacity protection and bounded retry/recovery | #47 coordinated with #11/#12/#17; actual conflict/failure tests belong there |
+| Caller identity, underlying permissions and ordinary-user proof | #39-#42 and #19/#20/#22-#24; verify prerequisites before dependent integration and release |
+| Migration-confirmation discoverability and old-data field/key mappings | #48; decision required before migrated data is exposed, not before core development |
+| Organiser contact route | #45 overview tracks the owner decision before publishing private-contact guidance; no route is invented here |
+| Notifications and operational delivery | #49 decision, #21 implementation; no channel selected by #46 |
+| Detailed error wording, paging and runtime coverage | Relevant reader/action implementation tickets and #25/#27; basic truthful failure handling remains mandatory |
+
+The proposed 1,000-character introduction limit was not approved and is not a
+contract default. Keep it for #17 review. Unavailable targets must never bypass
+acceptance eligibility; detailed Pending display/cancellation policy remains
+#10/#11/#17 work. No remaining follow-up is silently dropped or marked tested.
 
 No target fields or permission changes are deployed by this contract.
