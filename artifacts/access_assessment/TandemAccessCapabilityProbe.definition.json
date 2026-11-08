@@ -1,0 +1,385 @@
+{
+  "name": "2983ab84-af52-46c4-b944-8b7613a4543e",
+  "id": "/providers/Microsoft.Flow/flows/2983ab84-af52-46c4-b944-8b7613a4543e",
+  "type": "Microsoft.Flow/flows",
+  "properties": {
+    "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
+    "displayName": "TandemAccessCapabilityProbe",
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {},
+              "required": []
+            }
+          }
+        }
+      },
+      "actions": {
+        "Caller_path": {
+          "type": "Scope",
+          "actions": {
+            "Read_caller_identity": {
+              "type": "OpenApiConnection",
+              "runAfter": {},
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/currentuser?$select=Id",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "Caller_identity": {
+              "type": "ParseJson",
+              "runAfter": {
+                "Read_caller_identity": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "content": "@body('Read_caller_identity')?['d']",
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "Id"
+                  ],
+                  "properties": {
+                    "Id": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "runAfter": {}
+        },
+        "Backend_path": {
+          "type": "Scope",
+          "actions": {
+            "Read_backend_identity": {
+              "type": "OpenApiConnection",
+              "runAfter": {},
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/currentuser?$select=Id",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_backend",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Backend_identity": {
+              "type": "ParseJson",
+              "runAfter": {
+                "Read_backend_identity": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "content": "@body('Read_backend_identity')?['d']",
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "Id"
+                  ],
+                  "properties": {
+                    "Id": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  }
+                }
+              }
+            },
+            "Read_participant_list": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "Backend_identity": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'fd3adf46-f81d-4a7b-a80c-567fde0175dc')?$select=Id,Title,BaseTemplate,ItemCount,HasUniqueRoleAssignments,ReadSecurity,WriteSecurity",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_backend",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Read_identity_field": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "Read_participant_list": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'fd3adf46-f81d-4a7b-a80c-567fde0175dc')/fields(guid'aa74f84e-f60d-46a2-87f9-077066fa0aa7')?$select=Id,InternalName,TypeAsString,Required,Indexed,EnforceUniqueValues",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_backend",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Read_list_permissions": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "Read_identity_field": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'fd3adf46-f81d-4a7b-a80c-567fde0175dc')/EffectiveBasePermissions",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_backend",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Read_role_definitions": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "Read_list_permissions": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/roledefinitions?$select=Id,Name,RoleTypeKind,BasePermissions&$top=5000",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_backend",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Read_list_role_bindings": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "Read_role_definitions": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'fd3adf46-f81d-4a7b-a80c-567fde0175dc')/roleassignments?$select=Member/Id,Member/PrincipalType,RoleDefinitionBindings/Id,RoleDefinitionBindings/RoleTypeKind&$expand=Member,RoleDefinitionBindings&$top=5000",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_backend",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Backend_permission_flags": {
+              "type": "Compose",
+              "inputs": {
+                "viewItems": "@equals(mod(div(int(coalesce(body('Read_list_permissions')?['d']?['Low'],body('Read_list_permissions')?['d']?['EffectiveBasePermissions']?['Low'],'0')),1),2),1)",
+                "manageLists": "@equals(mod(div(int(coalesce(body('Read_list_permissions')?['d']?['Low'],body('Read_list_permissions')?['d']?['EffectiveBasePermissions']?['Low'],'0')),2048),2),1)",
+                "managePermissions": "@equals(mod(div(int(coalesce(body('Read_list_permissions')?['d']?['Low'],body('Read_list_permissions')?['d']?['EffectiveBasePermissions']?['Low'],'0')),33554432),2),1)"
+              },
+              "runAfter": {
+                "Read_list_role_bindings": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Caller_path": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          }
+        },
+        "Capabilities_collected": {
+          "type": "Compose",
+          "inputs": "@and(equals(actions('Caller_path')?['status'],'Succeeded'),equals(actions('Backend_path')?['status'],'Succeeded'),equals(body('Read_participant_list')?['d']?['Id'],'fd3adf46-f81d-4a7b-a80c-567fde0175dc'),equals(body('Read_participant_list')?['d']?['BaseTemplate'],100),equals(body('Read_identity_field')?['d']?['Id'],'aa74f84e-f60d-46a2-87f9-077066fa0aa7'),equals(body('Read_identity_field')?['d']?['InternalName'],'Participantaccount'),equals(body('Read_identity_field')?['d']?['TypeAsString'],'User'),equals(body('Read_identity_field')?['d']?['EnforceUniqueValues'],true),equals(body('Read_identity_field')?['d']?['Required'],true),equals(body('Read_identity_field')?['d']?['Indexed'],true),not(equals(body('Read_participant_list')?['d']?['ReadSecurity'],null)),not(equals(body('Read_participant_list')?['d']?['WriteSecurity'],null)),not(equals(body('Read_participant_list')?['d']?['HasUniqueRoleAssignments'],null)),not(equals(coalesce(body('Read_list_permissions')?['d']?['Low'],body('Read_list_permissions')?['d']?['EffectiveBasePermissions']?['Low']),null)),and(not(equals(body('Read_role_definitions')?['d']?['results'],null)),empty(body('Read_role_definitions')?['d']?['__next'])),and(not(equals(body('Read_list_role_bindings')?['d']?['results'],null)),empty(body('Read_list_role_bindings')?['d']?['__next'])))",
+          "runAfter": {
+            "Backend_path": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          }
+        },
+        "Capability_report": {
+          "type": "Compose",
+          "inputs": {
+            "kind": "TandemAccessCapabilityProbe",
+            "schemaVersion": 1,
+            "sourceTicket": 39,
+            "packageBuildId": "2983ab84-af52-46c4-b944-8b7613a4543e",
+            "runReference": "@workflow()?['run']?['name']",
+            "readOnly": true,
+            "itemRowsRead": 0,
+            "writes": 0,
+            "metadataComplete": "@outputs('Capabilities_collected')",
+            "result": "@if(outputs('Capabilities_collected'),'CAPABILITY_METADATA_COLLECTED','CAPABILITY_METADATA_INCOMPLETE')",
+            "connectionPathStatus": {
+              "caller": "@actions('Caller_path')?['status']",
+              "backend": "@actions('Backend_path')?['status']"
+            },
+            "callerSharePointUserId": "@body('Caller_identity')?['Id']",
+            "backendSharePointUserId": "@body('Backend_identity')?['Id']",
+            "twoAccountContextSeparationVerified": false,
+            "backendPermissionFlags": "@outputs('Backend_permission_flags')",
+            "participantList": {
+              "id": "@body('Read_participant_list')?['d']?['Id']",
+              "title": "@body('Read_participant_list')?['d']?['Title']",
+              "itemCount": "@body('Read_participant_list')?['d']?['ItemCount']",
+              "hasUniqueRoleAssignments": "@body('Read_participant_list')?['d']?['HasUniqueRoleAssignments']",
+              "readSecurity": "@body('Read_participant_list')?['d']?['ReadSecurity']",
+              "writeSecurity": "@body('Read_participant_list')?['d']?['WriteSecurity']"
+            },
+            "identityField": {
+              "internalName": "@body('Read_identity_field')?['d']?['InternalName']",
+              "unique": "@body('Read_identity_field')?['d']?['EnforceUniqueValues']",
+              "required": "@body('Read_identity_field')?['d']?['Required']"
+            },
+            "roleDefinitions": "@coalesce(body('Read_role_definitions')?['d']?['results'],json('[]'))",
+            "listRoleBindings": "@coalesce(body('Read_list_role_bindings')?['d']?['results'],json('[]'))",
+            "privacyVerified": false,
+            "permissionWritesVerified": false,
+            "audienceGroupVerified": false,
+            "proceedToPrivacyCutover": false,
+            "nextStep": "Assessment only: inspect imported Caller=Provided by run-only user and Backend=existing owner connection separately. One owner run cannot prove different-user separation, group onboarding, licences/policy or direct/API denial. #40 isolated proof remains gated; no production permission/schema/app changes."
+          },
+          "runAfter": {
+            "Capabilities_collected": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Respond": {
+          "type": "Response",
+          "kind": "PowerApp",
+          "runAfter": {
+            "Capability_report": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "statusCode": 200,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "reportjson": {
+                  "type": "string",
+                  "title": "reportjson",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              }
+            },
+            "body": {
+              "reportjson": "@string(outputs('Capability_report'))"
+            }
+          }
+        }
+      }
+    },
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "connectionName": "IMPORT_SELECT_EXISTING_SHAREPOINT_CONNECTION",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+        "tier": "NotSpecified",
+        "apiName": "sharepointonline",
+        "isProcessSimpleApiReferenceConversionAlreadyDone": false
+      },
+      "shared_sharepointonline_backend": {
+        "connectionName": "IMPORT_SELECT_EXISTING_OWNER_SHAREPOINT_CONNECTION",
+        "source": "Embedded",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+        "tier": "NotSpecified",
+        "apiName": "sharepointonline",
+        "isProcessSimpleApiReferenceConversionAlreadyDone": false
+      }
+    },
+    "flowFailureAlertSubscribed": false,
+    "isManaged": false
+  }
+}

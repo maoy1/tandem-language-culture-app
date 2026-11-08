@@ -172,3 +172,53 @@ Reference for interpreting connection modes:
 [Microsoft: run-only flow connections](https://learn.microsoft.com/en-us/power-automate/create-team-flows).
 This supports the feature description, not this tenant's policy, licensing or
 the security of an unbuilt registration flow.
+
+
+## #39 resumed assessment — 2026-11-08
+
+#47 and #12 are Done after merged PRs #75/#76. #39 is the sole In progress
+ticket; #7 is Planned with owner-preview evidence retained in draft PR #77.
+#61 remains Ready for testing. Ordinary-colleague tests remain deferred.
+
+The owner reconfirmed the tenant rejects creator-only Item-level Permissions
+while this list contains a unique column. Keep Participantaccount required,
+indexed and unique; do not retry that setting by removing uniqueness.
+An existing automatically maintained audience group is UNKNOWN (owner answer).
+Do not create a manually maintained participant group or invite people individually.
+
+Preferred candidate for further assessment: a private Participants list behind
+authenticated, allowlisted read/save and Discovery operations. The caller path
+must identify the invoking user independently of the backend connection; approved
+Discovery projection remains #7's responsibility. This is not a selected or
+implemented access architecture. Production access flows require focused Flow
+tickets before implementation, and app rebinding belongs to #41 after #40.
+
+An after-save per-row ACL flow remains unselected: initial inherited exposure,
+failed permission changes, managed identity/status edits through direct APIs and
+growing unique permission scopes need proof, not just a hidden app control.
+Private-list setup would be one-time admin work; connection renewal, failures and
+policy changes remain exceptional operational dependencies to resolve explicitly.
+
+### Metadata-only capability experiment
+
+`artifacts/access_assessment/TandemAccessCapabilityProbe.zip`, build
+`2983ab84-af52-46c4-b944-8b7613a4543e`: **15 actions / depth 2** (limits 500/8).
+Readable definition/review accompany the ZIP. Uses only the existing SharePoint
+connector with two connection aliases: exported caller Invoker authentication and
+an explicitly selected Embedded owner connection for metadata only. It reads user
+technical IDs, list/field and permission metadata; zero employee item reads/writes.
+Mixed connection modes in one imported flow are NOT tenant verified.
+Local validation: 205 tests passed, including 11 helper tests. No tenant import/run
+or permission-write capability is claimed. Owner-only metadata success cannot
+prove different ordinary-user identity separation or direct/API denial.
+
+The helper always reports privacyVerified=false, audienceGroupVerified=false,
+twoAccountContextSeparationVerified=false and proceedToPrivacyCutover=false.
+Applicable policy and intended-user entitlements remain unknown; historical owner
+Office 365/Free licence visibility proves neither. No new identity connector,
+paid licence, service or participant sign-in setup is assumed.
+
+Decision: **no-go for privacy cutover / #40** until the capability, audience,
+policy/licensing and isolated proof prerequisites are resolved. The working app,
+Discovery flow credentials and production list permissions remain unchanged.
+The exact operator steps and test checkboxes are inline in issue #39.

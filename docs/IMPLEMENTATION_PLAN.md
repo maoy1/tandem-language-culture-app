@@ -4,7 +4,7 @@ The approved design is CURRENT_DESIGN.md. This plan reflects the owner's
 annotations to Combined Requirements v0.2. GitHub tickets hold implementation
 acceptance and status; planning completion does not imply deployment.
 
-## Current focus - #12 schema review; #47 complete; #61 Ready for testing
+## Current focus - #39 access assessment; #7 queued; #61 Ready for testing
 
 #46 is accepted/closed. Tracking now separates Flow, App, Shared technical and
 Overview tickets. One production flow has one owner; old partial work/evidence
@@ -48,7 +48,7 @@ Sole production-flow ownership:
 | TandemMyGroups | #64 | Core |
 | TandemRespondGroupJoinRequest | #65 | Core |
 
-Next focused batches (one selected non-overview ticket at a time; #12 is current):
+Next focused batches (one selected non-overview ticket at a time; #39 is current):
 
 1. **#66 Shared technical:** verify participant/catalogue field
    mappings and availability defaults once; flag any permitted setup first.
@@ -81,7 +81,7 @@ rather than require every parent/dependency closed. Minimal app-call smoke tests
 belong to Flow tickets; full layout belongs to App tickets. Disposable proof
 harnesses belong to their explicitly scoped Shared technical evidence, not an
 untracked production service. In progress is active work only, max one. Queued
-partial work stays Planned. Superseded is not Done. PR #60 is merged. #66 and #6 are Done after merged PRs #69/#70. #5 is Done after merged #71. #61 remains Ready for testing; #9 is Done after merged #73; #47 is the sole In progress scope.
+partial work stays Planned. Superseded is not Done. PR #60 is merged. #66 and #6 are Done after merged PRs #69/#70. #5 is Done after merged #71. #61 remains Ready for testing; #9 is Done after merged #73; #47 and #12 are Done; #39 is the sole In progress scope; #7 is Planned with draft PR #77 retained.
 
 ## Ticket execution agreement - #45
 
@@ -514,3 +514,53 @@ Final audit build `cb49aded-f121-410e-b7df-d9646be892dd`, run `08584074372941101
 All five direct-setting changes read back: group Title required; WriteOwner optional blank nonunique Text/255; native integer/type-specific capacity formula/message; membership Group and Participant indexes. Source/membership keys remain required unique/indexed, correct links/focus choices/types, JoinedAt required/LeftAt optional, membership Title unused optional, State default Closed and SetupComplete default No. Other mapped business field IDs/properties/XML semantics unchanged. Formula bracket normalization is equivalent. Actual mapping in `config/group_schema_mapping.json`; raw report `artifacts/group_schema/results/final-audit.owner-report.json`. Raw inspector schemaVerified=false remains intentionally fixed; local reviewed mapping/readback is now verified.
 
 #12 Ready for review / PR #76 ready. No owner rerun or settings package needed; owner chose manual UI changes. 194 local tests previously passed; no executable change in final evidence recording. No row rejection/creation/migration, ordinary-user privacy or consuming-flow/history behavior claimed. No migration exceptions in these observed empty lists. Dynamic count/focus/identity/Ended/history guards remain respective Flow scope; #48 migration remains separate. Source/contract review and merge remain; next focused implementation is #7 Discovery after merge, #61 still Ready for testing. Earlier pending-index entries are historical.
+
+
+## #39 resumed assessment — 2026-11-08
+
+#47 and #12 are Done after merged PRs #75/#76. #39 is the sole In progress
+ticket; #7 is Planned with owner-preview evidence retained in draft PR #77.
+#61 remains Ready for testing. Ordinary-colleague tests remain deferred.
+
+The owner reconfirmed the tenant rejects creator-only Item-level Permissions
+while this list contains a unique column. Keep Participantaccount required,
+indexed and unique; do not retry that setting by removing uniqueness.
+An existing automatically maintained audience group is UNKNOWN (owner answer).
+Do not create a manually maintained participant group or invite people individually.
+
+Preferred candidate for further assessment: a private Participants list behind
+authenticated, allowlisted read/save and Discovery operations. The caller path
+must identify the invoking user independently of the backend connection; approved
+Discovery projection remains #7's responsibility. This is not a selected or
+implemented access architecture. Production access flows require focused Flow
+tickets before implementation, and app rebinding belongs to #41 after #40.
+
+An after-save per-row ACL flow remains unselected: initial inherited exposure,
+failed permission changes, managed identity/status edits through direct APIs and
+growing unique permission scopes need proof, not just a hidden app control.
+Private-list setup would be one-time admin work; connection renewal, failures and
+policy changes remain exceptional operational dependencies to resolve explicitly.
+
+### Metadata-only capability experiment
+
+`artifacts/access_assessment/TandemAccessCapabilityProbe.zip`, build
+`2983ab84-af52-46c4-b944-8b7613a4543e`: **15 actions / depth 2** (limits 500/8).
+Readable definition/review accompany the ZIP. Uses only the existing SharePoint
+connector with two connection aliases: exported caller Invoker authentication and
+an explicitly selected Embedded owner connection for metadata only. It reads user
+technical IDs, list/field and permission metadata; zero employee item reads/writes.
+Mixed connection modes in one imported flow are NOT tenant verified.
+Local validation: 205 tests passed, including 11 helper tests. No tenant import/run
+or permission-write capability is claimed. Owner-only metadata success cannot
+prove different ordinary-user identity separation or direct/API denial.
+
+The helper always reports privacyVerified=false, audienceGroupVerified=false,
+twoAccountContextSeparationVerified=false and proceedToPrivacyCutover=false.
+Applicable policy and intended-user entitlements remain unknown; historical owner
+Office 365/Free licence visibility proves neither. No new identity connector,
+paid licence, service or participant sign-in setup is assumed.
+
+Decision: **no-go for privacy cutover / #40** until the capability, audience,
+policy/licensing and isolated proof prerequisites are resolved. The working app,
+Discovery flow credentials and production list permissions remain unchanged.
+The exact operator steps and test checkboxes are inline in issue #39.
