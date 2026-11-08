@@ -19,16 +19,15 @@
   "readableDefinitionEqualsZip": true,
   "createAsNew": true,
   "rawSourceCommitted": false,
-  "nativeImportSmoke": "V5 reached Data_profiles then failed on legacy nulls; V6 NOT RUN",
+  "nativeImportSmoke": "PASS_OWNER_EMPTY_HISTORY_SMOKE; run 08584074267842029485356386842CU16",
   "ordinaryUserPrivacy": "NOT RUN; postponed #39",
   "actualRequestMetadata": "Verified correct by owner readback; scalar XPath bug fixed in reader, no schema change needed.",
   "limitations": [
     "Local WDL-subset graph execution with synthetic connector, not native certification.",
     "Full-list bounds and conservative malformed/legacy gates can block all rows.",
-    "Observed Number references and owner-approved target adapter tested locally; six new fields/recipient optional setting and fresh corrected preflight still pending.",
     "Compatibility/guard/CAS/action runtime belongs to action flows; availability/actions are hints."
   ],
-  "packageVersion": "v4",
+  "packageVersion": "v6",
   "reviewFix": "Permit extra benign Requests indexes while retaining required true key indexes/uniqueness, exact required flags, and Hidden=false/ReadOnlyField=false.",
   "fullUIBinding": "PENDING #67; local shape compatibility does not prove UI binding",
   "compatibilityFix": "Original request created timestamp and Created desc, ID desc order retained; no additional profile fields.",

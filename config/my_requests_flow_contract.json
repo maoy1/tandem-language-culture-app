@@ -3,7 +3,7 @@
   "sourceTicket": 62,
   "flowName": "TandemMyRequests",
   "scope": "Read-only authorized own sent, personal received and current operational group incoming requests/history.",
-  "state": "LOCAL_BUILD_PARENT_REVIEW_TENANT_NOT_RUN",
+  "state": "OWNER_EMPTY_HISTORY_SMOKE_PASSED_ACCEPTANCE_PENDING",
   "runtime": "Power Automate and existing SharePoint connector only; Python is optional local tooling.",
   "sourceExport": {
     "name": "TandemMyRequests_20261108220317.zip",
@@ -310,7 +310,7 @@
     "Full UI binding under #67 remains explicitly PENDING; preserved shape/order do not prove existing screen, labels, output refresh or action binding works.",
     "Parent updates the existing inline issue handover with v6 and observed Number-column mapping; no new draft handover file or PR."
   ],
-  "nativeStatus": "V5_PROFILE_PARSE_FAILED_NULL_AVAILABILITY; V6_LOCAL_PASS_RETEST_PENDING",
+  "nativeStatus": "V6_OWNER_EMPTY_HISTORY_OK; POPULATED_HISTORY_AND_ACCESS_PENDING",
   "packageVersion": "v6",
   "packageBuildId": "b108407d-4714-4d58-9852-0ffc3099c1e9",
   "packageSha256": "e44592098013a550ea6341dcf699d12722423e4d1d6434076a35379662ab2da8",
@@ -322,5 +322,6 @@
   ],
   "importDisplayName": "TandemMyRequests v6",
   "metadataAttributeAdapter": "XPath string(/Field/@Decimals) and string(/Field/@List) return scalar values, same as verified preflight; no bare attribute node-array comparison.",
-  "legacyAvailability": "Null Status/ParticipationStatus/OpenToConnections preserved; profile is unavailable for new acceptance. Authorized history/cancel/decline stay readable. No null-to-Active/Yes default, write, deletion, rejoin or membership-state change."
+  "legacyAvailability": "Null Status/ParticipationStatus/OpenToConnections preserved; profile is unavailable for new acceptance. Authorized history/cancel/decline stay readable. No null-to-Active/Yes default, write, deletion, rejoin or membership-state change.",
+  "nativeSmokeRunReference": "08584074267842029485356386842CU16"
 }
