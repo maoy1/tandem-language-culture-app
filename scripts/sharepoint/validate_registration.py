@@ -79,6 +79,59 @@ def validate(policy: dict[str, Any], schema: dict[str, Any]) -> list[str]:
             "item-level permissions are unavailable with the unique identity field."
         )
 
+    validation = policy.get("validation", {})
+    expected_offers = {"TeachLanguages", "LearnLanguages", "ShareCultures", "LearnCultures"}
+    offer_fields = validation.get("requireAnyOf", [])
+    if not isinstance(offer_fields, list) or set(offer_fields) != expected_offers:
+        errors.append("requireAnyOf must include all four language/culture offer/interest fields.")
+    else:
+        for name in offer_fields:
+            field = fields.get(name, {})
+            expected_catalogue = "Culture catalogue" if name in {"ShareCultures", "LearnCultures"} else "Language catalogue"
+            if (field.get("type") != "Lookup" or field.get("allowMultiple") is not True
+                    or field.get("lookupList") != expected_catalogue
+                    or field.get("required", False) or name not in visible):
+                errors.append(f"{name} must be a visible optional multi-value lookup to {expected_catalogue}.")
+    if validation.get("optionalCatalogueFields") != ["TimeZone"]:
+        errors.append("TimeZone must be recorded as an optional catalogue field.")
+    timezone = fields.get("TimeZone", {})
+    if (timezone.get("required", False) or timezone.get("type") != "Lookup"
+            or timezone.get("lookupList") != "Time zone catalogue"
+            or timezone.get("allowMultiple") is not False or "TimeZone" not in visible):
+        errors.append("TimeZone must be a visible optional single-value catalogue lookup.")
+    if validation.get("rejectInactiveSelections") is not True:
+        errors.append("Inactive catalogue selections must be rejected by validation.")
+
+    participation = policy.get("participation", {})
+    required_policy = {
+        "field": "ParticipationStatus", "opennessField": "OpenToConnections",
+        "newProfileDefault": "Active", "newProfileOpenDefault": True,
+        "defaultSource": "explicit_combo_box_new_mode",
+        "newProfileDefaultType": "choice_table",
+        "existingProfileDefaultSource": "stored_choice_record_table",
+        "defaultsApplyOnlyToNewProfiles": True, "preserveExistingChoices": True,
+        "validationMayReset": False, "membershipSideEffects": "none",
+        "binding": "generated_sharepoint_data_cards",
+    }
+    for key, expected in required_policy.items():
+        actual = participation.get(key)
+        if actual != expected or (isinstance(expected, bool) and type(actual) is not bool):
+            errors.append(f"Participation contract {key} must be {expected!r}; edits must preserve stored choices.")
+    allowed = ["Active", "Paused", "Inactive"]
+    if participation.get("allowedValues") != allowed:
+        errors.append("Participation values must be Active, Paused and Inactive; validation Status is separate.")
+    state = fields.get("ParticipationStatus", {})
+    if (state.get("type") != "Choice" or state.get("required") is not True
+            or state.get("choices") != allowed or state.get("defaultValue") != "Active"):
+        errors.append("ParticipationStatus must be a required Choice with Active/Paused/Inactive and new-profile default Active.")
+    openness = fields.get("OpenToConnections", {})
+    if (openness.get("type") != "Boolean" or openness.get("required") is not True
+            or openness.get("defaultValue") is not True):
+        errors.append("OpenToConnections must be a required Boolean with new-profile default Yes.")
+    for name in ("ParticipationStatus", "OpenToConnections"):
+        if name not in visible or name in hidden:
+            errors.append(f"Participation control must be visible/editable: {name}.")
+
     return errors
 
 

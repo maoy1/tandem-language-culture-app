@@ -1,0 +1,38 @@
+{
+  "sourceTicket": 47,
+  "flowName": "TandemCoordinationFixture",
+  "packageBuildId": "8b82de6a-95e7-40fc-aaff-d066b168442b",
+  "fixtureTitle": "Tandem47Fixture_8b82de6a95e740fc",
+  "fixtureTag": "Tandem issue 47 synthetic fixture; packageBuildId=8b82de6a-95e7-40fc-aaff-d066b168442b; no production data.",
+  "actions": 321,
+  "maximumActionDepth": 6,
+  "limits": {
+    "actions": 500,
+    "nesting": 8
+  },
+  "writeGateDefault": false,
+  "productionWrites": 0,
+  "deletes": 0,
+  "permissionChanges": 0,
+  "caseCount": 10,
+  "cases": [
+    "UNIQUE_PRIMARY",
+    "UNIQUE_SECONDARY",
+    "STALE_TERMINAL",
+    "PARALLEL_TERMINAL",
+    "LAST_SLOT_TWO_ACCEPTORS",
+    "CAPACITY_VS_JOIN",
+    "LEAVE_VS_JOIN",
+    "KNOWN_PREFIX_REPLAY",
+    "LEFT_EPISODE_HISTORY",
+    "COMMITTED_EVENT_UNIQUE"
+  ],
+  "sha256": "b8a932cccb52eb22dfc30ac69984d56e7ea8b62cc69578e7e2766bfeb9bee554",
+  "tenantResult": "NOT_IMPORTED_NOT_TESTED",
+  "limitations": [
+    "Selected native independent-branch races, not all 70 native schedules.",
+    "Known-prefix checkpoint is controlled; not a genuine connector timeout/killed-run proof.",
+    "Synthetic fixtures do not verify production field/access/caller mapping.",
+    "No notification delivery attempted."
+  ]
+}

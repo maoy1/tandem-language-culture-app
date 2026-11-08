@@ -1,0 +1,20 @@
+{
+  "ticket": 66,
+  "flowName": "TandemSchemaAudit",
+  "packageBuildId": "1fd35100-e381-48b7-9d53-aa927d1131ed",
+  "sha256": "a29163983b333ceb21310d7967717bb0ca36833ee1e008b5a65da58815c063af",
+  "actions": 73,
+  "maximumActionDepth": 5,
+  "limits": {
+    "actions": 500,
+    "nesting": 8
+  },
+  "readOnly": true,
+  "productionFlow": false,
+  "connection": "Existing owner SharePoint connection; embedded only for disposable metadata inspection",
+  "dataScope": "Field metadata; lookup-resolved catalogue Id/Title/key/Active only. No participant rows.",
+  "catalogueBound": 5000,
+  "truncation": "Explicit incomplete result, never silent success",
+  "tenantImportAndRun": "NOT RUN",
+  "scopeBoundary": "SCHEMA-001 inspector only. Full #66 alignment and SCHEMA-002 require observed mapping and verified repair capability."
+}

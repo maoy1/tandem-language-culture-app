@@ -1,0 +1,15 @@
+{
+  "sourceTicket": 47,
+  "sourceSha256": "67e9268d9a0d25de32681ad0e0372a1778e50531896781f8d222a592f50c94c5",
+  "localSuiteResult": "152 PASSED",
+  "orderPreservingLastSlotSchedules": 70,
+  "referenceAxioms": [
+    "Atomic per-row CAS",
+    "Native unique constraints",
+    "All writers obey same group guard",
+    "Fresh authorized adapter facts",
+    "Known sealed boundary has no outstanding I/O"
+  ],
+  "nativeCrossItemProof": "NOT RUN",
+  "productionChanges": false
+}

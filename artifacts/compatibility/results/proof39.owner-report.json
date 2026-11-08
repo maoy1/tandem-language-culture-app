@@ -1,0 +1,15 @@
+{
+  "kind": "TandemCompatibilityProof",
+  "schemaVersion": 1,
+  "sourceTicket": 9,
+  "rulesVersion": 1,
+  "packageBuildId": "57fa2bc6-2b02-4068-9999-fe46f3747d4a",
+  "sourceSha256": "dfe0dcd587a5a348080dde288183ed3dff2d02d1f652f0ae23010b2e6e649c72",
+  "runReference": "08584074461495133197897516907CU19",
+  "syntheticOnly": true,
+  "connectors": 0,
+  "writes": 0,
+  "testCount": 39,
+  "allPassed": true,
+  "failedCases": []
+}

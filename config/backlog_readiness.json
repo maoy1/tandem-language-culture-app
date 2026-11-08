@@ -1,0 +1,1639 @@
+{
+  "schemaVersion": 2,
+  "auditDate": "2026-11-08",
+  "ownerTicket": 45,
+  "workflowLabels": {
+    "Planned": "Queued/not actively being worked; may have partial implementation/evidence. Overview rollups do not count as active development.",
+    "In progress": "Actively being worked on now; at most one non-overview ticket. Partial but queued work is Planned with evidence retained.",
+    "Blocked": "Specific prerequisite prevents affected integration/full acceptance; bounded preparation may still be possible.",
+    "Deferred": "Explicit Later/final-phase/owner-postponed work; not invalid.",
+    "Ready for review": "Whole in-scope deliverable complete with a review artifact; a partial PR does not qualify the whole issue.",
+    "Ready for testing": "Reviewed version deployed/imported with verified test context, case steps/expected results and necessary prerequisites; no mandatory implementation missing.",
+    "Done": "Own acceptance passed and issue closed; a design ticket uses accepted review, not runtime tests.",
+    "Superseded": "Retired as not planned with explicit successors; not completed and not Done."
+  },
+  "ticketTypeLabels": {
+    "Flow": "type:flow",
+    "App": "type:app",
+    "Shared technical": "type:shared-technical",
+    "Overview": "type:overview"
+  },
+  "counts": {
+    "allTickets": 48,
+    "openTickets": 36,
+    "closedTickets": 12,
+    "done": 10,
+    "superseded": 2,
+    "inProgress": 0
+  },
+  "flowCountNote": "12 singly-owned core production flows (notification provisional), plus 1 Deferred reminder flow. Access/migration helpers remain undecided; no duplicate owners for the same production flow.",
+  "flowInventory": [
+    {
+      "name": "TandemDiscovery",
+      "ownerTicket": 7,
+      "ticketType": "Flow",
+      "phase": "Core",
+      "state": "Queued; existing partial evidence retained",
+      "inputOutputContract": "Defined and reviewed in this sole flow-owner ticket before package generation",
+      "openTechnicalWork": "One flow returning approved compatible people and existing open groups. App layout is #16; rule source is #9; protected access proof is #42."
+    },
+    {
+      "name": "TandemSendRequest",
+      "ownerTicket": 10,
+      "ticketType": "Flow",
+      "phase": "Core",
+      "state": "Queued; existing partial evidence retained",
+      "inputOutputContract": "Defined and reviewed in this sole flow-owner ticket before package generation",
+      "openTechnicalWork": "Personal connection-request creation only. History is #62, cancellation #63, group-join sending #17."
+    },
+    {
+      "name": "TandemRespondRequest",
+      "ownerTicket": 11,
+      "ticketType": "Flow",
+      "phase": "Core",
+      "state": "Queued; existing partial evidence retained",
+      "inputOutputContract": "Defined and reviewed in this sole flow-owner ticket before package generation",
+      "openTechnicalWork": "Personal recipient Accept/Decline flow, including resulting new-group creation. Group-join responses belong to #65."
+    },
+    {
+      "name": "TandemUpdateGroup",
+      "ownerTicket": 13,
+      "ticketType": "Flow",
+      "phase": "Core",
+      "state": "Queued; existing partial evidence retained",
+      "inputOutputContract": "Defined and reviewed in this sole flow-owner ticket before package generation",
+      "openTechnicalWork": "One current-member group update flow; group screen layout is #68."
+    },
+    {
+      "name": "TandemLeaveGroup",
+      "ownerTicket": 14,
+      "ticketType": "Flow",
+      "phase": "Core",
+      "state": "Queued; existing partial evidence retained",
+      "inputOutputContract": "Defined and reviewed in this sole flow-owner ticket before package generation",
+      "openTechnicalWork": "One self-service leave flow; no timer, automatic reopening/ending or replacement assignment."
+    },
+    {
+      "name": "TandemSendGroupJoinRequest",
+      "ownerTicket": 17,
+      "ticketType": "Flow",
+      "phase": "Core",
+      "state": "Queued; existing partial evidence retained",
+      "inputOutputContract": "Defined and reviewed in this sole flow-owner ticket before package generation",
+      "openTechnicalWork": "Group join-request creation only; #65 answers, #62 reads, #63 cancels."
+    },
+    {
+      "name": "TandemNotifyRequest (provisional)",
+      "ownerTicket": 21,
+      "ticketType": "Flow",
+      "phase": "Core",
+      "state": "Queued; existing partial evidence retained",
+      "inputOutputContract": "Defined and reviewed in this sole flow-owner ticket before package generation",
+      "openTechnicalWork": "One proposed request-event delivery flow, only after #49 chooses a permitted approach. No delivery runtime approved yet."
+    },
+    {
+      "name": "TandemFreshnessReminder",
+      "ownerTicket": 30,
+      "ticketType": "Flow",
+      "phase": "Later",
+      "state": "Queued; existing partial evidence retained",
+      "inputOutputContract": "Defined and reviewed in this sole flow-owner ticket before package generation",
+      "openTechnicalWork": "One future scheduled reminder flow, dependent on #29 and approved delivery."
+    },
+    {
+      "name": "Participant submission",
+      "ownerTicket": 61,
+      "ticketType": "Flow",
+      "phase": "Core",
+      "state": "Ready for testing; imported v2 and Live app 26; own remaining acceptance retained",
+      "inputOutputContract": "Defined and reviewed in this sole flow-owner ticket before package generation",
+      "openTechnicalWork": "One existing created/modified validation flow; App form is #5 and schema #66."
+    },
+    {
+      "name": "TandemMyRequests",
+      "ownerTicket": 62,
+      "ticketType": "Flow",
+      "phase": "Core",
+      "state": "Queued; existing partial evidence retained",
+      "inputOutputContract": "Defined and reviewed in this sole flow-owner ticket before package generation",
+      "openTechnicalWork": "One authorized request-history reader; screen layout is #67."
+    },
+    {
+      "name": "TandemCancelRequest",
+      "ownerTicket": 63,
+      "ticketType": "Flow",
+      "phase": "Core",
+      "state": "Queued; existing partial evidence retained",
+      "inputOutputContract": "Defined and reviewed in this sole flow-owner ticket before package generation",
+      "openTechnicalWork": "One sender-cancellation flow for personal and group requests; no history screen ownership."
+    },
+    {
+      "name": "TandemMyGroups",
+      "ownerTicket": 64,
+      "ticketType": "Flow",
+      "phase": "Core",
+      "state": "Proposed new; no runtime evidence",
+      "inputOutputContract": "Defined and reviewed in this sole flow-owner ticket before package generation",
+      "openTechnicalWork": "One reader for own operational groups/members/counts/free slots and membership-derived profile status."
+    },
+    {
+      "name": "TandemRespondGroupJoinRequest",
+      "ownerTicket": 65,
+      "ticketType": "Flow",
+      "phase": "Core",
+      "state": "Proposed new; no runtime evidence",
+      "inputOutputContract": "Defined and reviewed in this sole flow-owner ticket before package generation",
+      "openTechnicalWork": "One active-member Accept/Decline flow for an existing-group join; new-group personal acceptance remains #11."
+    }
+  ],
+  "openTickets": [
+    {
+      "number": 7,
+      "title": "[Flow] TandemDiscovery",
+      "ticketType": "Flow",
+      "status": "Planned",
+      "flowScope": "One flow returning approved compatible people and existing open groups. App layout is #16; rule source is #9; protected access proof is #42.",
+      "implementationReadiness": "Owner-only package completion can start; mapping/bounds needed",
+      "implementationEvidence": "#54 merged; historical BASE-005-009 synthetic checks and owner empty-gallery/Back checks; no populated target matching pass.",
+      "evidence": "#54 merged; historical BASE-005-009 synthetic checks and owner empty-gallery/Back checks; no populated target matching pass.",
+      "proposedExperience": [
+        "Click Discovery from your saved profile.",
+        "See compatible people, excluding self/unavailable/invalid profiles.",
+        "See approved profile fields including Comments/optional time zone, without email/system data.",
+        "Discovery creates no membership or request."
+      ],
+      "remainingWork": "One flow returning approved compatible people and existing open groups. App layout is #16; rule source is #9; protected access proof is #42.",
+      "testReferences": [
+        "DISC-001:011",
+        "GRP-005:007",
+        "LEAVE-003",
+        "LEAVE-004"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [
+        "TandemDiscovery"
+      ],
+      "scopeBoundary": "One flow returning approved compatible people and existing open groups. App layout is #16; rule source is #9; protected access proof is #42.",
+      "prerequisites": [
+        "#9 maintained compatibility source; #12 group schema for group-result branch",
+        "#66 availability fields; #42 verified access before ordinary-user integration"
+      ],
+      "validity": "Valid",
+      "sourceTickets": [
+        42,
+        16,
+        14,
+        9,
+        7,
+        6
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/7"
+    },
+    {
+      "number": 8,
+      "title": "[Shared technical] Later: ranking policy and reusable rule",
+      "ticketType": "Shared technical",
+      "status": "Deferred",
+      "flowScope": "Future scoring policy/rule artifact; does not own a second TandemDiscovery flow.",
+      "implementationReadiness": "Not an MVP package",
+      "implementationEvidence": "Explicit Later decision; eligibility checks do not prove ranking.",
+      "evidence": "Explicit Later decision; eligibility checks do not prove ranking.",
+      "proposedExperience": [
+        "If later approved, rank already eligible results in an agreed useful order.",
+        "Keep blank time zone supported and use no paid scoring or new location dependency."
+      ],
+      "remainingWork": "Future scoring policy/rule artifact; does not own a second TandemDiscovery flow.",
+      "testReferences": [
+        "LATER-001"
+      ],
+      "testStatus": "DEFERRED / REQUIREMENT PENDING at the stated future decision gate; no new runtime pass.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "Future scoring policy/rule artifact; does not own a second TandemDiscovery flow.",
+      "prerequisites": [],
+      "validity": "Valid - Later",
+      "sourceTickets": [
+        8
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/8"
+    },
+    {
+      "number": 10,
+      "title": "[Flow] TandemSendRequest",
+      "ticketType": "Flow",
+      "status": "Planned",
+      "flowScope": "Personal connection-request creation only. History is {{history}}, cancellation {{cancel}}, group-join sending #17.",
+      "implementationReadiness": "Needs bounded request/interface definition before package",
+      "implementationEvidence": "#56 merged guided history/cancel configuration; latest owner instruction requires verifying actual completion; no full request business-run pass.",
+      "evidence": "#56 merged guided history/cancel configuration; latest owner instruction requires verifying actual completion; no full request business-run pass.",
+      "proposedExperience": [
+        "Choose a compatible person and send a request.",
+        "View own Sent/Received history.",
+        "Cancel your Pending request and retain terminal history.",
+        "Handle unavailable targets clearly; no automatic cancellation policy approved."
+      ],
+      "remainingWork": "Personal connection-request creation only. History is #62, cancellation #63, group-join sending #17.",
+      "testReferences": [
+        "REQ-001",
+        "REQ-002",
+        "REQ-006",
+        "AUTH-002"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [
+        "TandemSendRequest"
+      ],
+      "scopeBoundary": "Personal connection-request creation only. History is #62, cancellation #63, group-join sending #17.",
+      "prerequisites": [
+        "#9 compatibility source, #23 caller/request authority contract and #47 duplicate guard",
+        "#66 availability fields"
+      ],
+      "validity": "Valid",
+      "sourceTickets": [
+        10
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/10"
+    },
+    {
+      "number": 11,
+      "title": "[Flow] TandemRespondRequest",
+      "ticketType": "Flow",
+      "status": "Planned",
+      "flowScope": "Personal recipient Accept/Decline flow, including resulting new-group creation. Group-join responses belong to {{respond_group}}.",
+      "implementationReadiness": "Needs response/app interface and bounded #47 integration",
+      "implementationEvidence": "#57 merged; 77-action snapshot plus verified Decline overlay passed bounded static review, not end-to-end acceptance.",
+      "evidence": "#57 merged; 77-action snapshot plus verified Decline overlay passed bounded static review, not end-to-end acceptance.",
+      "proposedExperience": [
+        "Open a personal request addressed to you.",
+        "Decline or accept with agreed group name/type/focus/capacity.",
+        "Recheck eligibility and save one consistent group/membership result.",
+        "Show the saved outcome, never false success after failure."
+      ],
+      "remainingWork": "Personal recipient Accept/Decline flow, including resulting new-group creation. Group-join responses belong to #65.",
+      "testReferences": [
+        "REQ-003",
+        "REQ-004",
+        "REQ-006",
+        "REQ-007",
+        "REQ-010",
+        "REQ-011",
+        "GRP-001:007"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [
+        "TandemRespondRequest"
+      ],
+      "scopeBoundary": "Personal recipient Accept/Decline flow, including resulting new-group creation. Group-join responses belong to #65.",
+      "prerequisites": [
+        "#12 verified group/member schema, #9 compatibility, #23 authority and #47 bounded decision/recovery guard"
+      ],
+      "validity": "Valid",
+      "sourceTickets": [
+        24,
+        12,
+        11
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/11"
+    },
+    {
+      "number": 12,
+      "title": "[Shared technical] Groups and Group Members schema and field mapping",
+      "ticketType": "Shared technical",
+      "status": "Ready for review",
+      "flowScope": "One-time group/membership data contract verification/setup only. #11 owns automatic new-group creation; {{mygroups}} owns reading/counts.",
+      "implementationReadiness": "Actual Groups/Group Members mapping verified; five manual settings read back, PR #76 source/data-contract review pending.",
+      "implementationEvidence": "194 local tests previously passed. Complete final audit 08584074372941101122136369836CU17; required Title, WriteOwner, capacity formula and separate Group/Participant indexes verified. Both lists itemCount=0.",
+      "evidence": "artifacts/group_schema/results/final-audit.owner-report.json; config/group_schema_mapping.json. SourceRequestId/MembershipKey uniqueness/indexes, lookups/defaults/history metadata verified; no production-flow or ordinary-user pass inferred.",
+      "proposedExperience": [
+        "Accept a valid connection to form a typed group.",
+        "Publish only after required request/membership setup agrees.",
+        "Open My groups for operational groups, members, counts and free slots.",
+        "Hide unfinished setup."
+      ],
+      "remainingWork": "Review/merge PR #76 for own data/schema scope. No owner rerun needed. #11/#13/#14/#17/#65/#64 own runtime integration; #48 migration exceptions stay separate.",
+      "testReferences": [
+        "SCHEMA-001",
+        "SCHEMA-002"
+      ],
+      "testStatus": "PASS SCHEMA-001 metadata mapping and SCHEMA-002 direct settings/readback; 194 local tests previously pass. Row rejection/flow/access behavior not executed here.",
+      "testHandoff": "Own schema settings handover complete; exact actual field/list IDs and checked cases/evidence inline #12. Manual setup chosen, no new setup package or repeat-apply claim.",
+      "flows": [],
+      "scopeBoundary": "One-time group/membership data contract verification/setup only. #11 owns automatic new-group creation; #64 owns reading/counts.",
+      "prerequisites": [
+        "Existing owner list/column access must be rechecked for any actual change; #48 owns old-data exceptions"
+      ],
+      "validity": "Valid",
+      "sourceTickets": [
+        12
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/12"
+    },
+    {
+      "number": 13,
+      "title": "[Flow] TandemUpdateGroup",
+      "ticketType": "Flow",
+      "status": "Planned",
+      "flowScope": "One current-member group update flow; group screen layout is {{mygroups_app}}.",
+      "implementationReadiness": "Ready for owner prototype after field mapping",
+      "implementationEvidence": "Behavior agreed; no deployed UpdateGroup flow/run.",
+      "evidence": "Behavior agreed; no deployed UpdateGroup flow/run.",
+      "proposedExperience": [
+        "An active member opens their group.",
+        "Edit name/description, bounded capacity or Open/Closed/Ended.",
+        "Ended stays final; type/focus stay fixed; capacity cannot fall below count.",
+        "Members see saved settings."
+      ],
+      "remainingWork": "One current-member group update flow; group screen layout is #68.",
+      "testReferences": [
+        "GRP-008:012",
+        "GRP-014",
+        "AUTH-001"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [
+        "TandemUpdateGroup"
+      ],
+      "scopeBoundary": "One current-member group update flow; group screen layout is #68.",
+      "prerequisites": [
+        "#12 mapping, #19 member guard and #47 capacity-changing write guard"
+      ],
+      "validity": "Valid",
+      "sourceTickets": [
+        13
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/13"
+    },
+    {
+      "number": 14,
+      "title": "[Flow] TandemLeaveGroup",
+      "ticketType": "Flow",
+      "status": "Planned",
+      "flowScope": "One self-service leave flow; no timer, automatic reopening/ending or replacement assignment.",
+      "implementationReadiness": "Ready for owner prototype after membership mapping",
+      "implementationEvidence": "Behavior agreed; no Leave flow/run recorded.",
+      "evidence": "Behavior agreed; no Leave flow/run recorded.",
+      "proposedExperience": [
+        "Choose Leave on your group.",
+        "Mark membership Left while preserving history.",
+        "Counts/slots update; Closed stays Closed.",
+        "Suppress invalid-focus groups from joining without automatic ending/replacements."
+      ],
+      "remainingWork": "One self-service leave flow; no timer, automatic reopening/ending or replacement assignment.",
+      "testReferences": [
+        "LEAVE-001:006",
+        "AUTH-001",
+        "AUTH-004"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [
+        "TandemLeaveGroup"
+      ],
+      "scopeBoundary": "One self-service leave flow; no timer, automatic reopening/ending or replacement assignment.",
+      "prerequisites": [
+        "#12 mapping and #19 current-member guard; #7 for invalid-focus integration test"
+      ],
+      "validity": "Valid",
+      "sourceTickets": [
+        14
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/14"
+    },
+    {
+      "number": 15,
+      "title": "[App] Later: multiple-group warning",
+      "ticketType": "App",
+      "status": "Deferred",
+      "flowScope": "Optional warning UI only if product chooses it; no core-MVP group limit.",
+      "implementationReadiness": "Not an MVP package",
+      "implementationEvidence": "Explicitly not current MVP scope.",
+      "evidence": "Explicitly not current MVP scope.",
+      "proposedExperience": [
+        "Only if later approved, show a multiple-active-groups warning.",
+        "Do not add routine admin approval or a hard membership limit."
+      ],
+      "remainingWork": "Optional warning UI only if product chooses it; no core-MVP group limit.",
+      "testReferences": [
+        "LATER-002"
+      ],
+      "testStatus": "DEFERRED / REQUIREMENT PENDING at the stated future decision gate; no new runtime pass.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "Optional warning UI only if product chooses it; no core-MVP group limit.",
+      "prerequisites": [],
+      "validity": "Valid - Later",
+      "sourceTickets": [
+        15
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/15"
+    },
+    {
+      "number": 16,
+      "title": "[App] Discovery screen for people and groups",
+      "ticketType": "App",
+      "status": "Planned",
+      "flowScope": "Discovery screen layout/display/navigation only. #7 exclusively owns TandemDiscovery and all matching.",
+      "implementationReadiness": "Ready to define UI against #7 reader interface; matching stays in the flow.",
+      "implementationEvidence": "Group limits/projection agreed; no populated group discovery run.",
+      "evidence": "Group limits/projection agreed; no populated group discovery run.",
+      "proposedExperience": [
+        "Review compatible Open groups with free places.",
+        "See approved group/member details and count/capacity.",
+        "Exclude existing memberships and Closed/Ended/full/invalid-focus opportunities.",
+        "Request joining under #17."
+      ],
+      "remainingWork": "Discovery screen layout/display/navigation only. #7 exclusively owns TandemDiscovery and all matching.",
+      "testReferences": [
+        "UI-001",
+        "DISC-008",
+        "DISC-009",
+        "REQ-014"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "Discovery screen layout/display/navigation only. #7 exclusively owns TandemDiscovery and all matching.",
+      "prerequisites": [
+        "#7 response interface; #10/#17 invocation contracts for action integration"
+      ],
+      "validity": "Valid",
+      "sourceTickets": [
+        16,
+        7
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/16"
+    },
+    {
+      "number": 17,
+      "title": "[Flow] TandemSendGroupJoinRequest",
+      "ticketType": "Flow",
+      "status": "Planned",
+      "flowScope": "Group join-request creation only; {{respond_group}} answers, {{history}} reads, {{cancel}} cancels.",
+      "implementationReadiness": "Needs request/interface schema and minimum #47 guard",
+      "implementationEvidence": "Experience approved in #46/#59; no group-join runtime implementation.",
+      "evidence": "Experience approved in #46/#59; no group-join runtime implementation.",
+      "proposedExperience": [
+        "Choose a compatible Open group and optionally introduce yourself.",
+        "Save Pending without membership; sender can view/cancel.",
+        "All active members see the request; any can accept/decline.",
+        "Acceptance rechecks fit/availability/space and adds one membership; first valid saved response wins.",
+        "No leader/contact or routine organiser approval."
+      ],
+      "remainingWork": "Group join-request creation only; #65 answers, #62 reads, #63 cancels.",
+      "testReferences": [
+        "REQ-001",
+        "REQ-002",
+        "REQ-006",
+        "REQ-014",
+        "AUTH-002"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [
+        "TandemSendGroupJoinRequest"
+      ],
+      "scopeBoundary": "Group join-request creation only; #65 answers, #62 reads, #63 cancels.",
+      "prerequisites": [
+        "#12 mapping, #9 compatibility, #23 authority and #47 duplicate guard"
+      ],
+      "validity": "Valid",
+      "sourceTickets": [
+        17,
+        10
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/17"
+    },
+    {
+      "number": 18,
+      "title": "[Overview] Private registration access stages",
+      "ticketType": "Overview",
+      "status": "Deferred",
+      "flowScope": "Roll up #39 assessment, #40 isolated proof and #41 app integration only; no implementation flow owned here. #42 is separate Discovery access.",
+      "implementationReadiness": "Owner deferred access work",
+      "implementationEvidence": "No selected private-data architecture or ordinary-user proof.",
+      "evidence": "No selected private-data architecture or ordinary-user proof.",
+      "proposedExperience": [
+        "Register/read/update only your profile.",
+        "Direct list/API access cannot reveal other profiles.",
+        "Discovery returns permitted candidates through the verified path."
+      ],
+      "remainingWork": "Roll up #39 assessment, #40 isolated proof and #41 app integration only; no implementation flow owned here. #42 is separate Discovery access.",
+      "testReferences": [
+        "ACC-001",
+        "ACC-002",
+        "ACC-005",
+        "OPS-001"
+      ],
+      "testStatus": "DEFERRED / REQUIREMENT PENDING at the stated future decision gate; no new runtime pass.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "Roll up #39 assessment, #40 isolated proof and #41 app integration only; no implementation flow owned here. #42 is separate Discovery access.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        18
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/18"
+    },
+    {
+      "number": 19,
+      "title": "[Shared technical] Current-member authorization guard",
+      "ticketType": "Shared technical",
+      "status": "Blocked",
+      "flowScope": "Reusable current membership authorization and departure revocation for member actions; no production flow of its own.",
+      "implementationReadiness": "Protected integration blocked on verified access",
+      "implementationEvidence": "No ordinary-user group-action proof.",
+      "evidence": "No ordinary-user group-action proof.",
+      "proposedExperience": [
+        "Active members manage their group.",
+        "Unrelated users cannot change it by direct/tampered calls.",
+        "Admins retain exceptional support."
+      ],
+      "remainingWork": "Reusable current membership authorization and departure revocation for member actions; no production flow of its own.",
+      "testReferences": [
+        "AUTH-001",
+        "AUTH-004",
+        "ACC-003",
+        "ACC-004"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "Reusable current membership authorization and departure revocation for member actions; no production flow of its own.",
+      "prerequisites": [
+        "#39/#40 proven identity/data-access path"
+      ],
+      "validity": "Valid",
+      "sourceTickets": [
+        22,
+        19,
+        13
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/19"
+    },
+    {
+      "number": 20,
+      "title": "[Shared technical] Workflow-only membership data writes",
+      "ticketType": "Shared technical",
+      "status": "Blocked",
+      "flowScope": "Protect raw authoritative Group Members lifecycle data; request visibility/response policy belongs to #23.",
+      "implementationReadiness": "Protected integration blocked on verified access",
+      "implementationEvidence": "Scaffolds/Invoker binding do not establish authority.",
+      "evidence": "Scaffolds/Invoker binding do not establish authority.",
+      "proposedExperience": [
+        "Only personal recipient or active target-group member answers.",
+        "Only sender cancels Pending.",
+        "Users cannot directly manufacture active memberships."
+      ],
+      "remainingWork": "Protect raw authoritative Group Members lifecycle data; request visibility/response policy belongs to #23.",
+      "testReferences": [
+        "AUTH-003",
+        "ACC-004"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "Protect raw authoritative Group Members lifecycle data; request visibility/response policy belongs to #23.",
+      "prerequisites": [
+        "#39/#40 access method; writer contracts #11/#14/#65"
+      ],
+      "validity": "Valid",
+      "sourceTickets": [
+        22,
+        20
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/20"
+    },
+    {
+      "number": 21,
+      "title": "[Flow] TandemNotifyRequest (channel pending)",
+      "ticketType": "Flow",
+      "status": "Blocked",
+      "flowScope": "One proposed request-event delivery flow, only after #49 chooses a permitted approach. No delivery runtime approved yet.",
+      "implementationReadiness": "Blocked on #49 decision and prerequisites",
+      "implementationEvidence": "No email/Teams/Approvals channel approved or implemented.",
+      "evidence": "No email/Teams/Approvals channel approved or implemented.",
+      "proposedExperience": [
+        "A relevant participant/member notices a saved request/answer.",
+        "Open its app view without exposing data to unrelated people.",
+        "Delivery failure is visible and never rolls back business state."
+      ],
+      "remainingWork": "One proposed request-event delivery flow, only after #49 chooses a permitted approach. No delivery runtime approved yet.",
+      "testReferences": [
+        "NOT-001",
+        "NOT-002"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [
+        "TandemNotifyRequest (provisional)"
+      ],
+      "scopeBoundary": "One proposed request-event delivery flow, only after #49 chooses a permitted approach. No delivery runtime approved yet.",
+      "prerequisites": [
+        "#49 approved channel/events and verified prerequisites"
+      ],
+      "validity": "Valid",
+      "sourceTickets": [
+        21,
+        11
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/21"
+    },
+    {
+      "number": 23,
+      "title": "[Shared technical] Request visibility and response authorization guard",
+      "ticketType": "Shared technical",
+      "status": "Blocked",
+      "flowScope": "Reusable trusted-caller request visibility/action policy; {{history}} owns the production reader.",
+      "implementationReadiness": "Protected integration blocked on verified access",
+      "implementationEvidence": "MyRequests actual completion unverified; retain only if complete/small adjustment, otherwise rebuild.",
+      "evidence": "MyRequests actual completion unverified; retain only if complete/small adjustment, otherwise rebuild.",
+      "proposedExperience": [
+        "See own sent and personally received requests.",
+        "See group incoming requests only as an active member.",
+        "Unrelated and departed members cannot read/respond beyond approved history rules."
+      ],
+      "remainingWork": "Reusable trusted-caller request visibility/action policy; #62 owns the production reader.",
+      "testReferences": [
+        "AUTH-002",
+        "REQ-012",
+        "REQ-013",
+        "REQ-015"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "Reusable trusted-caller request visibility/action policy; #62 owns the production reader.",
+      "prerequisites": [
+        "#39/#40 identity and protected-data method"
+      ],
+      "validity": "Valid",
+      "sourceTickets": [
+        24,
+        23,
+        20,
+        10
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/23"
+    },
+    {
+      "number": 25,
+      "title": "[Shared technical] Integrated MVP acceptance test execution",
+      "ticketType": "Shared technical",
+      "status": "Planned",
+      "flowScope": "Cross-feature test matrix, fixtures and versioned execution/report only; no production flow owned.",
+      "implementationReadiness": "Test planning ready; full execution needs deployed paths",
+      "implementationEvidence": "Catalogue and scoped baseline/#5/import evidence exist; most target acceptance deferred/not run.",
+      "evidence": "Catalogue and scoped baseline/#5/import evidence exist; most target acceptance deferred/not run.",
+      "proposedExperience": [
+        "Run repeatable fictional scenarios on a known version.",
+        "Record actual outcomes, account roles and persisted records.",
+        "Report defects with stable case IDs; distinguish static/owner from ordinary-user proof."
+      ],
+      "remainingWork": "Cross-feature test matrix, fixtures and versioned execution/report only; no production flow owned.",
+      "testReferences": [
+        "REG-001:016",
+        "PAR-001:007",
+        "DISC-001:011",
+        "GRP-001:014",
+        "REQ-001:015",
+        "LEAVE-001:006",
+        "ACC-001:005",
+        "AUTH-001:004",
+        "OPS-001",
+        "OPS-002"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "Cross-feature test matrix, fixtures and versioned execution/report only; no production flow owned.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        25
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/25"
+    },
+    {
+      "number": 26,
+      "title": "[Shared technical] Synthetic scale dataset generator",
+      "ticketType": "Shared technical",
+      "status": "Planned",
+      "flowScope": "Optional local reproducible fixture-generation/validation artifact; no production runtime.",
+      "implementationReadiness": "Local generator can start; tenant loading separate",
+      "implementationEvidence": "No scale generator/tenant loading pass.",
+      "evidence": "No scale generator/tenant loading pass.",
+      "proposedExperience": [
+        "Generate isolated fictional 200/1,000/5,000-profile datasets.",
+        "Include culture/language, blank zones, states and linked groups/memberships.",
+        "Validate counts/links; fake profiles do not simulate authenticated colleagues."
+      ],
+      "remainingWork": "Optional local reproducible fixture-generation/validation artifact; no production runtime.",
+      "testReferences": [
+        "DATA-001",
+        "DATA-002"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "Optional local reproducible fixture-generation/validation artifact; no production runtime.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        26
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/26"
+    },
+    {
+      "number": 27,
+      "title": "[Shared technical] Discovery scalability measurements",
+      "ticketType": "Shared technical",
+      "status": "Blocked",
+      "flowScope": "Versioned scale measurements/report only; no separate Discovery implementation.",
+      "implementationReadiness": "Measurements blocked on dataset/deployed reader",
+      "implementationEvidence": "No representative-scale measurements.",
+      "evidence": "No representative-scale measurements.",
+      "proposedExperience": [
+        "Run representative discovery at 200/1,000/5,000 profiles.",
+        "Measure latency, delegation/limits and complete results.",
+        "An explicit limit error is observable but not successful 5,000-profile support."
+      ],
+      "remainingWork": "Versioned scale measurements/report only; no separate Discovery implementation.",
+      "testReferences": [
+        "SCALE-001:003",
+        "DISC-011"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "Versioned scale measurements/report only; no separate Discovery implementation.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        27
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/27"
+    },
+    {
+      "number": 28,
+      "title": "[Shared technical] Deployment reproducibility and handover proof",
+      "ticketType": "Shared technical",
+      "status": "Planned",
+      "flowScope": "Independent-owner deployment instructions/reproduction test; no additional business flow.",
+      "implementationReadiness": "Probe checks passed; full handover not ready",
+      "implementationEvidence": "OPS-003/004 probes owner-reported PASS; not full deployment/handover.",
+      "evidence": "OPS-003/004 probes owner-reported PASS; not full deployment/handover.",
+      "proposedExperience": [
+        "A second permitted developer follows repository setup/import instructions.",
+        "Select allowed existing connections and run smoke checks.",
+        "Record versions/prerequisites and readable failures without local-only secrets."
+      ],
+      "remainingWork": "Independent-owner deployment instructions/reproduction test; no additional business flow.",
+      "testReferences": [
+        "OPS-003",
+        "OPS-004",
+        "DEP-001:003"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "Independent-owner deployment instructions/reproduction test; no additional business flow.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        28
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/28"
+    },
+    {
+      "number": 29,
+      "title": "[Shared technical] Later: freshness data and confirmation policy",
+      "ticketType": "Shared technical",
+      "status": "Deferred",
+      "flowScope": "Future freshness field/event/threshold contract; consuming flows remain separately owned.",
+      "implementationReadiness": "Not an MVP package",
+      "implementationEvidence": "Explicit Later scope; no implementation/test.",
+      "evidence": "Explicit Later scope; no implementation/test.",
+      "proposedExperience": [
+        "If enabled later, record agreed confirmation dates and identify stale profiles/groups.",
+        "Do not automatically delete data or add routine approvals."
+      ],
+      "remainingWork": "Future freshness field/event/threshold contract; consuming flows remain separately owned.",
+      "testReferences": [
+        "LATER-003"
+      ],
+      "testStatus": "DEFERRED / REQUIREMENT PENDING at the stated future decision gate; no new runtime pass.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "Future freshness field/event/threshold contract; consuming flows remain separately owned.",
+      "prerequisites": [],
+      "validity": "Valid - Later",
+      "sourceTickets": [
+        29
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/29"
+    },
+    {
+      "number": 30,
+      "title": "[Flow] Later: TandemFreshnessReminder",
+      "ticketType": "Flow",
+      "status": "Deferred",
+      "flowScope": "One future scheduled reminder flow, dependent on #29 and approved delivery.",
+      "implementationReadiness": "Not an MVP package",
+      "implementationEvidence": "Explicit Later scope; no reminder flow/test.",
+      "evidence": "Explicit Later scope; no reminder flow/test.",
+      "proposedExperience": [
+        "After agreeing freshness/delivery, identify due confirmations.",
+        "Send chosen reminders and expose failures.",
+        "A reminder does not end a group."
+      ],
+      "remainingWork": "One future scheduled reminder flow, dependent on #29 and approved delivery.",
+      "testReferences": [
+        "LATER-004"
+      ],
+      "testStatus": "DEFERRED / REQUIREMENT PENDING at the stated future decision gate; no new runtime pass.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [
+        "TandemFreshnessReminder"
+      ],
+      "scopeBoundary": "One future scheduled reminder flow, dependent on #29 and approved delivery.",
+      "prerequisites": [],
+      "validity": "Valid - Later",
+      "sourceTickets": [
+        30
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/30"
+    },
+    {
+      "number": 31,
+      "title": "[App] Later: admin status overview",
+      "ticketType": "App",
+      "status": "Deferred",
+      "flowScope": "Future admin screen/dashboard only; use existing readers or create a focused reader ticket only if later needed.",
+      "implementationReadiness": "Not an MVP package; obsolete state wording corrected",
+      "implementationEvidence": "Later scope; no dashboard. Old Paused-group requirement conflicts with approved group states.",
+      "evidence": "Later scope; no dashboard. Old Paused-group requirement conflicts with approved group states.",
+      "proposedExperience": [
+        "Admins later review agreed participant/group summaries.",
+        "Use group Open/Closed/Ended, separately from participant Active/Paused/Inactive.",
+        "Show freshness/intervention only when those rules/data exist."
+      ],
+      "remainingWork": "Future admin screen/dashboard only; use existing readers or create a focused reader ticket only if later needed.",
+      "testReferences": [
+        "LATER-005"
+      ],
+      "testStatus": "DEFERRED / REQUIREMENT PENDING at the stated future decision gate; no new runtime pass.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "Future admin screen/dashboard only; use existing readers or create a focused reader ticket only if later needed.",
+      "prerequisites": [],
+      "validity": "Valid - Later",
+      "sourceTickets": [
+        31
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/31"
+    },
+    {
+      "number": 39,
+      "title": "[Shared technical] Self-service access prerequisite assessment",
+      "ticketType": "Shared technical",
+      "status": "Deferred",
+      "flowScope": "Read-only capability inventory and feasible-method recommendation; actual two-user proof is #40.",
+      "implementationReadiness": "Assessment can resume; owner deferred access work",
+      "implementationEvidence": "Draft #43 partial assessment; Invoker source is not caller authorization.",
+      "evidence": "Draft #43 partial assessment; Invoker source is not caller authorization.",
+      "proposedExperience": [
+        "Inspect current app/list/flow capabilities without changing access.",
+        "Record available/unknown/unavailable prerequisites.",
+        "Recommend simplest self-service path and proceed/stop decision."
+      ],
+      "remainingWork": "Read-only capability inventory and feasible-method recommendation; actual two-user proof is #40.",
+      "testReferences": [
+        "AUTH-005",
+        "ACC-005",
+        "OPS-001"
+      ],
+      "testStatus": "DEFERRED / REQUIREMENT PENDING at the stated future decision gate; no new runtime pass.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "Read-only capability inventory and feasible-method recommendation; actual two-user proof is #40.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        39
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/39"
+    },
+    {
+      "number": 40,
+      "title": "[Shared technical] Two-user own-profile access proof",
+      "ticketType": "Shared technical",
+      "status": "Blocked",
+      "flowScope": "One isolated authentication/privacy capability proof, not a production flow or working-app cutover.",
+      "implementationReadiness": "Blocked on #39 approach and ordinary accounts",
+      "implementationEvidence": "No two-user proof; owner deferred colleague testing.",
+      "evidence": "No two-user proof; owner deferred colleague testing.",
+      "proposedExperience": [
+        "Two ordinary users each manage only their own synthetic profile.",
+        "Try direct list/API and tampered calls against the other record.",
+        "Admins retain access; new colleagues join without per-person grants."
+      ],
+      "remainingWork": "One isolated authentication/privacy capability proof, not a production flow or working-app cutover.",
+      "testReferences": [
+        "ACC-001",
+        "ACC-002",
+        "ACC-005",
+        "AUTH-002"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "One isolated authentication/privacy capability proof, not a production flow or working-app cutover.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        40,
+        39
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/40"
+    },
+    {
+      "number": 41,
+      "title": "[App] Apply proven private access to registration",
+      "ticketType": "App",
+      "status": "Blocked",
+      "flowScope": "Registration app data-binding/cutover and UI regression only; if proof requires extra backend flows, create one focused ticket per flow before building them.",
+      "implementationReadiness": "Blocked on passed #40 method; app-only cutover, extra backend flows require focused tickets.",
+      "implementationEvidence": "No protected registration integration proof.",
+      "evidence": "No protected registration integration proof.",
+      "proposedExperience": [
+        "Apply only proven own-profile access to registration.",
+        "Preserve records/identity/selections.",
+        "Verify self-onboarding and no bypass via old/direct paths."
+      ],
+      "remainingWork": "Registration app data-binding/cutover and UI regression only; if proof requires extra backend flows, create one focused ticket per flow before building them.",
+      "testReferences": [
+        "ACC-001",
+        "ACC-002",
+        "ACC-005",
+        "REG-001:009",
+        "REG-012",
+        "REG-014"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "Registration app data-binding/cutover and UI regression only; if proof requires extra backend flows, create one focused ticket per flow before building them.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        41
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/41"
+    },
+    {
+      "number": 42,
+      "title": "[Shared technical] Protected candidate-data access adapter and proof",
+      "ticketType": "Shared technical",
+      "status": "Blocked",
+      "flowScope": "Verified data-access/response boundary for Discovery; #7 alone owns TandemDiscovery deployment.",
+      "implementationReadiness": "Blocked on proved protected-data method; adapter/proof only, #7 owns production flow.",
+      "implementationEvidence": "Approved #46 projection; owner scaffold is not ordinary-user access proof.",
+      "evidence": "Approved #46 projection; owner scaffold is not ordinary-user access proof.",
+      "proposedExperience": [
+        "Click Discovery while raw profiles stay protected.",
+        "Receive only compatible candidates and approved fields without email/system data.",
+        "Tampered calls cannot reveal arbitrary profiles or a directory."
+      ],
+      "remainingWork": "Verified data-access/response boundary for Discovery; #7 alone owns TandemDiscovery deployment.",
+      "testReferences": [
+        "ACC-001",
+        "ACC-002",
+        "DISC-001",
+        "DISC-004",
+        "DISC-005",
+        "DISC-008",
+        "AUTH-002"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "Verified data-access/response boundary for Discovery; #7 alone owns TandemDiscovery deployment.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        42,
+        7
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/42"
+    },
+    {
+      "number": 45,
+      "title": "[Overview] MVP delivery and focused-ticket roadmap",
+      "ticketType": "Overview",
+      "status": "Planned",
+      "flowScope": "Roll up focused App/Flow/Shared technical deliverables and release decisions; not active implementation and not a second owner of child work.",
+      "implementationReadiness": "Overview only; roll up focused deliveries, not an active development ticket.",
+      "implementationEvidence": "#46 closed/#59 merged; import probes passed. Audit PR alone does not finish this parent.",
+      "evidence": "#46 closed/#59 merged; import probes passed. Audit PR alone does not finish this parent.",
+      "proposedExperience": [
+        "Use one Now/Next/Later overview.",
+        "Each ticket shows experience, remaining work, evidence and test handoff.",
+        "Close its own AC; dependencies block only affected work/tests."
+      ],
+      "remainingWork": "Roll up focused App/Flow/Shared technical deliverables and release decisions; not active implementation and not a second owner of child work.",
+      "testReferences": [
+        "DOC-001",
+        "OPS-001"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "Roll up focused App/Flow/Shared technical deliverables and release decisions; not active implementation and not a second owner of child work.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        45
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/45"
+    },
+    {
+      "number": 47,
+      "title": "[Shared technical] Shared conditional writes and bounded recovery",
+      "ticketType": "Shared technical",
+      "status": "Done",
+      "flowScope": "Minimum cross-flow decision/duplicate/capacity protection and proof; not a second acceptance engine or elaborate locking platform.",
+      "implementationReadiness": "Own shared-technical deliverable accepted/merged; not production deployment certification.",
+      "implementationEvidence": "179 local tests and 70 reference schedules passed. Native v2 run 08584074402025984197329193901CU08 reports 10 cases/allPassed=true/no failed cases; existing fixture reused.",
+      "evidence": "Build b54d7cee-971d-4af3-924f-e81d5fefaec9; artifacts/coordination/results/fixture-v2.pass.owner-summary.json. Earlier 5/10 and 9/10 failures retained; no production or unknown-I/O recovery certification.",
+      "proposedExperience": [
+        "Only one valid Pending decision wins.",
+        "Retry interrupted work without duplicate logical results.",
+        "Protect last slot across every capacity-changing writer.",
+        "Hide incomplete setup/report truthfully; rare support may be exceptional."
+      ],
+      "remainingWork": "Own bounded contract/proof accepted; PR #75 merged be278a1cc7a72b862154ae8ffe201acdf998f019, #47 closed. Each consumer owns its integration and #12 owns group/member schema.",
+      "testReferences": [
+        "REQ-002",
+        "REQ-007:011",
+        "LEAVE-005",
+        "NOT-002"
+      ],
+      "testStatus": "PASS: owner permission preflight and selected 10-case native synthetic proof; 179 local tests. Production integration, genuine timeout/killed-run and notification delivery outside this proof.",
+      "testHandoff": "Native operator proof completed; no owner rerun required. Successful matching-build summary in artifacts/coordination/results; issue #47 holds checked test cases and explicit remaining consumer gates.",
+      "flows": [],
+      "scopeBoundary": "Minimum cross-flow decision/duplicate/capacity protection and proof; not a second acceptance engine or elaborate locking platform.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        47,
+        24,
+        17,
+        12,
+        11,
+        10
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/47"
+    },
+    {
+      "number": 48,
+      "title": "[Shared technical] Final-phase existing-data migration",
+      "ticketType": "Shared technical",
+      "status": "Deferred",
+      "flowScope": "One-off source mapping, migration/reconciliation artifact and execution, not an ongoing intake workflow.",
+      "implementationReadiness": "Final phase; source mappings not reviewed",
+      "implementationEvidence": "Owner scheduled migration last; no workbook mapping/dry-run pass.",
+      "evidence": "Owner scheduled migration last; no workbook mapping/dry-run pass.",
+      "proposedExperience": [
+        "Inspect the real old workbook at the end.",
+        "Agree ambiguous account/status/culture/group mappings and dry-run exceptions.",
+        "Load/reconcile confirmed profiles/memberships, preserving originals/history."
+      ],
+      "remainingWork": "One-off source mapping, migration/reconciliation artifact and execution, not an ongoing intake workflow.",
+      "testReferences": [
+        "MIG-001",
+        "MIG-002"
+      ],
+      "testStatus": "DEFERRED / REQUIREMENT PENDING at the stated future decision gate; no new runtime pass.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "One-off source mapping, migration/reconciliation artifact and execution, not an ongoing intake workflow.",
+      "prerequisites": [],
+      "validity": "Valid - final migration phase",
+      "sourceTickets": [
+        48,
+        6
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/48"
+    },
+    {
+      "number": 49,
+      "title": "[Shared technical] Notification option and event-matrix decision",
+      "ticketType": "Shared technical",
+      "status": "Planned",
+      "flowScope": "Evaluate permitted central in-app/email/Teams/Approvals options and select a bounded matrix; #21 owns any resulting delivery flow.",
+      "implementationReadiness": "Ready to assess options at notification block",
+      "implementationEvidence": "Owner prefers app; Approvals candidate only.",
+      "evidence": "Owner prefers app; Approvals candidate only.",
+      "proposedExperience": [
+        "Compare central in-app experience with permitted email/Teams/Approvals options.",
+        "Agree events, recipients, links and privacy/retry/failure behavior.",
+        "Verify entitlement/policy/connection before selection; no routine organiser dispatch."
+      ],
+      "remainingWork": "Evaluate permitted central in-app/email/Teams/Approvals options and select a bounded matrix; #21 owns any resulting delivery flow.",
+      "testReferences": [
+        "NOT-003"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "Evaluate permitted central in-app/email/Teams/Approvals options and select a bounded matrix; #21 owns any resulting delivery flow.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        49
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/49"
+    },
+    {
+      "number": 61,
+      "title": "[Flow] Participant submission validation",
+      "ticketType": "Flow",
+      "status": "Ready for testing",
+      "flowScope": "One existing created/modified validation flow; App form is #5 and schema {{participant_schema}}.",
+      "implementationReadiness": "Whole implementation imported and owner-smoked; feedback Live Version 26. Owner requests merge and tester handover; full acceptance pending.",
+      "implementationEvidence": "Existing event mapping inspected/preserved; complete active-catalogue reads, typed ID validation, ETag-protected Status-only MERGE, failed-read gates/readback. 101 local tests passed, not tenant certification.",
+      "evidence": "Build 88637754-4c91-4833-9dcf-5116d8bfb77e, item 38: initial NO_CHANGE CU09, STATUS_UPDATED CU11, requested follow-up NO_CHANGE run 08584074534064918346698562621CU26. No global race/loop or field-preservation inference.",
+      "proposedExperience": [
+        "Save or correct your profile.",
+        "The flow reads current saved values and validates catalogue selections.",
+        "See validation feedback without admin approval or resetting personal choices."
+      ],
+      "remainingWork": "Tester execution/results for remaining scoped cases; issue stays open until own acceptance. https://github.com/maoy1/tandem-language-culture-app/issues/61 (issue description) retains pending/blocked access/fixture/harness variants.",
+      "testReferences": [
+        "REG-001:004",
+        "REG-006:009",
+        "REG-011",
+        "REG-014:016",
+        "PAR-002",
+        "PAR-003"
+      ],
+      "testStatus": "Owner flow/core profile preservation and invalid/restore Refresh passes; final copy accepted and Live 26 reported. Remaining target variants pending.",
+      "testHandoff": "https://github.com/maoy1/tandem-language-culture-app/issues/61 (issue description): Live app 26 / flow build 88637754-4c91-4833-9dcf-5116d8bfb77e; exact owner/synthetic setup, steps, expected outcomes, cleanup and blocked ordinary-user/negative fixtures.",
+      "flows": [
+        "Participant submission"
+      ],
+      "scopeBoundary": "One existing created/modified validation flow; App form is #5 and schema #66.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        41,
+        6,
+        5
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/61"
+    },
+    {
+      "number": 62,
+      "title": "[Flow] TandemMyRequests",
+      "ticketType": "Flow",
+      "status": "Planned",
+      "flowScope": "One authorized request-history reader; screen layout is {{requests_app}}.",
+      "implementationReadiness": "Prepare this bounded contract/package after required field mapping and verified prerequisites.",
+      "implementationEvidence": "Guided MyRequests configuration and app references were recorded under #10/#56, but latest owner clarification requires inspecting completion before retaining versus rebuilding. No actual history/privacy pass.",
+      "evidence": "Guided MyRequests configuration and app references were recorded under #10/#56, but latest owner clarification requires inspecting completion before retaining versus rebuilding. No actual history/privacy pass.",
+      "proposedExperience": [
+        "Open My requests.",
+        "See your sent requests, personal incoming requests and group join requests you may act on.",
+        "Select an available action and refresh to the saved outcome."
+      ],
+      "remainingWork": "One authorized request-history reader; screen layout is #67.",
+      "testReferences": [
+        "REQ-012",
+        "REQ-013",
+        "REQ-015",
+        "AUTH-002",
+        "DISC-011"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [
+        "TandemMyRequests"
+      ],
+      "scopeBoundary": "One authorized request-history reader; screen layout is #67.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        24,
+        23,
+        17,
+        10
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/62"
+    },
+    {
+      "number": 63,
+      "title": "[Flow] TandemCancelRequest",
+      "ticketType": "Flow",
+      "status": "Planned",
+      "flowScope": "One sender-cancellation flow for personal and group requests; no history screen ownership.",
+      "implementationReadiness": "Prepare this bounded contract/package after required field mapping and verified prerequisites.",
+      "implementationEvidence": "Guided Cancel configuration and conditional-write references exist under #10/#56/#57. No whole personal/group cancellation or race test pass.",
+      "evidence": "Guided Cancel configuration and conditional-write references exist under #10/#56/#57. No whole personal/group cancellation or race test pass.",
+      "proposedExperience": [
+        "Choose Cancel on your Pending sent request.",
+        "See saved Cancelled or the already-decided outcome.",
+        "History remains and a later acceptance cannot manufacture membership."
+      ],
+      "remainingWork": "One sender-cancellation flow for personal and group requests; no history screen ownership.",
+      "testReferences": [
+        "REQ-005",
+        "REQ-007",
+        "REQ-011",
+        "REQ-015",
+        "AUTH-002"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [
+        "TandemCancelRequest"
+      ],
+      "scopeBoundary": "One sender-cancellation flow for personal and group requests; no history screen ownership.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        24,
+        17,
+        10
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/63"
+    },
+    {
+      "number": 64,
+      "title": "[Flow] TandemMyGroups",
+      "ticketType": "Flow",
+      "status": "Planned",
+      "flowScope": "One reader for own operational groups/members/counts/free slots and membership-derived profile status.",
+      "implementationReadiness": "Prepare this bounded contract/package after required field mapping and verified prerequisites.",
+      "implementationEvidence": "Inherited recorded work from #6, #12. Split from the existing feature tickets; no new deployed implementation or test pass is claimed.",
+      "evidence": "Inherited recorded work from #6, #12. Split from the existing feature tickets; no new deployed implementation or test pass is claimed.",
+      "proposedExperience": [
+        "Open My groups.",
+        "See your current operational groups, members and free places.",
+        "Waiting/In a group is derived automatically without editable profile group text."
+      ],
+      "remainingWork": "One reader for own operational groups/members/counts/free slots and membership-derived profile status.",
+      "testReferences": [
+        "GRP-013",
+        "PAR-006",
+        "LEAVE-001",
+        "LEAVE-005",
+        "DISC-008",
+        "AUTH-002"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [
+        "TandemMyGroups"
+      ],
+      "scopeBoundary": "One reader for own operational groups/members/counts/free slots and membership-derived profile status.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        12,
+        6
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/64"
+    },
+    {
+      "number": 65,
+      "title": "[Flow] TandemRespondGroupJoinRequest",
+      "ticketType": "Flow",
+      "status": "Planned",
+      "flowScope": "One active-member Accept/Decline flow for an existing-group join; new-group personal acceptance remains #11.",
+      "implementationReadiness": "Prepare this bounded contract/package after required field mapping and verified prerequisites.",
+      "implementationEvidence": "Inherited recorded work from #11, #13, #17, #24. Split from the existing feature tickets; no new deployed implementation or test pass is claimed.",
+      "evidence": "Inherited recorded work from #11, #13, #17, #24. Split from the existing feature tickets; no new deployed implementation or test pass is claimed.",
+      "proposedExperience": [
+        "An active member opens a group join request.",
+        "Accept or decline after reviewing the introduction and candidate.",
+        "See one saved result; other members see that it was answered."
+      ],
+      "remainingWork": "One active-member Accept/Decline flow for an existing-group join; new-group personal acceptance remains #11.",
+      "testReferences": [
+        "REQ-003",
+        "REQ-004",
+        "REQ-006:011",
+        "REQ-013",
+        "GRP-014",
+        "AUTH-001"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [
+        "TandemRespondGroupJoinRequest"
+      ],
+      "scopeBoundary": "One active-member Accept/Decline flow for an existing-group join; new-group personal acceptance remains #11.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        24,
+        17,
+        13,
+        11
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/65"
+    },
+    {
+      "number": 67,
+      "title": "[App] Request inbox screen and action dialogs",
+      "ticketType": "App",
+      "status": "Planned",
+      "flowScope": "Sent/Received/group incoming screen, display/dialogs/navigation only; each flow remains independently owned.",
+      "implementationReadiness": "Prepare this bounded contract/package after required field mapping and verified prerequisites.",
+      "implementationEvidence": "Inherited recorded work from #10, #11, #17, #23. Split from the existing feature tickets; no new deployed implementation or test pass is claimed.",
+      "evidence": "Inherited recorded work from #10, #11, #17, #23. Split from the existing feature tickets; no new deployed implementation or test pass is claimed.",
+      "proposedExperience": [
+        "Open My requests and choose sent or incoming items.",
+        "Read the introduction/details and available actions.",
+        "Respond or cancel through the owning flow and see the saved result."
+      ],
+      "remainingWork": "Sent/Received/group incoming screen, display/dialogs/navigation only; each flow remains independently owned.",
+      "testReferences": [
+        "UI-002",
+        "REQ-012:015"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "Sent/Received/group incoming screen, display/dialogs/navigation only; each flow remains independently owned.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        23,
+        17,
+        11,
+        10
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/67"
+    },
+    {
+      "number": 68,
+      "title": "[App] My groups screen and member controls",
+      "ticketType": "App",
+      "status": "Planned",
+      "flowScope": "Own-group display, membership-derived status and group-control UI only; reader/update/leave flows separately owned.",
+      "implementationReadiness": "Prepare this bounded contract/package after required field mapping and verified prerequisites.",
+      "implementationEvidence": "Inherited recorded work from #6, #12, #14. Split from the existing feature tickets; no new deployed implementation or test pass is claimed.",
+      "evidence": "Inherited recorded work from #6, #12, #14. Split from the existing feature tickets; no new deployed implementation or test pass is claimed.",
+      "proposedExperience": [
+        "Open your groups and view members/counts/free places.",
+        "Manage permitted settings or leave through the corresponding action.",
+        "The view refreshes from saved membership/group data."
+      ],
+      "remainingWork": "Own-group display, membership-derived status and group-control UI only; reader/update/leave flows separately owned.",
+      "testReferences": [
+        "UI-003",
+        "GRP-013",
+        "PAR-006",
+        "LEAVE-001",
+        "LEAVE-002"
+      ],
+      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "flows": [],
+      "scopeBoundary": "Own-group display, membership-derived status and group-control UI only; reader/update/leave flows separately owned.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        14,
+        12,
+        6
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/68"
+    }
+  ],
+  "closedTickets": [
+    {
+      "number": 1,
+      "title": "[POC-01] Create Tandem POC repository structure",
+      "ticketType": "Shared technical",
+      "status": "Done",
+      "scope": "Historical accepted baseline/design, not new-MVP runtime proof"
+    },
+    {
+      "number": 2,
+      "title": "[POC-02] Define SharePoint schema and document manual setup",
+      "ticketType": "Shared technical",
+      "status": "Done",
+      "scope": "Historical accepted baseline/design, not new-MVP runtime proof"
+    },
+    {
+      "number": 3,
+      "title": "[POC-03] Implement participant self-registration",
+      "ticketType": "App",
+      "status": "Done",
+      "scope": "Historical accepted baseline/design, not new-MVP runtime proof"
+    },
+    {
+      "number": 4,
+      "title": "[POC-04] Add structured language preferences",
+      "ticketType": "App",
+      "status": "Done",
+      "scope": "Historical accepted baseline/design, not new-MVP runtime proof"
+    },
+    {
+      "number": 22,
+      "title": "[POC-22] Keep group-management access aligned with memberships",
+      "ticketType": "Shared technical",
+      "status": "Superseded",
+      "successors": [
+        19,
+        20
+      ],
+      "scope": "Closed as not planned; obligations transferred, not delivered here"
+    },
+    {
+      "number": 24,
+      "title": "[POC-24] Enforce terminal request controls and history access",
+      "ticketType": "Shared technical",
+      "status": "Superseded",
+      "successors": [
+        47,
+        23,
+        62,
+        63,
+        65,
+        11
+      ],
+      "scope": "Closed as not planned; obligations transferred, not delivered here"
+    },
+    {
+      "number": 46,
+      "title": "[MVP v0.2] Finalize field contract and discovery exposure",
+      "ticketType": "Shared technical",
+      "status": "Done",
+      "scope": "Historical accepted baseline/design, not new-MVP runtime proof"
+    },
+    {
+      "number": 66,
+      "title": "[Shared technical] Participant and catalogue schema alignment",
+      "ticketType": "Shared technical",
+      "status": "Done",
+      "flowScope": "One-time actual field/catalogue mapping and required delta for #5/#6/#61; no app layout or production flow ownership.",
+      "implementationReadiness": "Complete",
+      "implementationEvidence": "SCHEMA-20261108-01 final audit Verified/no findings; preview/apply and repeat summaries passed. Owner confirms five writes skipped in a new repeat with SETUP_VERIFIED; screenshot retained.",
+      "evidence": "Own schema tests passed, including safe-repeat confirmation. New repeat run reference not supplied; screenshot/owner statement retained. PR #69 review/merge pending.",
+      "proposedExperience": [
+        "Import/run supplied metadata helper with the existing owner SharePoint connection.",
+        "Preview verified permissions and bounded missing settings, then explicitly apply the prepared delta.",
+        "Use exact observed mappings; repeat safely and confirm whole schema before closing this ticket."
+      ],
+      "remainingWork": "None in own schema scope; PR #69 merged and issue closed.",
+      "testReferences": [
+        "SCHEMA-001",
+        "SCHEMA-002"
+      ],
+      "testStatus": "Own schema acceptance passed; see SCHEMA-20261108-01/03.",
+      "testHandoff": "All own schema acceptance checks passed; results and screenshot in artifacts/schema_alignment/results and TEST_RUNS.md. Ready for review; after merge close Done rather than leave Ready for testing.",
+      "flows": [],
+      "scopeBoundary": "One-time actual field/catalogue mapping and required delta for #5/#6/#61; no app layout or production flow ownership.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        5
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/66"
+    },
+    {
+      "number": 6,
+      "title": "[App] Participation and openness controls",
+      "ticketType": "App",
+      "status": "Done",
+      "flowScope": "Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64.",
+      "implementationReadiness": "Complete on scoped owner Version 19 UI acceptance",
+      "implementationEvidence": "UI6-20261108-06: New Active/open Yes, saved choices preserved, language/culture-only save/reopen without identity/unrelated changes confirmed. Working typed table defaults documented.",
+      "evidence": "Owner-reported Version 19 and own UI acceptance PASS; timestamps/fixture IDs not supplied. Flow/group integration transferred explicitly, not passed.",
+      "proposedExperience": [
+        "Choose Active/Paused/Inactive and Yes/No in own existing profile form.",
+        "New mode uses Active/Yes; edits save stored selections including No, Paused and Inactive.",
+        "Existing identity, selections and memberships remain unchanged by these two form fields.",
+        "Discovery/request flows consume availability under #7/#10; membership badges under #64/#68."
+      ],
+      "remainingWork": "None in own App scope; PR #70 merged and #6 closed. Receiving flow/group cases remain separately owned.",
+      "testReferences": [
+        "UI6-001:006 (App portions)",
+        "REG-009 (App persistence)",
+        "PAR-001:007 (split owner portions; see integration handoffs)"
+      ],
+      "testStatus": "PASS scoped App controls/defaults/persistence by owner report. Receiving-flow and operational-group integration variants remain Planned/Blocked/NOT RUN with owners.",
+      "testHandoff": "Version 19; own UI criteria owner-confirmed. POC_03 guide and participation_integration_handoffs.json retain exact regression and receiving-flow checks/blockers. No new group fixture fabricated.",
+      "flows": [],
+      "scopeBoundary": "Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64.",
+      "prerequisites": [
+        "#66 Done; availability fields verified.",
+        "Receiving-flow/group cases retained separately under #61/#7/#10/#25; not a whole-ticket completion gate for App #6."
+      ],
+      "validity": "Valid",
+      "sourceTickets": [
+        6
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/6"
+    },
+    {
+      "number": 5,
+      "title": "[App] Registration form: culture fields and optional time zone",
+      "ticketType": "App",
+      "status": "Done",
+      "flowScope": "Registration form controls, validation messages and save/reopen behavior only. Backend validation is {{submission}}; list schema is {{participant_schema}}.",
+      "implementationReadiness": "Existing Live Version 19 form accepted by owner; no rebuild required.",
+      "implementationEvidence": "Historical labels/guard and language/culture-only identity-preserving save/reopen retained; owner confirmed Version 19 A/B passed.",
+      "evidence": "artifacts/registration_form/version19.owner-report.json; owner report, no timestamp/fixture IDs.",
+      "proposedExperience": [
+        "Save a language/culture profile with optional time zone.",
+        "Reject all-four-empty selections.",
+        "Validate current saved data without changing identity or participation.",
+        "Correct an invalid profile and save without organiser approval."
+      ],
+      "remainingWork": "None in own App scope; PR #71 merged and #5 closed. Receiving integration cases retained separately.",
+      "testReferences": [
+        "REG-001:016",
+        "PAR-002",
+        "PAR-003",
+        "DISC-005"
+      ],
+      "testStatus": "Own App acceptance PASS_OWNER_REPORTED on Live Version 19; backend/access cases not passed.",
+      "testHandoff": "POC_05 guide retains A/B regression steps and receiving boundaries; TEST_RUNS records owner report and limitations.",
+      "flows": [],
+      "scopeBoundary": "Registration form controls, validation messages and save/reopen behavior only. Backend validation is #61; list schema is #66.",
+      "prerequisites": [
+        "#66 fields/catalogue mapping before binding cards",
+        "#61 validation interface for integrated validation-feedback tests"
+      ],
+      "validity": "Valid",
+      "sourceTickets": [
+        41,
+        5
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/5"
+    },
+    {
+      "number": 9,
+      "title": "[Shared technical] Reusable compatibility rules for generated flows",
+      "ticketType": "Shared technical",
+      "status": "Done",
+      "flowScope": "One maintained rule/normalization source and synthetic contract fixtures for package generation; no separately hosted runtime or assumed child flow.",
+      "implementationReadiness": "Shared source/normalization/adapters and 39-case connector-free proof complete; matching-build tenant proof owner-passed. Review/merge pending.",
+      "implementationEvidence": "compatibility.py builds reusable normalization/person/group expressions; 121 local tests pass including generated-action subset execution; proof 45 actions/depth 4, no connectors/data operations.",
+      "evidence": "Run 08584074461495133197897516907CU19 / matching build and source SHA: testCount=39, allPassed=true, failedCases=[]. Summary retained; no production integration inferred.",
+      "proposedExperience": [
+        "The app requests candidates from a flow.",
+        "The flow owns normalization, eligibility and projection.",
+        "Participant/group paths use one maintained compatibility source rather than UI formulas."
+      ],
+      "remainingWork": "None in own shared scope; PR #73 merged and #9 closed. Consumers retain independent integration acceptance.",
+      "testReferences": [
+        "DISC-001:011",
+        "REQ-001",
+        "REQ-003"
+      ],
+      "testStatus": "Own synthetic reference and target proof PASS (39 cases); 121 local tests previously passed. Consumer integration not certified.",
+      "testHandoff": "Issue #9 contains full handover, now-verified synthetic case checkboxes and exact matching-build run. No further owner proof rerun needed.",
+      "flows": [],
+      "scopeBoundary": "One maintained rule/normalization source and synthetic contract fixtures for package generation; no separately hosted runtime or assumed child flow.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        9
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/9"
+    }
+  ],
+  "publication": {
+    "status": "verified",
+    "date": "2026-11-08",
+    "issuesVerified": 48,
+    "openBodiesVerified": 37,
+    "typeAndLifecycleExactlyOne": true,
+    "uniqueProductionFlowOwners": 13,
+    "activeWork": 1,
+    "stateChanges": {
+      "supersededNotPlanned": [
+        22,
+        24
+      ],
+      "deliveredClosedUnchanged": [
+        1,
+        2,
+        3,
+        4,
+        46
+      ]
+    }
+  },
+  "participationIntegrationHandoffs": "config/participation_integration_handoffs.json"
+}

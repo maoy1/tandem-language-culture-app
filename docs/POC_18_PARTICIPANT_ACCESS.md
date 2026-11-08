@@ -1,6 +1,6 @@
 # POC-18: self-service access in small steps
 
-Status: #39 assessment started; prerequisites remain incomplete. No architecture is selected and no live
+Status: #39 read-only assessment resumed at owner request after the unique-column/creator-only setting conflict was reconfirmed. Ordinary-colleague proof remains pending; prior evidence is retained in PR #43. No architecture is selected and no live
 permissions or app connections have changed. #18 is the registration-access
 parent. This planning PR closes none of the access tickets.
 
@@ -9,6 +9,13 @@ parent. This planning PR closes none of the access tickets.
 Registration, updates, joining, discovery and connecting must be self-service.
 No routine admin approvals, per-person grants, manual participant account
 creation, manual matching or manual group maintenance may be required.
+
+These restrictions apply to ordinary operations in this trusted internal app.
+Critical or exceptional cases may involve necessary admin approval, correction
+or assistance. Minimize admin workload as participation grows; do not make every
+new user or ordinary action a manual task. This permits exceptional intervention
+without changing the agreed own-profile access rules or adding a routine approval
+workflow.
 
 Every permission, setting, connector, connection, licence or configuration
 prerequisite must be flagged to the owner and verified before dependent work.
@@ -24,8 +31,9 @@ operational dependencies must be disclosed before selecting an approach.
 - Direct SharePoint list/item/API access cannot expose or change other profiles.
 - Keep unique Participant account; administrators retain access.
 - Clicking Discovery returns eligible candidates through a controlled operation.
-- No public directory, extra discovery list or private-Comments classification
-  is approved. Candidate fields will be agreed during discovery.
+- No public directory or extra discovery list is approved. Exact Discovery fields
+  remain undecided; participant fields including Comments are generally eligible,
+  admin/system-only information excluded. The proposed Comments notice is removed.
 
 ## Delivery sequence
 
@@ -96,7 +104,8 @@ Keep broader rollout paused until tenant evidence passes and is accepted.
 ## D: candidate access during discovery
 
 Reuse eligibility/ranking in #7–#9, not a second matching implementation.
-Agree candidate response fields there. Reject arbitrary identities, record IDs
+Finalize candidate display fields with #7/#42 using the reviewed field contract;
+exclude admin/system-only data and impose no Comments notice for now. Reject arbitrary identities, record IDs
 and queries that could reveal all profiles. Candidate presentation is read-only;
 search and connecting need no manual candidate grants or approvals. Verify
 this path before discovery rollout while private registration stays protected.
@@ -112,6 +121,7 @@ this path before discovery rollout while private registration stays protected.
 
 No live access-control tests have passed. The working app still uses its
 documented direct-connector/filter baseline. PR #38 is planning only.
+
 
 ## #39 assessment evidence — 2026-10-31
 

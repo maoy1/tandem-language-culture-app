@@ -1,5 +1,6 @@
 {
-  "version": 1,
+  "version": 3,
+  "deploymentStatus": "version26_issue61_ready_for_testing_acceptance_pending",
   "list": "Participants",
   "identity": {
     "field": "ParticipantAccount",
@@ -23,13 +24,67 @@
       "ParticipantAccount",
       "TeachLanguages",
       "LearnLanguages",
+      "ShareCultures",
+      "LearnCultures",
       "TimeZone",
       "LearningFocus",
-      "Comments"
+      "Comments",
+      "ParticipationStatus",
+      "OpenToConnections"
     ],
     "hiddenFields": [
       "Title",
       "Status"
     ]
+  },
+  "validation": {
+    "requireAnyOf": [
+      "TeachLanguages",
+      "LearnLanguages",
+      "ShareCultures",
+      "LearnCultures"
+    ],
+    "optionalCatalogueFields": [
+      "TimeZone"
+    ],
+    "rejectInactiveSelections": true
+  },
+  "participation": {
+    "field": "ParticipationStatus",
+    "opennessField": "OpenToConnections",
+    "allowedValues": [
+      "Active",
+      "Paused",
+      "Inactive"
+    ],
+    "newProfileDefault": "Active",
+    "newProfileOpenDefault": true,
+    "defaultSource": "explicit_combo_box_new_mode",
+    "defaultsApplyOnlyToNewProfiles": true,
+    "preserveExistingChoices": true,
+    "validationMayReset": false,
+    "membershipSideEffects": "none",
+    "binding": "generated_sharepoint_data_cards",
+    "newProfileDefaultType": "choice_table",
+    "existingProfileDefaultSource": "stored_choice_record_table",
+    "defaultFormulaArtifact": "artifacts/participation_controls/ParticipationStatus.Combo.DefaultSelectedItems.powerfx",
+    "controlDefaultBindings": {
+      "outerCardDefault": "artifacts/participation_controls/ParticipationStatus.Card.Default.powerfx",
+      "DataCardValue2.Default": "artifacts/participation_controls/ParticipationStatus.Combo.Default.powerfx",
+      "DataCardValue2.DefaultSelectedItems": "artifacts/participation_controls/ParticipationStatus.Combo.DefaultSelectedItems.powerfx"
+    }
+  },
+  "appDelivery": {
+    "ticket": 6,
+    "app": "Tandem Participant Registration",
+    "version": 19,
+    "evidence": "artifacts/participation_controls/version19.owner-report.json",
+    "remainingAcceptance": "Own App scopes #5/#6 complete after merged #71/#70. Backend and protected integration remain with receiving tickets."
+  },
+  "currentRelease": {
+    "app": "Tandem Participant Registration",
+    "version": 26,
+    "state": "Live_owner_reported",
+    "evidence": "artifacts/participant_submission/results/version26.owner-report.json"
   }
 }

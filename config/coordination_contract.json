@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "sourceTicket": 47,
+  "state": "NATIVE_BOUNDED_PROOF_PASSED_READY_FOR_REVIEW",
+  "source": "scripts/power_automate/coordination.py",
+  "sourceSha256": "67e9268d9a0d25de32681ad0e0372a1778e50531896781f8d222a592f50c94c5",
+  "runtime": "Power Automate/SharePoint only; Python is isolated local reference/test tooling",
+  "coordination": "One per-group conditional owner token used by ALL capacity/state/membership-changing writers, plus stable saved operation receipt. No lease expiry, takeover timer, child flow or background repair platform.",
+  "keys": {
+    "OperationKey": "kind:trusted-actor-id:intent-uuid; one intent ID reused across transport retries; immutable intent bound to receipt.",
+    "SendOperationKey": "Unique immutable operation key on request; protects delayed/unknown create retries.",
+    "ConnectionKey": "Unique nonblank open:person:min:max or open:group:groupId:participant:id while Pending or Accepted-incomplete; rekey history:request:id only on settled completion/decline/cancel.",
+    "SourceRequestId": "Unique group source request ID; existing accepted target, verify before use.",
+    "MembershipKey": "Unique request:requestId:participant:participantId episode; Left never reactivated.",
+    "EventKey": "Unique request:id:terminal:status fact after committed operation; not exactly-once external delivery guarantee."
+  },
+  "proposedMetadataNotApplied": {
+    "OperationReceipts": "Unique required OperationKey, immutable IntentJson, result/reference JSON, completion/uncertain/retry-stage metadata. One bounded receipt per intent, not a transaction service.",
+    "Groups": "Groups.WriteOwner optional blank Text MaxLength=255 verified by #12 final audit 08584074372941101122136369836CU17. Runtime exact-ETag owner-token claim/release integration remains each consuming Flow; no automatic expiration.",
+    "Requests": "Unique SendOperationKey/ConnectionKey, WinningOperationKey, OperationComplete. Existing Status retains Pending/Accepted/Declined/Cancelled vocabulary.",
+    "ExistingGroupMemberKeys": "Verify Groups.SourceRequestId and GroupMembers.MembershipKey unique/indexed and actual mapping under #12; do not enable constraints blindly on existing rows."
+  },
+  "productionIntentComparison": "Use native equals(json(stored IntentJson), canonical typed intent object); model SHA fingerprint is local convenience, not a required hashing connector or authorization proof.",
+  "commit": "Only changed row CAS, automatic retries disabled; verify exact receipt/group/parties/membership result. Accepted-incomplete not success. Provisional Active rows count toward capacity but not operational membership until committed request/complete group.",
+  "recovery": {
+    "normal": "Replay saved completed result. At a stopped definite-error boundary with reconciled stable prefix and no outstanding I/O, seal old attempt and persist Retryable before releasing; a fresh bounded user retry reuses keys. Max three sealed attempts before exceptional support.",
+    "uncertain": "Do not seal/release/steal based on elapsed time or missing row. Reconcile expected unique-key writes/readbacks first; otherwise explicit rare support. No false success or universal automatic-repair promise.",
+    "completedRelease": "If receipt complete but release failed, exact old-token release may be finalized without repeating domain writes. Sealed/complete attempts cannot resume domain mutations."
+  },
+  "writers": {
+    "10": "Send idempotency + pending-connection keys; trusted actor/current validity from own adapter.",
+    "11": "Pending decision CAS, initial group SourceRequestId unique, guard/episode writes/commit readback.",
+    "13": "Same group guard for capacity/state updates; never below counted Active/provisional rows; Ended final.",
+    "14": "Same group guard; conditional Active -> Left episode, preserve Closed and history; no auto rejoin.",
+    "17": "Send group-join keys and duplicate connection guard; no membership creation at Send.",
+    "63": "Pending-only cancel CAS conflicts with accept; cannot reverse Accepted-incomplete.",
+    "65": "Same group guard + current rereads + terminal request CAS; one admitted slot, shared with #11/#13/#14."
+  },
+  "proof": {
+    "localSuite": 179,
+    "referenceInterleavings": 70,
+    "assumptions": [
+      "Atomic per-row CAS",
+      "Native unique constraints",
+      "All writers obey same group guard",
+      "Fresh authorized adapter facts",
+      "Known sealed boundary has no outstanding I/O"
+    ],
+    "nativeStatus": "PASS_OWNER_REPORTED: v2 matching build, 10 native cases, allPassed=true; selected synthetic scope only.",
+    "preflightBuildId": "ffd55bdf-ce46-4327-96bc-9e0cddc09ecd",
+    "preflight": "artifacts/coordination/TandemCoordinationPreflight.zip",
+    "preflightTenantResult": "PASS_OWNER_REPORTED",
+    "preflightEvidence": "artifacts/coordination/results/preflight.owner-report.json",
+    "preflightRunReference": "08584074437966574454125674321CU01",
+    "nativeFixture": {
+      "package": "artifacts/coordination/TandemCoordinationFixture-v2.zip",
+      "packageBuildId": "b54d7cee-971d-4af3-924f-e81d5fefaec9",
+      "fixtureTitle": "Tandem47Fixture_b54d7cee971d4af3",
+      "actions": 321,
+      "depth": 6,
+      "caseCount": 10,
+      "writeGateDefault": false,
+      "productionWrites": 0,
+      "deletes": 0,
+      "permissionChanges": 0,
+      "tenantResult": "PASS_OWNER_REPORTED",
+      "localSimulation": "Both race orders, no-write gate, fresh-run prefix/schema reuse, tag collision, schema tampering, revoked rights, failed read and receipt interruption verified locally; not native certification.",
+      "duplicateClassification": "HTTP 400/409/502 plus exact native duplicate exception/code; generic gateway error is not a confirmed duplicate.",
+      "runReference": "08584074402025984197329193901CU08",
+      "fixtureListId": "abade32d-8b24-4b30-b2e0-668d10238acb",
+      "fixtureReused": true,
+      "evidence": "artifacts/coordination/results/fixture-v2.pass.owner-summary.json",
+      "evidenceForm": "Owner-provided report summary; per-case result objects not supplied for successful run. allPassed is gated by exact count 10 and no failed cases.",
+      "priorV2FailureEvidence": "artifacts/coordination/results/fixture-v2.first-run.owner-report.json",
+      "priorV2Failure": "9/10 passed; Shrink RequestB duplicate rejection stopped CAPACITY_VS_JOIN. A/B supplied inputs were distinct; cause not established, no automatic recovery claim."
+    }
+  },
+  "gates": [
+    "Read-only web permission metadata preflight before relying on fixture creation rights.",
+    "Verify isolated fixture schema and native unique-key/CAS/error/readback behavior.",
+    "Later production mapping/constraints and caller authority separately verified; no deployment inferred from model."
+  ],
+  "notifications": "Only unique committed terminal-event fact covered here. #49 chooses channel; #21 must prove actual delivery/idempotency/unknown-outcome policy."
+}

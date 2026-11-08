@@ -1,0 +1,16 @@
+{
+  "kind": "TandemCoordinationFixture",
+  "schemaVersion": 1,
+  "sourceTicket": 47,
+  "packageBuildId": "b54d7cee-971d-4af3-924f-e81d5fefaec9",
+  "runReference": "08584074402025984197329193901CU08",
+  "writeRequested": true,
+  "fixtureCreated": false,
+  "fixtureTitle": "Tandem47Fixture_b54d7cee971d4af3",
+  "fixtureListId": "abade32d-8b24-4b30-b2e0-668d10238acb",
+  "runPrefix": "run:08584074402025984197329193901CU08",
+  "permissionGatePassed": true,
+  "testCount": 10,
+  "allPassed": true,
+  "failedCases": []
+}

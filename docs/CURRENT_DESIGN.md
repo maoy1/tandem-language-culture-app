@@ -1,205 +1,427 @@
 # Current design source of truth
 
-This file records the current agreed product and SharePoint design for the
-Tandem proof of concept. It is the design reference for implementation work.
+This file records the approved MVP direction and the implemented baseline.
+Approved target behavior is not evidence that a field, flow or permission exists.
 
 ## Authority and change control
 
-- This file is the source of truth for the current schema and product decisions.
-- `docs/IMPLEMENTATION_PLAN.md` defines the delivery sequence.
-- GitHub issues define the work for each ticket and its acceptance criteria.
-- The old `tandem_app` repository and the DOCX files under
-  `docs/reference/` are reference material only.
-- If a new decision conflicts with this file, update this file in the same PR
-  before implementing the conflicting change.
+Owner priority update (2026-10-31): build the integrated Power Apps/Power Automate
+path through discovery, in-app requests, group/membership creation and notifications
+before resuming remaining detailed tests. Preserve evidence and incomplete tickets;
+no blanket validation pass or broader-release approval is implied. Prioritize the
+app/flows over setup automation. Notification selection, including possible use of
+Approvals, is discussed when that feature is built; central in-app experience is
+the owner's preference. Required backing data is bound at the relevant build step.
 
-Every implementation ticket must:
+- This file controls implementation decisions; IMPLEMENTATION_PLAN.md sets sequence and GitHub issues hold acceptance evidence.
+- Combined Requirements v0.2 under docs/reference is the reviewed input. The owner's subsequent annotations recorded below override conflicting draft passages and reviewer comments.
+- The old tandem_app repository and older DOCX files are reference material only.
+- Update design, plan, affected ticket and setup evidence together on one ticket branch/PR.
+- Do not close an issue until its implementation and applicable tenant tests pass.
 
-1. Read this file before changing the schema, flow, or user experience.
-2. State which sections it implements in the PR description.
-3. Avoid reintroducing anything listed under “Removed from the current design”.
-4. Update this file in the same PR when the product decision changes.
+## Fixed platform and operating constraints
 
-## Product boundary
+Production is SharePoint with associated Power Apps/Power Automate under existing
+entitlements only. No paid hosting, standalone server, Azure Functions, external
+services, premium/custom connectors, new paid licences or trials as dependencies.
+Python remains optional local repository tooling, never a participant runtime.
 
-All participant actions must be self-service: no routine admin approvals,
-per-person grants, manual matching or manual group maintenance. Flag any needed
-permission, setting, connector, connection, licence or configuration to the owner
-and verify it before dependent implementation. Identify one-time setup and
-recurring operational maintenance separately and upfront.
+Ordinary internal-user actions are self-service. Admin effort must not grow per
+normal registration, search or request. Critical/exceptional cases may involve
+necessary approval, correction or assistance. Flag and verify permissions,
+settings, connections, connector policy, licences, one-time setup and recurring
+operational dependencies before relying on them.
 
-The MVP helps colleagues register language preferences, discover potentially
-compatible people or groups, and decide themselves whether to connect. The
-system may validate data, filter opportunities, rank suggestions, send
-notifications, and maintain status. It must not automatically decide that two
-people are a match or place them into a group without participant action.
+## Approved v0.2 decisions
 
-SharePoint is the operational database. Power Automate handles validation and
-enrichment. Later matching logic can read approved participant data and write
-proposed groups for review. A shared statistics page may show aggregated,
-non-identifying results to participants.
-
-## Current SharePoint schema
-
-### Language catalogue
-
-This is one of the controlled catalogues required by the current registration
-design.
-
-| Column | Type | Use |
+| Area | Decision | Delivery |
 |---|---|---|
-| Title | Single line text | Canonical language name |
-| ISO code | Single line text | Required, unique, and indexed ISO language code |
-| Aliases | Multiple lines | Search or display aliases |
-| Active | Yes/No | Allows a language to be retired without deleting history |
+| Time zone | Optional single selection from the Time zone catalogue; blank never blocks registration/discovery | SharePoint optional verified #66; app acceptance #5 |
+| Location derivation | Lower priority; reconsider only when cheap and supported | Later; no profile-location dependency |
+| Discovery audience | Present compatible available profiles/groups, not all profiles | #7, #16, #42 |
+| Discovery fields / Comments | Person/group display approved 2026-11-08; email/admin/system data excluded; no Comments notice | #46 contract; implement/test #7/#16/#42 |
+| Private organiser notes | Participant emails organisers; no new private-Comments split | Contact route to identify; separate from notification-channel decision |
+| Language groups | 1-to-1 or 1-to-2, meaning 2 or 3 people total | #12/#13 |
+| Culture groups | 2–10 total members, including at least one relevant culture sharer | Owner approved; #12/#13 |
+| Combined groups | Language/culture combined groups have 2–10 total; both focuses require a sharer and a different learner | Owner approved |
+| Participant status | Separate Active/Paused/Inactive participation from validation | #46 then #6 |
+| Culture-only participation | Supported; no mandatory language selection | #5/#7 |
+| Notifications | Evaluate options first; channel/event matrix not yet agreed | #49 then #21 |
+| Membership changes | Normal acceptance, membership and slot updates automatic | #11/#12/#17/#47 |
+| Exceptions | Necessary admin support permitted; avoid routine organiser matching | #13/#14 |
+| Excel import | Inspect/map/migrate at the end of implementation | #48; before launch if existing-data launch requirement remains |
+| Hosting | Standalone hosting alternative rejected under no-budget constraint | All tickets |
 
-Participants select languages from this catalogue through lookup fields. They
-may select multiple values in both language fields.
+## Observed schema update - #66, 2026-11-08
 
-### Time zone catalogue
+Owner metadata audit and setup-v2 apply/readback succeeded. Actual casing, list
+IDs, lookup display fields and observed settings are in
+config/tenant_schema_mapping.json. ParticipationStatus (required Choice, default
+Active) and OpenToConnections (required Boolean, default Yes) were added. Both
+language/culture multi-lookups and optional single time zone already existed.
+Catalogue label requiredness and time-zone IANA_ID required/unique/index settings
+were corrected. Existing values, legacy Status choices and IANA_ID lookup display
+were preserved; optional Windows conversion metadata is absent and unused.
+Final full audit is Verified (zero findings); setup repeat returned SETUP_VERIFIED.
+Owner confirmed all five writes skipped on a new repeat with SETUP_VERIFIED.
+Own schema acceptance passed; PR #69 is merged and #66 closed. App/flow acceptance
+stays with its separate owners. No ordinary-user privacy or rollout claim follows from owner setup.
+See POC_SHAREPOINT_SETUP.md and TEST_RUNS.md for versions and finish line.
 
-This catalogue is imported and maintained manually.
+## Completed participation controls - #6
 
-| Column | Type | Use |
-|---|---|---|
-| Title | Single line text | Display label shown in Power Apps |
-| IANA ID | Single line text | Required, unique, and indexed canonical identifier |
-| Windows ID | Single line text | Optional compatibility identifier |
-| Active | Yes/No | Allows a time zone to be retired without deleting history |
+Corrected owner-reported Live target is **Version 19**. The Participation status
+Combo box DataCardValue2 uses DefaultSelectedItems with table-returning branches:
+New filters the Active Choice; Edit wraps Parent.Default's saved Record. The
+outer card reads ThisItem.'Participation status'; inner legacy Default is Blank().
+Owner confirms Active/Yes new defaults, saved choices preserved, and language/
+culture-only save/reopen preserving identity/unrelated fields. #6 is Done; PR #70 merged and the issue closed on its own UI scope.
 
-Participants select one active value through the Power Apps dropdown; they do
-not type a time zone.
+Flow revalidation stays #61, candidate exclusion #7 and stale request rejection
+#10. Group side effects need an operational fixture and #25 integrated testing;
+derived displays remain #64/#68. Exact retained cases/blockers are in
+config/participation_integration_handoffs.json. No ordinary-user privacy, full
+backend acceptance or new hosting/connector capability is inferred from UI checks.
 
-### Participants
+## Current registration form work - #5
 
-| Column | Type | Current rule |
-|---|---|---|
-| Title | System text | Hidden from the participant form; not user-maintained |
-| Participant account | Person or Group, single | Required and unique; authoritative identity |
-| Teach languages | Lookup to Language catalogue, multiple | Optional individually |
-| Learn languages | Lookup to Language catalogue, multiple | Optional individually |
-| Time zone | Lookup to Time zone catalogue, single | Required; selected in Power Apps |
-| Learning focus | Multiple lines | Optional context |
-| Comments | Multiple lines | Optional context |
-| Status | Choice, flow-managed | `Active` or `Needs review` in the current POC |
+#5 is Done after merged PR #71. Owner confirmed Live Version 19 checks A/B passed:
+all four multi-lookups persist with optional time zone cleared and identity
+unchanged; all-four-empty Save retains input and leaves the saved item unchanged.
+Existing culture-only/identity evidence is retained. No app rebuild was needed.
+POC_05_CULTURE_REGISTRATION.md records scope and regression steps;
+backend validation remains #61 and access integration #41.
 
-The participant form must not ask users to type an email address. The Person
-field is the identity source. A hidden email helper may be retained only if a
-later automation genuinely needs it; it must be populated by the flow and not
-be a participant input.
+## Implemented SharePoint baseline
 
-`Created` and `Modified` are SharePoint system columns. Leave them system
-managed; do not create replacement columns or require users to edit them.
+The table below records the last verified registration baseline. The JSON schema
+and registration policy now describe the desired POC-05 delta (culture fields and
+optional time zone), explicitly marked pending tenant setup/tests. They are not a
+live export. See [POC_05_CULTURE_REGISTRATION.md](POC_05_CULTURE_REGISTRATION.md).
 
-### Future lists
+Language catalogue: Title, required unique indexed ISOCode, Aliases, Active.
+Time zone catalogue: Title, required unique indexed IANAId, optional WindowsId,
+Active.
 
-These are later delivery items, not part of the initial participant setup:
+| Participants field | Current implementation |
+|---|---|
+| ParticipantAccount | Required unique single Person identity; locked to signed-in user in the app |
+| TeachLanguages / LearnLanguages | Multi-value Language catalogue lookups |
+| TimeZone | Optional single lookup verified by #66 metadata audit; displays IANA_ID; app acceptance remains #5 |
+| LearningFocus / Comments | Optional multiple-line text |
+| Status | Flow-managed validation baseline: Active / Needs review |
+| Title | Hidden technical text |
+| Created / Modified and authors | SharePoint system-managed columns |
 
-- Matching Cycles
-- Groups
-- Group Members
-- Cycle Statistics
+Do not introduce a participant-entered identity email. Migration email matching
+must resolve to the company account; decide mapping/duplicate handling in #46/#48.
+Do not delete existing tenant helper/legacy columns during planning.
 
-The statistics page should use aggregated values and avoid exposing the
-Participants list or personal details.
+## Target fields and candidate exposure
 
-## Time-zone policy
+The reviewable field matrix is [MVP_FIELD_CONTRACT.md](MVP_FIELD_CONTRACT.md).
+It now includes separate Groups and Group Members tables, field ownership,
+editability and derived count/slot/joinability rules. These are target contracts,
+not proof that any existing tenant group lists have the proposed structure.
+Group limits and Discovery display are approved; target technical field tables
+need acceptance. #46 remains open and no schema/form is changed by this proposal.
 
-Participants choose one time zone from the controlled Time zone catalogue.
-This is the authoritative value for matching and reporting. Location or city is
-out of scope for the current POC. A later enhancement may add it as optional
-context, but it must not replace the controlled time-zone selection.
+#46 accepted the target types/requiredness/defaults/ownership and exposure. #66
+verifies actual participant/catalogue mappings before dependent #5/#6 App
+changes; #61 owns validation. Some setup has owner-reported evidence; the target
+contract does not certify every deployed setting or its runtime acceptance:
 
-## Participant submission flow
+- Controlled Cultures I can share and Cultures I am interested in, using a Culture
+  catalogue. This supersedes the earlier removal/deferment of controlled culture fields.
+- No participant group-size preference. People see actual group size/free slots
+  and decide whether to request joining; the group accepts or declines.
+- TimeZone remains a catalogue lookup but is optional. The baseline's required
+  restriction and validation dependency must be removed in #5; no live change is
+  implied by this contract review.
+- Participant-controlled participation status Active / Paused / Inactive.
+- Owner-approved new-registration defaults: participation Active and open to new
+  connections Yes. Validation remains independent; edits never reset choices.
+- Open to new connections, separate from validation; exact interaction with open
+  group membership must be specified without inventing a second manual status.
+- Independent validation state and migration-confirmation state. Retaining the
+  existing Status as validation is an option to preserve flows; technical names
+  and transition/default rules are finalized in #46.
+- Group exchange type, capacity, Open/Closed/Ended state, authoritative membership
+  records and derived free slots. Waiting / In a group are derived from memberships.
 
-The current validation rule is:
+Culture-only validation must accept useful culture selections without requiring
+Teach/Learn languages. Culture discovery needs a genuine sharer; interest alone
+must not imply sharing expertise. Agree how combined interests are represented.
 
-```text
-(Teach languages is not empty OR Learn languages is not empty)
-AND Time zone is not empty
-```
+Discovery display is approved in MVP_FIELD_CONTRACT.md (2026-11-08): include
+the proposed person fields, group description/member names and approved
+member profile details. Exclude email and raw account/identity/admin/system data.
+This decision does not establish deployed projection or verified access. Comments
+are included; the proposed Comments notice remains removed.
 
-Expected behavior:
+## Discovery and baseline test evidence
 
-- Trigger: SharePoint **When an item is created** on `Participants`.
-- If the rule is true, set `Status` to `Active`.
-- If the rule is false, set `Status` to `Needs review`.
-- Use the trigger's item ID when updating the item.
-- Validate that the selected time zone is an active catalogue value.
-- Do not use a file-content action or parse the language seed JSON in this
-  participant submission flow.
+The tested language baseline uses Active plus catalogue language IDs, excludes
+self/non-Active profiles and allows either exchange direction; both directions
+identify reciprocal fit. The owner confirmed synthetic Compose, Filter array,
+Select, teach-only and Needs review cases in Power Automate on 2026-10-31.
+config/discovery_eligibility.json remains that baseline, not the complete v0.2 rule.
 
-Language seed JSON is used only when importing or maintaining the Language
-catalogue. It is not the source of participant submissions.
+Before real-data integration, extend normalization and filtering for separate
+participation/validation, open-to-connections, culture-only/combined compatibility
+and compatible open groups with space. No assignments or memberships are created
+by discovery. Optional filters narrow compatible results, not a public directory.
 
-## Visibility and manual work
+Ranking by city/time zone/waiting time is Later (#8). Retain time zone for display;
+do not require derived location, paid services, AI suggestions or scheduling.
 
-Participants should use the Power Apps form to register and maintain their own
-profile. The app filters its gallery to the signed-in user's unique
-Participant account and locks that control. The form shows the required time
-zone lookup.
+## Requests and groups
 
-This app filter is a user-experience rule, not a SharePoint security boundary.
-Because Participant account remains unique, SharePoint's built-in item-level
-permission setting cannot be enabled. Users with direct list permissions may
-still see other rows in SharePoint. Strict row privacy requires a later custom
-permission flow or a data source with row-level security.
+MVP includes connect/join requests, recipient/member accept or decline, and sender
+request-state visibility. Use Pending/Accepted/Declined/Cancelled where required;
+meet-first, expiry and bulk invitations remain Later. Recheck availability and
+capacity before acceptance. Unavailability cancellation details are specified
+in #10/#11 without implicitly enabling an unchosen notification channel.
 
-Issue #18 owns this access/privacy work and must be completed before wider
-testing or discovery. It must define which information is intentionally readable
-by others, protect private fields, enforce own-profile edits at the data source,
-and record two-account tests including direct SharePoint access. The technical
-approach is decided in that ticket; the unique identity requirement remains.
+Group creation/membership updates follow accepted participant actions.
+Store group details in Groups and one group/participant episode link in Group
+Members. Keep personal profiles in Participants. Counts, slots and My groups
+derive from active membership links, not editable participant text or presumed
+cross-list calculated columns. Membership rows are workflow-maintained.
+Current #11 creation flow, backed by #12 schema, uses SourceRequestId and membership
+episode MembershipKey for retry identification, plus SetupComplete (default No)
+to distinguish unfinished setup from the participant-controlled lifecycle state.
+Operational My groups/discovery/count derivations must exclude unfinished groups:
+require SetupComplete and an Accepted source request. Temporary Active rows
+during multi-record setup are not an operational membership result. Ending
+such an unfinished group after rejection is setup cleanup, not automatic
+ending of an operating group after a member leaves.
+Conditional status/setup/cleanup writes and these keys do not complete #47 or
+caller/access proof. The current sanitized export review is recorded in
+config/participant_response_flow.snapshot.json, not an importable deployment.
 
-The agreed access boundary is now explicit: normal registration exposes only
-the caller's profile, including through direct SharePoint access. Discovery is
-a separate controlled operation returning eligible candidates, not list access.
-No private-Comments classification or public directory is approved.
+Owner-approved group creation publishes only after memberships save successfully:
+start Open if space remains, otherwise Closed. Active members may edit name and
+description and adjust capacity within bounds, never below current member count.
+Exchange type and focus are fixed after creation for MVP. Open and Closed can
+switch or become Ended; Ended is final, not a temporary closed state. Necessary
+admin exceptions remain possible without adding a routine reopen-Ended path.
+Groups control Open/Closed/Ended. Open groups can receive join requests only when
+space remains; Closed groups continue without new joiners; Ended groups are no
+longer operating. Show member count and free slots. No saved participant size
+preference is required; the participant chooses and the group accepts/declines.
+Language capacity is 2 or 3 total; culture capacity is 2–10 with a relevant culture
+sharer, and combined language/culture capacity is 2–10 with a relevant culture
+sharer. Do not infer a universal minimum of 3. Open/Closed/Ended is the target simple MVP group state;
+other lifecycle states and timers require a later decision. Active members may
+accept/decline join requests and set Open/Closed/Ended, with necessary admin override.
 
-No replacement architecture is selected yet. First assess prerequisites (#39),
-then prove own-record access in isolation (#40), then integrate registration
-(#41). These complete parent #18 only after verified evidence. Controlled
-candidate access (#42) follows with discovery #7–#9. Authenticated registration
-flows are one option to assess, not an instruction to configure them now.
-The current app-filter baseline remains unsuitable for wider rollout. Follow
-[the staged access plan](POC_18_PARTICIPANT_ACCESS.md).
+Every member participates in at least one stated group focus as sharer/learner
+or both. A language focus needs a sharer and a different learner; culture follows
+the equivalent rule. Combined groups support both focus relationships, while
+individual members can participate in either or both. Reciprocal teaching is optional.
 
-Hide system and flow-managed fields from the participant form, including Title
-and Status. Do not expose the Participant account people picker for choosing
-another colleague.
+Requests start Pending; senders may cancel before response. Only one Pending
+request per same person/group connection. Acceptance rechecks fit, availability
+and capacity; Accepted/Declined/Cancelled history is preserved.
 
-Automation should handle validation, identity enrichment, time-zone lookup
-validation, status updates, notifications, and repeatable checks. People still
-decide whether to connect, accept or decline requests, arrange meetings, run
-the exchange, approve tenant changes, and handle exceptional cases.
+Normal membership counts and free slots update automatically. A departure remains
+self-service and preserves history; ambiguous group purpose/sharer recovery can
+use exceptional admin support. A Closed group stays Closed until a member reopens
+it. When remaining members no longer support its stated focuses, hide it from
+Discovery using ordinary eligibility validation, without automatically changing
+its stored state. Do not auto-end/reopen, assign replacements, disband, expel
+others or rejoin people; recovery automation/timers remain Later. This specifies
+leaving, not a new pause/Inactive membership cascade.
 
-## Explicitly removed from the current design
+#47 covers duplicate accepts, simultaneous last-slot joins, retries and partial
+multi-record failure. It is shared acceptance logic/testing for #11/#12/#17,
+not a second matching implementation. Ordinary successful processing is automatic.
 
-Do not add these back unless a new product decision is recorded in this file:
+## Focused implementation ownership - #45
 
-- Culture catalogue
-- Location catalogue
-- Required native SharePoint Location input
-- Consent confirmed field
-- Participant Role field
-- Participant-entered Email as a required registration field
+Each production flow has one Flow ticket. App screens and shared schema/rule/
+authorization artifacts are separate; current owners are listed in
+config/backlog_readiness.json and docs/BACKLOG_ALIGNMENT.md. #61 owns validation,
+#62 request reading, #63 cancellation, #64 My groups reading and #65 group-join
+responses; #66 participant schema and #67/#68 screens are separate. #12 is group
+schema, #16 the Discovery App, #10 personal send and #17 group-join send only.
+#22/#24 are Superseded, not completed. The accepted product rules are unchanged.
 
-Culture-related concepts may still appear in the older product reference
-documents, but they are not part of the current SharePoint registration
-schema.
+## Contract ticket boundary - #46
 
-## Deferred optional profile enrichment
+#46 delivers the field/ownership and approved Discovery exposure specification;
+owner review/merge accepts its target field tables. Runtime implementation,
+permissions, flow interfaces, migration decisions and reliability tests have
+explicit receiving tickets in MVP_FIELD_CONTRACT.md. They do not prevent #46
+closing once its document review/merge is complete. All prerequisites remain
+mandatory before their dependent integration/release work.
 
-After the registration and matching core is stable, a later ticket may add
-optional profile context such as city/location, culture interests, or other
-free-text information. Those fields must be reviewed for privacy, matching
-value, and form usability before being added to the SharePoint schema.
+## Contract review decisions - 2026-11-08
 
-## Implementation checklist
+The final owner choice removes the proposed group leader/contact role. All active
+members can see incoming group join requests and accept/decline or manage allowed
+controls. Requests target the group; no contact appointment/replacement fields or
+exclusive authority. First valid saved response wins with #47 safeguards.
+An optional introduction message is approved for group join requests; technical
+request/payload mapping is still to specify under #46/#17.
 
-- [ ] Validate the SharePoint schema against this file.
-- [ ] Confirm the participant form hides system and flow-managed fields.
-- [ ] Confirm the language lookup fields allow multiple controlled selections.
-- [ ] Confirm Time zone is a required single-value lookup to the Time zone catalogue.
-- [ ] Implement and test the submission flow rule.
-- [ ] Add later lists only through their own GitHub issues and PRs.
+Concurrency is expected to be rare: prefer basic prevention plus simple safe
+retry/recovery and necessary exceptional admin help. Do not build an elaborate
+lock/reconciliation platform. Duplicate membership, over-capacity success and
+false success remain unacceptable; shared write protection still needs its
+bounded #47 proof. Identity/access and detailed error/pagination decisions may
+be reviewed later, with owner/synthetic construction only until required access
+prerequisites pass. No ordinary-user rollout is approved by this deferral.
+
+## Intake migration and notifications
+
+Direct in-tool registration is the agreed intake. Do not implement a second
+Microsoft Forms sync. Existing Excel inspection/migration is the final phase
+(#48): preserve originals, resolve accounts, report ambiguous colours/statuses,
+duplicates and mappings, recreate confirmed memberships and record confirmation.
+Do not guess culture expertise from ambiguous historical interest text.
+Whether unconfirmed migrated profiles appear in discovery remains to decide.
+
+Notification options are undecided despite email-only statements in the draft.
+#49 must compare permitted existing email/Teams capabilities and agree recipient,
+event, privacy, reliability, retry and cost behavior before #21 implementation.
+At least request-received/request-answered are candidates to evaluate, not a
+silent commitment to every event in the source document.
+
+## Access and release checks
+
+Normal registration exposes only the caller's profile; discovery returns only
+approved compatible candidate details. An app filter alone is not authorization.
+Site Members are trusted admins; their inherited access does not establish an
+ordinary user's access. The owner deferred colleague access testing; #18/#39–#42
+remain open while work continues with owner/synthetic data. No access redesign
+is approved. Verify actual ordinary-user access before broader release.
+
+The former submission flow used language selection plus mandatory time zone and
+rewrote identity from Created By. Owner-guided changes now use current item data,
+four-field language/culture presence, modified-event handling and change-only
+Status writes preserving identity. The Active no-op/correction/follow-up cases
+have scoped owner evidence; remaining cases, catalogue validation and full
+registration acceptance are deferred to the integrated test phase. Do not reset
+participation/openness through validation or treat old baseline tests as new-MVP proof.
+
+Confirmed target validation: the form blocks save if all four language/culture
+offer/interest fields are empty, with a clear correction message. Empty time zone
+is valid. Invalid existing/imported records are hidden from Discovery until
+corrected; users fix their data and validation reruns without routine admin
+approval. Successful validation never changes Paused/Inactive or a user's closed
+connection choice. Exceptional migration/identity repairs may still require admins.
+
+Go-live still needs data-policy review, field/exposure acceptance, actual
+permissions, request/capacity tests, selected notifications and migration evidence
+where existing participants/groups must be available at launch.
+
+## Later or excluded
+
+Later: automatic location/time-zone derivation, ranking, optional language level,
+freshness/reminders (#29/#30), dashboards/statistics (#31), detailed admin audit
+UI, needs-sharer timers, automatic departure recovery, bulk invitations, meet-first,
+request expiry and search-broadening advice. The earlier two-active-groups warning
+is not confirmed in v0.2; keep #15 for later review rather than silently require it.
+
+Excluded: separate paid hosting, automatic AI matching/assignment, in-app chat/video,
+detailed scheduling, mandatory Location catalogue, required native SharePoint
+Location input, participant Role and required participant-entered identity email.
+
+## Validation flow testing handover — #61
+
+#61 is Ready for testing on owner direction; #9 is Done after merged #73; #47 is the sole In progress ticket. Target contract and tenant handover are in
+FLOW_61_PARTICIPANT_SUBMISSION.md and participant_submission_contract.json.
+Current owner export inspected; event/connection alias mapping preserved in a
+new import package (26 actions / depth 3), with active-catalogue checks and
+ETag-protected changed Status only. 101 local tests passed. Owner valid/no-change and necessary Active correction/readback/follow-up passed
+for item 38; feedback accepted/published as owner-reported Live Version 26.
+Remaining scoped target acceptance variants stay pending; no whole-ticket completion.
+
+Owner chooses PR #72 merge and tester handover with remaining acceptance retained.
+See [the #61 issue description](https://github.com/maoy1/tandem-language-culture-app/issues/61) for Live-26/build context, role/setup, steps/expected
+results, cleanup and blocked cases. #61 stays open; no whole acceptance or
+ordinary-user access pass is implied.
+
+## Shared compatibility implementation — #9
+
+compatibility.py is the maintained rule/normalization source for package builders;
+config/compatibility_contract.json and COMPATIBILITY_RULES.md define adapters and
+boundaries. Person fits support one-way language/culture sharing/learning; groups
+require distinct sharer/learner per focus and every member relevant to a focus.
+Owner defers Any language matching; exclude sentinel from matching/group focus
+without changing catalogue or registration. Concrete selections remain supported.
+39 synthetic fixture cases / 121 local tests pass; isolated connector-free proof
+45 actions/depth 4. Tenant proof import/run NOT RUN; live consumer/caller/group
+availability mapping remains each consuming flow's evidence, not assumed here.
+
+#9 update: matching source/build tenant run 08584074461495133197897516907CU19
+passed all 39 synthetic cases with no failures. Own shared proof accepted; #73
+review/merge pending. No live consumer/authorization/group-availability certification
+is inferred. Any language remains deferred; no further proof rerun requested.
+
+## Shared bounded coordination preparation — #47
+
+PR #73 merged; #9 own artifact complete. #47 proposes one group-specific owner
+token plus saved operation receipt, stable request/episode keys and completion
+gates. No lease-steal timer or general transaction/repair platform. Known stopped
+prefix retry is bounded; unknown effects retain ownership for reconciliation or
+rare exceptional support. Native JSON intent comparison needs no hash connector.
+COORDINATION_CONTRACT.md / coordination_contract.json describe un-applied metadata,
+consumer boundaries and assumptions. 152 local tests / 70 model schedules pass;
+native cross-item fixture proof NOT RUN. Read-only metadata preflight is ready to
+verify fixture permissions; no fixture/production schema or data change yet.
+
+#47 update: read-only permission metadata gate passed on owner run. A native
+tagged fixture package is prepared (321 actions/depth 6; 10 checks; 165 local
+tests), defaulting to no fixture writes. Explicit Yes is limited to one verified
+build-tagged synthetic list. Native runtime results, genuine unknown/killed-run
+recovery and production mapping remain unverified; no production schema applied.
+
+
+### #47 connector duplicate-error correction — v2
+
+The owner supplied the first native report: 5/10 checks passed, allPassed=false. All five failed cases invoke the duplicate-response predicate. The Duplicate primary raw body confirms SharePoint error -2130575169 / Microsoft.SharePoint.SPDuplicateValuesFoundException wrapped by the existing SharePoint connector as HTTP 502. The original proof's 400/409-only classifier was too narrow. The five-case common cause is supported by local replay; a native v2 pass remains unverified.
+
+The classifier now requires the exact native duplicate exception/code together with HTTP 400, 409 or 502. For the wrapped form, both exact entries must exist in innerError.errors. Generic 502, unrelated 400/409, incomplete error identifiers and other statuses fail. Existing schema/row/ETag/count/readback checks remain required. All five duplicate-dependent reports now include diagnostic codes/messages. No cookie or response headers are stored.
+
+Supported package: artifacts/coordination/TandemCoordinationFixture-v2.zip, build b54d7cee-971d-4af3-924f-e81d5fefaec9, new tagged list Tandem47Fixture_b54d7cee971d4af3. Import as Create as new, display name TandemCoordinationFixture v2, existing SharePoint connection; Run fixture writes=Yes. Old fixture is retained; no deletion or production mutation. Expected Fixture report: 10 tests, allPassed=true, failedCases=[]. Return that report; expected rejected duplicate actions may still show red 502.
+
+Validation: 179 local tests passed, including wrapped native duplicate simulation in both writer orders and generic/error-negative cases; 321 actions / depth 6 (limits 500/8). V2 NOT_IMPORTED_NOT_TESTED. #47 remains In progress / PR #75 draft pending native results. No genuine timeout/killed-run, production consumer or notification-delivery proof inferred.
+
+
+### #47 native bounded proof passed — 2026-11-08
+
+Matching v2 build `b54d7cee-971d-4af3-924f-e81d5fefaec9`, owner run `08584074402025984197329193901CU08`: testCount=10, allPassed=true, failedCases=[]. Permission gate passed; existing tagged fixture `Tandem47Fixture_b54d7cee971d4af3` / `abade32d-8b24-4b30-b2e0-668d10238acb` reused (fixtureCreated=false). Summary exactly as supplied: `artifacts/coordination/results/fixture-v2.pass.owner-summary.json`; successful per-case details were not supplied and are not reconstructed. The package gates allPassed on exactly 10 results and no failed cases.
+
+History retained: original classifier build 5/10 pass; first v2 run `08584074408126043497852268406CU03` 9/10 pass (`artifacts/coordination/results/fixture-v2.first-run.owner-report.json`). Its Shrink RequestB returned the typed duplicate exception despite distinct supplied A/B keys; actual cause remains unconfirmed. A fresh run prefix passed without code/formula edits. This does not establish connector retry causation or generic unknown-write recovery.
+
+179 local tests / 70 reference schedules previously passed; final artifact remains 321 actions / depth 6, no runtime changes after owner proof. #47 **Ready for review**, PR #75 ready; no owner rerun required. Earlier pending-run entries above are historical. Own contract review/merge remains; no production schema applied, all 70 schedules are not native-proven, genuine timeout/killed-run, production consumer/access and external notification delivery remain separate. #12 group/member schema is next after merge; #61 stays Ready for testing.
+
+
+## #12 active schema inspection — 2026-11-08
+
+PR #75 merged `be278a1cc7a72b862154ae8ffe201acdf998f019`; #47 closed/Done after accepted bounded contract/native proof. #12 is the sole active ticket. Existing #57 group/member snapshot is historical source evidence; current actual list IDs/field definitions/settings remain unverified.
+
+Prepared `artifacts/group_schema/TandemGroupSchemaAudit.zip`, build `cb49aded-f121-410e-b7df-d9646be892dd`: **51 actions / depth 3**, below 500/8. Existing SharePoint connection; GET-only list inventory/identities, Group/Group Members fields/defaults/SchemaXml/column index/list validation and effective list permission masks. Known #66 participant/language/culture list identities rechecked. **No list item reads, writes, permission changes or working-flow/app modifications.** Actual unique-key constraints/lookup targets/defaults/schema compatibility are not approved from packaging or reference proof.
+
+194 local tests pass, including 15 generated-inspector cases (normal collection, ambiguous/missing/unsafe targets, paging, missing arrays/identities/permissions, failed reads and package safeguards). Tenant import/run **NOT RUN**. collectionComplete means bounded metadata collected, not schema acceptance; schemaVerified remains false. No setup until actual report reviewed, any changes flagged and actual per-list capability verified. Existing rows preserved; exceptions route #48. Full operator handover/checkboxes inline in issue #12; draft PR is partial preparation, not whole-ticket Ready. #61 remains Ready for testing.
+
+
+### #12 actual mapping and direct settings — 2026-11-08
+
+Owner opted for direct list settings rather than another setup package. Initial audit `08584074383115048211345636667CU09` and manual-settings readback `08584074377818105096431306544CU07` match build `cb49aded-f121-410e-b7df-d9646be892dd`: collectionComplete=true/errors empty; Groups and Group Members each itemCount=0. Actual field/list IDs, types, choices, defaults, XML constraints and lookup targets recorded in `config/group_schema_mapping.json`; source reports in `artifacts/group_schema/results/`.
+
+Confirmed group Title now required; WriteOwner optional nonunique Text/blank default; native integer/type-specific capacity formula/message saved. SharePoint removed optional column brackets; canonical formula comparison confirms the same expression. Existing focus links, SourceRequestId/MembershipKey unique+indexed, dates, membership Title optional, State Closed and SetupComplete No remain. Participant lookup displays ID; preserve its linkage and resolve approved display in consumers.
+
+Group Members Group and Participant still report indexed=false. Indexed columns page requested; no index completion or full schema acceptance claimed. #12 remains In progress / PR #76 draft. No setup package generated, row writes, renames/deletion or runtime/privacy certification. 194 existing local tests previously passed; this is metadata/evidence only, not new executable changes.
+
+
+### #12 schema mapping and five manual settings verified — 2026-11-08
+
+Final audit build `cb49aded-f121-410e-b7df-d9646be892dd`, run `08584074372941101122136369836CU17`: collectionComplete=true, errors=[], both lists itemCount=0. Groups `4bf1b37f-edce-40c5-8fa0-36543a2d0cd6`; Group Members `db611ec3-7fa3-477a-878e-effbbb195cb8`. Group and Participant now each indexed=true; owner Indexed columns page lists separate Group / MembershipKey / Participant. Prior combined Group, Participant index was replaced with separate indexes.
+
+All five direct-setting changes read back: group Title required; WriteOwner optional blank nonunique Text/255; native integer/type-specific capacity formula/message; membership Group and Participant indexes. Source/membership keys remain required unique/indexed, correct links/focus choices/types, JoinedAt required/LeftAt optional, membership Title unused optional, State default Closed and SetupComplete default No. Other mapped business field IDs/properties/XML semantics unchanged. Formula bracket normalization is equivalent. Actual mapping in `config/group_schema_mapping.json`; raw report `artifacts/group_schema/results/final-audit.owner-report.json`. Raw inspector schemaVerified=false remains intentionally fixed; local reviewed mapping/readback is now verified.
+
+#12 Ready for review / PR #76 ready. No owner rerun or settings package needed; owner chose manual UI changes. 194 local tests previously passed; no executable change in final evidence recording. No row rejection/creation/migration, ordinary-user privacy or consuming-flow/history behavior claimed. No migration exceptions in these observed empty lists. Dynamic count/focus/identity/Ended/history guards remain respective Flow scope; #48 migration remains separate. Source/contract review and merge remain; next focused implementation is #7 Discovery after merge, #61 still Ready for testing. Earlier pending-index entries are historical.

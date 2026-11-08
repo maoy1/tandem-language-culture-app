@@ -8,9 +8,15 @@ its acceptance work is complete; otherwise link the open follow-up.
 Record relevant automated results and actual tenant test evidence. Identify
 outstanding manual checks explicitly.
 
+List relevant IDs from `docs/TEST_CATALOGUE.md` and link the execution entry in
+`docs/TEST_RUNS.md`. Include actual app/flow versions for tenant results; mark
+unexecuted or deferred checks explicitly. For bug fixes, identify the regression
+case and its retest result. Documentation-only changes need only relevant checks.
+
 ## Completion checklist
 
-- [ ] Participant workflows require no routine admin approvals or individual permission/group maintenance.
+- [ ] Production stays within SharePoint/Power Apps/Power Automate and existing entitlements; no new paid hosting/licences, premium/custom connectors, trials or local-script runtime.
+- [ ] Ordinary participant workflows are self-service without per-user admin work as usage grows; any necessary critical-case approval or exceptional intervention is explicit and proportionate.
 - [ ] Required permissions, settings, connectors, connections and licences were flagged to the owner and verified before dependent implementation; one-time setup and recurring maintenance are explicit.
 - [ ] Current design and relevant setup documentation agree with this change.
 - [ ] Implementation plan records completion state, remaining work, and next ticket.

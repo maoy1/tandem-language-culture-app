@@ -1,0 +1,14 @@
+{
+  "sourceTicket": 61,
+  "packageBuildId": "88637754-4c91-4833-9dcf-5116d8bfb77e",
+  "sourceExportSha256": "a81c0c87b262ffb5a13fe079dec4a13bcc345e763c1e57c10dd02bed57dae90c",
+  "packageSha256": "5dd15d5c989d02158fbcafb13ac8e999e87b7e617674ecfa1cc6722ef86d7aad",
+  "displayName": "Tandem \u2013 Participant submission v2",
+  "sourceTriggerPreserved": true,
+  "sourceConnectionNamesCopied": false,
+  "importMode": "Create as new; select existing SharePoint connection; stop old validator before import",
+  "tenantResult": "NOT_IMPORTED_NOT_TESTED",
+  "appFeedback": "Existing asynchronous save; actual feedback binding not yet inspected",
+  "actionDefinitions": 26,
+  "maximumNesting": 3
+}

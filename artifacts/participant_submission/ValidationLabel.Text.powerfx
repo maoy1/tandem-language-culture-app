@@ -1,0 +1,25 @@
+If(
+    IsBlank(varValidationParticipantId),
+    "",
+    IfError(
+        With(
+            { savedProfile: LookUp([@Participants], ID = varValidationParticipantId) },
+            If(
+                IsBlank(savedProfile.ID),
+                "Profile check unavailable. Try Refresh validation.",
+                "Last profile check: " &
+                Switch(
+                    savedProfile.Status.Value,
+                    "Active", "Passed",
+                    "Needs review", "Needs attention",
+                    "Not yet confirmed"
+                ) & If(
+                    savedProfile.Status.Value = "Needs review",
+                    Char(10) & "Review your profile details and save again.",
+                    ""
+                )
+            )
+        ),
+        "Profile check unavailable. Try Refresh validation."
+    )
+)

@@ -1,0 +1,36 @@
+{
+  "sourceTicket": 47,
+  "note": "Review fragment only. Target field/list mappings not applied or verified. Precede with typed fresh read, nonempty/nonwildcard ETag and operation/ownership guards; follow with readback. Not a standalone flow.",
+  "action": {
+    "type": "OpenApiConnection",
+    "runAfter": {},
+    "inputs": {
+      "host": {
+        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+        "connectionName": "shared_sharepointonline",
+        "operationId": "HttpRequest"
+      },
+      "authentication": "@parameters('$authentication')",
+      "retryPolicy": {
+        "type": "none"
+      },
+      "parameters": {
+        "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+        "parameters/method": "POST",
+        "parameters/uri": "@outputs('Verified_target_item_uri')",
+        "parameters/headers": {
+          "Accept": "application/json;odata=verbose",
+          "Content-Type": "application/json;odata=verbose",
+          "X-HTTP-Method": "MERGE",
+          "IF-MATCH": "@body('Read_authoritative_revision')?['d']?['__metadata']?['etag']"
+        },
+        "parameters/body": {
+          "__metadata": {
+            "type": "@body('Read_authoritative_revision')?['d']?['__metadata']?['type']"
+          },
+          "WriteOwner": "@string(outputs('Bound_operation_attempt_token'))"
+        }
+      }
+    }
+  }
+}

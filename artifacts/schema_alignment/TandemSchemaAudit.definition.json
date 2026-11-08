@@ -1,0 +1,1342 @@
+{
+  "name": "1fd35100-e381-48b7-9d53-aa927d1131ed",
+  "id": "/providers/Microsoft.Flow/flows/1fd35100-e381-48b7-9d53-aa927d1131ed",
+  "type": "Microsoft.Flow/flows",
+  "properties": {
+    "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
+    "displayName": "TandemSchemaAudit",
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {},
+              "required": []
+            }
+          }
+        }
+      },
+      "actions": {
+        "Initialize_lists": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditLists",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "Initialize_errors": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditErrors",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_lists": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Inspect_participants": {
+          "type": "Scope",
+          "actions": {
+            "Read_participant_list": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists/getbytitle('Participants')?$select=Id,Title",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=nometadata"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runAfter": {}
+            },
+            "Read_participant_fields": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists/getbytitle('Participants')/fields?$select=Id,Title,InternalName,TypeAsString,Required,Hidden,ReadOnlyField,EnforceUniqueValues,Indexed,DefaultValue,SchemaXml&$top=5000",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=nometadata"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runAfter": {
+                "Read_participant_list": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Filter_participant_fields": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_participant_fields')?['value']",
+                "where": "@or(contains(createArray('title', 'title', 'participantaccount', 'participantaccount', 'teachlanguages', 'teachlanguages', 'learnlanguages', 'learnlanguages', 'sharecultures', 'culturesicanshare', 'learncultures', 'culturesofinterest', 'timezone', 'timezone', 'learningfocus', 'learningfocus', 'comments', 'comments', 'status', 'status', 'participationstatus', 'participationstatus', 'opentoconnections', 'opentonewconnections'), replace(replace(replace(toLower(string(item()?['InternalName'])), '_x0020_', ''), ' ', ''), '_', '')), contains(createArray('title', 'title', 'participantaccount', 'participantaccount', 'teachlanguages', 'teachlanguages', 'learnlanguages', 'learnlanguages', 'sharecultures', 'culturesicanshare', 'learncultures', 'culturesofinterest', 'timezone', 'timezone', 'learningfocus', 'learningfocus', 'comments', 'comments', 'status', 'status', 'participationstatus', 'participationstatus', 'opentoconnections', 'opentonewconnections'), replace(replace(replace(toLower(string(item()?['Title'])), '_x0020_', ''), ' ', ''), '_', '')))"
+              },
+              "runAfter": {
+                "Read_participant_fields": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Select_participant_fields": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Filter_participant_fields')",
+                "select": {
+                  "id": "@item()?['Id']",
+                  "internalName": "@item()?['InternalName']",
+                  "displayName": "@item()?['Title']",
+                  "type": "@item()?['TypeAsString']",
+                  "required": "@item()?['Required']",
+                  "unique": "@item()?['EnforceUniqueValues']",
+                  "indexed": "@item()?['Indexed']",
+                  "hidden": "@item()?['Hidden']",
+                  "readOnly": "@item()?['ReadOnlyField']",
+                  "defaultValue": "@if(contains(createArray('Boolean','Choice'),item()?['TypeAsString']),item()?['DefaultValue'],null)",
+                  "schemaXml": "@if(contains(createArray('Lookup','LookupMulti','Choice','MultiChoice'),item()?['TypeAsString']),item()?['SchemaXml'],null)"
+                }
+              },
+              "runAfter": {
+                "Filter_participant_fields": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Participant_column_index": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Read_participant_fields')?['value']",
+                "select": {
+                  "id": "@item()?['Id']",
+                  "internalName": "@item()?['InternalName']",
+                  "displayName": "@item()?['Title']",
+                  "type": "@item()?['TypeAsString']"
+                }
+              },
+              "runAfter": {
+                "Select_participant_fields": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Record_participant_schema": {
+              "type": "AppendToArrayVariable",
+              "inputs": {
+                "name": "AuditLists",
+                "value": {
+                  "role": "participants",
+                  "id": "@body('Read_participant_list')?['Id']",
+                  "title": "@body('Read_participant_list')?['Title']",
+                  "fields": "@body('Select_participant_fields')",
+                  "columnIndex": "@body('Participant_column_index')",
+                  "fieldsTruncated": "@not(empty(coalesce(body('Read_participant_fields')?['@odata.nextLink'],body('Read_participant_fields')?['odata.nextLink'],'')))",
+                  "valuesTruncated": false,
+                  "values": []
+                }
+              },
+              "runAfter": {
+                "Participant_column_index": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_errors": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Participant_failure": {
+          "type": "AppendToArrayVariable",
+          "inputs": {
+            "name": "AuditErrors",
+            "value": {
+              "role": "participants",
+              "code": "METADATA_READ_FAILED",
+              "message": "Participant metadata could not be read. Inspect the failed read action; no data or schema was changed."
+            }
+          },
+          "runAfter": {
+            "Inspect_participants": [
+              "Failed",
+              "TimedOut"
+            ]
+          }
+        },
+        "Inspect_language": {
+          "type": "Scope",
+          "actions": {
+            "Find_language_lookup": {
+              "type": "Query",
+              "inputs": {
+                "from": "@coalesce(body('Read_participant_fields')?['value'],json('[]'))",
+                "where": "@and(contains(createArray('Lookup','LookupMulti'),item()?['TypeAsString']),or(contains(createArray('teachlanguages', 'learnlanguages'), replace(replace(replace(toLower(string(item()?['InternalName'])), '_x0020_', ''), ' ', ''), '_', '')), contains(createArray('teachlanguages', 'learnlanguages'), replace(replace(replace(toLower(string(item()?['Title'])), '_x0020_', ''), ' ', ''), '_', ''))))"
+              },
+              "runAfter": {}
+            },
+            "Has_language_lookup": {
+              "type": "If",
+              "expression": {
+                "greater": [
+                  "@length(body('Find_language_lookup'))",
+                  0
+                ]
+              },
+              "actions": {
+                "Catalogue_id_language": {
+                  "type": "Compose",
+                  "inputs": "@replace(replace(string(xpath(xml(first(body('Find_language_lookup'))?['SchemaXml']),'string(/*[local-name()=\"Field\"]/@List)')),'{',''),'}','')",
+                  "runAfter": {}
+                },
+                "Safe_catalogue_language": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@length(outputs('Catalogue_id_language'))",
+                          36
+                        ]
+                      },
+                      {
+                        "not": {
+                          "equals": [
+                            "@toLower(outputs('Catalogue_id_language'))",
+                            "@toLower(string(body('Read_participant_list')?['Id']))"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Read_language_list": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                          "parameters/method": "GET",
+                          "parameters/uri": "@concat('_api/web/lists(guid''',outputs('Catalogue_id_language'),''')?$select=Id,Title')",
+                          "parameters/headers": {
+                            "Accept": "application/json;odata=nometadata"
+                          }
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "HttpRequest"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {}
+                    },
+                    "Read_language_fields": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                          "parameters/method": "GET",
+                          "parameters/uri": "@concat('_api/web/lists(guid''',outputs('Catalogue_id_language'),''')/fields?$select=Id,Title,InternalName,TypeAsString,Required,Hidden,ReadOnlyField,EnforceUniqueValues,Indexed,DefaultValue,SchemaXml&$top=5000')",
+                          "parameters/headers": {
+                            "Accept": "application/json;odata=nometadata"
+                          }
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "HttpRequest"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {
+                        "Read_language_list": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Filter_language_fields": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@body('Read_language_fields')?['value']",
+                        "where": "@or(contains(createArray('title', 'title', 'isocode', 'isocode', 'aliases', 'aliases', 'active', 'active'), replace(replace(replace(toLower(string(item()?['InternalName'])), '_x0020_', ''), ' ', ''), '_', '')), contains(createArray('title', 'title', 'isocode', 'isocode', 'aliases', 'aliases', 'active', 'active'), replace(replace(replace(toLower(string(item()?['Title'])), '_x0020_', ''), ' ', ''), '_', '')))"
+                      },
+                      "runAfter": {
+                        "Read_language_fields": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Select_language_fields": {
+                      "type": "Select",
+                      "inputs": {
+                        "from": "@body('Filter_language_fields')",
+                        "select": {
+                          "id": "@item()?['Id']",
+                          "internalName": "@item()?['InternalName']",
+                          "displayName": "@item()?['Title']",
+                          "type": "@item()?['TypeAsString']",
+                          "required": "@item()?['Required']",
+                          "unique": "@item()?['EnforceUniqueValues']",
+                          "indexed": "@item()?['Indexed']",
+                          "hidden": "@item()?['Hidden']",
+                          "readOnly": "@item()?['ReadOnlyField']",
+                          "defaultValue": "@if(contains(createArray('Boolean','Choice'),item()?['TypeAsString']),item()?['DefaultValue'],null)",
+                          "schemaXml": "@if(contains(createArray('Lookup','LookupMulti','Choice','MultiChoice'),item()?['TypeAsString']),item()?['SchemaXml'],null)"
+                        }
+                      },
+                      "runAfter": {
+                        "Filter_language_fields": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Index_language_columns": {
+                      "type": "Select",
+                      "inputs": {
+                        "from": "@body('Read_language_fields')?['value']",
+                        "select": {
+                          "internalName": "@item()?['InternalName']",
+                          "displayName": "@item()?['Title']",
+                          "type": "@item()?['TypeAsString']"
+                        }
+                      },
+                      "runAfter": {
+                        "Select_language_fields": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Find_language_key": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@body('Read_language_fields')?['value']",
+                        "where": "@or(contains(createArray('isocode', 'isocode'), replace(replace(replace(toLower(string(item()?['InternalName'])), '_x0020_', ''), ' ', ''), '_', '')), contains(createArray('isocode', 'isocode'), replace(replace(replace(toLower(string(item()?['Title'])), '_x0020_', ''), ' ', ''), '_', '')))"
+                      },
+                      "runAfter": {
+                        "Index_language_columns": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Find_language_active": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@body('Read_language_fields')?['value']",
+                        "where": "@or(contains(createArray('active'), replace(replace(replace(toLower(string(item()?['InternalName'])), '_x0020_', ''), ' ', ''), '_', '')), contains(createArray('active'), replace(replace(replace(toLower(string(item()?['Title'])), '_x0020_', ''), ' ', ''), '_', '')))"
+                      },
+                      "runAfter": {
+                        "Find_language_key": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Catalogue_columns_language": {
+                      "type": "If",
+                      "expression": {
+                        "and": [
+                          {
+                            "equals": [
+                              "@length(body('Find_language_key'))",
+                              1
+                            ]
+                          },
+                          {
+                            "equals": [
+                              "@length(body('Find_language_active'))",
+                              1
+                            ]
+                          },
+                          {
+                            "not": {
+                              "equals": [
+                                "@first(union(body('Find_language_key'),createArray(json('{}'))))?['InternalName']",
+                                "Title"
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      "actions": {
+                        "Read_language_values": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "@concat('_api/web/lists(guid''',outputs('Catalogue_id_language'),''')/items?$select=Id,Title,',first(body('Find_language_key'))?['InternalName'],',',first(body('Find_language_active'))?['InternalName'],'&$top=5000')",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=nometadata"
+                              }
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest"
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          },
+                          "runAfter": {}
+                        },
+                        "Select_language_values": {
+                          "type": "Select",
+                          "inputs": {
+                            "from": "@body('Read_language_values')?['value']",
+                            "select": {
+                              "id": "@item()?['Id']",
+                              "title": "@item()?['Title']",
+                              "key": "@item()?[first(body('Find_language_key'))?['InternalName']]",
+                              "active": "@item()?[first(body('Find_language_active'))?['InternalName']]"
+                            }
+                          },
+                          "runAfter": {
+                            "Read_language_values": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {
+                          "Missing_language_columns": {
+                            "type": "AppendToArrayVariable",
+                            "inputs": {
+                              "name": "AuditErrors",
+                              "value": {
+                                "role": "language",
+                                "code": "CATALOGUE_COLUMNS_UNRESOLVED",
+                                "message": "Key/Active columns are missing, ambiguous, or key aliases the Title field. Metadata is returned for mapping; catalogue rows were not read."
+                              }
+                            },
+                            "runAfter": {}
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Find_language_active": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Record_language": {
+                      "type": "AppendToArrayVariable",
+                      "inputs": {
+                        "name": "AuditLists",
+                        "value": {
+                          "role": "language",
+                          "id": "@body('Read_language_list')?['Id']",
+                          "title": "@body('Read_language_list')?['Title']",
+                          "fields": "@body('Select_language_fields')",
+                          "columnIndex": "@body('Index_language_columns')",
+                          "fieldsTruncated": "@not(empty(coalesce(body('Read_language_fields')?['@odata.nextLink'],body('Read_language_fields')?['odata.nextLink'],'')))",
+                          "valuesTruncated": "@not(empty(coalesce(body('Read_language_values')?['@odata.nextLink'],body('Read_language_values')?['odata.nextLink'],'')))",
+                          "values": "@coalesce(body('Select_language_values'),json('[]'))"
+                        }
+                      },
+                      "runAfter": {
+                        "Catalogue_columns_language": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "Unsafe_language_target": {
+                        "type": "AppendToArrayVariable",
+                        "inputs": {
+                          "name": "AuditErrors",
+                          "value": {
+                            "role": "language",
+                            "code": "CATALOGUE_TARGET_UNSAFE",
+                            "message": "Lookup target is not a GUID or points to Participants; no catalogue-row read attempted."
+                          }
+                        },
+                        "runAfter": {}
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Catalogue_id_language": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "No_language_lookup": {
+                    "type": "AppendToArrayVariable",
+                    "inputs": {
+                      "name": "AuditErrors",
+                      "value": {
+                        "role": "language",
+                        "code": "LOOKUP_TARGET_UNRESOLVED",
+                        "message": "No recognized participant lookup target. Participant column index is returned for mapping; no guessed list read."
+                      }
+                    },
+                    "runAfter": {}
+                  }
+                }
+              },
+              "runAfter": {
+                "Find_language_lookup": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Participant_failure": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          }
+        },
+        "language_failure": {
+          "type": "AppendToArrayVariable",
+          "inputs": {
+            "name": "AuditErrors",
+            "value": {
+              "role": "language",
+              "code": "METADATA_READ_FAILED",
+              "message": "Catalogue inspection failed. Inspect the failed action; no data or schema was changed."
+            }
+          },
+          "runAfter": {
+            "Inspect_language": [
+              "Failed",
+              "TimedOut"
+            ]
+          }
+        },
+        "Inspect_culture": {
+          "type": "Scope",
+          "actions": {
+            "Find_culture_lookup": {
+              "type": "Query",
+              "inputs": {
+                "from": "@coalesce(body('Read_participant_fields')?['value'],json('[]'))",
+                "where": "@and(contains(createArray('Lookup','LookupMulti'),item()?['TypeAsString']),or(contains(createArray('sharecultures', 'learncultures'), replace(replace(replace(toLower(string(item()?['InternalName'])), '_x0020_', ''), ' ', ''), '_', '')), contains(createArray('sharecultures', 'learncultures'), replace(replace(replace(toLower(string(item()?['Title'])), '_x0020_', ''), ' ', ''), '_', ''))))"
+              },
+              "runAfter": {}
+            },
+            "Has_culture_lookup": {
+              "type": "If",
+              "expression": {
+                "greater": [
+                  "@length(body('Find_culture_lookup'))",
+                  0
+                ]
+              },
+              "actions": {
+                "Catalogue_id_culture": {
+                  "type": "Compose",
+                  "inputs": "@replace(replace(string(xpath(xml(first(body('Find_culture_lookup'))?['SchemaXml']),'string(/*[local-name()=\"Field\"]/@List)')),'{',''),'}','')",
+                  "runAfter": {}
+                },
+                "Safe_catalogue_culture": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@length(outputs('Catalogue_id_culture'))",
+                          36
+                        ]
+                      },
+                      {
+                        "not": {
+                          "equals": [
+                            "@toLower(outputs('Catalogue_id_culture'))",
+                            "@toLower(string(body('Read_participant_list')?['Id']))"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Read_culture_list": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                          "parameters/method": "GET",
+                          "parameters/uri": "@concat('_api/web/lists(guid''',outputs('Catalogue_id_culture'),''')?$select=Id,Title')",
+                          "parameters/headers": {
+                            "Accept": "application/json;odata=nometadata"
+                          }
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "HttpRequest"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {}
+                    },
+                    "Read_culture_fields": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                          "parameters/method": "GET",
+                          "parameters/uri": "@concat('_api/web/lists(guid''',outputs('Catalogue_id_culture'),''')/fields?$select=Id,Title,InternalName,TypeAsString,Required,Hidden,ReadOnlyField,EnforceUniqueValues,Indexed,DefaultValue,SchemaXml&$top=5000')",
+                          "parameters/headers": {
+                            "Accept": "application/json;odata=nometadata"
+                          }
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "HttpRequest"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {
+                        "Read_culture_list": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Filter_culture_fields": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@body('Read_culture_fields')?['value']",
+                        "where": "@or(contains(createArray('title', 'title', 'culturekey', 'culturekey', 'active', 'active'), replace(replace(replace(toLower(string(item()?['InternalName'])), '_x0020_', ''), ' ', ''), '_', '')), contains(createArray('title', 'title', 'culturekey', 'culturekey', 'active', 'active'), replace(replace(replace(toLower(string(item()?['Title'])), '_x0020_', ''), ' ', ''), '_', '')))"
+                      },
+                      "runAfter": {
+                        "Read_culture_fields": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Select_culture_fields": {
+                      "type": "Select",
+                      "inputs": {
+                        "from": "@body('Filter_culture_fields')",
+                        "select": {
+                          "id": "@item()?['Id']",
+                          "internalName": "@item()?['InternalName']",
+                          "displayName": "@item()?['Title']",
+                          "type": "@item()?['TypeAsString']",
+                          "required": "@item()?['Required']",
+                          "unique": "@item()?['EnforceUniqueValues']",
+                          "indexed": "@item()?['Indexed']",
+                          "hidden": "@item()?['Hidden']",
+                          "readOnly": "@item()?['ReadOnlyField']",
+                          "defaultValue": "@if(contains(createArray('Boolean','Choice'),item()?['TypeAsString']),item()?['DefaultValue'],null)",
+                          "schemaXml": "@if(contains(createArray('Lookup','LookupMulti','Choice','MultiChoice'),item()?['TypeAsString']),item()?['SchemaXml'],null)"
+                        }
+                      },
+                      "runAfter": {
+                        "Filter_culture_fields": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Index_culture_columns": {
+                      "type": "Select",
+                      "inputs": {
+                        "from": "@body('Read_culture_fields')?['value']",
+                        "select": {
+                          "internalName": "@item()?['InternalName']",
+                          "displayName": "@item()?['Title']",
+                          "type": "@item()?['TypeAsString']"
+                        }
+                      },
+                      "runAfter": {
+                        "Select_culture_fields": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Find_culture_key": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@body('Read_culture_fields')?['value']",
+                        "where": "@or(contains(createArray('culturekey', 'culturekey'), replace(replace(replace(toLower(string(item()?['InternalName'])), '_x0020_', ''), ' ', ''), '_', '')), contains(createArray('culturekey', 'culturekey'), replace(replace(replace(toLower(string(item()?['Title'])), '_x0020_', ''), ' ', ''), '_', '')))"
+                      },
+                      "runAfter": {
+                        "Index_culture_columns": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Find_culture_active": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@body('Read_culture_fields')?['value']",
+                        "where": "@or(contains(createArray('active'), replace(replace(replace(toLower(string(item()?['InternalName'])), '_x0020_', ''), ' ', ''), '_', '')), contains(createArray('active'), replace(replace(replace(toLower(string(item()?['Title'])), '_x0020_', ''), ' ', ''), '_', '')))"
+                      },
+                      "runAfter": {
+                        "Find_culture_key": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Catalogue_columns_culture": {
+                      "type": "If",
+                      "expression": {
+                        "and": [
+                          {
+                            "equals": [
+                              "@length(body('Find_culture_key'))",
+                              1
+                            ]
+                          },
+                          {
+                            "equals": [
+                              "@length(body('Find_culture_active'))",
+                              1
+                            ]
+                          },
+                          {
+                            "not": {
+                              "equals": [
+                                "@first(union(body('Find_culture_key'),createArray(json('{}'))))?['InternalName']",
+                                "Title"
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      "actions": {
+                        "Read_culture_values": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "@concat('_api/web/lists(guid''',outputs('Catalogue_id_culture'),''')/items?$select=Id,Title,',first(body('Find_culture_key'))?['InternalName'],',',first(body('Find_culture_active'))?['InternalName'],'&$top=5000')",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=nometadata"
+                              }
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest"
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          },
+                          "runAfter": {}
+                        },
+                        "Select_culture_values": {
+                          "type": "Select",
+                          "inputs": {
+                            "from": "@body('Read_culture_values')?['value']",
+                            "select": {
+                              "id": "@item()?['Id']",
+                              "title": "@item()?['Title']",
+                              "key": "@item()?[first(body('Find_culture_key'))?['InternalName']]",
+                              "active": "@item()?[first(body('Find_culture_active'))?['InternalName']]"
+                            }
+                          },
+                          "runAfter": {
+                            "Read_culture_values": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {
+                          "Missing_culture_columns": {
+                            "type": "AppendToArrayVariable",
+                            "inputs": {
+                              "name": "AuditErrors",
+                              "value": {
+                                "role": "culture",
+                                "code": "CATALOGUE_COLUMNS_UNRESOLVED",
+                                "message": "Key/Active columns are missing, ambiguous, or key aliases the Title field. Metadata is returned for mapping; catalogue rows were not read."
+                              }
+                            },
+                            "runAfter": {}
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Find_culture_active": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Record_culture": {
+                      "type": "AppendToArrayVariable",
+                      "inputs": {
+                        "name": "AuditLists",
+                        "value": {
+                          "role": "culture",
+                          "id": "@body('Read_culture_list')?['Id']",
+                          "title": "@body('Read_culture_list')?['Title']",
+                          "fields": "@body('Select_culture_fields')",
+                          "columnIndex": "@body('Index_culture_columns')",
+                          "fieldsTruncated": "@not(empty(coalesce(body('Read_culture_fields')?['@odata.nextLink'],body('Read_culture_fields')?['odata.nextLink'],'')))",
+                          "valuesTruncated": "@not(empty(coalesce(body('Read_culture_values')?['@odata.nextLink'],body('Read_culture_values')?['odata.nextLink'],'')))",
+                          "values": "@coalesce(body('Select_culture_values'),json('[]'))"
+                        }
+                      },
+                      "runAfter": {
+                        "Catalogue_columns_culture": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "Unsafe_culture_target": {
+                        "type": "AppendToArrayVariable",
+                        "inputs": {
+                          "name": "AuditErrors",
+                          "value": {
+                            "role": "culture",
+                            "code": "CATALOGUE_TARGET_UNSAFE",
+                            "message": "Lookup target is not a GUID or points to Participants; no catalogue-row read attempted."
+                          }
+                        },
+                        "runAfter": {}
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Catalogue_id_culture": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "No_culture_lookup": {
+                    "type": "AppendToArrayVariable",
+                    "inputs": {
+                      "name": "AuditErrors",
+                      "value": {
+                        "role": "culture",
+                        "code": "LOOKUP_TARGET_UNRESOLVED",
+                        "message": "No recognized participant lookup target. Participant column index is returned for mapping; no guessed list read."
+                      }
+                    },
+                    "runAfter": {}
+                  }
+                }
+              },
+              "runAfter": {
+                "Find_culture_lookup": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "language_failure": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          }
+        },
+        "culture_failure": {
+          "type": "AppendToArrayVariable",
+          "inputs": {
+            "name": "AuditErrors",
+            "value": {
+              "role": "culture",
+              "code": "METADATA_READ_FAILED",
+              "message": "Catalogue inspection failed. Inspect the failed action; no data or schema was changed."
+            }
+          },
+          "runAfter": {
+            "Inspect_culture": [
+              "Failed",
+              "TimedOut"
+            ]
+          }
+        },
+        "Inspect_timezone": {
+          "type": "Scope",
+          "actions": {
+            "Find_timezone_lookup": {
+              "type": "Query",
+              "inputs": {
+                "from": "@coalesce(body('Read_participant_fields')?['value'],json('[]'))",
+                "where": "@and(contains(createArray('Lookup','LookupMulti'),item()?['TypeAsString']),or(contains(createArray('timezone'), replace(replace(replace(toLower(string(item()?['InternalName'])), '_x0020_', ''), ' ', ''), '_', '')), contains(createArray('timezone'), replace(replace(replace(toLower(string(item()?['Title'])), '_x0020_', ''), ' ', ''), '_', ''))))"
+              },
+              "runAfter": {}
+            },
+            "Has_timezone_lookup": {
+              "type": "If",
+              "expression": {
+                "greater": [
+                  "@length(body('Find_timezone_lookup'))",
+                  0
+                ]
+              },
+              "actions": {
+                "Catalogue_id_timezone": {
+                  "type": "Compose",
+                  "inputs": "@replace(replace(string(xpath(xml(first(body('Find_timezone_lookup'))?['SchemaXml']),'string(/*[local-name()=\"Field\"]/@List)')),'{',''),'}','')",
+                  "runAfter": {}
+                },
+                "Safe_catalogue_timezone": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@length(outputs('Catalogue_id_timezone'))",
+                          36
+                        ]
+                      },
+                      {
+                        "not": {
+                          "equals": [
+                            "@toLower(outputs('Catalogue_id_timezone'))",
+                            "@toLower(string(body('Read_participant_list')?['Id']))"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Read_timezone_list": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                          "parameters/method": "GET",
+                          "parameters/uri": "@concat('_api/web/lists(guid''',outputs('Catalogue_id_timezone'),''')?$select=Id,Title')",
+                          "parameters/headers": {
+                            "Accept": "application/json;odata=nometadata"
+                          }
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "HttpRequest"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {}
+                    },
+                    "Read_timezone_fields": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                          "parameters/method": "GET",
+                          "parameters/uri": "@concat('_api/web/lists(guid''',outputs('Catalogue_id_timezone'),''')/fields?$select=Id,Title,InternalName,TypeAsString,Required,Hidden,ReadOnlyField,EnforceUniqueValues,Indexed,DefaultValue,SchemaXml&$top=5000')",
+                          "parameters/headers": {
+                            "Accept": "application/json;odata=nometadata"
+                          }
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "HttpRequest"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {
+                        "Read_timezone_list": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Filter_timezone_fields": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@body('Read_timezone_fields')?['value']",
+                        "where": "@or(contains(createArray('title', 'timezone', 'ianaid', 'ianaid', 'windowsid', 'windowsid', 'active', 'active'), replace(replace(replace(toLower(string(item()?['InternalName'])), '_x0020_', ''), ' ', ''), '_', '')), contains(createArray('title', 'timezone', 'ianaid', 'ianaid', 'windowsid', 'windowsid', 'active', 'active'), replace(replace(replace(toLower(string(item()?['Title'])), '_x0020_', ''), ' ', ''), '_', '')))"
+                      },
+                      "runAfter": {
+                        "Read_timezone_fields": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Select_timezone_fields": {
+                      "type": "Select",
+                      "inputs": {
+                        "from": "@body('Filter_timezone_fields')",
+                        "select": {
+                          "id": "@item()?['Id']",
+                          "internalName": "@item()?['InternalName']",
+                          "displayName": "@item()?['Title']",
+                          "type": "@item()?['TypeAsString']",
+                          "required": "@item()?['Required']",
+                          "unique": "@item()?['EnforceUniqueValues']",
+                          "indexed": "@item()?['Indexed']",
+                          "hidden": "@item()?['Hidden']",
+                          "readOnly": "@item()?['ReadOnlyField']",
+                          "defaultValue": "@if(contains(createArray('Boolean','Choice'),item()?['TypeAsString']),item()?['DefaultValue'],null)",
+                          "schemaXml": "@if(contains(createArray('Lookup','LookupMulti','Choice','MultiChoice'),item()?['TypeAsString']),item()?['SchemaXml'],null)"
+                        }
+                      },
+                      "runAfter": {
+                        "Filter_timezone_fields": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Index_timezone_columns": {
+                      "type": "Select",
+                      "inputs": {
+                        "from": "@body('Read_timezone_fields')?['value']",
+                        "select": {
+                          "internalName": "@item()?['InternalName']",
+                          "displayName": "@item()?['Title']",
+                          "type": "@item()?['TypeAsString']"
+                        }
+                      },
+                      "runAfter": {
+                        "Select_timezone_fields": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Find_timezone_key": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@body('Read_timezone_fields')?['value']",
+                        "where": "@or(contains(createArray('ianaid', 'ianaid'), replace(replace(replace(toLower(string(item()?['InternalName'])), '_x0020_', ''), ' ', ''), '_', '')), contains(createArray('ianaid', 'ianaid'), replace(replace(replace(toLower(string(item()?['Title'])), '_x0020_', ''), ' ', ''), '_', '')))"
+                      },
+                      "runAfter": {
+                        "Index_timezone_columns": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Find_timezone_active": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@body('Read_timezone_fields')?['value']",
+                        "where": "@or(contains(createArray('active'), replace(replace(replace(toLower(string(item()?['InternalName'])), '_x0020_', ''), ' ', ''), '_', '')), contains(createArray('active'), replace(replace(replace(toLower(string(item()?['Title'])), '_x0020_', ''), ' ', ''), '_', '')))"
+                      },
+                      "runAfter": {
+                        "Find_timezone_key": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Catalogue_columns_timezone": {
+                      "type": "If",
+                      "expression": {
+                        "and": [
+                          {
+                            "equals": [
+                              "@length(body('Find_timezone_key'))",
+                              1
+                            ]
+                          },
+                          {
+                            "equals": [
+                              "@length(body('Find_timezone_active'))",
+                              1
+                            ]
+                          },
+                          {
+                            "not": {
+                              "equals": [
+                                "@first(union(body('Find_timezone_key'),createArray(json('{}'))))?['InternalName']",
+                                "Title"
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      "actions": {
+                        "Read_timezone_values": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "@concat('_api/web/lists(guid''',outputs('Catalogue_id_timezone'),''')/items?$select=Id,Title,',first(body('Find_timezone_key'))?['InternalName'],',',first(body('Find_timezone_active'))?['InternalName'],'&$top=5000')",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=nometadata"
+                              }
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest"
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          },
+                          "runAfter": {}
+                        },
+                        "Select_timezone_values": {
+                          "type": "Select",
+                          "inputs": {
+                            "from": "@body('Read_timezone_values')?['value']",
+                            "select": {
+                              "id": "@item()?['Id']",
+                              "title": "@item()?['Title']",
+                              "key": "@item()?[first(body('Find_timezone_key'))?['InternalName']]",
+                              "active": "@item()?[first(body('Find_timezone_active'))?['InternalName']]"
+                            }
+                          },
+                          "runAfter": {
+                            "Read_timezone_values": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {
+                          "Missing_timezone_columns": {
+                            "type": "AppendToArrayVariable",
+                            "inputs": {
+                              "name": "AuditErrors",
+                              "value": {
+                                "role": "timezone",
+                                "code": "CATALOGUE_COLUMNS_UNRESOLVED",
+                                "message": "Key/Active columns are missing, ambiguous, or key aliases the Title field. Metadata is returned for mapping; catalogue rows were not read."
+                              }
+                            },
+                            "runAfter": {}
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Find_timezone_active": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Record_timezone": {
+                      "type": "AppendToArrayVariable",
+                      "inputs": {
+                        "name": "AuditLists",
+                        "value": {
+                          "role": "timezone",
+                          "id": "@body('Read_timezone_list')?['Id']",
+                          "title": "@body('Read_timezone_list')?['Title']",
+                          "fields": "@body('Select_timezone_fields')",
+                          "columnIndex": "@body('Index_timezone_columns')",
+                          "fieldsTruncated": "@not(empty(coalesce(body('Read_timezone_fields')?['@odata.nextLink'],body('Read_timezone_fields')?['odata.nextLink'],'')))",
+                          "valuesTruncated": "@not(empty(coalesce(body('Read_timezone_values')?['@odata.nextLink'],body('Read_timezone_values')?['odata.nextLink'],'')))",
+                          "values": "@coalesce(body('Select_timezone_values'),json('[]'))"
+                        }
+                      },
+                      "runAfter": {
+                        "Catalogue_columns_timezone": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "Unsafe_timezone_target": {
+                        "type": "AppendToArrayVariable",
+                        "inputs": {
+                          "name": "AuditErrors",
+                          "value": {
+                            "role": "timezone",
+                            "code": "CATALOGUE_TARGET_UNSAFE",
+                            "message": "Lookup target is not a GUID or points to Participants; no catalogue-row read attempted."
+                          }
+                        },
+                        "runAfter": {}
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Catalogue_id_timezone": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "No_timezone_lookup": {
+                    "type": "AppendToArrayVariable",
+                    "inputs": {
+                      "name": "AuditErrors",
+                      "value": {
+                        "role": "timezone",
+                        "code": "LOOKUP_TARGET_UNRESOLVED",
+                        "message": "No recognized participant lookup target. Participant column index is returned for mapping; no guessed list read."
+                      }
+                    },
+                    "runAfter": {}
+                  }
+                }
+              },
+              "runAfter": {
+                "Find_timezone_lookup": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "culture_failure": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          }
+        },
+        "timezone_failure": {
+          "type": "AppendToArrayVariable",
+          "inputs": {
+            "name": "AuditErrors",
+            "value": {
+              "role": "timezone",
+              "code": "METADATA_READ_FAILED",
+              "message": "Catalogue inspection failed. Inspect the failed action; no data or schema was changed."
+            }
+          },
+          "runAfter": {
+            "Inspect_timezone": [
+              "Failed",
+              "TimedOut"
+            ]
+          }
+        },
+        "Find_truncated_lists": {
+          "type": "Query",
+          "inputs": {
+            "from": "@variables('AuditLists')",
+            "where": "@or(equals(item()?['fieldsTruncated'],true),equals(item()?['valuesTruncated'],true))"
+          },
+          "runAfter": {
+            "timezone_failure": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          }
+        },
+        "Audit_report": {
+          "type": "Compose",
+          "inputs": {
+            "kind": "TandemSchemaAudit",
+            "schemaVersion": 1,
+            "packageBuildId": "1fd35100-e381-48b7-9d53-aa927d1131ed",
+            "readOnly": true,
+            "sourceTicket": 66,
+            "runReference": "@workflow()?['run']?['name']",
+            "collectionComplete": "@and(equals(length(variables('AuditLists')),4),empty(variables('AuditErrors')),empty(body('Find_truncated_lists')))",
+            "writeCapability": "NOT_VERIFIED_NO_WRITES",
+            "lists": "@variables('AuditLists')",
+            "errors": "@variables('AuditErrors')"
+          },
+          "runAfter": {
+            "Find_truncated_lists": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Respond_to_a_Power_App_or_flow": {
+          "type": "Response",
+          "kind": "PowerApp",
+          "inputs": {
+            "statusCode": 200,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "title": "success",
+                  "type": "boolean",
+                  "x-ms-content-hint": "BOOLEAN",
+                  "x-ms-dynamically-added": true
+                },
+                "message": {
+                  "title": "message",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "reportjson": {
+                  "title": "reportjson",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "additionalProperties": {}
+            },
+            "body": {
+              "success": "@and(equals(length(variables('AuditLists')),4),empty(variables('AuditErrors')),empty(body('Find_truncated_lists')))",
+              "message": "@if(outputs('Audit_report')?['collectionComplete'],'SCHEMA_METADATA_COLLECTED','SCHEMA_METADATA_INCOMPLETE')",
+              "reportjson": "@string(outputs('Audit_report'))"
+            }
+          },
+          "runAfter": {
+            "Audit_report": [
+              "Succeeded"
+            ]
+          }
+        }
+      }
+    },
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "connectionName": "IMPORT_SELECT_EXISTING_SHAREPOINT_CONNECTION",
+        "source": "Embedded",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+        "tier": "NotSpecified",
+        "apiName": "sharepointonline",
+        "isProcessSimpleApiReferenceConversionAlreadyDone": false
+      }
+    },
+    "flowFailureAlertSubscribed": false,
+    "isManaged": false
+  }
+}

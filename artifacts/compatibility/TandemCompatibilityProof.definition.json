@@ -1,0 +1,1985 @@
+{
+  "name": "57fa2bc6-2b02-4068-9999-fe46f3747d4a",
+  "id": "/providers/Microsoft.Flow/flows/57fa2bc6-2b02-4068-9999-fe46f3747d4a",
+  "type": "Microsoft.Flow/flows",
+  "properties": {
+    "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
+    "displayName": "TandemCompatibilityProof",
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {},
+              "required": []
+            }
+          }
+        }
+      },
+      "actions": {
+        "Raw_profiles": {
+          "type": "Compose",
+          "inputs": [
+            {
+              "profileId": 1,
+              "accountKey": " SYNTHETIC-1 ",
+              "status": "Active",
+              "participationStatus": "Active",
+              "openToConnections": true,
+              "teachIds": [
+                1
+              ],
+              "learnIds": [
+                2
+              ],
+              "shareCultureIds": [
+                10
+              ],
+              "learnCultureIds": [
+                20
+              ],
+              "timezoneId": null
+            },
+            {
+              "profileId": 2,
+              "accountKey": "synthetic-2",
+              "status": "Active",
+              "participationStatus": "Active",
+              "openToConnections": true,
+              "teachIds": [
+                2
+              ],
+              "learnIds": [
+                1
+              ],
+              "shareCultureIds": [
+                20
+              ],
+              "learnCultureIds": [
+                10
+              ],
+              "timezoneId": null
+            },
+            {
+              "profileId": 3,
+              "accountKey": "synthetic-3",
+              "status": "Active",
+              "participationStatus": "Active",
+              "openToConnections": true,
+              "teachIds": [
+                2
+              ],
+              "learnIds": [],
+              "shareCultureIds": [],
+              "learnCultureIds": [],
+              "timezoneId": null
+            },
+            {
+              "profileId": 4,
+              "accountKey": "synthetic-4",
+              "status": "Active",
+              "participationStatus": "Active",
+              "openToConnections": true,
+              "teachIds": [],
+              "learnIds": [],
+              "shareCultureIds": [
+                10
+              ],
+              "learnCultureIds": [],
+              "timezoneId": null
+            },
+            {
+              "profileId": 5,
+              "accountKey": "synthetic-5",
+              "status": "Active",
+              "participationStatus": "Active",
+              "openToConnections": true,
+              "teachIds": [],
+              "learnIds": [],
+              "shareCultureIds": [],
+              "learnCultureIds": [
+                10
+              ],
+              "timezoneId": null
+            },
+            {
+              "profileId": 6,
+              "accountKey": "synthetic-6",
+              "status": "Active",
+              "participationStatus": "Active",
+              "openToConnections": true,
+              "teachIds": [],
+              "learnIds": [],
+              "shareCultureIds": [],
+              "learnCultureIds": [
+                10
+              ],
+              "timezoneId": null
+            },
+            {
+              "profileId": 7,
+              "accountKey": "synthetic-7",
+              "status": "Active",
+              "participationStatus": "Active",
+              "openToConnections": true,
+              "teachIds": [
+                3
+              ],
+              "learnIds": [],
+              "shareCultureIds": [],
+              "learnCultureIds": [],
+              "timezoneId": null
+            },
+            {
+              "profileId": 8,
+              "accountKey": "synthetic-8",
+              "status": "Active",
+              "participationStatus": "Active",
+              "openToConnections": true,
+              "teachIds": [
+                1
+              ],
+              "learnIds": [
+                1
+              ],
+              "shareCultureIds": [],
+              "learnCultureIds": [],
+              "timezoneId": null
+            },
+            {
+              "profileId": 9,
+              "accountKey": "synthetic-9",
+              "status": "Active",
+              "participationStatus": "Paused",
+              "openToConnections": true,
+              "teachIds": [
+                2
+              ],
+              "learnIds": [
+                1
+              ],
+              "shareCultureIds": [],
+              "learnCultureIds": [],
+              "timezoneId": null
+            },
+            {
+              "profileId": 10,
+              "accountKey": "synthetic-10",
+              "status": "Active",
+              "participationStatus": "Active",
+              "openToConnections": false,
+              "teachIds": [
+                2
+              ],
+              "learnIds": [
+                1
+              ],
+              "shareCultureIds": [],
+              "learnCultureIds": [],
+              "timezoneId": null
+            },
+            {
+              "profileId": 11,
+              "accountKey": "synthetic-11",
+              "status": "Needs review",
+              "participationStatus": "Active",
+              "openToConnections": true,
+              "teachIds": [
+                2
+              ],
+              "learnIds": [
+                1
+              ],
+              "shareCultureIds": [],
+              "learnCultureIds": [],
+              "timezoneId": null
+            },
+            {
+              "profileId": 12,
+              "accountKey": "synthetic-12",
+              "status": "Active",
+              "participationStatus": "Inactive",
+              "openToConnections": true,
+              "teachIds": [
+                2
+              ],
+              "learnIds": [
+                1
+              ],
+              "shareCultureIds": [],
+              "learnCultureIds": [],
+              "timezoneId": null
+            },
+            {
+              "profileId": 13,
+              "accountKey": "synthetic-13",
+              "status": "Active",
+              "participationStatus": "Active",
+              "openToConnections": true,
+              "teachIds": [],
+              "learnIds": [
+                99
+              ],
+              "shareCultureIds": [],
+              "learnCultureIds": [],
+              "timezoneId": null
+            },
+            {
+              "profileId": 14,
+              "accountKey": "synthetic-14",
+              "status": "Active",
+              "participationStatus": "Active",
+              "openToConnections": true,
+              "teachIds": [
+                2,
+                2
+              ],
+              "learnIds": null,
+              "shareCultureIds": null,
+              "learnCultureIds": [],
+              "timezoneId": null
+            },
+            {
+              "profileId": 15,
+              "accountKey": "synthetic-15",
+              "status": "Active",
+              "participationStatus": "Active",
+              "openToConnections": true,
+              "teachIds": [],
+              "learnIds": [],
+              "shareCultureIds": [],
+              "learnCultureIds": [
+                20
+              ],
+              "timezoneId": null
+            },
+            {
+              "profileId": 16,
+              "accountKey": "synthetic-16",
+              "status": "Active",
+              "participationStatus": "Active",
+              "openToConnections": true,
+              "teachIds": [],
+              "learnIds": [
+                2
+              ],
+              "shareCultureIds": [],
+              "learnCultureIds": [],
+              "timezoneId": null
+            },
+            {
+              "profileId": 17,
+              "accountKey": "synthetic-17",
+              "status": "Active",
+              "participationStatus": "Active",
+              "openToConnections": true,
+              "teachIds": [
+                2
+              ],
+              "learnIds": [],
+              "shareCultureIds": [],
+              "learnCultureIds": [],
+              "timezoneId": null
+            }
+          ],
+          "runAfter": {}
+        },
+        "Raw_catalogues": {
+          "type": "Compose",
+          "inputs": {
+            "languageIds": [
+              1,
+              2,
+              3,
+              99
+            ],
+            "cultureIds": [
+              10,
+              20
+            ],
+            "timezoneIds": [
+              100
+            ],
+            "anyLanguageId": 99
+          },
+          "runAfter": {
+            "Raw_profiles": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Shared_Parse_profiles": {
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@outputs('Raw_profiles')",
+            "schema": {
+              "type": "array",
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "required": [
+                  "profileId",
+                  "accountKey",
+                  "status",
+                  "participationStatus",
+                  "openToConnections"
+                ],
+                "properties": {
+                  "profileId": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "accountKey": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "participationStatus": {
+                    "type": "string",
+                    "enum": [
+                      "Active",
+                      "Paused",
+                      "Inactive"
+                    ]
+                  },
+                  "openToConnections": {
+                    "type": "boolean"
+                  },
+                  "timezoneId": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1
+                  },
+                  "teachIds": {
+                    "type": [
+                      "array",
+                      "null"
+                    ],
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "learnIds": {
+                    "type": [
+                      "array",
+                      "null"
+                    ],
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "shareCultureIds": {
+                    "type": [
+                      "array",
+                      "null"
+                    ],
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "learnCultureIds": {
+                    "type": [
+                      "array",
+                      "null"
+                    ],
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Raw_catalogues": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Shared_Parse_catalogues": {
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@outputs('Raw_catalogues')",
+            "schema": {
+              "type": "object",
+              "required": [
+                "languageIds",
+                "cultureIds",
+                "timezoneIds",
+                "anyLanguageId"
+              ],
+              "properties": {
+                "languageIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                },
+                "cultureIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                },
+                "timezoneIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                },
+                "anyLanguageId": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 1
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Shared_Parse_profiles": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Shared_Concrete_languages": {
+          "type": "Query",
+          "inputs": {
+            "from": "@body('Shared_Parse_catalogues')?['languageIds']",
+            "where": "@not(equals(item(),body('Shared_Parse_catalogues')?['anyLanguageId']))"
+          },
+          "runAfter": {
+            "Shared_Parse_catalogues": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Shared_Invalid_profiles": {
+          "type": "Query",
+          "inputs": {
+            "from": "@body('Shared_Parse_profiles')",
+            "where": "@not(and(not(empty(trim(item()?['accountKey']))),not(empty(trim(item()?['status']))),equals(length(intersection(union(coalesce(item()?['teachIds'],json('[]')),coalesce(item()?['teachIds'],json('[]'))),body('Shared_Parse_catalogues')?['languageIds'])),length(union(coalesce(item()?['teachIds'],json('[]')),coalesce(item()?['teachIds'],json('[]'))))),equals(length(intersection(union(coalesce(item()?['learnIds'],json('[]')),coalesce(item()?['learnIds'],json('[]'))),body('Shared_Parse_catalogues')?['languageIds'])),length(union(coalesce(item()?['learnIds'],json('[]')),coalesce(item()?['learnIds'],json('[]'))))),equals(length(intersection(union(coalesce(item()?['shareCultureIds'],json('[]')),coalesce(item()?['shareCultureIds'],json('[]'))),body('Shared_Parse_catalogues')?['cultureIds'])),length(union(coalesce(item()?['shareCultureIds'],json('[]')),coalesce(item()?['shareCultureIds'],json('[]'))))),equals(length(intersection(union(coalesce(item()?['learnCultureIds'],json('[]')),coalesce(item()?['learnCultureIds'],json('[]'))),body('Shared_Parse_catalogues')?['cultureIds'])),length(union(coalesce(item()?['learnCultureIds'],json('[]')),coalesce(item()?['learnCultureIds'],json('[]'))))),or(equals(item()?['timezoneId'],null),contains(body('Shared_Parse_catalogues')?['timezoneIds'],item()?['timezoneId']))))"
+          },
+          "runAfter": {
+            "Shared_Concrete_languages": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Shared_Profiles": {
+          "type": "Select",
+          "inputs": {
+            "from": "@body('Shared_Parse_profiles')",
+            "select": {
+              "profileId": "@item()?['profileId']",
+              "status": "@item()?['status']",
+              "participationStatus": "@item()?['participationStatus']",
+              "openToConnections": "@item()?['openToConnections']",
+              "timezoneId": "@item()?['timezoneId']",
+              "accountKey": "@toLower(trim(item()?['accountKey']))",
+              "teachIds": "@intersection(union(coalesce(item()?['teachIds'],json('[]')),coalesce(item()?['teachIds'],json('[]'))),body('Shared_Concrete_languages'))",
+              "learnIds": "@intersection(union(coalesce(item()?['learnIds'],json('[]')),coalesce(item()?['learnIds'],json('[]'))),body('Shared_Concrete_languages'))",
+              "shareCultureIds": "@intersection(union(coalesce(item()?['shareCultureIds'],json('[]')),coalesce(item()?['shareCultureIds'],json('[]'))),body('Shared_Parse_catalogues')?['cultureIds'])",
+              "learnCultureIds": "@intersection(union(coalesce(item()?['learnCultureIds'],json('[]')),coalesce(item()?['learnCultureIds'],json('[]'))),body('Shared_Parse_catalogues')?['cultureIds'])"
+            }
+          },
+          "runAfter": {
+            "Shared_Invalid_profiles": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Shared_Keys_accountKey": {
+          "type": "Select",
+          "inputs": {
+            "from": "@body('Shared_Profiles')",
+            "select": "@item()?['accountKey']"
+          },
+          "runAfter": {
+            "Shared_Profiles": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Shared_Keys_profileId": {
+          "type": "Select",
+          "inputs": {
+            "from": "@body('Shared_Profiles')",
+            "select": "@item()?['profileId']"
+          },
+          "runAfter": {
+            "Shared_Keys_accountKey": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Shared_Require_valid_input": {
+          "type": "If",
+          "expression": "@and(empty(body('Shared_Invalid_profiles')),equals(length(body('Shared_Keys_accountKey')),length(union(body('Shared_Keys_accountKey'),body('Shared_Keys_accountKey')))),equals(length(body('Shared_Keys_profileId')),length(union(body('Shared_Keys_profileId'),body('Shared_Keys_profileId')))))",
+          "runAfter": {
+            "Shared_Keys_profileId": [
+              "Succeeded"
+            ]
+          },
+          "actions": {},
+          "else": {
+            "actions": {
+              "Shared_Reject_input": {
+                "type": "Terminate",
+                "inputs": {
+                  "runStatus": "Failed",
+                  "runError": {
+                    "code": "INVALID_COMPATIBILITY_INPUT",
+                    "message": "Malformed, unknown/inactive ID, duplicate identity or incomplete adapter input."
+                  }
+                },
+                "runAfter": {}
+              }
+            }
+          }
+        },
+        "Shared_Catalogues": {
+          "type": "Compose",
+          "inputs": {
+            "concreteLanguageIds": "@body('Shared_Concrete_languages')",
+            "cultureIds": "@body('Shared_Parse_catalogues')?['cultureIds']"
+          },
+          "runAfter": {
+            "Shared_Require_valid_input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Fixture_cases": {
+          "type": "Compose",
+          "inputs": [
+            {
+              "id": "PAIR_COMBINED_RECIPROCAL",
+              "kind": "person",
+              "leftId": 1,
+              "rightId": 2,
+              "expected": {
+                "eligible": true,
+                "fitType": "Combined",
+                "canLearnLanguageIds": [
+                  2
+                ],
+                "canShareLanguageIds": [
+                  1
+                ],
+                "canLearnCultureIds": [
+                  20
+                ],
+                "canShareCultureIds": [
+                  10
+                ]
+              }
+            },
+            {
+              "id": "PAIR_ONE_WAY_LANGUAGE",
+              "kind": "person",
+              "leftId": 1,
+              "rightId": 3,
+              "expected": {
+                "eligible": true,
+                "fitType": "Language",
+                "canLearnLanguageIds": [
+                  2
+                ],
+                "canShareLanguageIds": [],
+                "canLearnCultureIds": [],
+                "canShareCultureIds": []
+              }
+            },
+            {
+              "id": "PAIR_CULTURE_ONLY_SHARE_ONLY",
+              "kind": "person",
+              "leftId": 4,
+              "rightId": 5,
+              "expected": {
+                "eligible": true,
+                "fitType": "Culture",
+                "canLearnLanguageIds": [],
+                "canShareLanguageIds": [],
+                "canLearnCultureIds": [],
+                "canShareCultureIds": [
+                  10
+                ]
+              }
+            },
+            {
+              "id": "PAIR_CULTURE_REVERSE",
+              "kind": "person",
+              "leftId": 5,
+              "rightId": 4,
+              "expected": {
+                "eligible": true,
+                "fitType": "Culture",
+                "canLearnLanguageIds": [],
+                "canShareLanguageIds": [],
+                "canLearnCultureIds": [
+                  10
+                ],
+                "canShareCultureIds": []
+              }
+            },
+            {
+              "id": "PAIR_INTEREST_ALONE",
+              "kind": "person",
+              "leftId": 5,
+              "rightId": 6,
+              "expected": {
+                "eligible": false,
+                "fitType": null,
+                "canLearnLanguageIds": [],
+                "canShareLanguageIds": [],
+                "canLearnCultureIds": [],
+                "canShareCultureIds": []
+              }
+            },
+            {
+              "id": "PAIR_SELF",
+              "kind": "person",
+              "leftId": 1,
+              "rightId": 1,
+              "expected": {
+                "eligible": false,
+                "fitType": null,
+                "canLearnLanguageIds": [],
+                "canShareLanguageIds": [],
+                "canLearnCultureIds": [],
+                "canShareCultureIds": []
+              }
+            },
+            {
+              "id": "PAIR_UNRELATED",
+              "kind": "person",
+              "leftId": 1,
+              "rightId": 7,
+              "expected": {
+                "eligible": false,
+                "fitType": null,
+                "canLearnLanguageIds": [],
+                "canShareLanguageIds": [],
+                "canLearnCultureIds": [],
+                "canShareCultureIds": []
+              }
+            },
+            {
+              "id": "PAIR_PAUSED",
+              "kind": "person",
+              "leftId": 1,
+              "rightId": 9,
+              "expected": {
+                "eligible": false,
+                "fitType": null,
+                "canLearnLanguageIds": [],
+                "canShareLanguageIds": [],
+                "canLearnCultureIds": [],
+                "canShareCultureIds": []
+              }
+            },
+            {
+              "id": "PAIR_CLOSED",
+              "kind": "person",
+              "leftId": 1,
+              "rightId": 10,
+              "expected": {
+                "eligible": false,
+                "fitType": null,
+                "canLearnLanguageIds": [],
+                "canShareLanguageIds": [],
+                "canLearnCultureIds": [],
+                "canShareCultureIds": []
+              }
+            },
+            {
+              "id": "PAIR_REVIEW",
+              "kind": "person",
+              "leftId": 1,
+              "rightId": 11,
+              "expected": {
+                "eligible": false,
+                "fitType": null,
+                "canLearnLanguageIds": [],
+                "canShareLanguageIds": [],
+                "canLearnCultureIds": [],
+                "canShareCultureIds": []
+              }
+            },
+            {
+              "id": "PAIR_INACTIVE",
+              "kind": "person",
+              "leftId": 1,
+              "rightId": 12,
+              "expected": {
+                "eligible": false,
+                "fitType": null,
+                "canLearnLanguageIds": [],
+                "canShareLanguageIds": [],
+                "canLearnCultureIds": [],
+                "canShareCultureIds": []
+              }
+            },
+            {
+              "id": "PAIR_ANY_LANGUAGE_DEFERRED",
+              "kind": "person",
+              "leftId": 3,
+              "rightId": 13,
+              "expected": {
+                "eligible": false,
+                "fitType": null,
+                "canLearnLanguageIds": [],
+                "canShareLanguageIds": [],
+                "canLearnCultureIds": [],
+                "canShareCultureIds": []
+              }
+            },
+            {
+              "id": "PAIR_NULL_DEDUP_BLANK_ZONE",
+              "kind": "person",
+              "leftId": 1,
+              "rightId": 14,
+              "expected": {
+                "eligible": true,
+                "fitType": "Language",
+                "canLearnLanguageIds": [
+                  2
+                ],
+                "canShareLanguageIds": [],
+                "canLearnCultureIds": [],
+                "canShareCultureIds": []
+              }
+            },
+            {
+              "id": "PAIR_CURRENT_PAUSED",
+              "kind": "person",
+              "leftId": 9,
+              "rightId": 1,
+              "expected": {
+                "eligible": false,
+                "fitType": null,
+                "canLearnLanguageIds": [],
+                "canShareLanguageIds": [],
+                "canLearnCultureIds": [],
+                "canShareCultureIds": []
+              }
+            },
+            {
+              "id": "PAIR_SHARE_ONLY_NO_LEARN",
+              "kind": "person",
+              "leftId": 3,
+              "rightId": 17,
+              "expected": {
+                "eligible": false,
+                "fitType": null,
+                "canLearnLanguageIds": [],
+                "canShareLanguageIds": [],
+                "canLearnCultureIds": [],
+                "canShareCultureIds": []
+              }
+            },
+            {
+              "id": "GROUP_LANGUAGE_OPEN",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Language",
+                "languageFocusIds": [
+                  1,
+                  2
+                ],
+                "cultureFocusIds": [],
+                "memberProfileIds": [
+                  1,
+                  2
+                ],
+                "state": "Open",
+                "capacity": 3,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 3,
+              "expected": {
+                "purposeValid": true,
+                "capacityValid": true,
+                "candidateParticipates": true,
+                "compatible": true
+              }
+            },
+            {
+              "id": "GROUP_CULTURE_OPEN",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Culture",
+                "languageFocusIds": [],
+                "cultureFocusIds": [
+                  10
+                ],
+                "memberProfileIds": [
+                  4,
+                  5
+                ],
+                "state": "Open",
+                "capacity": 10,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 6,
+              "expected": {
+                "purposeValid": true,
+                "capacityValid": true,
+                "candidateParticipates": true,
+                "compatible": true
+              }
+            },
+            {
+              "id": "GROUP_COMBINED_SPLIT_ROLES",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Combined",
+                "languageFocusIds": [
+                  2
+                ],
+                "cultureFocusIds": [
+                  10
+                ],
+                "memberProfileIds": [
+                  3,
+                  16,
+                  4,
+                  5
+                ],
+                "state": "Open",
+                "capacity": 10,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 6,
+              "expected": {
+                "purposeValid": true,
+                "capacityValid": true,
+                "candidateParticipates": true,
+                "compatible": true
+              }
+            },
+            {
+              "id": "GROUP_COMBINED_MEMBER_ONE_FOCUS",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Combined",
+                "languageFocusIds": [
+                  1,
+                  2
+                ],
+                "cultureFocusIds": [
+                  10,
+                  20
+                ],
+                "memberProfileIds": [
+                  1,
+                  2
+                ],
+                "state": "Open",
+                "capacity": 10,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 3,
+              "expected": {
+                "purposeValid": true,
+                "capacityValid": true,
+                "candidateParticipates": true,
+                "compatible": true
+              }
+            },
+            {
+              "id": "GROUP_CLOSED",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Language",
+                "languageFocusIds": [
+                  1,
+                  2
+                ],
+                "cultureFocusIds": [],
+                "memberProfileIds": [
+                  1,
+                  2
+                ],
+                "state": "Closed",
+                "capacity": 3,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 3,
+              "expected": {
+                "purposeValid": true,
+                "capacityValid": true,
+                "candidateParticipates": true,
+                "compatible": false
+              }
+            },
+            {
+              "id": "GROUP_ENDED",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Language",
+                "languageFocusIds": [
+                  1,
+                  2
+                ],
+                "cultureFocusIds": [],
+                "memberProfileIds": [
+                  1,
+                  2
+                ],
+                "state": "Ended",
+                "capacity": 3,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 3,
+              "expected": {
+                "purposeValid": true,
+                "capacityValid": true,
+                "candidateParticipates": true,
+                "compatible": false
+              }
+            },
+            {
+              "id": "GROUP_FULL_OPEN",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Language",
+                "languageFocusIds": [
+                  1,
+                  2
+                ],
+                "cultureFocusIds": [],
+                "memberProfileIds": [
+                  1,
+                  2
+                ],
+                "state": "Open",
+                "capacity": 2,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 3,
+              "expected": {
+                "purposeValid": true,
+                "capacityValid": true,
+                "candidateParticipates": true,
+                "compatible": false
+              }
+            },
+            {
+              "id": "GROUP_LANGUAGE_CAPACITY_TOO_LARGE",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Language",
+                "languageFocusIds": [
+                  1,
+                  2
+                ],
+                "cultureFocusIds": [],
+                "memberProfileIds": [
+                  1,
+                  2
+                ],
+                "state": "Open",
+                "capacity": 4,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 3,
+              "expected": {
+                "purposeValid": true,
+                "capacityValid": false,
+                "candidateParticipates": true,
+                "compatible": false
+              }
+            },
+            {
+              "id": "GROUP_CULTURE_CAPACITY_TOO_LARGE",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Culture",
+                "languageFocusIds": [],
+                "cultureFocusIds": [
+                  10
+                ],
+                "memberProfileIds": [
+                  4,
+                  5
+                ],
+                "state": "Open",
+                "capacity": 11,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 6,
+              "expected": {
+                "purposeValid": true,
+                "capacityValid": false,
+                "candidateParticipates": true,
+                "compatible": false
+              }
+            },
+            {
+              "id": "GROUP_UNSUPPORTED_DECLARED_FOCUS",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Language",
+                "languageFocusIds": [
+                  1,
+                  2,
+                  3
+                ],
+                "cultureFocusIds": [],
+                "memberProfileIds": [
+                  1,
+                  2
+                ],
+                "state": "Open",
+                "capacity": 3,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 3,
+              "expected": {
+                "purposeValid": false,
+                "capacityValid": true,
+                "candidateParticipates": true,
+                "compatible": false
+              }
+            },
+            {
+              "id": "GROUP_UNRELATED_EXISTING_MEMBER",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Language",
+                "languageFocusIds": [
+                  1,
+                  2
+                ],
+                "cultureFocusIds": [],
+                "memberProfileIds": [
+                  1,
+                  2,
+                  7
+                ],
+                "state": "Open",
+                "capacity": 3,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 3,
+              "expected": {
+                "purposeValid": false,
+                "capacityValid": true,
+                "candidateParticipates": true,
+                "compatible": false
+              }
+            },
+            {
+              "id": "GROUP_CANDIDATE_UNRELATED",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Language",
+                "languageFocusIds": [
+                  1,
+                  2
+                ],
+                "cultureFocusIds": [],
+                "memberProfileIds": [
+                  1,
+                  2
+                ],
+                "state": "Open",
+                "capacity": 3,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 4,
+              "expected": {
+                "purposeValid": true,
+                "capacityValid": true,
+                "candidateParticipates": false,
+                "compatible": false
+              }
+            },
+            {
+              "id": "GROUP_CANDIDATE_ALREADY_MEMBER",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Language",
+                "languageFocusIds": [
+                  1,
+                  2
+                ],
+                "cultureFocusIds": [],
+                "memberProfileIds": [
+                  1,
+                  2
+                ],
+                "state": "Open",
+                "capacity": 3,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 1,
+              "expected": {
+                "purposeValid": true,
+                "capacityValid": true,
+                "candidateParticipates": true,
+                "compatible": false
+              }
+            },
+            {
+              "id": "GROUP_DUPLICATE_MEMBER",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Language",
+                "languageFocusIds": [
+                  1,
+                  2
+                ],
+                "cultureFocusIds": [],
+                "memberProfileIds": [
+                  1,
+                  2,
+                  2
+                ],
+                "state": "Open",
+                "capacity": 3,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 3,
+              "expected": {
+                "purposeValid": false,
+                "capacityValid": true,
+                "candidateParticipates": true,
+                "compatible": false
+              }
+            },
+            {
+              "id": "GROUP_MISSING_MEMBER_PROFILE",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Language",
+                "languageFocusIds": [
+                  1,
+                  2
+                ],
+                "cultureFocusIds": [],
+                "memberProfileIds": [
+                  1,
+                  2,
+                  200
+                ],
+                "state": "Open",
+                "capacity": 3,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 3,
+              "expected": {
+                "purposeValid": false,
+                "capacityValid": true,
+                "candidateParticipates": true,
+                "compatible": false
+              }
+            },
+            {
+              "id": "GROUP_SELF_ONLY_FOCUS_RELATION",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Language",
+                "languageFocusIds": [
+                  1
+                ],
+                "cultureFocusIds": [],
+                "memberProfileIds": [
+                  8
+                ],
+                "state": "Open",
+                "capacity": 2,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 1,
+              "expected": {
+                "purposeValid": false,
+                "capacityValid": true,
+                "candidateParticipates": true,
+                "compatible": false
+              }
+            },
+            {
+              "id": "GROUP_COMBINED_MISSING_CULTURE",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Combined",
+                "languageFocusIds": [
+                  1,
+                  2
+                ],
+                "cultureFocusIds": [],
+                "memberProfileIds": [
+                  1,
+                  2
+                ],
+                "state": "Open",
+                "capacity": 10,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 3,
+              "expected": {
+                "purposeValid": false,
+                "capacityValid": true,
+                "candidateParticipates": true,
+                "compatible": false
+              }
+            },
+            {
+              "id": "GROUP_ANY_LANGUAGE_FOCUS_DEFERRED",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Language",
+                "languageFocusIds": [
+                  99
+                ],
+                "cultureFocusIds": [],
+                "memberProfileIds": [
+                  1,
+                  2
+                ],
+                "state": "Open",
+                "capacity": 3,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 3,
+              "expected": {
+                "purposeValid": false,
+                "capacityValid": true,
+                "candidateParticipates": false,
+                "compatible": false
+              }
+            },
+            {
+              "id": "GROUP_SETUP_INCOMPLETE",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Language",
+                "languageFocusIds": [
+                  1,
+                  2
+                ],
+                "cultureFocusIds": [],
+                "memberProfileIds": [
+                  1,
+                  2
+                ],
+                "state": "Open",
+                "capacity": 3,
+                "setupComplete": false,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 3,
+              "expected": {
+                "purposeValid": true,
+                "capacityValid": true,
+                "candidateParticipates": true,
+                "compatible": false
+              }
+            },
+            {
+              "id": "GROUP_SHARER_AVAILABILITY_UNVERIFIED",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Language",
+                "languageFocusIds": [
+                  1,
+                  2
+                ],
+                "cultureFocusIds": [],
+                "memberProfileIds": [
+                  1,
+                  2
+                ],
+                "state": "Open",
+                "capacity": 3,
+                "setupComplete": true,
+                "focusSharersAvailable": false
+              },
+              "candidateId": 3,
+              "expected": {
+                "purposeValid": true,
+                "capacityValid": true,
+                "candidateParticipates": true,
+                "compatible": false
+              }
+            },
+            {
+              "id": "GROUP_PAUSED_MEMBER_NOT_DROPPED_FROM_COUNT",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Language",
+                "languageFocusIds": [
+                  1,
+                  2
+                ],
+                "cultureFocusIds": [],
+                "memberProfileIds": [
+                  1,
+                  2,
+                  9
+                ],
+                "state": "Open",
+                "capacity": 3,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 3,
+              "expected": {
+                "purposeValid": true,
+                "capacityValid": true,
+                "candidateParticipates": true,
+                "compatible": false
+              }
+            },
+            {
+              "id": "GROUP_CANDIDATE_PAUSED",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Language",
+                "languageFocusIds": [
+                  1,
+                  2
+                ],
+                "cultureFocusIds": [],
+                "memberProfileIds": [
+                  1,
+                  2
+                ],
+                "state": "Open",
+                "capacity": 3,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 9,
+              "expected": {
+                "purposeValid": true,
+                "capacityValid": true,
+                "candidateParticipates": true,
+                "compatible": false
+              }
+            },
+            {
+              "id": "GROUP_TYPE_FOCUS_MISMATCH",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Culture",
+                "languageFocusIds": [
+                  1,
+                  2
+                ],
+                "cultureFocusIds": [],
+                "memberProfileIds": [
+                  1,
+                  2
+                ],
+                "state": "Open",
+                "capacity": 3,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 3,
+              "expected": {
+                "purposeValid": false,
+                "capacityValid": true,
+                "candidateParticipates": true,
+                "compatible": false
+              }
+            },
+            {
+              "id": "GROUP_EMPTY_FOCUS",
+              "kind": "group",
+              "group": {
+                "groupId": 1,
+                "exchangeType": "Language",
+                "languageFocusIds": [],
+                "cultureFocusIds": [],
+                "memberProfileIds": [
+                  1,
+                  2
+                ],
+                "state": "Open",
+                "capacity": 3,
+                "setupComplete": true,
+                "focusSharersAvailable": true
+              },
+              "candidateId": 3,
+              "expected": {
+                "purposeValid": false,
+                "capacityValid": true,
+                "candidateParticipates": false,
+                "compatible": false
+              }
+            }
+          ],
+          "runAfter": {
+            "Shared_Catalogues": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Initialize_focus_checks": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "FocusChecks",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {
+            "Fixture_cases": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Initialize_results": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "TestResults",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_focus_checks": [
+              "Succeeded"
+            ]
+          }
+        },
+        "For_each_case": {
+          "type": "Foreach",
+          "foreach": "@outputs('Fixture_cases')",
+          "runAfter": {
+            "Initialize_results": [
+              "Succeeded"
+            ]
+          },
+          "runtimeConfiguration": {
+            "concurrency": {
+              "repetitions": 1
+            }
+          },
+          "actions": {
+            "Reset_focus_checks": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "FocusChecks",
+                "value": []
+              },
+              "runAfter": {}
+            },
+            "Case_kind": {
+              "type": "If",
+              "expression": "@equals(items('For_each_case')?['kind'],'person')",
+              "runAfter": {
+                "Reset_focus_checks": [
+                  "Succeeded"
+                ]
+              },
+              "actions": {
+                "Find_left": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Shared_Profiles')",
+                    "where": "@equals(item()?['profileId'],items('For_each_case')?['leftId'])"
+                  },
+                  "runAfter": {}
+                },
+                "Find_right": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Shared_Profiles')",
+                    "where": "@equals(item()?['profileId'],items('For_each_case')?['rightId'])"
+                  },
+                  "runAfter": {
+                    "Find_left": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Person_result": {
+                  "type": "Compose",
+                  "inputs": {
+                    "eligible": "@and(and(equals(first(body('Find_left'))?['status'],'Active'),equals(first(body('Find_left'))?['participationStatus'],'Active'),equals(first(body('Find_left'))?['openToConnections'],true),not(empty(first(body('Find_left'))?['accountKey'])),or(not(empty(first(body('Find_left'))?['teachIds'])),not(empty(first(body('Find_left'))?['learnIds'])),not(empty(first(body('Find_left'))?['shareCultureIds'])),not(empty(first(body('Find_left'))?['learnCultureIds'])))),and(equals(first(body('Find_right'))?['status'],'Active'),equals(first(body('Find_right'))?['participationStatus'],'Active'),equals(first(body('Find_right'))?['openToConnections'],true),not(empty(first(body('Find_right'))?['accountKey'])),or(not(empty(first(body('Find_right'))?['teachIds'])),not(empty(first(body('Find_right'))?['learnIds'])),not(empty(first(body('Find_right'))?['shareCultureIds'])),not(empty(first(body('Find_right'))?['learnCultureIds'])))),not(equals(first(body('Find_left'))?['profileId'],first(body('Find_right'))?['profileId'])),not(equals(first(body('Find_left'))?['accountKey'],first(body('Find_right'))?['accountKey'])),or(or(not(empty(intersection(first(body('Find_left'))?['learnIds'],first(body('Find_right'))?['teachIds']))),not(empty(intersection(first(body('Find_left'))?['teachIds'],first(body('Find_right'))?['learnIds'])))),or(not(empty(intersection(first(body('Find_left'))?['learnCultureIds'],first(body('Find_right'))?['shareCultureIds']))),not(empty(intersection(first(body('Find_left'))?['shareCultureIds'],first(body('Find_right'))?['learnCultureIds']))))))",
+                    "fitType": "@if(and(and(equals(first(body('Find_left'))?['status'],'Active'),equals(first(body('Find_left'))?['participationStatus'],'Active'),equals(first(body('Find_left'))?['openToConnections'],true),not(empty(first(body('Find_left'))?['accountKey'])),or(not(empty(first(body('Find_left'))?['teachIds'])),not(empty(first(body('Find_left'))?['learnIds'])),not(empty(first(body('Find_left'))?['shareCultureIds'])),not(empty(first(body('Find_left'))?['learnCultureIds'])))),and(equals(first(body('Find_right'))?['status'],'Active'),equals(first(body('Find_right'))?['participationStatus'],'Active'),equals(first(body('Find_right'))?['openToConnections'],true),not(empty(first(body('Find_right'))?['accountKey'])),or(not(empty(first(body('Find_right'))?['teachIds'])),not(empty(first(body('Find_right'))?['learnIds'])),not(empty(first(body('Find_right'))?['shareCultureIds'])),not(empty(first(body('Find_right'))?['learnCultureIds'])))),not(equals(first(body('Find_left'))?['profileId'],first(body('Find_right'))?['profileId'])),not(equals(first(body('Find_left'))?['accountKey'],first(body('Find_right'))?['accountKey'])),or(or(not(empty(intersection(first(body('Find_left'))?['learnIds'],first(body('Find_right'))?['teachIds']))),not(empty(intersection(first(body('Find_left'))?['teachIds'],first(body('Find_right'))?['learnIds'])))),or(not(empty(intersection(first(body('Find_left'))?['learnCultureIds'],first(body('Find_right'))?['shareCultureIds']))),not(empty(intersection(first(body('Find_left'))?['shareCultureIds'],first(body('Find_right'))?['learnCultureIds'])))))),if(and(or(not(empty(intersection(first(body('Find_left'))?['learnIds'],first(body('Find_right'))?['teachIds']))),not(empty(intersection(first(body('Find_left'))?['teachIds'],first(body('Find_right'))?['learnIds'])))),or(not(empty(intersection(first(body('Find_left'))?['learnCultureIds'],first(body('Find_right'))?['shareCultureIds']))),not(empty(intersection(first(body('Find_left'))?['shareCultureIds'],first(body('Find_right'))?['learnCultureIds']))))),'Combined',if(or(not(empty(intersection(first(body('Find_left'))?['learnIds'],first(body('Find_right'))?['teachIds']))),not(empty(intersection(first(body('Find_left'))?['teachIds'],first(body('Find_right'))?['learnIds'])))),'Language','Culture')),null)",
+                    "canLearnLanguageIds": "@if(and(and(equals(first(body('Find_left'))?['status'],'Active'),equals(first(body('Find_left'))?['participationStatus'],'Active'),equals(first(body('Find_left'))?['openToConnections'],true),not(empty(first(body('Find_left'))?['accountKey'])),or(not(empty(first(body('Find_left'))?['teachIds'])),not(empty(first(body('Find_left'))?['learnIds'])),not(empty(first(body('Find_left'))?['shareCultureIds'])),not(empty(first(body('Find_left'))?['learnCultureIds'])))),and(equals(first(body('Find_right'))?['status'],'Active'),equals(first(body('Find_right'))?['participationStatus'],'Active'),equals(first(body('Find_right'))?['openToConnections'],true),not(empty(first(body('Find_right'))?['accountKey'])),or(not(empty(first(body('Find_right'))?['teachIds'])),not(empty(first(body('Find_right'))?['learnIds'])),not(empty(first(body('Find_right'))?['shareCultureIds'])),not(empty(first(body('Find_right'))?['learnCultureIds'])))),not(equals(first(body('Find_left'))?['profileId'],first(body('Find_right'))?['profileId'])),not(equals(first(body('Find_left'))?['accountKey'],first(body('Find_right'))?['accountKey'])),or(or(not(empty(intersection(first(body('Find_left'))?['learnIds'],first(body('Find_right'))?['teachIds']))),not(empty(intersection(first(body('Find_left'))?['teachIds'],first(body('Find_right'))?['learnIds'])))),or(not(empty(intersection(first(body('Find_left'))?['learnCultureIds'],first(body('Find_right'))?['shareCultureIds']))),not(empty(intersection(first(body('Find_left'))?['shareCultureIds'],first(body('Find_right'))?['learnCultureIds'])))))),intersection(first(body('Find_left'))?['learnIds'],first(body('Find_right'))?['teachIds']),json('[]'))",
+                    "canShareLanguageIds": "@if(and(and(equals(first(body('Find_left'))?['status'],'Active'),equals(first(body('Find_left'))?['participationStatus'],'Active'),equals(first(body('Find_left'))?['openToConnections'],true),not(empty(first(body('Find_left'))?['accountKey'])),or(not(empty(first(body('Find_left'))?['teachIds'])),not(empty(first(body('Find_left'))?['learnIds'])),not(empty(first(body('Find_left'))?['shareCultureIds'])),not(empty(first(body('Find_left'))?['learnCultureIds'])))),and(equals(first(body('Find_right'))?['status'],'Active'),equals(first(body('Find_right'))?['participationStatus'],'Active'),equals(first(body('Find_right'))?['openToConnections'],true),not(empty(first(body('Find_right'))?['accountKey'])),or(not(empty(first(body('Find_right'))?['teachIds'])),not(empty(first(body('Find_right'))?['learnIds'])),not(empty(first(body('Find_right'))?['shareCultureIds'])),not(empty(first(body('Find_right'))?['learnCultureIds'])))),not(equals(first(body('Find_left'))?['profileId'],first(body('Find_right'))?['profileId'])),not(equals(first(body('Find_left'))?['accountKey'],first(body('Find_right'))?['accountKey'])),or(or(not(empty(intersection(first(body('Find_left'))?['learnIds'],first(body('Find_right'))?['teachIds']))),not(empty(intersection(first(body('Find_left'))?['teachIds'],first(body('Find_right'))?['learnIds'])))),or(not(empty(intersection(first(body('Find_left'))?['learnCultureIds'],first(body('Find_right'))?['shareCultureIds']))),not(empty(intersection(first(body('Find_left'))?['shareCultureIds'],first(body('Find_right'))?['learnCultureIds'])))))),intersection(first(body('Find_left'))?['teachIds'],first(body('Find_right'))?['learnIds']),json('[]'))",
+                    "canLearnCultureIds": "@if(and(and(equals(first(body('Find_left'))?['status'],'Active'),equals(first(body('Find_left'))?['participationStatus'],'Active'),equals(first(body('Find_left'))?['openToConnections'],true),not(empty(first(body('Find_left'))?['accountKey'])),or(not(empty(first(body('Find_left'))?['teachIds'])),not(empty(first(body('Find_left'))?['learnIds'])),not(empty(first(body('Find_left'))?['shareCultureIds'])),not(empty(first(body('Find_left'))?['learnCultureIds'])))),and(equals(first(body('Find_right'))?['status'],'Active'),equals(first(body('Find_right'))?['participationStatus'],'Active'),equals(first(body('Find_right'))?['openToConnections'],true),not(empty(first(body('Find_right'))?['accountKey'])),or(not(empty(first(body('Find_right'))?['teachIds'])),not(empty(first(body('Find_right'))?['learnIds'])),not(empty(first(body('Find_right'))?['shareCultureIds'])),not(empty(first(body('Find_right'))?['learnCultureIds'])))),not(equals(first(body('Find_left'))?['profileId'],first(body('Find_right'))?['profileId'])),not(equals(first(body('Find_left'))?['accountKey'],first(body('Find_right'))?['accountKey'])),or(or(not(empty(intersection(first(body('Find_left'))?['learnIds'],first(body('Find_right'))?['teachIds']))),not(empty(intersection(first(body('Find_left'))?['teachIds'],first(body('Find_right'))?['learnIds'])))),or(not(empty(intersection(first(body('Find_left'))?['learnCultureIds'],first(body('Find_right'))?['shareCultureIds']))),not(empty(intersection(first(body('Find_left'))?['shareCultureIds'],first(body('Find_right'))?['learnCultureIds'])))))),intersection(first(body('Find_left'))?['learnCultureIds'],first(body('Find_right'))?['shareCultureIds']),json('[]'))",
+                    "canShareCultureIds": "@if(and(and(equals(first(body('Find_left'))?['status'],'Active'),equals(first(body('Find_left'))?['participationStatus'],'Active'),equals(first(body('Find_left'))?['openToConnections'],true),not(empty(first(body('Find_left'))?['accountKey'])),or(not(empty(first(body('Find_left'))?['teachIds'])),not(empty(first(body('Find_left'))?['learnIds'])),not(empty(first(body('Find_left'))?['shareCultureIds'])),not(empty(first(body('Find_left'))?['learnCultureIds'])))),and(equals(first(body('Find_right'))?['status'],'Active'),equals(first(body('Find_right'))?['participationStatus'],'Active'),equals(first(body('Find_right'))?['openToConnections'],true),not(empty(first(body('Find_right'))?['accountKey'])),or(not(empty(first(body('Find_right'))?['teachIds'])),not(empty(first(body('Find_right'))?['learnIds'])),not(empty(first(body('Find_right'))?['shareCultureIds'])),not(empty(first(body('Find_right'))?['learnCultureIds'])))),not(equals(first(body('Find_left'))?['profileId'],first(body('Find_right'))?['profileId'])),not(equals(first(body('Find_left'))?['accountKey'],first(body('Find_right'))?['accountKey'])),or(or(not(empty(intersection(first(body('Find_left'))?['learnIds'],first(body('Find_right'))?['teachIds']))),not(empty(intersection(first(body('Find_left'))?['teachIds'],first(body('Find_right'))?['learnIds'])))),or(not(empty(intersection(first(body('Find_left'))?['learnCultureIds'],first(body('Find_right'))?['shareCultureIds']))),not(empty(intersection(first(body('Find_left'))?['shareCultureIds'],first(body('Find_right'))?['learnCultureIds'])))))),intersection(first(body('Find_left'))?['shareCultureIds'],first(body('Find_right'))?['learnCultureIds']),json('[]'))"
+                  },
+                  "runAfter": {
+                    "Find_right": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Append_person_result": {
+                  "type": "AppendToArrayVariable",
+                  "runAfter": {
+                    "Person_result": [
+                      "Succeeded"
+                    ]
+                  },
+                  "inputs": {
+                    "name": "TestResults",
+                    "value": {
+                      "id": "@items('For_each_case')?['id']",
+                      "kind": "@items('For_each_case')?['kind']",
+                      "passed": "@equals(outputs('Person_result'),items('For_each_case')?['expected'])",
+                      "actual": "@outputs('Person_result')",
+                      "expected": "@items('For_each_case')?['expected']"
+                    }
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "Parse_group": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@items('For_each_case')?['group']",
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "groupId",
+                          "exchangeType",
+                          "state",
+                          "capacity",
+                          "setupComplete",
+                          "focusSharersAvailable",
+                          "languageFocusIds",
+                          "cultureFocusIds",
+                          "memberProfileIds"
+                        ],
+                        "properties": {
+                          "groupId": {
+                            "type": "integer",
+                            "minimum": 1
+                          },
+                          "exchangeType": {
+                            "type": "string"
+                          },
+                          "state": {
+                            "type": "string",
+                            "enum": [
+                              "Open",
+                              "Closed",
+                              "Ended"
+                            ]
+                          },
+                          "capacity": {
+                            "type": "integer"
+                          },
+                          "setupComplete": {
+                            "type": "boolean"
+                          },
+                          "focusSharersAvailable": {
+                            "type": "boolean"
+                          },
+                          "languageFocusIds": {
+                            "type": "array",
+                            "items": {
+                              "type": "integer",
+                              "minimum": 1
+                            }
+                          },
+                          "cultureFocusIds": {
+                            "type": "array",
+                            "items": {
+                              "type": "integer",
+                              "minimum": 1
+                            }
+                          },
+                          "memberProfileIds": {
+                            "type": "array",
+                            "items": {
+                              "type": "integer",
+                              "minimum": 1
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {}
+                  },
+                  "Find_members": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@body('Shared_Profiles')",
+                      "where": "@contains(body('Parse_group')?['memberProfileIds'],item()?['profileId'])"
+                    },
+                    "runAfter": {
+                      "Parse_group": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Find_candidate": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@body('Shared_Profiles')",
+                      "where": "@equals(item()?['profileId'],items('For_each_case')?['candidateId'])"
+                    },
+                    "runAfter": {
+                      "Find_members": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Group_Language_focus": {
+                    "type": "Foreach",
+                    "foreach": "@body('Parse_group')?['languageFocusIds']",
+                    "actions": {
+                      "Group_Language_Sharers": {
+                        "type": "Query",
+                        "inputs": {
+                          "from": "@body('Find_members')",
+                          "where": "@and(equals(item()?['status'],'Active'),contains(item()?['teachIds'],items('Group_Language_focus')))"
+                        },
+                        "runAfter": {}
+                      },
+                      "Group_Language_Sharers_ids": {
+                        "type": "Select",
+                        "inputs": {
+                          "from": "@body('Group_Language_Sharers')",
+                          "select": "@item()?['profileId']"
+                        },
+                        "runAfter": {
+                          "Group_Language_Sharers": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "Group_Language_Learners": {
+                        "type": "Query",
+                        "inputs": {
+                          "from": "@body('Find_members')",
+                          "where": "@and(equals(item()?['status'],'Active'),contains(item()?['learnIds'],items('Group_Language_focus')))"
+                        },
+                        "runAfter": {
+                          "Group_Language_Sharers_ids": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "Group_Language_Learners_ids": {
+                        "type": "Select",
+                        "inputs": {
+                          "from": "@body('Group_Language_Learners')",
+                          "select": "@item()?['profileId']"
+                        },
+                        "runAfter": {
+                          "Group_Language_Learners": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "Group_Language_Check": {
+                        "type": "AppendToArrayVariable",
+                        "inputs": {
+                          "name": "FocusChecks",
+                          "value": {
+                            "kind": "Language",
+                            "focusId": "@items('Group_Language_focus')",
+                            "supported": "@and(not(empty(body('Group_Language_Sharers_ids'))),not(empty(body('Group_Language_Learners_ids'))),greater(length(union(body('Group_Language_Sharers_ids'),body('Group_Language_Learners_ids'))),1))"
+                          }
+                        },
+                        "runAfter": {
+                          "Group_Language_Learners_ids": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    },
+                    "runtimeConfiguration": {
+                      "concurrency": {
+                        "repetitions": 1
+                      }
+                    },
+                    "runAfter": {
+                      "Find_candidate": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Group_Culture_focus": {
+                    "type": "Foreach",
+                    "foreach": "@body('Parse_group')?['cultureFocusIds']",
+                    "actions": {
+                      "Group_Culture_Sharers": {
+                        "type": "Query",
+                        "inputs": {
+                          "from": "@body('Find_members')",
+                          "where": "@and(equals(item()?['status'],'Active'),contains(item()?['shareCultureIds'],items('Group_Culture_focus')))"
+                        },
+                        "runAfter": {}
+                      },
+                      "Group_Culture_Sharers_ids": {
+                        "type": "Select",
+                        "inputs": {
+                          "from": "@body('Group_Culture_Sharers')",
+                          "select": "@item()?['profileId']"
+                        },
+                        "runAfter": {
+                          "Group_Culture_Sharers": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "Group_Culture_Learners": {
+                        "type": "Query",
+                        "inputs": {
+                          "from": "@body('Find_members')",
+                          "where": "@and(equals(item()?['status'],'Active'),contains(item()?['learnCultureIds'],items('Group_Culture_focus')))"
+                        },
+                        "runAfter": {
+                          "Group_Culture_Sharers_ids": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "Group_Culture_Learners_ids": {
+                        "type": "Select",
+                        "inputs": {
+                          "from": "@body('Group_Culture_Learners')",
+                          "select": "@item()?['profileId']"
+                        },
+                        "runAfter": {
+                          "Group_Culture_Learners": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "Group_Culture_Check": {
+                        "type": "AppendToArrayVariable",
+                        "inputs": {
+                          "name": "FocusChecks",
+                          "value": {
+                            "kind": "Culture",
+                            "focusId": "@items('Group_Culture_focus')",
+                            "supported": "@and(not(empty(body('Group_Culture_Sharers_ids'))),not(empty(body('Group_Culture_Learners_ids'))),greater(length(union(body('Group_Culture_Sharers_ids'),body('Group_Culture_Learners_ids'))),1))"
+                          }
+                        },
+                        "runAfter": {
+                          "Group_Culture_Learners_ids": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    },
+                    "runtimeConfiguration": {
+                      "concurrency": {
+                        "repetitions": 1
+                      }
+                    },
+                    "runAfter": {
+                      "Group_Language_focus": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Group_Unsupported": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@variables('FocusChecks')",
+                      "where": "@not(equals(item()?['supported'],true))"
+                    },
+                    "runAfter": {
+                      "Group_Culture_focus": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Group_Unrelated_members": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@body('Find_members')",
+                      "where": "@not(and(equals(item()?['status'],'Active'),or(not(empty(intersection(item()?['teachIds'],body('Parse_group')?['languageFocusIds']))),not(empty(intersection(item()?['learnIds'],body('Parse_group')?['languageFocusIds']))),not(empty(intersection(item()?['shareCultureIds'],body('Parse_group')?['cultureFocusIds']))),not(empty(intersection(item()?['learnCultureIds'],body('Parse_group')?['cultureFocusIds']))))))"
+                    },
+                    "runAfter": {
+                      "Group_Unsupported": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Group_Result": {
+                    "type": "Compose",
+                    "inputs": {
+                      "purposeValid": "@and(or(and(equals(body('Parse_group')?['exchangeType'],'Language'),not(empty(body('Parse_group')?['languageFocusIds'])),not(not(empty(body('Parse_group')?['cultureFocusIds'])))),and(equals(body('Parse_group')?['exchangeType'],'Culture'),not(empty(body('Parse_group')?['cultureFocusIds'])),not(not(empty(body('Parse_group')?['languageFocusIds'])))),and(equals(body('Parse_group')?['exchangeType'],'Combined'),not(empty(body('Parse_group')?['languageFocusIds'])),not(empty(body('Parse_group')?['cultureFocusIds'])))),and(equals(length(intersection(body('Parse_group')?['languageFocusIds'],outputs('Shared_Catalogues')?['concreteLanguageIds'])),length(body('Parse_group')?['languageFocusIds'])),equals(length(intersection(body('Parse_group')?['cultureFocusIds'],outputs('Shared_Catalogues')?['cultureIds'])),length(body('Parse_group')?['cultureFocusIds']))),equals(length(body('Parse_group')?['memberProfileIds']),length(union(body('Parse_group')?['memberProfileIds'],body('Parse_group')?['memberProfileIds']))),equals(length(body('Find_members')),length(body('Parse_group')?['memberProfileIds'])),empty(body('Group_Unsupported')),empty(body('Group_Unrelated_members')))",
+                      "capacityValid": "@and(greaterOrEquals(body('Parse_group')?['capacity'],2),lessOrEquals(body('Parse_group')?['capacity'],if(equals(body('Parse_group')?['exchangeType'],'Language'),3,10)),greaterOrEquals(body('Parse_group')?['capacity'],length(body('Parse_group')?['memberProfileIds'])))",
+                      "candidateParticipates": "@and(equals(first(body('Find_candidate'))?['status'],'Active'),or(not(empty(intersection(first(body('Find_candidate'))?['teachIds'],body('Parse_group')?['languageFocusIds']))),not(empty(intersection(first(body('Find_candidate'))?['learnIds'],body('Parse_group')?['languageFocusIds']))),not(empty(intersection(first(body('Find_candidate'))?['shareCultureIds'],body('Parse_group')?['cultureFocusIds']))),not(empty(intersection(first(body('Find_candidate'))?['learnCultureIds'],body('Parse_group')?['cultureFocusIds'])))))",
+                      "compatible": "@and(and(or(and(equals(body('Parse_group')?['exchangeType'],'Language'),not(empty(body('Parse_group')?['languageFocusIds'])),not(not(empty(body('Parse_group')?['cultureFocusIds'])))),and(equals(body('Parse_group')?['exchangeType'],'Culture'),not(empty(body('Parse_group')?['cultureFocusIds'])),not(not(empty(body('Parse_group')?['languageFocusIds'])))),and(equals(body('Parse_group')?['exchangeType'],'Combined'),not(empty(body('Parse_group')?['languageFocusIds'])),not(empty(body('Parse_group')?['cultureFocusIds'])))),and(equals(length(intersection(body('Parse_group')?['languageFocusIds'],outputs('Shared_Catalogues')?['concreteLanguageIds'])),length(body('Parse_group')?['languageFocusIds'])),equals(length(intersection(body('Parse_group')?['cultureFocusIds'],outputs('Shared_Catalogues')?['cultureIds'])),length(body('Parse_group')?['cultureFocusIds']))),equals(length(body('Parse_group')?['memberProfileIds']),length(union(body('Parse_group')?['memberProfileIds'],body('Parse_group')?['memberProfileIds']))),equals(length(body('Find_members')),length(body('Parse_group')?['memberProfileIds'])),empty(body('Group_Unsupported')),empty(body('Group_Unrelated_members'))),and(greaterOrEquals(body('Parse_group')?['capacity'],2),lessOrEquals(body('Parse_group')?['capacity'],if(equals(body('Parse_group')?['exchangeType'],'Language'),3,10)),greaterOrEquals(body('Parse_group')?['capacity'],length(body('Parse_group')?['memberProfileIds']))),and(equals(first(body('Find_candidate'))?['status'],'Active'),or(not(empty(intersection(first(body('Find_candidate'))?['teachIds'],body('Parse_group')?['languageFocusIds']))),not(empty(intersection(first(body('Find_candidate'))?['learnIds'],body('Parse_group')?['languageFocusIds']))),not(empty(intersection(first(body('Find_candidate'))?['shareCultureIds'],body('Parse_group')?['cultureFocusIds']))),not(empty(intersection(first(body('Find_candidate'))?['learnCultureIds'],body('Parse_group')?['cultureFocusIds']))))),and(equals(first(body('Find_candidate'))?['status'],'Active'),equals(first(body('Find_candidate'))?['participationStatus'],'Active'),equals(first(body('Find_candidate'))?['openToConnections'],true),not(empty(first(body('Find_candidate'))?['accountKey'])),or(not(empty(first(body('Find_candidate'))?['teachIds'])),not(empty(first(body('Find_candidate'))?['learnIds'])),not(empty(first(body('Find_candidate'))?['shareCultureIds'])),not(empty(first(body('Find_candidate'))?['learnCultureIds'])))),equals(body('Parse_group')?['state'],'Open'),equals(body('Parse_group')?['setupComplete'],true),equals(body('Parse_group')?['focusSharersAvailable'],true),greater(body('Parse_group')?['capacity'],length(body('Parse_group')?['memberProfileIds'])),not(contains(body('Parse_group')?['memberProfileIds'],first(body('Find_candidate'))?['profileId'])))"
+                    },
+                    "runAfter": {
+                      "Group_Unrelated_members": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Append_group_result": {
+                    "type": "AppendToArrayVariable",
+                    "runAfter": {
+                      "Group_Result": [
+                        "Succeeded"
+                      ]
+                    },
+                    "inputs": {
+                      "name": "TestResults",
+                      "value": {
+                        "id": "@items('For_each_case')?['id']",
+                        "kind": "@items('For_each_case')?['kind']",
+                        "passed": "@equals(outputs('Group_Result'),items('For_each_case')?['expected'])",
+                        "actual": "@outputs('Group_Result')",
+                        "expected": "@items('For_each_case')?['expected']"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Failed_cases": {
+          "type": "Query",
+          "inputs": {
+            "from": "@variables('TestResults')",
+            "where": "@not(equals(item()?['passed'],true))"
+          },
+          "runAfter": {
+            "For_each_case": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Proof_report": {
+          "type": "Compose",
+          "inputs": {
+            "kind": "TandemCompatibilityProof",
+            "schemaVersion": 1,
+            "sourceTicket": 9,
+            "rulesVersion": 1,
+            "packageBuildId": "57fa2bc6-2b02-4068-9999-fe46f3747d4a",
+            "sourceSha256": "dfe0dcd587a5a348080dde288183ed3dff2d02d1f652f0ae23010b2e6e649c72",
+            "runReference": "@workflow()?['run']?['name']",
+            "syntheticOnly": true,
+            "connectors": 0,
+            "writes": 0,
+            "testCount": "@length(variables('TestResults'))",
+            "allPassed": "@and(empty(body('Failed_cases')),equals(length(variables('TestResults')),length(outputs('Fixture_cases'))))",
+            "failedCases": "@body('Failed_cases')",
+            "results": "@variables('TestResults')"
+          },
+          "runAfter": {
+            "Failed_cases": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Require_all_passed": {
+          "type": "If",
+          "expression": "@and(empty(body('Failed_cases')),equals(length(variables('TestResults')),length(outputs('Fixture_cases'))))",
+          "runAfter": {
+            "Proof_report": [
+              "Succeeded"
+            ]
+          },
+          "actions": {},
+          "else": {
+            "actions": {
+              "Fail_proof": {
+                "type": "Terminate",
+                "inputs": {
+                  "runStatus": "Failed",
+                  "runError": {
+                    "code": "COMPATIBILITY_PROOF_FAILED",
+                    "message": "See Proof_report failedCases; no live data accessed."
+                  }
+                },
+                "runAfter": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "connectionReferences": {},
+    "flowFailureAlertSubscribed": false,
+    "isManaged": false
+  }
+}

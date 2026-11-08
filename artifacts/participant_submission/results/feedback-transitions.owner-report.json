@@ -1,0 +1,10 @@
+{
+  "sourceTicket": 61,
+  "reportedDate": "2026-11-08",
+  "ownerReply": "all fine. but the latest label text is ... it might confuse the user",
+  "testRequested": "On own item 38 record four selections, clear via SharePoint, wait for Needs review, App Refresh shows Needs review; restore originals, wait for Active, Refresh shows Active.",
+  "result": "PASS_OWNER_REPORTED",
+  "scope": "Owner confirms directed invalid-profile/restore and changed-value refresh steps; no invalid-run JSON, new run references or app Live version supplied.",
+  "wordingFeedback": "Earlier-edit/background caveat confusing when Active; shortened wording prepared, not yet owner-accepted/published.",
+  "latestConfirmedLiveVersion": 19
+}

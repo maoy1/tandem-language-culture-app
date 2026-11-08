@@ -1,0 +1,112 @@
+{
+  "version": 3,
+  "status": "owner_reported_configured_populated_matching_unverified",
+  "scopePlanIssue": 45,
+  "fieldContractIssue": 46,
+  "executionPlatform": "Power Automate",
+  "additionalBudgetAllowed": false,
+  "buildScope": "Discovery language/culture matching and response configuration is owner-confirmed, with app binding and empty-gallery/Back navigation reported. This is a partial owner-build reference, not a tenant export or release approval. Separate participation/openness filters, trusted ordinary-caller binding, final field projection and full acceptance remain gates before ordinary rollout.",
+  "inputContract": {
+    "My_profile": "Compose: server-loaded profile; owner-only construction. App-supplied item ID is a reference, not authorization.",
+    "Candidate_profiles": "Compose: normalized server-loaded candidate array",
+    "profileShape": {
+      "profileId": "SharePoint item ID; internal reference",
+      "accountId": "canonical Person Claims from stored profile, never app email",
+      "displayName": "stored Person DisplayName for owner preview",
+      "status": "validation Status choice Value; participation status is separate pending #6",
+      "teachIds": "array of integer Language catalogue IDs",
+      "learnIds": "array of integer Language catalogue IDs",
+      "shareCultureIds": "array of integer Culture catalogue IDs",
+      "learnCultureIds": "array of integer Culture catalogue IDs"
+    }
+  },
+  "completionGates": [
+    "Bind authenticated caller before sharing with ordinary users; owner-only construction is not an authorization solution.",
+    "Implement separate participation/openness filters after #6 fields are bound; missing target fields must not imply availability.",
+    "Agree final response fields with #42 before wider exposure.",
+    "Verify actual lookup ID-array fields, pagination and synchronous response bounds; fail clearly on incomplete data.",
+    "Complete deferred test cases and do not close #7 on preparation artifacts."
+  ],
+  "actions": {
+    "Eligible_candidates": {
+      "type": "Query",
+      "inputs": {
+        "from": "@coalesce(outputs('Candidate_profiles'), json('[]'))",
+        "where": "@and(   equals(outputs('My_profile')?['status'], 'Active'),   not(empty(outputs('My_profile')?['accountId'])),   equals(item()?['status'], 'Active'),   not(empty(item()?['accountId'])),   not(equals(item()?['accountId'], outputs('My_profile')?['accountId'])),   or(     not(empty(intersection(outputs('My_profile')?['learnIds'], item()?['teachIds']))),     not(empty(intersection(outputs('My_profile')?['teachIds'], item()?['learnIds']))),     not(empty(intersection(outputs('My_profile')?['learnCultureIds'], item()?['shareCultureIds']))),     not(empty(intersection(outputs('My_profile')?['shareCultureIds'], item()?['learnCultureIds'])))   ) )"
+      },
+      "runAfter": {
+        "Candidate_profiles": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Candidate_fit": {
+      "type": "Select",
+      "inputs": {
+        "from": "@body('Eligible_candidates')",
+        "select": {
+          "profileId": "@item()?['profileId']",
+          "displayName": "@item()?['displayName']",
+          "fitType": "@if(   empty(union(     intersection(outputs('My_profile')?['learnIds'], item()?['teachIds']),     intersection(outputs('My_profile')?['teachIds'], item()?['learnIds'])   )),   'Culture',   if(     empty(union(       intersection(outputs('My_profile')?['learnCultureIds'], item()?['shareCultureIds']),       intersection(outputs('My_profile')?['shareCultureIds'], item()?['learnCultureIds'])     )),     'Language',     'Combined'   ) )"
+        }
+      },
+      "runAfter": {
+        "Eligible_candidates": [
+          "Succeeded"
+        ]
+      }
+    }
+  },
+  "baselineEvidence": "PR #44 owner-reported language-only runs remain historical evidence. The new culture paths/display mapping are not thereby tested.",
+  "deploymentNote": "Expression/action reference for the guided configuration, not an importable flow package or a verified export. Owner reports matching/response actions and app bindings configured; actual reader/normalization values, query bounds, caller authorization and populated matching require verification. App control formulas are in src/README.md. Current published version and sharing state were not supplied.",
+  "responseContract": {
+    "action": "Respond to a Power App or flow",
+    "outputs": {
+      "candidatesjson": {
+        "type": "Text",
+        "expression": "if(greater(length(outputs('Candidate_profiles')), 500), '[]', string(body('Candidate_fit')))"
+      },
+      "errormessage": {
+        "type": "Text",
+        "expression": "if(greater(length(outputs('Candidate_profiles')), 500), 'Discovery limit reached. Please try again later.', if(or(empty(outputs('My_profile')?['accountId']), not(equals(outputs('My_profile')?['status'], 'Active'))), 'Please complete your registration before using discovery.', ''))"
+      }
+    },
+    "note": "Configure both outputs before adding/refreshing the flow in Power Apps. Failed reads do not run the success response; app IfError handles invocation failures. This is a construction reference, not exported action JSON."
+  },
+  "configurationEvidence": {
+    "recordedOn": "2026-11-07",
+    "source": "Owner confirmations and screenshots in the working chat; no tenant export or run/version IDs supplied.",
+    "flow": "TandemDiscovery",
+    "reportedConfigured": [
+      "Participant reader and normalization actions",
+      "Eligible_candidates language/culture filter",
+      "Candidate_fit three-field projection",
+      "candidatesjson and errormessage response outputs",
+      "Power Apps flow/button/gallery bindings"
+    ],
+    "reportedObserved": [
+      "Empty candidate gallery with no suitable participant data",
+      "Back navigation works"
+    ],
+    "notVerified": [
+      "Populated candidate matching",
+      "Actual values for every lookup-ID mapping",
+      "Candidate query pagination/limit behavior",
+      "Caller identity, participation/openness and final exposure acceptance",
+      "Published version and ordinary-user access"
+    ]
+  },
+  "coverage": {
+    "included": [
+      "Normalized profile contract",
+      "Eligible_candidates and Candidate_fit action fragments",
+      "Response output expressions"
+    ],
+    "documentedSeparately": "src/README.md: trigger, SharePoint reader/normalization setup and Power Apps control formulas",
+    "notIncluded": [
+      "Complete exported Power Automate definition or import package",
+      "Power Apps app export",
+      "TandemSendRequest and request/group workflows"
+    ]
+  }
+}

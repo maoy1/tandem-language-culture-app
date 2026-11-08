@@ -1,6 +1,7 @@
 {
-  "schemaVersion": 2,
-  "description": "Current SharePoint lists and fields required for the Tandem participant-registration POC.",
+  "schemaVersion": 4,
+  "deploymentStatus": "schema66_verified_app_flow_acceptance_pending",
+  "description": "Logical registration schema including participation/openness verified under #66. Actual tenant names/display fields are in tenant_schema_mapping.json; this is not a raw tenant export. #6 app controls, #5 registration and #61 server validation acceptance remain separate.",
   "lists": [
     {
       "name": "Language catalogue",
@@ -23,26 +24,39 @@
       "indexes": ["IANAId"]
     },
     {
+      "name": "Culture catalogue",
+      "fields": [
+        { "internalName": "Title", "displayName": "Title", "type": "Text", "required": true },
+        { "internalName": "CultureKey", "displayName": "Culture key", "type": "Text", "required": true, "unique": true },
+        { "internalName": "Active", "displayName": "Active", "type": "Boolean", "defaultValue": true }
+      ],
+      "indexes": ["CultureKey"]
+    },
+    {
       "name": "Participants",
       "fields": [
         { "internalName": "Title", "displayName": "Title", "type": "Text" },
         { "internalName": "ParticipantAccount", "displayName": "Participant account", "type": "User", "required": true, "unique": true },
         { "internalName": "TeachLanguages", "displayName": "Teach languages", "type": "Lookup", "lookupList": "Language catalogue", "lookupField": "Title", "allowMultiple": true },
         { "internalName": "LearnLanguages", "displayName": "Learn languages", "type": "Lookup", "lookupList": "Language catalogue", "lookupField": "Title", "allowMultiple": true },
+        { "internalName": "ShareCultures", "displayName": "Cultures I can share", "type": "Lookup", "lookupList": "Culture catalogue", "lookupField": "Title", "allowMultiple": true },
+        { "internalName": "LearnCultures", "displayName": "Cultures of interest", "type": "Lookup", "lookupList": "Culture catalogue", "lookupField": "Title", "allowMultiple": true },
         {
           "internalName": "TimeZone",
           "displayName": "Time zone",
           "type": "Lookup",
           "lookupList": "Time zone catalogue",
           "lookupField": "Title",
-          "required": true,
+          "required": false,
           "allowMultiple": false,
           "editableByParticipants": true,
-          "description": "Selected from the controlled Time zone catalogue in Power Apps."
+          "description": "Optional controlled catalogue selection. Blank must not block registration or discovery."
         },
         { "internalName": "LearningFocus", "displayName": "Learning focus", "type": "Note" },
         { "internalName": "Comments", "displayName": "Comments", "type": "Note" },
-        { "internalName": "Status", "displayName": "Status", "type": "Choice", "choices": ["Active", "Needs review"] }
+        { "internalName": "Status", "displayName": "Status", "type": "Choice", "choices": ["Active", "Needs review"] },
+        {"internalName": "ParticipationStatus", "displayName": "Participation status", "type": "Choice", "required": true, "choices": ["Active", "Paused", "Inactive"], "defaultValue": "Active"},
+        {"internalName": "OpenToConnections", "displayName": "Open to new connections", "type": "Boolean", "required": true, "defaultValue": true}
       ],
       "indexes": ["Status", "ParticipantAccount"]
     }

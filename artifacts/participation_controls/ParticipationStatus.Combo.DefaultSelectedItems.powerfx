@@ -1,0 +1,8 @@
+If(
+    Form1.Mode = FormMode.New,
+    Filter(
+        Choices([@Participants].'Participation status'),
+        Value = "Active"
+    ),
+    [Parent.Default]
+)
