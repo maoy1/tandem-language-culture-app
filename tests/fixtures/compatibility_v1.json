@@ -1,0 +1,1188 @@
+{
+  "schemaVersion": 1,
+  "sourceTicket": 9,
+  "syntheticOnly": true,
+  "anyLanguagePolicy": "deferred_exclude_from_matching_and_focus",
+  "catalogues": {
+    "languageIds": [
+      1,
+      2,
+      3,
+      99
+    ],
+    "cultureIds": [
+      10,
+      20
+    ],
+    "timezoneIds": [
+      100
+    ],
+    "anyLanguageId": 99
+  },
+  "profiles": [
+    {
+      "profileId": 1,
+      "accountKey": " SYNTHETIC-1 ",
+      "status": "Active",
+      "participationStatus": "Active",
+      "openToConnections": true,
+      "teachIds": [
+        1
+      ],
+      "learnIds": [
+        2
+      ],
+      "shareCultureIds": [
+        10
+      ],
+      "learnCultureIds": [
+        20
+      ],
+      "timezoneId": null
+    },
+    {
+      "profileId": 2,
+      "accountKey": "synthetic-2",
+      "status": "Active",
+      "participationStatus": "Active",
+      "openToConnections": true,
+      "teachIds": [
+        2
+      ],
+      "learnIds": [
+        1
+      ],
+      "shareCultureIds": [
+        20
+      ],
+      "learnCultureIds": [
+        10
+      ],
+      "timezoneId": null
+    },
+    {
+      "profileId": 3,
+      "accountKey": "synthetic-3",
+      "status": "Active",
+      "participationStatus": "Active",
+      "openToConnections": true,
+      "teachIds": [
+        2
+      ],
+      "learnIds": [],
+      "shareCultureIds": [],
+      "learnCultureIds": [],
+      "timezoneId": null
+    },
+    {
+      "profileId": 4,
+      "accountKey": "synthetic-4",
+      "status": "Active",
+      "participationStatus": "Active",
+      "openToConnections": true,
+      "teachIds": [],
+      "learnIds": [],
+      "shareCultureIds": [
+        10
+      ],
+      "learnCultureIds": [],
+      "timezoneId": null
+    },
+    {
+      "profileId": 5,
+      "accountKey": "synthetic-5",
+      "status": "Active",
+      "participationStatus": "Active",
+      "openToConnections": true,
+      "teachIds": [],
+      "learnIds": [],
+      "shareCultureIds": [],
+      "learnCultureIds": [
+        10
+      ],
+      "timezoneId": null
+    },
+    {
+      "profileId": 6,
+      "accountKey": "synthetic-6",
+      "status": "Active",
+      "participationStatus": "Active",
+      "openToConnections": true,
+      "teachIds": [],
+      "learnIds": [],
+      "shareCultureIds": [],
+      "learnCultureIds": [
+        10
+      ],
+      "timezoneId": null
+    },
+    {
+      "profileId": 7,
+      "accountKey": "synthetic-7",
+      "status": "Active",
+      "participationStatus": "Active",
+      "openToConnections": true,
+      "teachIds": [
+        3
+      ],
+      "learnIds": [],
+      "shareCultureIds": [],
+      "learnCultureIds": [],
+      "timezoneId": null
+    },
+    {
+      "profileId": 8,
+      "accountKey": "synthetic-8",
+      "status": "Active",
+      "participationStatus": "Active",
+      "openToConnections": true,
+      "teachIds": [
+        1
+      ],
+      "learnIds": [
+        1
+      ],
+      "shareCultureIds": [],
+      "learnCultureIds": [],
+      "timezoneId": null
+    },
+    {
+      "profileId": 9,
+      "accountKey": "synthetic-9",
+      "status": "Active",
+      "participationStatus": "Paused",
+      "openToConnections": true,
+      "teachIds": [
+        2
+      ],
+      "learnIds": [
+        1
+      ],
+      "shareCultureIds": [],
+      "learnCultureIds": [],
+      "timezoneId": null
+    },
+    {
+      "profileId": 10,
+      "accountKey": "synthetic-10",
+      "status": "Active",
+      "participationStatus": "Active",
+      "openToConnections": false,
+      "teachIds": [
+        2
+      ],
+      "learnIds": [
+        1
+      ],
+      "shareCultureIds": [],
+      "learnCultureIds": [],
+      "timezoneId": null
+    },
+    {
+      "profileId": 11,
+      "accountKey": "synthetic-11",
+      "status": "Needs review",
+      "participationStatus": "Active",
+      "openToConnections": true,
+      "teachIds": [
+        2
+      ],
+      "learnIds": [
+        1
+      ],
+      "shareCultureIds": [],
+      "learnCultureIds": [],
+      "timezoneId": null
+    },
+    {
+      "profileId": 12,
+      "accountKey": "synthetic-12",
+      "status": "Active",
+      "participationStatus": "Inactive",
+      "openToConnections": true,
+      "teachIds": [
+        2
+      ],
+      "learnIds": [
+        1
+      ],
+      "shareCultureIds": [],
+      "learnCultureIds": [],
+      "timezoneId": null
+    },
+    {
+      "profileId": 13,
+      "accountKey": "synthetic-13",
+      "status": "Active",
+      "participationStatus": "Active",
+      "openToConnections": true,
+      "teachIds": [],
+      "learnIds": [
+        99
+      ],
+      "shareCultureIds": [],
+      "learnCultureIds": [],
+      "timezoneId": null
+    },
+    {
+      "profileId": 14,
+      "accountKey": "synthetic-14",
+      "status": "Active",
+      "participationStatus": "Active",
+      "openToConnections": true,
+      "teachIds": [
+        2,
+        2
+      ],
+      "learnIds": null,
+      "shareCultureIds": null,
+      "learnCultureIds": [],
+      "timezoneId": null
+    },
+    {
+      "profileId": 15,
+      "accountKey": "synthetic-15",
+      "status": "Active",
+      "participationStatus": "Active",
+      "openToConnections": true,
+      "teachIds": [],
+      "learnIds": [],
+      "shareCultureIds": [],
+      "learnCultureIds": [
+        20
+      ],
+      "timezoneId": null
+    },
+    {
+      "profileId": 16,
+      "accountKey": "synthetic-16",
+      "status": "Active",
+      "participationStatus": "Active",
+      "openToConnections": true,
+      "teachIds": [],
+      "learnIds": [
+        2
+      ],
+      "shareCultureIds": [],
+      "learnCultureIds": [],
+      "timezoneId": null
+    },
+    {
+      "profileId": 17,
+      "accountKey": "synthetic-17",
+      "status": "Active",
+      "participationStatus": "Active",
+      "openToConnections": true,
+      "teachIds": [
+        2
+      ],
+      "learnIds": [],
+      "shareCultureIds": [],
+      "learnCultureIds": [],
+      "timezoneId": null
+    }
+  ],
+  "cases": [
+    {
+      "id": "PAIR_COMBINED_RECIPROCAL",
+      "kind": "person",
+      "leftId": 1,
+      "rightId": 2,
+      "expected": {
+        "eligible": true,
+        "fitType": "Combined",
+        "canLearnLanguageIds": [
+          2
+        ],
+        "canShareLanguageIds": [
+          1
+        ],
+        "canLearnCultureIds": [
+          20
+        ],
+        "canShareCultureIds": [
+          10
+        ]
+      }
+    },
+    {
+      "id": "PAIR_ONE_WAY_LANGUAGE",
+      "kind": "person",
+      "leftId": 1,
+      "rightId": 3,
+      "expected": {
+        "eligible": true,
+        "fitType": "Language",
+        "canLearnLanguageIds": [
+          2
+        ],
+        "canShareLanguageIds": [],
+        "canLearnCultureIds": [],
+        "canShareCultureIds": []
+      }
+    },
+    {
+      "id": "PAIR_CULTURE_ONLY_SHARE_ONLY",
+      "kind": "person",
+      "leftId": 4,
+      "rightId": 5,
+      "expected": {
+        "eligible": true,
+        "fitType": "Culture",
+        "canLearnLanguageIds": [],
+        "canShareLanguageIds": [],
+        "canLearnCultureIds": [],
+        "canShareCultureIds": [
+          10
+        ]
+      }
+    },
+    {
+      "id": "PAIR_CULTURE_REVERSE",
+      "kind": "person",
+      "leftId": 5,
+      "rightId": 4,
+      "expected": {
+        "eligible": true,
+        "fitType": "Culture",
+        "canLearnLanguageIds": [],
+        "canShareLanguageIds": [],
+        "canLearnCultureIds": [
+          10
+        ],
+        "canShareCultureIds": []
+      }
+    },
+    {
+      "id": "PAIR_INTEREST_ALONE",
+      "kind": "person",
+      "leftId": 5,
+      "rightId": 6,
+      "expected": {
+        "eligible": false,
+        "fitType": null,
+        "canLearnLanguageIds": [],
+        "canShareLanguageIds": [],
+        "canLearnCultureIds": [],
+        "canShareCultureIds": []
+      }
+    },
+    {
+      "id": "PAIR_SELF",
+      "kind": "person",
+      "leftId": 1,
+      "rightId": 1,
+      "expected": {
+        "eligible": false,
+        "fitType": null,
+        "canLearnLanguageIds": [],
+        "canShareLanguageIds": [],
+        "canLearnCultureIds": [],
+        "canShareCultureIds": []
+      }
+    },
+    {
+      "id": "PAIR_UNRELATED",
+      "kind": "person",
+      "leftId": 1,
+      "rightId": 7,
+      "expected": {
+        "eligible": false,
+        "fitType": null,
+        "canLearnLanguageIds": [],
+        "canShareLanguageIds": [],
+        "canLearnCultureIds": [],
+        "canShareCultureIds": []
+      }
+    },
+    {
+      "id": "PAIR_PAUSED",
+      "kind": "person",
+      "leftId": 1,
+      "rightId": 9,
+      "expected": {
+        "eligible": false,
+        "fitType": null,
+        "canLearnLanguageIds": [],
+        "canShareLanguageIds": [],
+        "canLearnCultureIds": [],
+        "canShareCultureIds": []
+      }
+    },
+    {
+      "id": "PAIR_CLOSED",
+      "kind": "person",
+      "leftId": 1,
+      "rightId": 10,
+      "expected": {
+        "eligible": false,
+        "fitType": null,
+        "canLearnLanguageIds": [],
+        "canShareLanguageIds": [],
+        "canLearnCultureIds": [],
+        "canShareCultureIds": []
+      }
+    },
+    {
+      "id": "PAIR_REVIEW",
+      "kind": "person",
+      "leftId": 1,
+      "rightId": 11,
+      "expected": {
+        "eligible": false,
+        "fitType": null,
+        "canLearnLanguageIds": [],
+        "canShareLanguageIds": [],
+        "canLearnCultureIds": [],
+        "canShareCultureIds": []
+      }
+    },
+    {
+      "id": "PAIR_INACTIVE",
+      "kind": "person",
+      "leftId": 1,
+      "rightId": 12,
+      "expected": {
+        "eligible": false,
+        "fitType": null,
+        "canLearnLanguageIds": [],
+        "canShareLanguageIds": [],
+        "canLearnCultureIds": [],
+        "canShareCultureIds": []
+      }
+    },
+    {
+      "id": "PAIR_ANY_LANGUAGE_DEFERRED",
+      "kind": "person",
+      "leftId": 3,
+      "rightId": 13,
+      "expected": {
+        "eligible": false,
+        "fitType": null,
+        "canLearnLanguageIds": [],
+        "canShareLanguageIds": [],
+        "canLearnCultureIds": [],
+        "canShareCultureIds": []
+      }
+    },
+    {
+      "id": "PAIR_NULL_DEDUP_BLANK_ZONE",
+      "kind": "person",
+      "leftId": 1,
+      "rightId": 14,
+      "expected": {
+        "eligible": true,
+        "fitType": "Language",
+        "canLearnLanguageIds": [
+          2
+        ],
+        "canShareLanguageIds": [],
+        "canLearnCultureIds": [],
+        "canShareCultureIds": []
+      }
+    },
+    {
+      "id": "PAIR_CURRENT_PAUSED",
+      "kind": "person",
+      "leftId": 9,
+      "rightId": 1,
+      "expected": {
+        "eligible": false,
+        "fitType": null,
+        "canLearnLanguageIds": [],
+        "canShareLanguageIds": [],
+        "canLearnCultureIds": [],
+        "canShareCultureIds": []
+      }
+    },
+    {
+      "id": "PAIR_SHARE_ONLY_NO_LEARN",
+      "kind": "person",
+      "leftId": 3,
+      "rightId": 17,
+      "expected": {
+        "eligible": false,
+        "fitType": null,
+        "canLearnLanguageIds": [],
+        "canShareLanguageIds": [],
+        "canLearnCultureIds": [],
+        "canShareCultureIds": []
+      }
+    },
+    {
+      "id": "GROUP_LANGUAGE_OPEN",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Language",
+        "languageFocusIds": [
+          1,
+          2
+        ],
+        "cultureFocusIds": [],
+        "memberProfileIds": [
+          1,
+          2
+        ],
+        "state": "Open",
+        "capacity": 3,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 3,
+      "expected": {
+        "purposeValid": true,
+        "capacityValid": true,
+        "candidateParticipates": true,
+        "compatible": true
+      }
+    },
+    {
+      "id": "GROUP_CULTURE_OPEN",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Culture",
+        "languageFocusIds": [],
+        "cultureFocusIds": [
+          10
+        ],
+        "memberProfileIds": [
+          4,
+          5
+        ],
+        "state": "Open",
+        "capacity": 10,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 6,
+      "expected": {
+        "purposeValid": true,
+        "capacityValid": true,
+        "candidateParticipates": true,
+        "compatible": true
+      }
+    },
+    {
+      "id": "GROUP_COMBINED_SPLIT_ROLES",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Combined",
+        "languageFocusIds": [
+          2
+        ],
+        "cultureFocusIds": [
+          10
+        ],
+        "memberProfileIds": [
+          3,
+          16,
+          4,
+          5
+        ],
+        "state": "Open",
+        "capacity": 10,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 6,
+      "expected": {
+        "purposeValid": true,
+        "capacityValid": true,
+        "candidateParticipates": true,
+        "compatible": true
+      }
+    },
+    {
+      "id": "GROUP_COMBINED_MEMBER_ONE_FOCUS",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Combined",
+        "languageFocusIds": [
+          1,
+          2
+        ],
+        "cultureFocusIds": [
+          10,
+          20
+        ],
+        "memberProfileIds": [
+          1,
+          2
+        ],
+        "state": "Open",
+        "capacity": 10,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 3,
+      "expected": {
+        "purposeValid": true,
+        "capacityValid": true,
+        "candidateParticipates": true,
+        "compatible": true
+      }
+    },
+    {
+      "id": "GROUP_CLOSED",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Language",
+        "languageFocusIds": [
+          1,
+          2
+        ],
+        "cultureFocusIds": [],
+        "memberProfileIds": [
+          1,
+          2
+        ],
+        "state": "Closed",
+        "capacity": 3,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 3,
+      "expected": {
+        "purposeValid": true,
+        "capacityValid": true,
+        "candidateParticipates": true,
+        "compatible": false
+      }
+    },
+    {
+      "id": "GROUP_ENDED",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Language",
+        "languageFocusIds": [
+          1,
+          2
+        ],
+        "cultureFocusIds": [],
+        "memberProfileIds": [
+          1,
+          2
+        ],
+        "state": "Ended",
+        "capacity": 3,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 3,
+      "expected": {
+        "purposeValid": true,
+        "capacityValid": true,
+        "candidateParticipates": true,
+        "compatible": false
+      }
+    },
+    {
+      "id": "GROUP_FULL_OPEN",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Language",
+        "languageFocusIds": [
+          1,
+          2
+        ],
+        "cultureFocusIds": [],
+        "memberProfileIds": [
+          1,
+          2
+        ],
+        "state": "Open",
+        "capacity": 2,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 3,
+      "expected": {
+        "purposeValid": true,
+        "capacityValid": true,
+        "candidateParticipates": true,
+        "compatible": false
+      }
+    },
+    {
+      "id": "GROUP_LANGUAGE_CAPACITY_TOO_LARGE",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Language",
+        "languageFocusIds": [
+          1,
+          2
+        ],
+        "cultureFocusIds": [],
+        "memberProfileIds": [
+          1,
+          2
+        ],
+        "state": "Open",
+        "capacity": 4,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 3,
+      "expected": {
+        "purposeValid": true,
+        "capacityValid": false,
+        "candidateParticipates": true,
+        "compatible": false
+      }
+    },
+    {
+      "id": "GROUP_CULTURE_CAPACITY_TOO_LARGE",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Culture",
+        "languageFocusIds": [],
+        "cultureFocusIds": [
+          10
+        ],
+        "memberProfileIds": [
+          4,
+          5
+        ],
+        "state": "Open",
+        "capacity": 11,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 6,
+      "expected": {
+        "purposeValid": true,
+        "capacityValid": false,
+        "candidateParticipates": true,
+        "compatible": false
+      }
+    },
+    {
+      "id": "GROUP_UNSUPPORTED_DECLARED_FOCUS",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Language",
+        "languageFocusIds": [
+          1,
+          2,
+          3
+        ],
+        "cultureFocusIds": [],
+        "memberProfileIds": [
+          1,
+          2
+        ],
+        "state": "Open",
+        "capacity": 3,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 3,
+      "expected": {
+        "purposeValid": false,
+        "capacityValid": true,
+        "candidateParticipates": true,
+        "compatible": false
+      }
+    },
+    {
+      "id": "GROUP_UNRELATED_EXISTING_MEMBER",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Language",
+        "languageFocusIds": [
+          1,
+          2
+        ],
+        "cultureFocusIds": [],
+        "memberProfileIds": [
+          1,
+          2,
+          7
+        ],
+        "state": "Open",
+        "capacity": 3,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 3,
+      "expected": {
+        "purposeValid": false,
+        "capacityValid": true,
+        "candidateParticipates": true,
+        "compatible": false
+      }
+    },
+    {
+      "id": "GROUP_CANDIDATE_UNRELATED",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Language",
+        "languageFocusIds": [
+          1,
+          2
+        ],
+        "cultureFocusIds": [],
+        "memberProfileIds": [
+          1,
+          2
+        ],
+        "state": "Open",
+        "capacity": 3,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 4,
+      "expected": {
+        "purposeValid": true,
+        "capacityValid": true,
+        "candidateParticipates": false,
+        "compatible": false
+      }
+    },
+    {
+      "id": "GROUP_CANDIDATE_ALREADY_MEMBER",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Language",
+        "languageFocusIds": [
+          1,
+          2
+        ],
+        "cultureFocusIds": [],
+        "memberProfileIds": [
+          1,
+          2
+        ],
+        "state": "Open",
+        "capacity": 3,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 1,
+      "expected": {
+        "purposeValid": true,
+        "capacityValid": true,
+        "candidateParticipates": true,
+        "compatible": false
+      }
+    },
+    {
+      "id": "GROUP_DUPLICATE_MEMBER",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Language",
+        "languageFocusIds": [
+          1,
+          2
+        ],
+        "cultureFocusIds": [],
+        "memberProfileIds": [
+          1,
+          2,
+          2
+        ],
+        "state": "Open",
+        "capacity": 3,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 3,
+      "expected": {
+        "purposeValid": false,
+        "capacityValid": true,
+        "candidateParticipates": true,
+        "compatible": false
+      }
+    },
+    {
+      "id": "GROUP_MISSING_MEMBER_PROFILE",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Language",
+        "languageFocusIds": [
+          1,
+          2
+        ],
+        "cultureFocusIds": [],
+        "memberProfileIds": [
+          1,
+          2,
+          200
+        ],
+        "state": "Open",
+        "capacity": 3,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 3,
+      "expected": {
+        "purposeValid": false,
+        "capacityValid": true,
+        "candidateParticipates": true,
+        "compatible": false
+      }
+    },
+    {
+      "id": "GROUP_SELF_ONLY_FOCUS_RELATION",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Language",
+        "languageFocusIds": [
+          1
+        ],
+        "cultureFocusIds": [],
+        "memberProfileIds": [
+          8
+        ],
+        "state": "Open",
+        "capacity": 2,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 1,
+      "expected": {
+        "purposeValid": false,
+        "capacityValid": true,
+        "candidateParticipates": true,
+        "compatible": false
+      }
+    },
+    {
+      "id": "GROUP_COMBINED_MISSING_CULTURE",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Combined",
+        "languageFocusIds": [
+          1,
+          2
+        ],
+        "cultureFocusIds": [],
+        "memberProfileIds": [
+          1,
+          2
+        ],
+        "state": "Open",
+        "capacity": 10,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 3,
+      "expected": {
+        "purposeValid": false,
+        "capacityValid": true,
+        "candidateParticipates": true,
+        "compatible": false
+      }
+    },
+    {
+      "id": "GROUP_ANY_LANGUAGE_FOCUS_DEFERRED",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Language",
+        "languageFocusIds": [
+          99
+        ],
+        "cultureFocusIds": [],
+        "memberProfileIds": [
+          1,
+          2
+        ],
+        "state": "Open",
+        "capacity": 3,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 3,
+      "expected": {
+        "purposeValid": false,
+        "capacityValid": true,
+        "candidateParticipates": false,
+        "compatible": false
+      }
+    },
+    {
+      "id": "GROUP_SETUP_INCOMPLETE",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Language",
+        "languageFocusIds": [
+          1,
+          2
+        ],
+        "cultureFocusIds": [],
+        "memberProfileIds": [
+          1,
+          2
+        ],
+        "state": "Open",
+        "capacity": 3,
+        "setupComplete": false,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 3,
+      "expected": {
+        "purposeValid": true,
+        "capacityValid": true,
+        "candidateParticipates": true,
+        "compatible": false
+      }
+    },
+    {
+      "id": "GROUP_SHARER_AVAILABILITY_UNVERIFIED",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Language",
+        "languageFocusIds": [
+          1,
+          2
+        ],
+        "cultureFocusIds": [],
+        "memberProfileIds": [
+          1,
+          2
+        ],
+        "state": "Open",
+        "capacity": 3,
+        "setupComplete": true,
+        "focusSharersAvailable": false
+      },
+      "candidateId": 3,
+      "expected": {
+        "purposeValid": true,
+        "capacityValid": true,
+        "candidateParticipates": true,
+        "compatible": false
+      }
+    },
+    {
+      "id": "GROUP_PAUSED_MEMBER_NOT_DROPPED_FROM_COUNT",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Language",
+        "languageFocusIds": [
+          1,
+          2
+        ],
+        "cultureFocusIds": [],
+        "memberProfileIds": [
+          1,
+          2,
+          9
+        ],
+        "state": "Open",
+        "capacity": 3,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 3,
+      "expected": {
+        "purposeValid": true,
+        "capacityValid": true,
+        "candidateParticipates": true,
+        "compatible": false
+      }
+    },
+    {
+      "id": "GROUP_CANDIDATE_PAUSED",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Language",
+        "languageFocusIds": [
+          1,
+          2
+        ],
+        "cultureFocusIds": [],
+        "memberProfileIds": [
+          1,
+          2
+        ],
+        "state": "Open",
+        "capacity": 3,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 9,
+      "expected": {
+        "purposeValid": true,
+        "capacityValid": true,
+        "candidateParticipates": true,
+        "compatible": false
+      }
+    },
+    {
+      "id": "GROUP_TYPE_FOCUS_MISMATCH",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Culture",
+        "languageFocusIds": [
+          1,
+          2
+        ],
+        "cultureFocusIds": [],
+        "memberProfileIds": [
+          1,
+          2
+        ],
+        "state": "Open",
+        "capacity": 3,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 3,
+      "expected": {
+        "purposeValid": false,
+        "capacityValid": true,
+        "candidateParticipates": true,
+        "compatible": false
+      }
+    },
+    {
+      "id": "GROUP_EMPTY_FOCUS",
+      "kind": "group",
+      "group": {
+        "groupId": 1,
+        "exchangeType": "Language",
+        "languageFocusIds": [],
+        "cultureFocusIds": [],
+        "memberProfileIds": [
+          1,
+          2
+        ],
+        "state": "Open",
+        "capacity": 3,
+        "setupComplete": true,
+        "focusSharersAvailable": true
+      },
+      "candidateId": 3,
+      "expected": {
+        "purposeValid": false,
+        "capacityValid": true,
+        "candidateParticipates": false,
+        "compatible": false
+      }
+    }
+  ]
+}

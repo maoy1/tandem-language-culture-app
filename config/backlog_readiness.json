@@ -24,7 +24,7 @@
     "closedTickets": 10,
     "done": 8,
     "superseded": 2,
-    "inProgress": 0
+    "inProgress": 1
   },
   "flowCountNote": "12 singly-owned core production flows (notification provisional), plus 1 Deferred reminder flow. Access/migration helpers remain undecided; no duplicate owners for the same production flow.",
   "flowInventory": [
@@ -222,24 +222,24 @@
       "number": 9,
       "title": "[Shared technical] Reusable compatibility rules for generated flows",
       "ticketType": "Shared technical",
-      "status": "Planned",
+      "status": "In progress",
       "flowScope": "One maintained rule/normalization source and synthetic contract fixtures for package generation; no separately hosted runtime or assumed child flow.",
-      "implementationReadiness": "Can start shared-source/interface work",
-      "implementationEvidence": "App invocation/reference config exist; reuse across discovery/request/acceptance paths remains incomplete.",
-      "evidence": "App invocation/reference config exist; reuse across discovery/request/acceptance paths remains incomplete.",
+      "implementationReadiness": "Shared source, typed adapter contract, 39 synthetic fixtures and connector-free proof package built. Own tenant proof import/run pending.",
+      "implementationEvidence": "compatibility.py builds reusable normalization/person/group expressions; 121 local tests pass including generated-action subset execution; proof 45 actions/depth 4, no connectors/data operations.",
+      "evidence": "Rules v1 / proof build 57fa2bc6-2b02-4068-9999-fe46f3747d4a; Any language deferred by owner and excluded from matching/focus; tenant proof NOT RUN.",
       "proposedExperience": [
         "The app requests candidates from a flow.",
         "The flow owns normalization, eligibility and projection.",
         "Participant/group paths use one maintained compatibility source rather than UI formulas."
       ],
-      "remainingWork": "One maintained rule/normalization source and synthetic contract fixtures for package generation; no separately hosted runtime or assumed child flow.",
+      "remainingWork": "Import/run isolated proof or record exact blocked error; shared-source review. Consuming flows own live integration; no wait for every consumer to finish.",
       "testReferences": [
         "DISC-001:011",
         "REQ-001",
         "REQ-003"
       ],
-      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
-      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "testStatus": "39 reference fixture cases pass locally; 121 full suite tests pass. Tenant proof NOT_IMPORTED_NOT_TESTED; no production integration inferred.",
+      "testHandoff": "Full import/run prerequisites, outputs, cleanup and per-case verification checkboxes directly in issue #9. No connection mapping/tenant data needed.",
       "flows": [],
       "scopeBoundary": "One maintained rule/normalization source and synthetic contract fixtures for package generation; no separately hosted runtime or assumed child flow.",
       "prerequisites": [],
@@ -1620,7 +1620,7 @@
     "openBodiesVerified": 38,
     "typeAndLifecycleExactlyOne": true,
     "uniqueProductionFlowOwners": 13,
-    "activeWork": 0,
+    "activeWork": 1,
     "stateChanges": {
       "supersededNotPlanned": [
         22,

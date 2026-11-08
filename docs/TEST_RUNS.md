@@ -1321,3 +1321,26 @@ whole-schema audit evidence above remain separately scoped.
   use their own profiles; unavailable/unverified access is a blocked case under
   #39/#40/#41. Detailed tests handed over, not silently removed from #61 scope.
 - JSON/diff checked for handover-only changes; prior 101-test result retained.
+
+### COMP9-BUILD-20261108 — shared source and isolated synthetic proof
+
+- #61 remains Ready for testing after merged #72; next #9 is sole In progress
+  on codex/issue-9-compatibility-rules. No #61 pending acceptance marked passed.
+- Owner says Any language is nice-to-have and not to consider it now. Defer
+  wildcard/exact-sentinel matching: drop known sentinel from matching role arrays,
+  reject as group focus, keep concrete choices; no catalogue/registration change.
+- Maintained Expr source emits normalization/person/group rules. Typed adapters
+  require complete active catalogues, canonical identities and explicit server
+  group sharer-availability evidence; no app identity/availability assumed trusted.
+- 39 independently specified expected cases pass locally; generated WDL-subset
+  runner checks emitted normalization/loop/ref scoping as well as source evaluation.
+  Strict malformed/duplicate input guards and package/runtime boundaries tested.
+- **121 pytest passed** (20 new tests). Proof 57fa2bc6-2b02-4068-9999-fe46f3747d4a:
+  **45 action definitions / maximum depth 4** (limits 500/8); largest generated
+  expression 2800 characters. Source/fixture/package hashes in review metadata.
+- Proof has zero connectors/live inputs/tenant reads/writes, no Response/trigger
+  concurrency combination and no Terminate inside foreach. No employee data.
+- Tenant import/run **NOT RUN**. No production consumer, caller authority,
+  paging/scale or ordinary-user group availability pass inferred. Full current
+  test handover and verification boxes are directly in issue #9; production
+  #7/#10/#11/#17/#65 own their integration; #12 actual group mapping, #47 writes.
