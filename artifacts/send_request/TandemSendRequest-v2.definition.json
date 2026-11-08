@@ -1,6 +1,6 @@
 {
-  "name": "03faf4f3-72c9-481c-8f45-230b3d943bc8",
-  "id": "/providers/Microsoft.Flow/flows/03faf4f3-72c9-481c-8f45-230b3d943bc8",
+  "name": "4f0030f7-6b1c-4e57-90fc-ff58bd270c78",
+  "id": "/providers/Microsoft.Flow/flows/4f0030f7-6b1c-4e57-90fc-ff58bd270c78",
   "type": "Microsoft.Flow/flows",
   "properties": {
     "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
@@ -380,7 +380,7 @@
                 "parameters": {
                   "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
                   "parameters/method": "GET",
-                  "parameters/uri": "_api/web/lists(guid'3d17485d-1dac-41f0-a1af-24e45daa4567')/fields?$select=InternalName,TypeAsString,Required,Indexed,EnforceUniqueValues,SchemaXml&$top=5000",
+                  "parameters/uri": "_api/web/lists(guid'3d17485d-1dac-41f0-a1af-24e45daa4567')/fields?$select=InternalName,TypeAsString,Required,Hidden,ReadOnlyField,Indexed,EnforceUniqueValues,SchemaXml&$top=5000",
                   "parameters/headers": {
                     "Accept": "application/json;odata=verbose"
                   }
@@ -400,7 +400,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_request_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'SenderParticipant'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],true),contains(toLower(coalesce(item()?['SchemaXml'],'')),'fd3adf46-f81d-4a7b-a80c-567fde0175dc'))"
+                "where": "@and(equals(item()?['InternalName'],'SenderParticipant'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Required'],true),equals(replace(replace(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@List)'))),'{',''),'}',''),'fd3adf46-f81d-4a7b-a80c-567fde0175dc'))"
               },
               "runAfter": {
                 "Read_request_fields": [
@@ -412,7 +412,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_request_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'RecipientParticipant'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],false),contains(toLower(coalesce(item()?['SchemaXml'],'')),'fd3adf46-f81d-4a7b-a80c-567fde0175dc'))"
+                "where": "@and(equals(item()?['InternalName'],'RecipientParticipant'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Required'],false),equals(replace(replace(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@List)'))),'{',''),'}',''),'fd3adf46-f81d-4a7b-a80c-567fde0175dc'))"
               },
               "runAfter": {
                 "Schema_SenderParticipant": [
@@ -424,7 +424,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_request_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'TargetGroup'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],false),contains(toLower(coalesce(item()?['SchemaXml'],'')),'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'))"
+                "where": "@and(equals(item()?['InternalName'],'TargetGroup'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Required'],false),equals(replace(replace(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@List)'))),'{',''),'}',''),'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'))"
               },
               "runAfter": {
                 "Schema_RecipientParticipant": [
@@ -436,7 +436,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_request_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'RequestType'),equals(item()?['TypeAsString'],'Choice'),contains(coalesce(item()?['SchemaXml'],''),'<CHOICE>Personal</CHOICE>'),contains(coalesce(item()?['SchemaXml'],''),'<CHOICE>Group</CHOICE>'))"
+                "where": "@and(equals(item()?['InternalName'],'RequestType'),equals(item()?['TypeAsString'],'Choice'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Personal'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Group'),equals(length(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()')),2),or(empty(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@FillInChoice)')))),equals(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@FillInChoice)'))),'false')))"
               },
               "runAfter": {
                 "Schema_TargetGroup": [
@@ -448,7 +448,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_request_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'Status'),equals(item()?['TypeAsString'],'Choice'),contains(coalesce(item()?['SchemaXml'],''),'<CHOICE>Pending</CHOICE>'),contains(coalesce(item()?['SchemaXml'],''),'<CHOICE>Accepted</CHOICE>'),contains(coalesce(item()?['SchemaXml'],''),'<CHOICE>Declined</CHOICE>'),contains(coalesce(item()?['SchemaXml'],''),'<CHOICE>Cancelled</CHOICE>'))"
+                "where": "@and(equals(item()?['InternalName'],'Status'),equals(item()?['TypeAsString'],'Choice'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Pending'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Accepted'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Declined'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Cancelled'),equals(length(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()')),4),or(empty(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@FillInChoice)')))),equals(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@FillInChoice)'))),'false')))"
               },
               "runAfter": {
                 "Schema_RequestType": [
@@ -460,7 +460,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_request_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'SendOperationKey'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Required'],true),equals(item()?['Indexed'],true),equals(item()?['EnforceUniqueValues'],true))"
+                "where": "@and(equals(item()?['InternalName'],'SendOperationKey'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],true),equals(item()?['Required'],true),equals(item()?['Indexed'],true),equals(item()?['EnforceUniqueValues'],true))"
               },
               "runAfter": {
                 "Schema_Status": [
@@ -472,7 +472,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_request_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'ConnectionKey'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Required'],true),equals(item()?['Indexed'],true),equals(item()?['EnforceUniqueValues'],true))"
+                "where": "@and(equals(item()?['InternalName'],'ConnectionKey'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],true),equals(item()?['Required'],true),equals(item()?['Indexed'],true),equals(item()?['EnforceUniqueValues'],true))"
               },
               "runAfter": {
                 "Schema_SendOperationKey": [
@@ -484,7 +484,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_request_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'WinningOperationKey'),equals(item()?['TypeAsString'],'Text'))"
+                "where": "@and(equals(item()?['InternalName'],'WinningOperationKey'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false))"
               },
               "runAfter": {
                 "Schema_ConnectionKey": [
@@ -496,7 +496,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_request_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'OperationComplete'),equals(item()?['TypeAsString'],'Boolean'))"
+                "where": "@and(equals(item()?['InternalName'],'OperationComplete'),equals(item()?['TypeAsString'],'Boolean'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false))"
               },
               "runAfter": {
                 "Schema_WinningOperationKey": [
@@ -546,7 +546,7 @@
                 "parameters": {
                   "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
                   "parameters/method": "GET",
-                  "parameters/uri": "@concat('_api/web/lists(guid''3d17485d-1dac-41f0-a1af-24e45daa4567'')/items?$select=Id,SenderParticipantId,RecipientParticipantId,TargetGroupId,RequestType,Status,SendOperationKey,ConnectionKey,OperationComplete&$filter=SendOperationKey eq ''',outputs('Operation_key'),'''&$top=2')",
+                  "parameters/uri": "@concat('_api/web/lists(guid''3d17485d-1dac-41f0-a1af-24e45daa4567'')/items?$select=Id,SenderParticipantId,RecipientParticipantId,TargetGroupId,RequestType,Status,SendOperationKey,ConnectionKey,WinningOperationKey,OperationComplete&$filter=SendOperationKey eq ''',outputs('Operation_key'),'''&$top=2')",
                   "parameters/headers": {
                     "Accept": "application/json;odata=verbose"
                   }
@@ -604,7 +604,7 @@
                 },
                 "Require_same_intent": {
                   "type": "If",
-                  "expression": "@and(equals(outputs('Prior_intent')?['SenderParticipantId'],outputs('Own_profile')?['Id']),equals(outputs('Prior_intent')?['RecipientParticipantId'],body('Input_reference')),equals(outputs('Prior_intent')?['TargetGroupId'],null),equals(outputs('Prior_intent')?['RequestType'],'Personal'),equals(outputs('Prior_intent')?['SendOperationKey'],outputs('Operation_key')),contains(createArray('Pending','Accepted','Declined','Cancelled'),outputs('Prior_intent')?['Status']),or(and(contains(createArray('Pending','Accepted'),outputs('Prior_intent')?['Status']),equals(outputs('Prior_intent')?['OperationComplete'],false),equals(outputs('Prior_intent')?['ConnectionKey'],outputs('Connection_key'))),and(contains(createArray('Accepted','Declined','Cancelled'),outputs('Prior_intent')?['Status']),equals(outputs('Prior_intent')?['OperationComplete'],true),equals(outputs('Prior_intent')?['ConnectionKey'],concat('history:request:',string(outputs('Prior_intent')?['Id']))))))",
+                  "expression": "@and(greater(coalesce(outputs('Prior_intent')?['Id'],0),0),if(equals(outputs('Prior_intent')?['Status'],'Pending'),empty(outputs('Prior_intent')?['WinningOperationKey']),not(empty(outputs('Prior_intent')?['WinningOperationKey']))),equals(outputs('Prior_intent')?['SenderParticipantId'],outputs('Own_profile')?['Id']),equals(outputs('Prior_intent')?['RecipientParticipantId'],body('Input_reference')),equals(outputs('Prior_intent')?['TargetGroupId'],null),equals(outputs('Prior_intent')?['RequestType'],'Personal'),equals(outputs('Prior_intent')?['SendOperationKey'],outputs('Operation_key')),contains(createArray('Pending','Accepted','Declined','Cancelled'),outputs('Prior_intent')?['Status']),or(and(contains(createArray('Pending','Accepted'),outputs('Prior_intent')?['Status']),equals(outputs('Prior_intent')?['OperationComplete'],false),equals(outputs('Prior_intent')?['ConnectionKey'],outputs('Connection_key'))),and(contains(createArray('Accepted','Declined','Cancelled'),outputs('Prior_intent')?['Status']),equals(outputs('Prior_intent')?['OperationComplete'],true),equals(outputs('Prior_intent')?['ConnectionKey'],concat('history:request:',string(outputs('Prior_intent')?['Id']))))))",
                   "actions": {},
                   "else": {
                     "actions": {
@@ -633,18 +633,6 @@
                     ]
                   }
                 },
-                "REPLAY_Set_result": {
-                  "type": "SetVariable",
-                  "inputs": {
-                    "name": "ResultCode",
-                    "value": "REPLAY"
-                  },
-                  "runAfter": {
-                    "Require_same_intent": [
-                      "Succeeded"
-                    ]
-                  }
-                },
                 "REPLAY_Set_request_id": {
                   "type": "SetVariable",
                   "inputs": {
@@ -652,7 +640,7 @@
                     "value": "@outputs('Prior_intent')?['Id']"
                   },
                   "runAfter": {
-                    "REPLAY_Set_result": [
+                    "Require_same_intent": [
                       "Succeeded"
                     ]
                   }
@@ -665,6 +653,18 @@
                   },
                   "runAfter": {
                     "REPLAY_Set_request_id": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "REPLAY_Set_result": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ResultCode",
+                    "value": "REPLAY"
+                  },
+                  "runAfter": {
+                    "REPLAY_Set_saved_status": [
                       "Succeeded"
                     ]
                   }
@@ -1472,7 +1472,7 @@
                       "parameters": {
                         "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
                         "parameters/method": "GET",
-                        "parameters/uri": "@concat('_api/web/lists(guid''3d17485d-1dac-41f0-a1af-24e45daa4567'')/items?$select=Id,SenderParticipantId,RecipientParticipantId,TargetGroupId,RequestType,Status,SendOperationKey,ConnectionKey,OperationComplete&$filter=ConnectionKey eq ''',outputs('Connection_key'),'''&$top=2')",
+                        "parameters/uri": "@concat('_api/web/lists(guid''3d17485d-1dac-41f0-a1af-24e45daa4567'')/items?$select=Id,SenderParticipantId,RecipientParticipantId,TargetGroupId,RequestType,Status,SendOperationKey,ConnectionKey,WinningOperationKey,OperationComplete&$filter=ConnectionKey eq ''',outputs('Connection_key'),'''&$top=2')",
                         "parameters/headers": {
                           "Accept": "application/json;odata=verbose"
                         }
@@ -1664,6 +1664,7 @@
                           "Status": "Pending",
                           "SendOperationKey": "@outputs('Operation_key')",
                           "ConnectionKey": "@outputs('Connection_key')",
+                          "WinningOperationKey": null,
                           "OperationComplete": false
                         }
                       },
@@ -1692,7 +1693,7 @@
                       "parameters": {
                         "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
                         "parameters/method": "GET",
-                        "parameters/uri": "@concat('_api/web/lists(guid''3d17485d-1dac-41f0-a1af-24e45daa4567'')/items?$select=Id,SenderParticipantId,RecipientParticipantId,TargetGroupId,RequestType,Status,SendOperationKey,ConnectionKey,OperationComplete&$filter=SendOperationKey eq ''',outputs('Operation_key'),'''&$top=2')",
+                        "parameters/uri": "@concat('_api/web/lists(guid''3d17485d-1dac-41f0-a1af-24e45daa4567'')/items?$select=Id,SenderParticipantId,RecipientParticipantId,TargetGroupId,RequestType,Status,SendOperationKey,ConnectionKey,WinningOperationKey,OperationComplete&$filter=SendOperationKey eq ''',outputs('Operation_key'),'''&$top=2')",
                         "parameters/headers": {
                           "Accept": "application/json;odata=verbose"
                         }
@@ -1752,27 +1753,15 @@
                   },
                   "Verified_create": {
                     "type": "If",
-                    "expression": "@and(equals(outputs('Created_row')?['SenderParticipantId'],outputs('Own_profile')?['Id']),equals(outputs('Created_row')?['RecipientParticipantId'],body('Input_reference')),equals(outputs('Created_row')?['TargetGroupId'],null),equals(outputs('Created_row')?['RequestType'],'Personal'),equals(outputs('Created_row')?['SendOperationKey'],outputs('Operation_key')),contains(createArray('Pending','Accepted','Declined','Cancelled'),outputs('Created_row')?['Status']),or(and(contains(createArray('Pending','Accepted'),outputs('Created_row')?['Status']),equals(outputs('Created_row')?['OperationComplete'],false),equals(outputs('Created_row')?['ConnectionKey'],outputs('Connection_key'))),and(contains(createArray('Accepted','Declined','Cancelled'),outputs('Created_row')?['Status']),equals(outputs('Created_row')?['OperationComplete'],true),equals(outputs('Created_row')?['ConnectionKey'],concat('history:request:',string(outputs('Created_row')?['Id']))))))",
+                    "expression": "@and(greater(coalesce(outputs('Created_row')?['Id'],0),0),if(equals(outputs('Created_row')?['Status'],'Pending'),empty(outputs('Created_row')?['WinningOperationKey']),not(empty(outputs('Created_row')?['WinningOperationKey']))),equals(outputs('Created_row')?['SenderParticipantId'],outputs('Own_profile')?['Id']),equals(outputs('Created_row')?['RecipientParticipantId'],body('Input_reference')),equals(outputs('Created_row')?['TargetGroupId'],null),equals(outputs('Created_row')?['RequestType'],'Personal'),equals(outputs('Created_row')?['SendOperationKey'],outputs('Operation_key')),contains(createArray('Pending','Accepted','Declined','Cancelled'),outputs('Created_row')?['Status']),or(and(contains(createArray('Pending','Accepted'),outputs('Created_row')?['Status']),equals(outputs('Created_row')?['OperationComplete'],false),equals(outputs('Created_row')?['ConnectionKey'],outputs('Connection_key'))),and(contains(createArray('Accepted','Declined','Cancelled'),outputs('Created_row')?['Status']),equals(outputs('Created_row')?['OperationComplete'],true),equals(outputs('Created_row')?['ConnectionKey'],concat('history:request:',string(outputs('Created_row')?['Id']))))))",
                     "actions": {
-                      "SAVED_Set_result": {
-                        "type": "SetVariable",
-                        "inputs": {
-                          "name": "ResultCode",
-                          "value": "SAVED"
-                        },
-                        "runAfter": {}
-                      },
                       "SAVED_Set_request_id": {
                         "type": "SetVariable",
                         "inputs": {
                           "name": "RequestId",
                           "value": "@outputs('Created_row')?['Id']"
                         },
-                        "runAfter": {
-                          "SAVED_Set_result": [
-                            "Succeeded"
-                          ]
-                        }
+                        "runAfter": {}
                       },
                       "SAVED_Set_saved_status": {
                         "type": "SetVariable",
@@ -1782,6 +1771,18 @@
                         },
                         "runAfter": {
                           "SAVED_Set_request_id": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "SAVED_Set_result": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ResultCode",
+                          "value": "SAVED"
+                        },
+                        "runAfter": {
+                          "SAVED_Set_saved_status": [
                             "Succeeded"
                           ]
                         }
@@ -1826,7 +1827,7 @@
             "kind": "TandemSendRequest",
             "schemaVersion": 1,
             "sourceTicket": 10,
-            "packageBuildId": "66cdb66a-69d5-4a2b-ba7b-543bbfda0980",
+            "packageBuildId": "50e14992-a69a-4001-93f4-1ac8ed57dfe2",
             "runReference": "@workflow()?['run']?['name']",
             "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF",
             "ordinaryUserAccessVerified": false,

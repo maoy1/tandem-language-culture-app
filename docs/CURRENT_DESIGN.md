@@ -484,7 +484,7 @@ scheduling rule for this batch only. #7 is queued with remaining tests retained;
 
 ### #10 implementation and exact bindings
 
-TandemSendRequest v2 build **66cdb66a-69d5-4a2b-ba7b-543bbfda0980**;
+TandemSendRequest v2 build **50e14992-a69a-4001-93f4-1ac8ed57dfe2**;
 **125 actions / depth 5**, limits 500/8.
 Original export SHA `823383a1b2941a38ebf80c3e2f0a288f72a9956d24db793767e2dda5eeff0ab8`; raw archive private/untracked.
 Preserves original SenderParticipantId `number`, RecipientParticipantId `number_1`,
@@ -498,12 +498,12 @@ current compatibility/availability, idempotent request receipt, native unique
 live connection key and legacy unsettled-pair guard. One POST with retries off;
 exact immutable readback reconciles lost success. Unknown stays unknown; no
 fake rollback, membership/group creation, profile update or auto-cancellation.
-27 new emitted-graph/local cases pass; tenant import/write/race/ordinary-user
+29 new emitted-graph/local cases pass; tenant import/write/race/ordinary-user
 results NOT RUN. Schema prerequisites remain real integration work, not a PASS.
 
 ### One metadata preflight before this batch
 
-TandemRequestSchemaPreflight build **88990545-0026-40b6-913b-fdfa3d623ef7**,
+TandemRequestSchemaPreflight build **f7fd078d-740a-4d68-a8fe-31ca2abc9e54**,
 **18 actions / depth 3**. No inputs, item reads,
 writes or permission/schema changes. Shares the expected request mapping with the
 send gate. Local valid/missing-schema cases pass; native NOT RUN.

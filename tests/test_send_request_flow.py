@@ -19,8 +19,8 @@ def fields():
     for n,t in send.EXPECTED.items():
         xml=''
         if t=='Lookup':xml='<Field List="'+(GROUPS['lists']['groups']['listId'] if n=='TargetGroup' else PEOPLE['lists']['participants']['listId'])+'" />'
-        if t=='Choice':xml=''.join('<CHOICE>'+v+'</CHOICE>' for v in (['Personal','Group'] if n=='RequestType' else ['Pending','Accepted','Declined','Cancelled']))
-        rows.append({'InternalName':n,'TypeAsString':t,'Required':n in ['SendOperationKey','ConnectionKey','SenderParticipant'],'Indexed':n in ['SendOperationKey','ConnectionKey'],'EnforceUniqueValues':n in ['SendOperationKey','ConnectionKey'],'SchemaXml':xml})
+        if t=='Choice':xml='<Field FillInChoice="FALSE"><CHOICES>'+''.join('<CHOICE>'+v+'</CHOICE>' for v in (['Personal','Group'] if n=='RequestType' else ['Pending','Accepted','Declined','Cancelled']))+'</CHOICES></Field>'
+        rows.append({'InternalName':n,'TypeAsString':t,'Required':n in ['SendOperationKey','ConnectionKey','SenderParticipant','RequestType','Status'],'Hidden':False,'ReadOnlyField':False,'Indexed':n in ['SendOperationKey','ConnectionKey'],'EnforceUniqueValues':n in ['SendOperationKey','ConnectionKey'],'SchemaXml':xml})
     return rows
 
 class Server(Fake):
@@ -84,8 +84,8 @@ def test_schema_unknown_never_writes(variant):
     s=Server()
     if variant=='missing':s.fields.pop()
     if variant=='unique':next(x for x in s.fields if x['InternalName']=='ConnectionKey')['EnforceUniqueValues']=False
-    if variant=='lookup':s.fields[0]['SchemaXml']='other-list'
-    if variant=='choice':next(x for x in s.fields if x['InternalName']=='RequestType')['SchemaXml']='wrong choices'
+    if variant=='lookup':s.fields[0]['SchemaXml']='<Field List="other-list" />'
+    if variant=='choice':next(x for x in s.fields if x['InternalName']=='RequestType')['SchemaXml']='<Field><CHOICES><CHOICE>Wrong</CHOICE></CHOICES></Field>'
     if variant=='paging':s.schema_page=True
     r=execute(s);assert r.response['resultcode']=='REQUEST_SCHEMA_UNVERIFIED' and s.writes==0
 
@@ -116,7 +116,7 @@ def test_reverse_send_race_native_unique_key_prevents_second_pending():
     assert len(s.rows)==1 and not r.response['success'] and r.response['resultcode']=='CREATE_OUTCOME_UNKNOWN'
 
 def test_terminal_history_replay_keeps_old_result_and_can_start_distinct_intent():
-    s=Server();execute(s);s.rows[0].update(Status='Cancelled',OperationComplete=True,ConnectionKey='history:request:80')
+    s=Server();execute(s);s.rows[0].update(Status='Cancelled',OperationComplete=True,WinningOperationKey='cancel:1:request:80',ConnectionKey='history:request:80')
     r=execute(s);assert r.response['resultcode']=='REPLAY' and r.response['status']=='Cancelled'
     r=execute(s,intent='ffffffff-ffff-ffff-ffff-ffffffffffff');assert r.response['resultcode']=='SAVED' and len(s.rows)==2
 
@@ -154,3 +154,14 @@ def test_actual_export_adapter_finds_nested_request_actions_and_preserves_auth(t
     adapted=send.original_source(export)
     assert adapted['properties']['definition']['actions']['Get_item']['inputs']['authentication']==old['Get_item']['inputs']['authentication']
     assert send.build_package(tmp_path/'new.zip',export)['sourceExportSha256']
+
+
+def test_metadata_preflight_requires_status_type_and_canonical_choices():
+    for field,change in [('Status',{'Required':False}),('RequestType',{'SchemaXml':'<Field FillInChoice="TRUE"><CHOICES><CHOICE>Personal</CHOICE><CHOICE>Group</CHOICE></CHOICES></Field>'}),('SenderParticipant',{'ReadOnlyField':True})]:
+        server=Server();next(x for x in server.fields if x['InternalName']==field).update(change)
+        runner=execute(server);assert runner.response['resultcode']=='REQUEST_SCHEMA_UNVERIFIED' and server.writes==0
+
+
+def test_replay_rejects_incoherent_winning_marker_without_writing():
+    s=Server();execute(s);s.rows[0]['WinningOperationKey']='unexpected-live-decision'
+    r=execute(s);assert r.response['resultcode']=='INTENT_CONFLICT' and s.writes==1

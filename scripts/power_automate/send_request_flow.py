@@ -72,33 +72,38 @@ def build_actions(source, people, groups, build_id):
     s['Operation_key']=d.compose("@concat('personal:',string(outputs('Own_profile')?['Id']),':',toLower(body('Input_intent')?['intent']))",'Require_own_profile')
     s['Connection_key']=d.compose("@concat('open:person:',string(if(less(outputs('Own_profile')?['Id'],body('Input_reference')),outputs('Own_profile')?['Id'],body('Input_reference'))),':',string(if(less(outputs('Own_profile')?['Id'],body('Input_reference')),body('Input_reference'),outputs('Own_profile')?['Id'])))",'Operation_key')
     s['Read_request_list']=http(base+'?$select=Id,BaseTemplate','Connection_key')
-    s['Read_request_fields']=http(base+'/fields?$select=InternalName,TypeAsString,Required,Indexed,EnforceUniqueValues,SchemaXml&$top=5000','Read_request_list')
+    s['Read_request_fields']=http(base+'/fields?$select=InternalName,TypeAsString,Required,Hidden,ReadOnlyField,Indexed,EnforceUniqueValues,SchemaXml&$top=5000','Read_request_list')
     prior='Read_request_fields';matches=[]
     for field,kind in EXPECTED.items():
-        terms=["equals(item()?['InternalName'],'"+field+"')","equals(item()?['TypeAsString'],'"+kind+"')"]
+        terms=["equals(item()?['InternalName'],'"+field+"')","equals(item()?['TypeAsString'],'"+kind+"')","equals(item()?['Hidden'],false)","equals(item()?['ReadOnlyField'],false)"]
+        terms.append("equals(item()?['Required'],"+str(field in ['SenderParticipant','RequestType','Status','SendOperationKey','ConnectionKey']).lower()+')')
+        if field not in ['SendOperationKey','ConnectionKey']:terms.append("equals(item()?['EnforceUniqueValues'],false)")
         if field in ['SendOperationKey','ConnectionKey']:
             terms += ["equals(item()?['Required'],true)","equals(item()?['Indexed'],true)","equals(item()?['EnforceUniqueValues'],true)"]
         if field=='SenderParticipant':terms.append("equals(item()?['Required'],true)")
         if field in ['RecipientParticipant','TargetGroup']:terms.append("equals(item()?['Required'],false)")
         if kind=='Lookup':
             target=groups['lists']['groups']['listId'] if field=='TargetGroup' else people['lists']['participants']['listId']
-            terms.append("contains(toLower(coalesce(item()?['SchemaXml'],'')),'"+target+"')")
+            terms.append("equals(replace(replace(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@List)'))),'{',''),'}',''),'"+target+"')")
         if kind=='Choice':
             choices=['Personal','Group'] if field=='RequestType' else ['Pending','Accepted','Declined','Cancelled']
-            terms.extend("contains(coalesce(item()?['SchemaXml'],''),'<CHOICE>"+c+"</CHOICE>')" for c in choices)
+            terms.extend("contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'"+c+"')" for c in choices)
+            terms.append("equals(length(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()')),"+str(len(choices))+')')
+            fill="toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@FillInChoice)')))"
+            terms.append('or(empty('+fill+"),equals("+fill+",'false'))")
         key='Schema_'+field;s[key]=d.query("@body('Read_request_fields')?['d']?['results']",'and('+','.join(terms)+')',prior);prior=key
         matches.append("equals(length(body('"+key+"')),1)")
     s['Require_request_schema']=gate('and('+d.complete('Read_request_fields',5000)+",equals(body('Read_request_list')?['d']?['Id'],'"+REQUESTS+"'),equals(body('Read_request_list')?['d']?['BaseTemplate'],100),"+','.join(matches)+')','REQUEST_SCHEMA_UNVERIFIED',prior)
-    select='Id,SenderParticipantId,RecipientParticipantId,TargetGroupId,RequestType,Status,SendOperationKey,ConnectionKey,OperationComplete'
+    select='Id,SenderParticipantId,RecipientParticipantId,TargetGroupId,RequestType,Status,SendOperationKey,ConnectionKey,WinningOperationKey,OperationComplete'
     def readkey(field,value,prev):return http(d.cat(base+'/items?$select='+select+'&$filter='+field+" eq '",value,"'&$top=2"),prev)
     s['Read_send_intent']=readkey('SendOperationKey',"@outputs('Operation_key')",'Require_request_schema')
     s['Require_intent_read']=gate(d.complete('Read_send_intent',1),'INTENT_READ_INCOMPLETE','Read_send_intent')
     def result(code,row,prev=None):
         prefix=code+'_'
-        x={prefix+'Set_result':d.setvar('ResultCode',code,prev),prefix+'Set_request_id':d.setvar('RequestId','@'+row+"?['Id']",prefix+'Set_result'),
-           prefix+'Set_saved_status':d.setvar('SavedStatus','@'+row+"?['Status']",prefix+'Set_request_id')}
+        x={prefix+'Set_request_id':d.setvar('RequestId','@'+row+"?['Id']",prev),
+           prefix+'Set_saved_status':d.setvar('SavedStatus','@'+row+"?['Status']",prefix+'Set_request_id'),prefix+'Set_result':d.setvar('ResultCode',code,prefix+'Set_saved_status')}
         return x
-    def exact(row):return "and(equals("+row+"?['SenderParticipantId'],outputs('Own_profile')?['Id']),equals("+row+"?['RecipientParticipantId'],body('Input_reference')),equals("+row+"?['TargetGroupId'],null),equals("+row+"?['RequestType'],'Personal'),equals("+row+"?['SendOperationKey'],outputs('Operation_key')),contains(createArray('Pending','Accepted','Declined','Cancelled'),"+row+"?['Status']),or(and(contains(createArray('Pending','Accepted'),"+row+"?['Status']),equals("+row+"?['OperationComplete'],false),equals("+row+"?['ConnectionKey'],outputs('Connection_key'))),and(contains(createArray('Accepted','Declined','Cancelled'),"+row+"?['Status']),equals("+row+"?['OperationComplete'],true),equals("+row+"?['ConnectionKey'],concat('history:request:',string("+row+"?['Id']))))))"
+    def exact(row):return "and(greater(coalesce("+row+"?['Id'],0),0),if(equals("+row+"?['Status'],'Pending'),empty("+row+"?['WinningOperationKey']),not(empty("+row+"?['WinningOperationKey']))),equals("+row+"?['SenderParticipantId'],outputs('Own_profile')?['Id']),equals("+row+"?['RecipientParticipantId'],body('Input_reference')),equals("+row+"?['TargetGroupId'],null),equals("+row+"?['RequestType'],'Personal'),equals("+row+"?['SendOperationKey'],outputs('Operation_key')),contains(createArray('Pending','Accepted','Declined','Cancelled'),"+row+"?['Status']),or(and(contains(createArray('Pending','Accepted'),"+row+"?['Status']),equals("+row+"?['OperationComplete'],false),equals("+row+"?['ConnectionKey'],outputs('Connection_key'))),and(contains(createArray('Accepted','Declined','Cancelled'),"+row+"?['Status']),equals("+row+"?['OperationComplete'],true),equals("+row+"?['ConnectionKey'],concat('history:request:',string("+row+"?['Id']))))))"
     replay={'Prior_intent':d.compose("@first(body('Read_send_intent')?['d']?['results'])")}
     replay['Require_same_intent']=gate(exact("outputs('Prior_intent')"),'INTENT_CONFLICT','Prior_intent')
     replay.update(result('REPLAY',"outputs('Prior_intent')",'Require_same_intent'))
@@ -123,7 +128,7 @@ def build_actions(source, people, groups, build_id):
     new['Require_pair_read']=gate(d.complete('Read_unsettled_pair',1),'PAIR_READ_INCOMPLETE','Read_unsettled_pair')
     new['Require_no_unsettled_pair']=gate("empty(body('Read_unsettled_pair')?['d']?['results'])",'UNSETTLED_CONNECTION_EXISTS','Require_pair_read')
     payload={'Title':'Personal request','RequestType':'Personal','SenderParticipantId':"@outputs('Own_profile')?['Id']",'RecipientParticipantId':"@body('Input_reference')",'TargetGroupId':None,'Status':'Pending',
-      'SendOperationKey':"@outputs('Operation_key')",'ConnectionKey':"@outputs('Connection_key')",'OperationComplete':False}
+      'SendOperationKey':"@outputs('Operation_key')",'ConnectionKey':"@outputs('Connection_key')",'WinningOperationKey':None,'OperationComplete':False}
     new['Create_pending']=http(base+'/items','Require_no_unsettled_pair','POST',payload)
     new['Read_created_intent']=readkey('SendOperationKey',"@outputs('Operation_key')",None)
     new['Read_created_intent']['runAfter']={'Create_pending':['Succeeded','Failed','TimedOut']}
