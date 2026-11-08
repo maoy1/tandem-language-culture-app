@@ -18,13 +18,21 @@ GROUPS = json.loads((flow.ROOT / 'config/group_schema_mapping.json').read_text(e
 class ReaderRunner(FlowRunner):
     def expr(self, expression, context):
         # Independently evaluate only emitted native XML metadata primitives.
-        pattern = r"xpath\(xml\(coalesce\(item\(\)\?\['SchemaXml'\],'<Field/>'\)\),'([^']+)'\)"
+        pattern = r"xpath\(xml\((?:coalesce\(item\(\)\?\['SchemaXml'\],'<Field/>'\)|if\(empty\(item\(\)\?\['SchemaXml'\]\),'<Field/>',item\(\)\?\['SchemaXml'\]\))\),'([^']+)'\)"
         def xpath(match):
             try: root = ET.fromstring(context['item'].get('SchemaXml') or '<Field/>')
             except ET.ParseError as error: raise ValueError('Invalid metadata XML') from error
             path = match.group(1)
-            if path in ['/Field/@List', '/Field/@Decimals']:
-                attribute = path.split('@')[1]; value = [root.attrib[attribute]] if attribute in root.attrib else []
+            if path.startswith('string(/Field/@'):
+                attribute = path[len('string(/Field/@'):-1]; value = root.attrib.get(attribute, '')
+            elif path in ['/Field/@List', '/Field/@Decimals']:
+                attribute = path.split('@')[1]
+                raw = root.attrib.get(attribute)
+                style = getattr(self, 'attribute_style', 'xml_nodes')
+                if raw is None: value = []
+                elif style == 'scalar': value = raw
+                elif style == 'value_array': value = [raw]
+                else: value = [attribute + '="' + raw + '"']
             elif path == '/Field/CHOICES/CHOICE/text()': value = [e.text or '' for e in root.findall('./CHOICES/CHOICE')]
             else: raise AssertionError('Unsupported XPath ' + path)
             return "json('" + json.dumps(value).replace("'", "''") + "')"
@@ -429,3 +437,30 @@ def test_fractional_number_reference_rejected_before_keys_and_projection(field):
     f = Fake(); f.data['requests'][0][field] += 0.5
     r = execute(f); failure(r, 'REQUEST_DATA_INCOMPLETE')
     assert r.action_states['Data_requests'] == 'Skipped'
+
+
+@pytest.mark.parametrize('style',['xml_nodes','scalar','value_array'])
+def test_schema_attribute_values_do_not_depend_on_xpath_node_serialization(style):
+    server=Fake();server.group();runner=ReaderRunner(server);runner.attribute_style=style
+    runner.run(flow.build_actions(source(),PEOPLE,GROUPS,'scalar-attribute-regression'))
+    assert runner.response['resultcode']=='OK'
+    assert len(runner.outputs['requests_field_SenderParticipantId'])==1
+    assert len(runner.outputs['requests_field_TargetGroup'])==1
+    assert len(runner.outputs['memberships_field_Group'])==1
+
+
+def test_legacy_attribute_node_comparison_rejects_valid_sender_but_scalar_check_accepts():
+    server=Fake();actual=next(x for x in server.fields['requests'] if x['InternalName']=='SenderParticipantId')
+    runner=ReaderRunner(server);ctx={'item':actual,'items':{}}
+    old="@equals(first(union(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/@Decimals'),createArray(''))),'0')"
+    fixed="@equals(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@Decimals)')),'0')"
+    assert not runner.expr(old,ctx)
+    assert runner.expr(fixed,ctx)
+
+
+def test_exact_owner_sender_field_without_fake_decimals_property_matches_metadata_gate():
+    server=Fake();actual=json.loads((flow.ROOT/'tests/fixtures/my_requests_sender_metadata.json').read_text())
+    assert 'Decimals' not in actual
+    server.fields['requests']=[actual if x['InternalName']=='SenderParticipantId' else x for x in server.fields['requests']]
+    result=execute(server);assert result.response['resultcode']=='OK'
+    assert result.outputs['requests_field_SenderParticipantId']==[actual]

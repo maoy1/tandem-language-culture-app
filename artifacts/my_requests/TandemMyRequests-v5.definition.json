@@ -1,10 +1,10 @@
 {
-  "name": "08435fcf-4c8e-4fb6-a282-65221f330151",
-  "id": "/providers/Microsoft.Flow/flows/08435fcf-4c8e-4fb6-a282-65221f330151",
+  "name": "9c1e8a33-9321-4204-bd17-bf82d3605b36",
+  "id": "/providers/Microsoft.Flow/flows/9c1e8a33-9321-4204-bd17-bf82d3605b36",
   "type": "Microsoft.Flow/flows",
   "properties": {
     "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
-    "displayName": "TandemMyRequests",
+    "displayName": "TandemMyRequests v5",
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
@@ -285,7 +285,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_requests_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'SenderParticipantId'),equals(item()?['TypeAsString'],'Number'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(first(union(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/@Decimals'),createArray(''))),'0'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
+                "where": "@and(equals(item()?['InternalName'],'SenderParticipantId'),equals(item()?['TypeAsString'],'Number'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@Decimals)')),'0'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
               },
               "runAfter": {
                 "requests_metadata_complete": [
@@ -328,7 +328,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_requests_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'RecipientParticipantId'),equals(item()?['TypeAsString'],'Number'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(first(union(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/@Decimals'),createArray(''))),'0'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
+                "where": "@and(equals(item()?['InternalName'],'RecipientParticipantId'),equals(item()?['TypeAsString'],'Number'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@Decimals)')),'0'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
               },
               "runAfter": {
                 "requests_field_SenderParticipantId_gate": [
@@ -371,7 +371,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_requests_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'TargetGroup'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(toLower(replace(replace(first(union(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/@List'),createArray(''))),'{',''),'}','')),'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
+                "where": "@and(equals(item()?['InternalName'],'TargetGroup'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(toLower(replace(replace(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@List)')),'{',''),'}','')),'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
               },
               "runAfter": {
                 "requests_field_RecipientParticipantId_gate": [
@@ -414,7 +414,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_requests_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'RequestType'),equals(item()?['TypeAsString'],'Choice'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(length(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()')),2),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Personal'),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Group'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
+                "where": "@and(equals(item()?['InternalName'],'RequestType'),equals(item()?['TypeAsString'],'Choice'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(length(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()')),2),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Personal'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Group'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
               },
               "runAfter": {
                 "requests_field_TargetGroup_gate": [
@@ -457,7 +457,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_requests_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'Status'),equals(item()?['TypeAsString'],'Choice'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(length(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()')),4),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Pending'),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Accepted'),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Declined'),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Cancelled'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
+                "where": "@and(equals(item()?['InternalName'],'Status'),equals(item()?['TypeAsString'],'Choice'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(length(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()')),4),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Pending'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Accepted'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Declined'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Cancelled'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
               },
               "runAfter": {
                 "requests_field_RequestType_gate": [
@@ -990,7 +990,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_groups_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'State'),equals(item()?['TypeAsString'],'Choice'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],false),equals(length(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()')),3),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Open'),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Closed'),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Ended'))"
+                "where": "@and(equals(item()?['InternalName'],'State'),equals(item()?['TypeAsString'],'Choice'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],false),equals(length(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()')),3),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Open'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Closed'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Ended'))"
               },
               "runAfter": {
                 "groups_field_Capacity_gate": [
@@ -1278,7 +1278,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_memberships_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'Group'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],true),equals(toLower(replace(replace(first(union(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/@List'),createArray(''))),'{',''),'}','')),'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'))"
+                "where": "@and(equals(item()?['InternalName'],'Group'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],true),equals(toLower(replace(replace(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@List)')),'{',''),'}','')),'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'))"
               },
               "runAfter": {
                 "memberships_metadata_complete": [
@@ -1321,7 +1321,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_memberships_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'Participant'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],true),equals(toLower(replace(replace(first(union(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/@List'),createArray(''))),'{',''),'}','')),'fd3adf46-f81d-4a7b-a80c-567fde0175dc'))"
+                "where": "@and(equals(item()?['InternalName'],'Participant'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],true),equals(toLower(replace(replace(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@List)')),'{',''),'}','')),'fd3adf46-f81d-4a7b-a80c-567fde0175dc'))"
               },
               "runAfter": {
                 "memberships_field_Group_gate": [
@@ -1364,7 +1364,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_memberships_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'MembershipStatus'),equals(item()?['TypeAsString'],'Choice'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],false),equals(length(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()')),2),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Active'),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Left'))"
+                "where": "@and(equals(item()?['InternalName'],'MembershipStatus'),equals(item()?['TypeAsString'],'Choice'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],false),equals(length(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()')),2),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Active'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Left'))"
               },
               "runAfter": {
                 "memberships_field_Participant_gate": [

@@ -308,16 +308,18 @@
     "Action buttons call #63/#11/#65 with their own stable intent contracts and refresh this reader after outcome.",
     "Owner import/smoke is still required. #39 audience/ordinary participant access/privacy remain postponed.",
     "Full UI binding under #67 remains explicitly PENDING; preserved shape/order do not prove existing screen, labels, output refresh or action binding works.",
-    "Parent updates the existing inline issue handover with v4 and observed Number-column mapping; no new draft handover file or PR."
+    "Parent updates the existing inline issue handover with v5 and observed Number-column mapping; no new draft handover file or PR."
   ],
-  "nativeStatus": "NOT_IMPORTED_NOT_TESTED; neither native runtime nor privacy certified.",
-  "packageVersion": "v4",
-  "packageBuildId": "36bebc35-e946-411a-ac3f-dd244bf3dd9a",
-  "packageSha256": "f84ea923fca0813fbb775eaed4d493ba17c1f66ea5b00dd4d83899c41369ef9a",
+  "nativeStatus": "V4_OWNER_METADATA_GATE_FAILURE; V5_FIX_LOCAL_PASS_NATIVE_RETEST_PENDING",
+  "packageVersion": "v5",
+  "packageBuildId": "51130189-433c-4808-b605-031e92bd439c",
+  "packageSha256": "1fc799b1525210609f5c8d19dac97d271a47c4a3a463f9d1f2d9c230904793c3",
   "referenceAdapter": "Read SenderParticipantId/RecipientParticipantId as positive number / nullable positive number. Explicit equals(x,int(x)) for sender and equals(coalesce(recipient,0),int(coalesce(recipient,0))) gate rejects fractions; normalize both to int BEFORE canonical connection-key validation, authority comparisons and public projection. Null group recipient retained. System Id/TargetGroupId remain integer. Decimals=0 alone is not integer authority.",
   "ownerSetupPrerequisites": [
-    "Owner adds six missing fields using the accepted target mapping; OperationComplete optional Boolean defaults No.",
-    "Owner makes existing RecipientParticipantId optional; preserve existing SenderParticipantId/RecipientParticipantId names, Number type, Decimals=0 and column IDs. Do not create SenderParticipant/RecipientParticipant lookup duplicates.",
-    "Fresh corrected preflight must verify the complete target before dependent import/smoke. No tenant settings are changed by this reader or patch."
-  ]
+    "Request schema verified by preflight dd0c91b6-13b4-41e0-affd-ebafeeb87404 run08584074285601068216673996565CU29; no list changes requested for this fix.",
+    "Import v5 Create as new, same existing Invoker connection, own ParticipantId; return Respond action Outputs.",
+    "Native reader/business/privacy acceptance remains pending."
+  ],
+  "importDisplayName": "TandemMyRequests v5",
+  "metadataAttributeAdapter": "XPath string(/Field/@Decimals) and string(/Field/@List) return scalar values, same as verified preflight; no bare attribute node-array comparison."
 }

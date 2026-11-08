@@ -472,3 +472,11 @@ publication, source-flow replacement or additional import is requested now.
 After implementation review/merge, retain #7's remaining tests and blocked cases
 for later handover; the next build batch is #10 personal send, #62 inbox and #63
 cancellation, with one focused production-flow ticket active at a time.
+
+## #62 metadata comparison correction
+
+Owner's MyRequests v4 smoke stopped at requests_field_SenderParticipantId_gate; preceding query returned body []. The returned Read_requests_fields response was HTTP200 with the correct required Number/Decimals=0 SenderParticipantId, unique=false/hidden=false/readOnly=false. Schema remains verified by #10 preflight run08584074285601068216673996565CU29. No list setting changes are requested.
+
+Reader used bare XPath attribute-node results as an array/value. Replace Decimals and lookup List extraction with XPath string() values, matching the native-passed preflight; handle empty XML safely. Microsoft documents XPath returning nodes or values, with scalar string() extraction: https://learn.microsoft.com/en-us/azure/logic-apps/expression-functions-reference#xpath. Exact native XPath serialization was not returned; the local regression models node/array/scalar shapes and the exact returned Sender metadata. The prior test evaluator incorrectly always returned plain attribute-value arrays. It now exercises the representation difference.
+
+TandemMyRequests-v5.zip build **51130189-433c-4808-b605-031e92bd439c**, 228 actions/depth4 (limits500/8), zero writes. 365 local tests pass, 123 reader cases. Original trigger/Invoker/auth/response/public row shape retained. V4 runtime failure is recorded, not a schema failure or runtime success; v5 native retest NOT RUN. Evidence artifacts/my_requests/results/v4-sender-gate.owner-evidence.json and tests/fixtures/my_requests_sender_metadata.json. Import v5 Create as new (display name TandemMyRequests v5), existing SharePoint Provided by run-only user; run own ParticipantId previously38 and return Respond to a Power App or flow Outputs. Expect OK, requestsjson [], errormessage empty for the empty list. Keep old published app/working flows unchanged; no repeat schema preflight required for this reader fix. Issue #62 stays open.

@@ -11,7 +11,7 @@ from .build_import_probe import build_package as envelope
 from .schema_audit import measure
 
 ROOT = Path(__file__).resolve().parents[2]
-NAME = 'TandemMyRequests'
+NAME = 'TandemMyRequests v5'
 BOUNDS = {'requests': 500, 'memberships': 2000, 'profiles': 500, 'groups': 100, 'fields': 500, 'responseChars': 250000}
 REQUESTS = '3d17485d-1dac-41f0-a1af-24e45daa4567'
 
@@ -132,13 +132,13 @@ def build_actions(original, people, groups, build_id):
         for name, expected in fields.items():
             q = role + '_field_' + name
             tests = ["equals(item()?['InternalName'],'" + name + "')"]
-            schema_xml = "xml(coalesce(item()?['SchemaXml'],'<Field/>'))"
-            lookup = "first(union(xpath(" + schema_xml + ",'/Field/@List'),createArray('')))"
+            schema_xml = "xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml']))"
+            lookup = "string(xpath(" + schema_xml + ",'string(/Field/@List)'))"
             choices = "xpath(" + schema_xml + ",'/Field/CHOICES/CHOICE/text()')"
             for key, value in expected.items():
                 if key == 'LookupList': tests.append("equals(toLower(replace(replace(" + lookup + ",'{',''),'}','')),'" + value + "')")
                 elif key == 'Decimals':
-                    tests.append("equals(first(union(xpath(" + schema_xml + ",'/Field/@Decimals'),createArray(''))),'" + value + "')")
+                    tests.append("equals(string(xpath(" + schema_xml + ",'string(/Field/@Decimals)')),'" + value + "')")
                 elif key == 'Choices':
                     tests.append('equals(length(' + choices + '),' + str(len(value)) + ')')
                     tests += ["contains(" + choices + ",'" + v + "')" for v in value]
