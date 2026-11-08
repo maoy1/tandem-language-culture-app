@@ -304,22 +304,22 @@
       "ticketType": "Shared technical",
       "status": "In progress",
       "flowScope": "One-time group/membership data contract verification/setup only. #11 owns automatic new-group creation; {{mygroups}} owns reading/counts.",
-      "implementationReadiness": "Read-only group/member metadata inspector built; actual tenant audit/mapping and any scoped setup still pending.",
-      "implementationEvidence": "194 local tests pass; TandemGroupSchemaAudit build cb49aded-f121-410e-b7df-d9646be892dd, 51 actions/depth 3. No list item reads or writes. PR #75 merged; #47 shared bounded proof complete.",
-      "evidence": "Owner historical setup/#57 snapshot retained. New audit NOT_IMPORTED_NOT_TESTED; no observed group/member mapping/settings or correction capability inferred.",
+      "implementationReadiness": "Actual mapping recorded. Owner chose direct settings: required group name, WriteOwner and capacity validation read back. Group/Participant query indexes remain unconfirmed; keep In progress.",
+      "implementationEvidence": "Audit cb49aded-f121-410e-b7df-d9646be892dd; before 08584074383115048211345636667CU09, after 08584074377818105096431306544CU07. Complete metadata/errors empty, both list counts zero; 194 local tests previously passed.",
+      "evidence": "config/group_schema_mapping.json plus artifacts/group_schema/results owner reports. Core types/choices/lookups/history/unique keys confirmed; Group and Participant still indexed=false.",
       "proposedExperience": [
         "Accept a valid connection to form a typed group.",
         "Publish only after required request/membership setup agrees.",
         "Open My groups for operational groups, members, counts and free slots.",
         "Hide unfinished setup."
       ],
-      "remainingWork": "Run read-only inspector, resolve actual field mapping/types/defaults/lookups/unique/index/schema/list rights; flag any bounded corrections before applying. Preserve existing rows and route migration exceptions to #48.",
+      "remainingWork": "Check Group Members Indexed columns page, resolve index metadata and final own-scope mapping/settings readback/review. No setup package needed after owner chose direct settings.",
       "testReferences": [
         "SCHEMA-001",
         "SCHEMA-002"
       ],
-      "testStatus": "194 local tests PASS, including 15 generated-inspector/package/failure-path cases. #12 tenant SCHEMA-001/SCHEMA-002 NOT RUN.",
-      "testHandoff": "Partial metadata collection handover only; exact build/package/connection/read scope/steps/expected report/failure handling and checkboxes inline in #12. No production schema apply package until actual audit reviewed.",
+      "testStatus": "SCHEMA-001 metadata collected and mapping recorded; SCHEMA-002 partial manual-settings readback (3/5), indexes pending. No row/production/ordinary-user acceptance inferred.",
+      "testHandoff": "No new package/import. Inspect Group Members Indexed columns for Group and Participant, then use existing read-only audit for final readback. Exact cases/checks inline #12.",
       "flows": [],
       "scopeBoundary": "One-time group/membership data contract verification/setup only. #11 owns automatic new-group creation; #64 owns reading/counts.",
       "prerequisites": [
