@@ -1110,3 +1110,25 @@ whole-schema audit evidence above remain separately scoped.
   the newest edit finished validation. Feedback text preserves that distinction.
 - No runtime Python/extra connector or schema field added. Local suite remains
   101 passed from BUILD61; static Power Fx handover is not Power Apps execution.
+
+### RUN61-20261108-01 — valid Active no-change smoke PASS
+
+- Owner pasted Validation_report for build 88637754-4c91-4833-9dcf-5116d8bfb77e,
+  run 08584074536792033395422259203CU09, participant item 38.
+  Report retained in artifacts/participant_submission/results/valid-no-change.owner-report.json.
+- **PASS (owner report)**: valid=true, status=Active, statusChanged=false,
+  result=NO_CHANGE. Target package ran successfully through catalogue/current-item
+  validation and the no-change branch for this profile. Import/run is established;
+  no independent inspection of import settings or disabled original is inferred.
+- The Status-write branch was not exercised. Conditional MERGE permissions,
+  changed-write/readback, necessary-write follow-up no-op, invalid/missing IDs,
+  failure/conflict handling, creation and identity/availability preservation remain
+  pending target cases; no full REG/PAR family PASS is inferred.
+- Owner has not yet explicitly confirmed original validator off, v2 saved-field
+  preservation or application/publication of prepared feedback formulas.
+- Next bounded case: keep item 38's valid selections, change only validation Status
+  to Needs review in the permitted Participants list, observe v2 restore Active,
+  successful patch/readback and follow-up NO_CHANGE. Do not change Participation
+  status. Compare identity/selections/availability; retain original data.
+- No production code or package changed. Prior 101-test local result retained;
+  JSON and diff checked for this evidence-only update. #61 remains In progress.

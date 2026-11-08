@@ -335,5 +335,5 @@ Location input, participant Role and required participant-entered identity email
 FLOW_61_PARTICIPANT_SUBMISSION.md and participant_submission_contract.json.
 Current owner export inspected; event/connection alias mapping preserved in a
 new import package (26 actions / depth 3), with active-catalogue checks and
-ETag-protected changed Status only. 101 local tests passed. Import/smoke and
-actual app feedback binding remain pending; no target tenant run claimed.
+ETag-protected changed Status only. 101 local tests passed. Owner valid/no-change target smoke passed for item 38; Status-write/readback/
+follow-up and applied app feedback acceptance remain pending.

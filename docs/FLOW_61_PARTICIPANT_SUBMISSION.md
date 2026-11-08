@@ -1,6 +1,6 @@
 # Participant submission validation — #61
 
-Status: **In progress; package prepared, tenant import/smoke and app feedback pending**.
+Status: **In progress; imported valid/no-change smoke passed; Status-write and app-feedback acceptance pending**.
 The owner supplied the current export. Inspection confirms GetOnUpdatedItems,
 one-minute recurrence, splitOn body/value, current Get_item using triggerBody ID,
 four-field nonempty OR and changed-only Status patches. Catalogue validity and
@@ -201,3 +201,13 @@ label deliberately says **latest stored** and warns that it may reflect an earli
 edit. It never claims a particular save passed merely because an old Status is
 Active. No timer, automatic retry or extra tracking column is introduced. Detailed
 read-error/race and creation fixtures remain explicitly pending when unavailable.
+
+## Observed target run — 2026-11-08
+
+Owner returned run 08584074536792033395422259203CU09, item 38, matching build:
+valid=true, Active, statusChanged=false, NO_CHANGE. This passes the valid/no-change
+smoke only. Source build review's NOT_IMPORTED_NOT_TESTED reflects its historical
+generation time; current runtime evidence is recorded in results/ and TEST_RUNS.
+Original-validator disabled state and saved-field preservation were not explicitly
+reported. Necessary-write/readback/follow-up and feedback checks remain pending.
+No new import or app edit is needed merely to repeat this successful no-change run.
