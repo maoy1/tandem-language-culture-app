@@ -20,11 +20,11 @@
   },
   "counts": {
     "allTickets": 48,
-    "openTickets": 36,
-    "closedTickets": 12,
-    "done": 10,
+    "openTickets": 35,
+    "closedTickets": 13,
+    "done": 11,
     "superseded": 2,
-    "inProgress": 0
+    "inProgress": 1
   },
   "flowCountNote": "12 singly-owned core production flows (notification provisional), plus 1 Deferred reminder flow. Access/migration helpers remain undecided; no duplicate owners for the same production flow.",
   "flowInventory": [
@@ -33,7 +33,7 @@
       "ownerTicket": 7,
       "ticketType": "Flow",
       "phase": "Core",
-      "state": "Queued; existing partial evidence retained",
+      "state": "Owner-preview smoke partial pass; populated/native tamper/group/access tests pending",
       "inputOutputContract": "Defined and reviewed in this sole flow-owner ticket before package generation",
       "openTechnicalWork": "One flow returning approved compatible people and existing open groups. App layout is #16; rule source is #9; protected access proof is #42."
     },
@@ -151,26 +151,26 @@
       "number": 7,
       "title": "[Flow] TandemDiscovery",
       "ticketType": "Flow",
-      "status": "Planned",
+      "status": "In progress",
       "flowScope": "One flow returning approved compatible people and existing open groups. App layout is #16; rule source is #9; protected access proof is #42.",
-      "implementationReadiness": "Owner-only package completion can start; mapping/bounds needed",
-      "implementationEvidence": "#54 merged; historical BASE-005-009 synthetic checks and owner empty-gallery/Back checks; no populated target matching pass.",
-      "evidence": "#54 merged; historical BASE-005-009 synthetic checks and owner empty-gallery/Back checks; no populated target matching pass.",
+      "implementationReadiness": "Owner-preview v2 imported/invoked: Paused own profile rejected; Active own profile completed with empty results. Populated, actual Run-only selector and ordinary access tests pending.",
+      "implementationEvidence": "242 local tests; 165 actions/depth 6. Native owner Paused 08584074350262917105745395996CU25 => PROFILE_UNAVAILABLE; Active 08584074348343616902680114159CU10 => OK, 0 people/0 groups, writes=0.",
+      "evidence": "artifacts/tandem_discovery/results/owner-smoke.evidence.json and exact owner reports. Empty-result owner pass is not populated matching/ordinary-user proof.",
       "proposedExperience": [
         "Click Discovery from your saved profile.",
         "See compatible people, excluding self/unavailable/invalid profiles.",
         "See approved profile fields including Comments/optional time zone, without email/system data.",
         "Discovery creates no membership or request."
       ],
-      "remainingWork": "One flow returning approved compatible people and existing open groups. App layout is #16; rule source is #9; protected access proof is #42.",
+      "remainingWork": "Native different-profile tamper rejection and actual Run-only selector evidence; compatible people/group fixtures/projection/availability/commitment and native bounds/load tests. #42 protected group-based participant access remains gated, no routine individual grants.",
       "testReferences": [
         "DISC-001:011",
         "GRP-005:007",
         "LEAVE-003",
         "LEAVE-004"
       ],
-      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
-      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "testStatus": "Owner native own-profile Paused rejection and Active/empty success PASS. 242 local tests PASS. Remaining DISC/GRP/LEAVE populated/access/load cases NOT RUN; no app publication/cutover confirmed.",
+      "testHandoff": "Keep owner Studio preview and source flow/published app unchanged. Checked/unchecked cases and reports inline #7; no new package or full native pass claimed.",
       "flows": [
         "TandemDiscovery"
       ],
@@ -188,7 +188,8 @@
         7,
         6
       ],
-      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/7"
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/7",
+      "implementationReview": "PR #77 ready for implementation review; 242 tests rerun; unchanged owner-tested package. Remaining native/access tests unchecked in issue #7; no rollout or closure."
     },
     {
       "number": 8,
@@ -302,9 +303,9 @@
       "number": 12,
       "title": "[Shared technical] Groups and Group Members schema and field mapping",
       "ticketType": "Shared technical",
-      "status": "Ready for review",
+      "status": "Done",
       "flowScope": "One-time group/membership data contract verification/setup only. #11 owns automatic new-group creation; {{mygroups}} owns reading/counts.",
-      "implementationReadiness": "Actual Groups/Group Members mapping verified; five manual settings read back, PR #76 source/data-contract review pending.",
+      "implementationReadiness": "Own schema mapping/manual settings accepted; PR #76 merged 39ebc0cd48c428602a0434a12db0c99ac77a9de5; issue closed.",
       "implementationEvidence": "194 local tests previously passed. Complete final audit 08584074372941101122136369836CU17; required Title, WriteOwner, capacity formula and separate Group/Participant indexes verified. Both lists itemCount=0.",
       "evidence": "artifacts/group_schema/results/final-audit.owner-report.json; config/group_schema_mapping.json. SourceRequestId/MembershipKey uniqueness/indexes, lookups/defaults/history metadata verified; no production-flow or ordinary-user pass inferred.",
       "proposedExperience": [
@@ -313,7 +314,7 @@
         "Open My groups for operational groups, members, counts and free slots.",
         "Hide unfinished setup."
       ],
-      "remainingWork": "Review/merge PR #76 for own data/schema scope. No owner rerun needed. #11/#13/#14/#17/#65/#64 own runtime integration; #48 migration exceptions stay separate.",
+      "remainingWork": "Own data deliverable complete. Consuming Flow/access/migration tickets retain their runtime acceptance.",
       "testReferences": [
         "SCHEMA-001",
         "SCHEMA-002"
@@ -901,7 +902,7 @@
       "number": 39,
       "title": "[Shared technical] Self-service access prerequisite assessment",
       "ticketType": "Shared technical",
-      "status": "Deferred",
+      "status": "Planned",
       "flowScope": "Read-only capability inventory and feasible-method recommendation; actual two-user proof is #40.",
       "implementationReadiness": "Assessment can resume; owner deferred access work",
       "implementationEvidence": "Draft #43 partial assessment; Invoker source is not caller authorization.",
@@ -926,7 +927,8 @@
       "sourceTickets": [
         39
       ],
-      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/39"
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/39",
+      "resumedAssessmentEvidence": "PR #43; owner metadata run 08584074326403190336298551812CU15 passed; audience/IT follow-up owner-deferred. No privacy cutover or two-account proof."
     },
     {
       "number": 40,

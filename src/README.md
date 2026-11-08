@@ -363,3 +363,8 @@ pass tenant tests. No production flow export exists yet.
 Sources: [data operations](https://learn.microsoft.com/en-us/power-automate/data-operations),
 [expression reference](https://learn.microsoft.com/en-us/azure/logic-apps/workflow-definition-language-functions-reference),
 [flow limits](https://learn.microsoft.com/en-us/power-automate/limits-and-config).
+
+
+## #7 current owner-preview flow
+
+Use the generated TandemDiscovery v2 package/contract in config/discovery_flow_contract.json; prior Batch 1–3 instructions above are historical owner scaffolding. Do not reconstruct the old matching fragments or overwrite the working flow. The v2 reader preserves Invoker and numeric input; old candidatesjson/errormessage fields remain, with groupsjson/resultcode/runreference/mode added. Import/Run-only connection verification and one temporary Studio button are detailed in issue #7. Keep the existing published app/flow unchanged until actual caller/data/response proof and cutover decision; ordinary access remains #42-gated. No Python/cloud service or additional entitlement is required by the generated flow.

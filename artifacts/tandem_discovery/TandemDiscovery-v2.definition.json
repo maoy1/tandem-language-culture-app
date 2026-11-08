@@ -1,0 +1,2818 @@
+{
+  "name": "92ab359c-a1d2-45b7-bf7f-86d444aa3534",
+  "id": "/providers/Microsoft.Flow/flows/92ab359c-a1d2-45b7-bf7f-86d444aa3534",
+  "type": "Microsoft.Flow/flows",
+  "properties": {
+    "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
+    "displayName": "TandemDiscovery v2",
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "number": {
+                  "description": "ParticipantId",
+                  "title": "Number",
+                  "type": "number",
+                  "x-ms-content-hint": "NUMBER",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "required": [
+                "number"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Initialize_People": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "People",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "Initialize_Groups": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Groups",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_People": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Initialize_FocusChecks": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "FocusChecks",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_Groups": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Initialize_AvailableFocusChecks": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AvailableFocusChecks",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_FocusChecks": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Initialize_MemberDisplays": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "MemberDisplays",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_AvailableFocusChecks": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Initialize_GroupWork": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "GroupWork",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_MemberDisplays": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Initialize_ErrorCode": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ErrorCode",
+                "type": "string",
+                "value": ""
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_GroupWork": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Discovery_reads": {
+          "type": "Scope",
+          "actions": {
+            "Input_reference": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@triggerBody()?['number']",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "runAfter": {}
+            },
+            "Read_invoker": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/currentuser?$select=Id",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "runAfter": {
+                "Input_reference": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Invoker": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Read_invoker')?['d']",
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "Id"
+                  ],
+                  "properties": {
+                    "Id": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_invoker": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Resolve_own_profile": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "@concat('_api/web/lists(guid''fd3adf46-f81d-4a7b-a80c-567fde0175dc'')/items?$select=Id&$filter=ParticipantaccountId eq ',string(body('Invoker')?['Id']),'&$top=2')",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "runAfter": {
+                "Invoker": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Own_profile": {
+              "type": "Compose",
+              "inputs": "@first(union(coalesce(body('Resolve_own_profile')?['d']?['results'],json('[]')),createArray(json('{}'))))",
+              "runAfter": {
+                "Resolve_own_profile": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Require_own_profile": {
+              "type": "If",
+              "expression": "@and(and(not(equals(body('Resolve_own_profile')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Resolve_own_profile')?['d']?['results'],json('[]'))),1),empty(body('Resolve_own_profile')?['d']?['__next'])),equals(length(coalesce(body('Resolve_own_profile')?['d']?['results'],json('[]'))),1),equals(outputs('Own_profile')?['Id'],body('Input_reference')))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Error_UNAUTHORIZED_PROFILE": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "UNAUTHORIZED_PROFILE"
+                    },
+                    "runAfter": {}
+                  },
+                  "Stop_UNAUTHORIZED_PROFILE": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Error_UNAUTHORIZED_PROFILE": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Own_profile": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Get_item": {
+              "runAfter": {
+                "Require_own_profile": [
+                  "Succeeded"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "table": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
+                  "id": "@triggerBody()?['number']"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "GetItem"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "Candidate_source": {
+              "runAfter": {
+                "Get_item": [
+                  "Succeeded"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "table": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
+                  "$orderby": "ID asc",
+                  "$top": 501
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "GetItems"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "runtimeConfiguration": {
+                "paginationPolicy": {
+                  "minimumItemCount": 501
+                }
+              }
+            },
+            "Require_profile_bound": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Candidate_source')?['value'],null)),lessOrEquals(length(coalesce(body('Candidate_source')?['value'],json('[]'))),500),empty(coalesce(body('Candidate_source')?['@odata.nextLink'],body('Candidate_source')?['odata.nextLink'])))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Error_PROFILE_BOUND_OR_INCOMPLETE": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "PROFILE_BOUND_OR_INCOMPLETE"
+                    },
+                    "runAfter": {}
+                  },
+                  "Stop_PROFILE_BOUND_OR_INCOMPLETE": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Error_PROFILE_BOUND_OR_INCOMPLETE": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Candidate_source": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_language": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63')/items?$select=Id,Title,Active,ISOcode&$top=5001",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "runAfter": {
+                "Require_profile_bound": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Require_language_bound": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Read_language')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_language')?['d']?['results'],json('[]'))),5000),empty(body('Read_language')?['d']?['__next']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Error_CATALOGUE_LANGUAGE_BOUND_OR_INCOMPLETE": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "CATALOGUE_LANGUAGE_BOUND_OR_INCOMPLETE"
+                    },
+                    "runAfter": {}
+                  },
+                  "Stop_CATALOGUE_LANGUAGE_BOUND_OR_INCOMPLETE": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Error_CATALOGUE_LANGUAGE_BOUND_OR_INCOMPLETE": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_language": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Active_language": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_language')?['d']?['results']",
+                "where": "@equals(item()?['Active'],true)"
+              },
+              "runAfter": {
+                "Require_language_bound": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "IDs_language": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Active_language')",
+                "select": "@item()?['Id']"
+              },
+              "runAfter": {
+                "Active_language": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_culture": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'cf7ed5b4-2e11-4a0a-a417-6c63ed60f614')/items?$select=Id,Title,Active,CultureKey&$top=5001",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "runAfter": {
+                "IDs_language": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Require_culture_bound": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Read_culture')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_culture')?['d']?['results'],json('[]'))),5000),empty(body('Read_culture')?['d']?['__next']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Error_CATALOGUE_CULTURE_BOUND_OR_INCOMPLETE": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "CATALOGUE_CULTURE_BOUND_OR_INCOMPLETE"
+                    },
+                    "runAfter": {}
+                  },
+                  "Stop_CATALOGUE_CULTURE_BOUND_OR_INCOMPLETE": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Error_CATALOGUE_CULTURE_BOUND_OR_INCOMPLETE": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_culture": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Active_culture": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_culture')?['d']?['results']",
+                "where": "@equals(item()?['Active'],true)"
+              },
+              "runAfter": {
+                "Require_culture_bound": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "IDs_culture": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Active_culture')",
+                "select": "@item()?['Id']"
+              },
+              "runAfter": {
+                "Active_culture": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_timezone": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'7beddfff-1881-4a82-8003-29933b836350')/items?$select=Id,Title,Active,IANA_ID&$top=5001",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "runAfter": {
+                "IDs_culture": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Require_timezone_bound": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Read_timezone')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_timezone')?['d']?['results'],json('[]'))),5000),empty(body('Read_timezone')?['d']?['__next']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Error_CATALOGUE_TIMEZONE_BOUND_OR_INCOMPLETE": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "CATALOGUE_TIMEZONE_BOUND_OR_INCOMPLETE"
+                    },
+                    "runAfter": {}
+                  },
+                  "Stop_CATALOGUE_TIMEZONE_BOUND_OR_INCOMPLETE": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Error_CATALOGUE_TIMEZONE_BOUND_OR_INCOMPLETE": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_timezone": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Active_timezone": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_timezone')?['d']?['results']",
+                "where": "@equals(item()?['Active'],true)"
+              },
+              "runAfter": {
+                "Require_timezone_bound": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "IDs_timezone": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Active_timezone')",
+                "select": "@item()?['Id']"
+              },
+              "runAfter": {
+                "Active_timezone": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Any_language": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Active_language')",
+                "where": "@equals(toLower(item()?['ISOcode']),'any')"
+              },
+              "runAfter": {
+                "IDs_timezone": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Require_any_unambiguous": {
+              "type": "If",
+              "expression": "@lessOrEquals(length(body('Any_language')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Error_ANY_LANGUAGE_AMBIGUOUS": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "ANY_LANGUAGE_AMBIGUOUS"
+                    },
+                    "runAfter": {}
+                  },
+                  "Stop_ANY_LANGUAGE_AMBIGUOUS": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Error_ANY_LANGUAGE_AMBIGUOUS": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Any_language": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Raw_catalogues": {
+              "type": "Compose",
+              "inputs": {
+                "languageIds": "@body('IDs_language')",
+                "cultureIds": "@body('IDs_culture')",
+                "timezoneIds": "@body('IDs_timezone')",
+                "anyLanguageId": "@first(union(body('Any_language'),createArray(json('{}'))))?['Id']"
+              },
+              "runAfter": {
+                "Require_any_unambiguous": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Qualified_source": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Candidate_source')?['value']",
+                "where": "@and(not(empty(item()?['Participantaccount']?['Claims'])),not(empty(item()?['Participantaccount']?['DisplayName'])),not(empty(item()?['Status']?['Value'])),contains(createArray('Active','Paused','Inactive'),item()?['ParticipationStatus']?['Value']),or(equals(item()?['OpenToConnections'],true),equals(item()?['OpenToConnections'],false)),equals(length(intersection(coalesce(item()?['Teachlanguages#Id'],json('[]')),body('IDs_language'))),length(coalesce(item()?['Teachlanguages#Id'],json('[]')))),equals(length(intersection(coalesce(item()?['Learnlanguages#Id'],json('[]')),body('IDs_language'))),length(coalesce(item()?['Learnlanguages#Id'],json('[]')))),equals(length(intersection(coalesce(item()?['ShareCultures#Id'],json('[]')),body('IDs_culture'))),length(coalesce(item()?['ShareCultures#Id'],json('[]')))),equals(length(intersection(coalesce(item()?['LearnCultures#Id'],json('[]')),body('IDs_culture'))),length(coalesce(item()?['LearnCultures#Id'],json('[]')))),or(equals(item()?['Timezone']?['Id'],null),contains(body('IDs_timezone'),item()?['Timezone']?['Id'])))"
+              },
+              "runAfter": {
+                "Raw_catalogues": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Raw_profiles": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Qualified_source')",
+                "select": {
+                  "profileId": "@item()?['ID']",
+                  "accountKey": "@item()?['Participantaccount']?['Claims']",
+                  "status": "@item()?['Status']?['Value']",
+                  "participationStatus": "@item()?['ParticipationStatus']?['Value']",
+                  "openToConnections": "@item()?['OpenToConnections']",
+                  "timezoneId": "@item()?['Timezone']?['Id']",
+                  "teachIds": "@coalesce(item()?['Teachlanguages#Id'],json('[]'))",
+                  "learnIds": "@coalesce(item()?['Learnlanguages#Id'],json('[]'))",
+                  "shareCultureIds": "@coalesce(item()?['ShareCultures#Id'],json('[]'))",
+                  "learnCultureIds": "@coalesce(item()?['LearnCultures#Id'],json('[]'))"
+                }
+              },
+              "runAfter": {
+                "Qualified_source": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Shared_Parse_profiles": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Raw_profiles')",
+                "schema": {
+                  "type": "array",
+                  "maxItems": 500,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "profileId",
+                      "accountKey",
+                      "status",
+                      "participationStatus",
+                      "openToConnections"
+                    ],
+                    "properties": {
+                      "profileId": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "accountKey": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "participationStatus": {
+                        "type": "string",
+                        "enum": [
+                          "Active",
+                          "Paused",
+                          "Inactive"
+                        ]
+                      },
+                      "openToConnections": {
+                        "type": "boolean"
+                      },
+                      "timezoneId": {
+                        "type": [
+                          "integer",
+                          "null"
+                        ],
+                        "minimum": 1
+                      },
+                      "teachIds": {
+                        "type": [
+                          "array",
+                          "null"
+                        ],
+                        "items": {
+                          "type": "integer",
+                          "minimum": 1
+                        }
+                      },
+                      "learnIds": {
+                        "type": [
+                          "array",
+                          "null"
+                        ],
+                        "items": {
+                          "type": "integer",
+                          "minimum": 1
+                        }
+                      },
+                      "shareCultureIds": {
+                        "type": [
+                          "array",
+                          "null"
+                        ],
+                        "items": {
+                          "type": "integer",
+                          "minimum": 1
+                        }
+                      },
+                      "learnCultureIds": {
+                        "type": [
+                          "array",
+                          "null"
+                        ],
+                        "items": {
+                          "type": "integer",
+                          "minimum": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Raw_profiles": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Shared_Parse_catalogues": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@outputs('Raw_catalogues')",
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "languageIds",
+                    "cultureIds",
+                    "timezoneIds",
+                    "anyLanguageId"
+                  ],
+                  "properties": {
+                    "languageIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1
+                      }
+                    },
+                    "cultureIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1
+                      }
+                    },
+                    "timezoneIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1
+                      }
+                    },
+                    "anyLanguageId": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 1
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Shared_Parse_profiles": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Shared_Concrete_languages": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Shared_Parse_catalogues')?['languageIds']",
+                "where": "@not(equals(item(),body('Shared_Parse_catalogues')?['anyLanguageId']))"
+              },
+              "runAfter": {
+                "Shared_Parse_catalogues": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Shared_Invalid_profiles": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Shared_Parse_profiles')",
+                "where": "@not(and(not(empty(trim(item()?['accountKey']))),not(empty(trim(item()?['status']))),equals(length(intersection(union(coalesce(item()?['teachIds'],json('[]')),coalesce(item()?['teachIds'],json('[]'))),body('Shared_Parse_catalogues')?['languageIds'])),length(union(coalesce(item()?['teachIds'],json('[]')),coalesce(item()?['teachIds'],json('[]'))))),equals(length(intersection(union(coalesce(item()?['learnIds'],json('[]')),coalesce(item()?['learnIds'],json('[]'))),body('Shared_Parse_catalogues')?['languageIds'])),length(union(coalesce(item()?['learnIds'],json('[]')),coalesce(item()?['learnIds'],json('[]'))))),equals(length(intersection(union(coalesce(item()?['shareCultureIds'],json('[]')),coalesce(item()?['shareCultureIds'],json('[]'))),body('Shared_Parse_catalogues')?['cultureIds'])),length(union(coalesce(item()?['shareCultureIds'],json('[]')),coalesce(item()?['shareCultureIds'],json('[]'))))),equals(length(intersection(union(coalesce(item()?['learnCultureIds'],json('[]')),coalesce(item()?['learnCultureIds'],json('[]'))),body('Shared_Parse_catalogues')?['cultureIds'])),length(union(coalesce(item()?['learnCultureIds'],json('[]')),coalesce(item()?['learnCultureIds'],json('[]'))))),or(equals(item()?['timezoneId'],null),contains(body('Shared_Parse_catalogues')?['timezoneIds'],item()?['timezoneId']))))"
+              },
+              "runAfter": {
+                "Shared_Concrete_languages": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Shared_Profiles": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Shared_Parse_profiles')",
+                "select": {
+                  "profileId": "@item()?['profileId']",
+                  "status": "@item()?['status']",
+                  "participationStatus": "@item()?['participationStatus']",
+                  "openToConnections": "@item()?['openToConnections']",
+                  "timezoneId": "@item()?['timezoneId']",
+                  "accountKey": "@toLower(trim(item()?['accountKey']))",
+                  "teachIds": "@intersection(union(coalesce(item()?['teachIds'],json('[]')),coalesce(item()?['teachIds'],json('[]'))),body('Shared_Concrete_languages'))",
+                  "learnIds": "@intersection(union(coalesce(item()?['learnIds'],json('[]')),coalesce(item()?['learnIds'],json('[]'))),body('Shared_Concrete_languages'))",
+                  "shareCultureIds": "@intersection(union(coalesce(item()?['shareCultureIds'],json('[]')),coalesce(item()?['shareCultureIds'],json('[]'))),body('Shared_Parse_catalogues')?['cultureIds'])",
+                  "learnCultureIds": "@intersection(union(coalesce(item()?['learnCultureIds'],json('[]')),coalesce(item()?['learnCultureIds'],json('[]'))),body('Shared_Parse_catalogues')?['cultureIds'])"
+                }
+              },
+              "runAfter": {
+                "Shared_Invalid_profiles": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Shared_Keys_accountKey": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Shared_Profiles')",
+                "select": "@item()?['accountKey']"
+              },
+              "runAfter": {
+                "Shared_Profiles": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Shared_Keys_profileId": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Shared_Profiles')",
+                "select": "@item()?['profileId']"
+              },
+              "runAfter": {
+                "Shared_Keys_accountKey": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Shared_Require_valid_input": {
+              "type": "If",
+              "expression": "@and(empty(body('Shared_Invalid_profiles')),equals(length(body('Shared_Keys_accountKey')),length(union(body('Shared_Keys_accountKey'),body('Shared_Keys_accountKey')))),equals(length(body('Shared_Keys_profileId')),length(union(body('Shared_Keys_profileId'),body('Shared_Keys_profileId')))))",
+              "runAfter": {
+                "Shared_Keys_profileId": [
+                  "Succeeded"
+                ]
+              },
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Shared_Reject_input": {
+                    "type": "Terminate",
+                    "inputs": {
+                      "runStatus": "Failed",
+                      "runError": {
+                        "code": "INVALID_COMPATIBILITY_INPUT",
+                        "message": "Malformed, unknown/inactive ID, duplicate identity or incomplete adapter input."
+                      }
+                    },
+                    "runAfter": {}
+                  }
+                }
+              }
+            },
+            "Shared_Catalogues": {
+              "type": "Compose",
+              "inputs": {
+                "concreteLanguageIds": "@body('Shared_Concrete_languages')",
+                "cultureIds": "@body('Shared_Parse_catalogues')?['cultureIds']"
+              },
+              "runAfter": {
+                "Shared_Require_valid_input": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Find_actor": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Shared_Profiles')",
+                "where": "@equals(item()?['profileId'],body('Input_reference'))"
+              },
+              "runAfter": {
+                "Shared_Catalogues": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Actor": {
+              "type": "Compose",
+              "inputs": "@first(union(body('Find_actor'),createArray(json('{}'))))",
+              "runAfter": {
+                "Find_actor": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Require_available_actor": {
+              "type": "If",
+              "expression": "@and(equals(length(body('Find_actor')),1),and(equals(outputs('Actor')?['status'],'Active'),equals(outputs('Actor')?['participationStatus'],'Active'),equals(outputs('Actor')?['openToConnections'],true),not(empty(outputs('Actor')?['accountKey'])),or(not(empty(outputs('Actor')?['teachIds'])),not(empty(outputs('Actor')?['learnIds'])),not(empty(outputs('Actor')?['shareCultureIds'])),not(empty(outputs('Actor')?['learnCultureIds'])))))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Error_PROFILE_UNAVAILABLE": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "PROFILE_UNAVAILABLE"
+                    },
+                    "runAfter": {}
+                  },
+                  "Stop_PROFILE_UNAVAILABLE": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Error_PROFILE_UNAVAILABLE": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Actor": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Eligible_people": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Shared_Profiles')",
+                "where": "@and(and(equals(outputs('Actor')?['status'],'Active'),equals(outputs('Actor')?['participationStatus'],'Active'),equals(outputs('Actor')?['openToConnections'],true),not(empty(outputs('Actor')?['accountKey'])),or(not(empty(outputs('Actor')?['teachIds'])),not(empty(outputs('Actor')?['learnIds'])),not(empty(outputs('Actor')?['shareCultureIds'])),not(empty(outputs('Actor')?['learnCultureIds'])))),and(equals(item()?['status'],'Active'),equals(item()?['participationStatus'],'Active'),equals(item()?['openToConnections'],true),not(empty(item()?['accountKey'])),or(not(empty(item()?['teachIds'])),not(empty(item()?['learnIds'])),not(empty(item()?['shareCultureIds'])),not(empty(item()?['learnCultureIds'])))),not(equals(outputs('Actor')?['profileId'],item()?['profileId'])),not(equals(outputs('Actor')?['accountKey'],item()?['accountKey'])),or(or(not(empty(intersection(outputs('Actor')?['learnIds'],item()?['teachIds']))),not(empty(intersection(outputs('Actor')?['teachIds'],item()?['learnIds'])))),or(not(empty(intersection(outputs('Actor')?['learnCultureIds'],item()?['shareCultureIds']))),not(empty(intersection(outputs('Actor')?['shareCultureIds'],item()?['learnCultureIds']))))))"
+              },
+              "runAfter": {
+                "Require_available_actor": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Require_people_result_bound": {
+              "type": "If",
+              "expression": "@lessOrEquals(length(body('Eligible_people')),50)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Error_PEOPLE_RESULT_BOUND": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "PEOPLE_RESULT_BOUND"
+                    },
+                    "runAfter": {}
+                  },
+                  "Stop_PEOPLE_RESULT_BOUND": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Error_PEOPLE_RESULT_BOUND": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Eligible_people": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Each_person": {
+              "type": "Foreach",
+              "foreach": "@body('Eligible_people')",
+              "actions": {
+                "Person_raw": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Qualified_source')",
+                    "where": "@equals(item()?['ID'],items('Each_person')?['profileId'])"
+                  },
+                  "runAfter": {}
+                },
+                "Person_fit": {
+                  "type": "Compose",
+                  "inputs": {
+                    "eligible": "@and(and(equals(outputs('Actor')?['status'],'Active'),equals(outputs('Actor')?['participationStatus'],'Active'),equals(outputs('Actor')?['openToConnections'],true),not(empty(outputs('Actor')?['accountKey'])),or(not(empty(outputs('Actor')?['teachIds'])),not(empty(outputs('Actor')?['learnIds'])),not(empty(outputs('Actor')?['shareCultureIds'])),not(empty(outputs('Actor')?['learnCultureIds'])))),and(equals(items('Each_person')?['status'],'Active'),equals(items('Each_person')?['participationStatus'],'Active'),equals(items('Each_person')?['openToConnections'],true),not(empty(items('Each_person')?['accountKey'])),or(not(empty(items('Each_person')?['teachIds'])),not(empty(items('Each_person')?['learnIds'])),not(empty(items('Each_person')?['shareCultureIds'])),not(empty(items('Each_person')?['learnCultureIds'])))),not(equals(outputs('Actor')?['profileId'],items('Each_person')?['profileId'])),not(equals(outputs('Actor')?['accountKey'],items('Each_person')?['accountKey'])),or(or(not(empty(intersection(outputs('Actor')?['learnIds'],items('Each_person')?['teachIds']))),not(empty(intersection(outputs('Actor')?['teachIds'],items('Each_person')?['learnIds'])))),or(not(empty(intersection(outputs('Actor')?['learnCultureIds'],items('Each_person')?['shareCultureIds']))),not(empty(intersection(outputs('Actor')?['shareCultureIds'],items('Each_person')?['learnCultureIds']))))))",
+                    "fitType": "@if(and(and(equals(outputs('Actor')?['status'],'Active'),equals(outputs('Actor')?['participationStatus'],'Active'),equals(outputs('Actor')?['openToConnections'],true),not(empty(outputs('Actor')?['accountKey'])),or(not(empty(outputs('Actor')?['teachIds'])),not(empty(outputs('Actor')?['learnIds'])),not(empty(outputs('Actor')?['shareCultureIds'])),not(empty(outputs('Actor')?['learnCultureIds'])))),and(equals(items('Each_person')?['status'],'Active'),equals(items('Each_person')?['participationStatus'],'Active'),equals(items('Each_person')?['openToConnections'],true),not(empty(items('Each_person')?['accountKey'])),or(not(empty(items('Each_person')?['teachIds'])),not(empty(items('Each_person')?['learnIds'])),not(empty(items('Each_person')?['shareCultureIds'])),not(empty(items('Each_person')?['learnCultureIds'])))),not(equals(outputs('Actor')?['profileId'],items('Each_person')?['profileId'])),not(equals(outputs('Actor')?['accountKey'],items('Each_person')?['accountKey'])),or(or(not(empty(intersection(outputs('Actor')?['learnIds'],items('Each_person')?['teachIds']))),not(empty(intersection(outputs('Actor')?['teachIds'],items('Each_person')?['learnIds'])))),or(not(empty(intersection(outputs('Actor')?['learnCultureIds'],items('Each_person')?['shareCultureIds']))),not(empty(intersection(outputs('Actor')?['shareCultureIds'],items('Each_person')?['learnCultureIds'])))))),if(and(or(not(empty(intersection(outputs('Actor')?['learnIds'],items('Each_person')?['teachIds']))),not(empty(intersection(outputs('Actor')?['teachIds'],items('Each_person')?['learnIds'])))),or(not(empty(intersection(outputs('Actor')?['learnCultureIds'],items('Each_person')?['shareCultureIds']))),not(empty(intersection(outputs('Actor')?['shareCultureIds'],items('Each_person')?['learnCultureIds']))))),'Combined',if(or(not(empty(intersection(outputs('Actor')?['learnIds'],items('Each_person')?['teachIds']))),not(empty(intersection(outputs('Actor')?['teachIds'],items('Each_person')?['learnIds'])))),'Language','Culture')),null)",
+                    "canLearnLanguageIds": "@if(and(and(equals(outputs('Actor')?['status'],'Active'),equals(outputs('Actor')?['participationStatus'],'Active'),equals(outputs('Actor')?['openToConnections'],true),not(empty(outputs('Actor')?['accountKey'])),or(not(empty(outputs('Actor')?['teachIds'])),not(empty(outputs('Actor')?['learnIds'])),not(empty(outputs('Actor')?['shareCultureIds'])),not(empty(outputs('Actor')?['learnCultureIds'])))),and(equals(items('Each_person')?['status'],'Active'),equals(items('Each_person')?['participationStatus'],'Active'),equals(items('Each_person')?['openToConnections'],true),not(empty(items('Each_person')?['accountKey'])),or(not(empty(items('Each_person')?['teachIds'])),not(empty(items('Each_person')?['learnIds'])),not(empty(items('Each_person')?['shareCultureIds'])),not(empty(items('Each_person')?['learnCultureIds'])))),not(equals(outputs('Actor')?['profileId'],items('Each_person')?['profileId'])),not(equals(outputs('Actor')?['accountKey'],items('Each_person')?['accountKey'])),or(or(not(empty(intersection(outputs('Actor')?['learnIds'],items('Each_person')?['teachIds']))),not(empty(intersection(outputs('Actor')?['teachIds'],items('Each_person')?['learnIds'])))),or(not(empty(intersection(outputs('Actor')?['learnCultureIds'],items('Each_person')?['shareCultureIds']))),not(empty(intersection(outputs('Actor')?['shareCultureIds'],items('Each_person')?['learnCultureIds'])))))),intersection(outputs('Actor')?['learnIds'],items('Each_person')?['teachIds']),json('[]'))",
+                    "canShareLanguageIds": "@if(and(and(equals(outputs('Actor')?['status'],'Active'),equals(outputs('Actor')?['participationStatus'],'Active'),equals(outputs('Actor')?['openToConnections'],true),not(empty(outputs('Actor')?['accountKey'])),or(not(empty(outputs('Actor')?['teachIds'])),not(empty(outputs('Actor')?['learnIds'])),not(empty(outputs('Actor')?['shareCultureIds'])),not(empty(outputs('Actor')?['learnCultureIds'])))),and(equals(items('Each_person')?['status'],'Active'),equals(items('Each_person')?['participationStatus'],'Active'),equals(items('Each_person')?['openToConnections'],true),not(empty(items('Each_person')?['accountKey'])),or(not(empty(items('Each_person')?['teachIds'])),not(empty(items('Each_person')?['learnIds'])),not(empty(items('Each_person')?['shareCultureIds'])),not(empty(items('Each_person')?['learnCultureIds'])))),not(equals(outputs('Actor')?['profileId'],items('Each_person')?['profileId'])),not(equals(outputs('Actor')?['accountKey'],items('Each_person')?['accountKey'])),or(or(not(empty(intersection(outputs('Actor')?['learnIds'],items('Each_person')?['teachIds']))),not(empty(intersection(outputs('Actor')?['teachIds'],items('Each_person')?['learnIds'])))),or(not(empty(intersection(outputs('Actor')?['learnCultureIds'],items('Each_person')?['shareCultureIds']))),not(empty(intersection(outputs('Actor')?['shareCultureIds'],items('Each_person')?['learnCultureIds'])))))),intersection(outputs('Actor')?['teachIds'],items('Each_person')?['learnIds']),json('[]'))",
+                    "canLearnCultureIds": "@if(and(and(equals(outputs('Actor')?['status'],'Active'),equals(outputs('Actor')?['participationStatus'],'Active'),equals(outputs('Actor')?['openToConnections'],true),not(empty(outputs('Actor')?['accountKey'])),or(not(empty(outputs('Actor')?['teachIds'])),not(empty(outputs('Actor')?['learnIds'])),not(empty(outputs('Actor')?['shareCultureIds'])),not(empty(outputs('Actor')?['learnCultureIds'])))),and(equals(items('Each_person')?['status'],'Active'),equals(items('Each_person')?['participationStatus'],'Active'),equals(items('Each_person')?['openToConnections'],true),not(empty(items('Each_person')?['accountKey'])),or(not(empty(items('Each_person')?['teachIds'])),not(empty(items('Each_person')?['learnIds'])),not(empty(items('Each_person')?['shareCultureIds'])),not(empty(items('Each_person')?['learnCultureIds'])))),not(equals(outputs('Actor')?['profileId'],items('Each_person')?['profileId'])),not(equals(outputs('Actor')?['accountKey'],items('Each_person')?['accountKey'])),or(or(not(empty(intersection(outputs('Actor')?['learnIds'],items('Each_person')?['teachIds']))),not(empty(intersection(outputs('Actor')?['teachIds'],items('Each_person')?['learnIds'])))),or(not(empty(intersection(outputs('Actor')?['learnCultureIds'],items('Each_person')?['shareCultureIds']))),not(empty(intersection(outputs('Actor')?['shareCultureIds'],items('Each_person')?['learnCultureIds'])))))),intersection(outputs('Actor')?['learnCultureIds'],items('Each_person')?['shareCultureIds']),json('[]'))",
+                    "canShareCultureIds": "@if(and(and(equals(outputs('Actor')?['status'],'Active'),equals(outputs('Actor')?['participationStatus'],'Active'),equals(outputs('Actor')?['openToConnections'],true),not(empty(outputs('Actor')?['accountKey'])),or(not(empty(outputs('Actor')?['teachIds'])),not(empty(outputs('Actor')?['learnIds'])),not(empty(outputs('Actor')?['shareCultureIds'])),not(empty(outputs('Actor')?['learnCultureIds'])))),and(equals(items('Each_person')?['status'],'Active'),equals(items('Each_person')?['participationStatus'],'Active'),equals(items('Each_person')?['openToConnections'],true),not(empty(items('Each_person')?['accountKey'])),or(not(empty(items('Each_person')?['teachIds'])),not(empty(items('Each_person')?['learnIds'])),not(empty(items('Each_person')?['shareCultureIds'])),not(empty(items('Each_person')?['learnCultureIds'])))),not(equals(outputs('Actor')?['profileId'],items('Each_person')?['profileId'])),not(equals(outputs('Actor')?['accountKey'],items('Each_person')?['accountKey'])),or(or(not(empty(intersection(outputs('Actor')?['learnIds'],items('Each_person')?['teachIds']))),not(empty(intersection(outputs('Actor')?['teachIds'],items('Each_person')?['learnIds'])))),or(not(empty(intersection(outputs('Actor')?['learnCultureIds'],items('Each_person')?['shareCultureIds']))),not(empty(intersection(outputs('Actor')?['shareCultureIds'],items('Each_person')?['learnCultureIds'])))))),intersection(outputs('Actor')?['shareCultureIds'],items('Each_person')?['learnCultureIds']),json('[]'))"
+                  },
+                  "runAfter": {
+                    "Person_raw": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Person_teachLanguages_rows": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Active_language')",
+                    "where": "@contains(items('Each_person')?['teachIds'],item()?['Id'])"
+                  },
+                  "runAfter": {
+                    "Person_fit": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Person_teachLanguages": {
+                  "type": "Select",
+                  "inputs": {
+                    "from": "@body('Person_teachLanguages_rows')",
+                    "select": {
+                      "id": "@item()?['Id']",
+                      "label": "@item()?['Title']"
+                    }
+                  },
+                  "runAfter": {
+                    "Person_teachLanguages_rows": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Person_learnLanguages_rows": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Active_language')",
+                    "where": "@contains(items('Each_person')?['learnIds'],item()?['Id'])"
+                  },
+                  "runAfter": {
+                    "Person_teachLanguages": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Person_learnLanguages": {
+                  "type": "Select",
+                  "inputs": {
+                    "from": "@body('Person_learnLanguages_rows')",
+                    "select": {
+                      "id": "@item()?['Id']",
+                      "label": "@item()?['Title']"
+                    }
+                  },
+                  "runAfter": {
+                    "Person_learnLanguages_rows": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Person_shareCultures_rows": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Active_culture')",
+                    "where": "@contains(items('Each_person')?['shareCultureIds'],item()?['Id'])"
+                  },
+                  "runAfter": {
+                    "Person_learnLanguages": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Person_shareCultures": {
+                  "type": "Select",
+                  "inputs": {
+                    "from": "@body('Person_shareCultures_rows')",
+                    "select": {
+                      "id": "@item()?['Id']",
+                      "label": "@item()?['Title']"
+                    }
+                  },
+                  "runAfter": {
+                    "Person_shareCultures_rows": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Person_learnCultures_rows": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Active_culture')",
+                    "where": "@contains(items('Each_person')?['learnCultureIds'],item()?['Id'])"
+                  },
+                  "runAfter": {
+                    "Person_shareCultures": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Person_learnCultures": {
+                  "type": "Select",
+                  "inputs": {
+                    "from": "@body('Person_learnCultures_rows')",
+                    "select": {
+                      "id": "@item()?['Id']",
+                      "label": "@item()?['Title']"
+                    }
+                  },
+                  "runAfter": {
+                    "Person_learnCultures_rows": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Person_zone_rows": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Active_timezone')",
+                    "where": "@equals(item()?['Id'],items('Each_person')?['timezoneId'])"
+                  },
+                  "runAfter": {
+                    "Person_learnCultures": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Person_display": {
+                  "type": "Compose",
+                  "inputs": {
+                    "profileId": "@items('Each_person')?['profileId']",
+                    "displayName": "@first(body('Person_raw'))?['Participantaccount']?['DisplayName']",
+                    "teachLanguages": "@body('Person_teachLanguages')",
+                    "learnLanguages": "@body('Person_learnLanguages')",
+                    "shareCultures": "@body('Person_shareCultures')",
+                    "learnCultures": "@body('Person_learnCultures')",
+                    "timeZone": {
+                      "id": "@first(union(body('Person_zone_rows'),createArray(json('{}'))))?['Id']",
+                      "label": "@first(union(body('Person_zone_rows'),createArray(json('{}'))))?['Title']",
+                      "ianaId": "@first(union(body('Person_zone_rows'),createArray(json('{}'))))?['IANA_ID']"
+                    },
+                    "learningFocus": "@coalesce(first(body('Person_raw'))?['Learningfocus'],'')",
+                    "comments": "@coalesce(first(body('Person_raw'))?['Comments'],'')"
+                  },
+                  "runAfter": {
+                    "Person_zone_rows": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Person_public": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@outputs('Person_display')",
+                    "schema": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "profileId",
+                        "displayName",
+                        "teachLanguages",
+                        "learnLanguages",
+                        "shareCultures",
+                        "learnCultures",
+                        "timeZone",
+                        "learningFocus",
+                        "comments"
+                      ],
+                      "properties": {
+                        "profileId": {
+                          "type": "integer",
+                          "minimum": 1
+                        },
+                        "displayName": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "teachLanguages": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "id",
+                              "label"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "minimum": 1
+                              },
+                              "label": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "learnLanguages": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "id",
+                              "label"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "minimum": 1
+                              },
+                              "label": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "shareCultures": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "id",
+                              "label"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "minimum": 1
+                              },
+                              "label": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "learnCultures": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "id",
+                              "label"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "minimum": 1
+                              },
+                              "label": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "timeZone": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "id",
+                            "label",
+                            "ianaId"
+                          ],
+                          "properties": {
+                            "id": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ],
+                              "minimum": 1
+                            },
+                            "label": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "ianaId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          }
+                        },
+                        "learningFocus": {
+                          "type": "string"
+                        },
+                        "comments": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Person_display": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Append_person": {
+                  "type": "AppendToArrayVariable",
+                  "inputs": {
+                    "name": "People",
+                    "value": {
+                      "profileId": "@items('Each_person')?['profileId']",
+                      "displayName": "@body('Person_public')?['displayName']",
+                      "fitType": "@outputs('Person_fit')?['fitType']",
+                      "profile": "@body('Person_public')",
+                      "match": {
+                        "canLearnLanguageIds": "@outputs('Person_fit')?['canLearnLanguageIds']",
+                        "canShareLanguageIds": "@outputs('Person_fit')?['canShareLanguageIds']",
+                        "canLearnCultureIds": "@outputs('Person_fit')?['canLearnCultureIds']",
+                        "canShareCultureIds": "@outputs('Person_fit')?['canShareCultureIds']"
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Person_public": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 1
+                }
+              },
+              "runAfter": {
+                "Require_people_result_bound": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_groups": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6')/items?$select=Id,Title,ExchangeType,LanguageFocusId,CultureFocusId,Capacity,State,Purpose,SourceRequestId,SetupComplete,WriteOwner&$orderby=Id&$top=101",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "runAfter": {
+                "Each_person": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Require_group_bound": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Read_groups')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_groups')?['d']?['results'],json('[]'))),100),empty(body('Read_groups')?['d']?['__next']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Error_GROUP_BOUND_OR_INCOMPLETE": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "GROUP_BOUND_OR_INCOMPLETE"
+                    },
+                    "runAfter": {}
+                  },
+                  "Stop_GROUP_BOUND_OR_INCOMPLETE": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Error_GROUP_BOUND_OR_INCOMPLETE": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_groups": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Potential_groups": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_groups')?['d']?['results']",
+                "where": "@and(equals(item()?['State'],'Open'),equals(item()?['SetupComplete'],true),empty(item()?['WriteOwner']))"
+              },
+              "runAfter": {
+                "Require_group_bound": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Groups_exist": {
+              "type": "If",
+              "expression": "@not(empty(body('Potential_groups')))",
+              "actions": {
+                "Read_request_fields": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "_api/web/lists(guid'3d17485d-1dac-41f0-a1af-24e45daa4567')/fields?$select=InternalName,TypeAsString&$top=5000",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=verbose"
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "runAfter": {}
+                },
+                "Request_commit_field": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Read_request_fields')?['d']?['results']",
+                    "where": "@and(equals(item()?['InternalName'],'OperationComplete'),equals(item()?['TypeAsString'],'Boolean'))"
+                  },
+                  "runAfter": {
+                    "Read_request_fields": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Require_request_commit_schema": {
+                  "type": "If",
+                  "expression": "@and(and(not(equals(body('Read_request_fields')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_request_fields')?['d']?['results'],json('[]'))),5000),empty(body('Read_request_fields')?['d']?['__next'])),equals(length(body('Request_commit_field')),1))",
+                  "actions": {},
+                  "else": {
+                    "actions": {
+                      "Error_GROUP_COMMIT_SCHEMA_UNVERIFIED": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ErrorCode",
+                          "value": "GROUP_COMMIT_SCHEMA_UNVERIFIED"
+                        },
+                        "runAfter": {}
+                      },
+                      "Stop_GROUP_COMMIT_SCHEMA_UNVERIFIED": {
+                        "type": "Compose",
+                        "inputs": "@div(1,0)",
+                        "runAfter": {
+                          "Error_GROUP_COMMIT_SCHEMA_UNVERIFIED": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Request_commit_field": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Read_memberships": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "_api/web/lists(guid'db611ec3-7fa3-477a-878e-effbbb195cb8')/items?$select=Id,GroupId,ParticipantId,MembershipStatus,MembershipKey&$orderby=Id&$top=2001",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=verbose"
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "runAfter": {
+                    "Require_request_commit_schema": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Require_member_bound": {
+                  "type": "If",
+                  "expression": "@and(not(equals(body('Read_memberships')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_memberships')?['d']?['results'],json('[]'))),2000),empty(body('Read_memberships')?['d']?['__next']))",
+                  "actions": {},
+                  "else": {
+                    "actions": {
+                      "Error_MEMBERSHIP_BOUND_OR_INCOMPLETE": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ErrorCode",
+                          "value": "MEMBERSHIP_BOUND_OR_INCOMPLETE"
+                        },
+                        "runAfter": {}
+                      },
+                      "Stop_MEMBERSHIP_BOUND_OR_INCOMPLETE": {
+                        "type": "Compose",
+                        "inputs": "@div(1,0)",
+                        "runAfter": {
+                          "Error_MEMBERSHIP_BOUND_OR_INCOMPLETE": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Read_memberships": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Read_requests": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "_api/web/lists(guid'3d17485d-1dac-41f0-a1af-24e45daa4567')/items?$select=Id,Status,OperationComplete&$orderby=Id&$top=501",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=verbose"
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "runAfter": {
+                    "Require_member_bound": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Require_request_bound": {
+                  "type": "If",
+                  "expression": "@and(not(equals(body('Read_requests')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_requests')?['d']?['results'],json('[]'))),500),empty(body('Read_requests')?['d']?['__next']))",
+                  "actions": {},
+                  "else": {
+                    "actions": {
+                      "Error_REQUEST_BOUND_OR_INCOMPLETE": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ErrorCode",
+                          "value": "REQUEST_BOUND_OR_INCOMPLETE"
+                        },
+                        "runAfter": {}
+                      },
+                      "Stop_REQUEST_BOUND_OR_INCOMPLETE": {
+                        "type": "Compose",
+                        "inputs": "@div(1,0)",
+                        "runAfter": {
+                          "Error_REQUEST_BOUND_OR_INCOMPLETE": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Read_requests": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Open_groups": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Read_groups')?['d']?['results']",
+                    "where": "@and(equals(item()?['State'],'Open'),equals(item()?['SetupComplete'],true),empty(item()?['WriteOwner']))"
+                  },
+                  "runAfter": {
+                    "Require_request_bound": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Each_group": {
+                  "type": "Foreach",
+                  "foreach": "@body('Open_groups')",
+                  "actions": {
+                    "Reset_focus": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "FocusChecks",
+                        "value": []
+                      },
+                      "runAfter": {}
+                    },
+                    "Reset_available": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "AvailableFocusChecks",
+                        "value": []
+                      },
+                      "runAfter": {
+                        "Reset_focus": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Reset_members": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "MemberDisplays",
+                        "value": []
+                      },
+                      "runAfter": {
+                        "Reset_available": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Physical_members": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@body('Read_memberships')?['d']?['results']",
+                        "where": "@and(equals(item()?['GroupId'],items('Each_group')?['Id']),equals(item()?['MembershipStatus'],'Active'))"
+                      },
+                      "runAfter": {
+                        "Reset_members": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Member_profile_ids": {
+                      "type": "Select",
+                      "inputs": {
+                        "from": "@body('Physical_members')",
+                        "select": "@item()?['ParticipantId']"
+                      },
+                      "runAfter": {
+                        "Physical_members": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Group_members": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@body('Shared_Profiles')",
+                        "where": "@contains(body('Member_profile_ids'),item()?['profileId'])"
+                      },
+                      "runAfter": {
+                        "Member_profile_ids": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Accepted_source": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@body('Read_requests')?['d']?['results']",
+                        "where": "@and(equals(item()?['Id'],items('Each_group')?['SourceRequestId']),equals(item()?['Status'],'Accepted'),equals(item()?['OperationComplete'],true))"
+                      },
+                      "runAfter": {
+                        "Group_members": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Check_member_commit": {
+                      "type": "Foreach",
+                      "foreach": "@body('Physical_members')",
+                      "actions": {
+                        "Membership_commit": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Read_requests')?['d']?['results']",
+                            "where": "@and(equals(items('Check_member_commit')?['MembershipKey'],concat('request:',string(item()?['Id']),':participant:',string(items('Check_member_commit')?['ParticipantId']))),equals(item()?['Status'],'Accepted'),equals(item()?['OperationComplete'],true))"
+                          },
+                          "runAfter": {}
+                        },
+                        "Remember_commit": {
+                          "type": "AppendToArrayVariable",
+                          "inputs": {
+                            "name": "AvailableFocusChecks",
+                            "value": "@equals(length(body('Membership_commit')),1)"
+                          },
+                          "runAfter": {
+                            "Membership_commit": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      },
+                      "runtimeConfiguration": {
+                        "concurrency": {
+                          "repetitions": 1
+                        }
+                      },
+                      "runAfter": {
+                        "Accepted_source": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Uncommitted_members": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@variables('AvailableFocusChecks')",
+                        "where": "@not(equals(item(),true))"
+                      },
+                      "runAfter": {
+                        "Check_member_commit": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Parse_group": {
+                      "type": "ParseJson",
+                      "inputs": {
+                        "content": "@items('Each_group')",
+                        "schema": {
+                          "type": "object",
+                          "required": [
+                            "Id",
+                            "Title",
+                            "ExchangeType",
+                            "Capacity",
+                            "SourceRequestId",
+                            "LanguageFocusId",
+                            "CultureFocusId"
+                          ],
+                          "properties": {
+                            "Id": {
+                              "type": "integer",
+                              "minimum": 1
+                            },
+                            "Title": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "ExchangeType": {
+                              "type": "string",
+                              "enum": [
+                                "Language",
+                                "Culture",
+                                "Combined"
+                              ]
+                            },
+                            "Capacity": {
+                              "type": "integer",
+                              "minimum": 2,
+                              "maximum": 10
+                            },
+                            "SourceRequestId": {
+                              "type": "integer",
+                              "minimum": 1
+                            },
+                            "LanguageFocusId": {
+                              "type": "object",
+                              "required": [
+                                "results"
+                              ],
+                              "properties": {
+                                "results": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                  }
+                                }
+                              }
+                            },
+                            "CultureFocusId": {
+                              "type": "object",
+                              "required": [
+                                "results"
+                              ],
+                              "properties": {
+                                "results": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Uncommitted_members": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Group_work_total": {
+                      "type": "Compose",
+                      "inputs": "@add(variables('GroupWork'),add(length(body('Physical_members')),add(length(items('Each_group')?['LanguageFocusId']?['results']),length(items('Each_group')?['CultureFocusId']?['results']))))",
+                      "runAfter": {
+                        "Parse_group": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Save_group_work": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "GroupWork",
+                        "value": "@outputs('Group_work_total')"
+                      },
+                      "runAfter": {
+                        "Group_work_total": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Require_group_work_bound": {
+                      "type": "If",
+                      "expression": "@lessOrEquals(variables('GroupWork'),100)",
+                      "actions": {},
+                      "else": {
+                        "actions": {
+                          "Error_GROUP_WORK_BOUND": {
+                            "type": "SetVariable",
+                            "inputs": {
+                              "name": "ErrorCode",
+                              "value": "GROUP_WORK_BOUND"
+                            },
+                            "runAfter": {}
+                          },
+                          "Stop_GROUP_WORK_BOUND": {
+                            "type": "Compose",
+                            "inputs": "@div(1,0)",
+                            "runAfter": {
+                              "Error_GROUP_WORK_BOUND": [
+                                "Succeeded"
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Save_group_work": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Reset_available_focus": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "AvailableFocusChecks",
+                        "value": []
+                      },
+                      "runAfter": {
+                        "Require_group_work_bound": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Available_language_focus": {
+                      "type": "Foreach",
+                      "foreach": "@items('Each_group')?['LanguageFocusId']?['results']",
+                      "actions": {
+                        "Find_available_language": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Group_members')",
+                            "where": "@and(and(equals(item()?['status'],'Active'),equals(item()?['participationStatus'],'Active'),equals(item()?['openToConnections'],true),not(empty(item()?['accountKey'])),or(not(empty(item()?['teachIds'])),not(empty(item()?['learnIds'])),not(empty(item()?['shareCultureIds'])),not(empty(item()?['learnCultureIds'])))),contains(item()?['teachIds'],items('Available_language_focus')))"
+                          },
+                          "runAfter": {}
+                        },
+                        "Record_available_language": {
+                          "type": "AppendToArrayVariable",
+                          "inputs": {
+                            "name": "AvailableFocusChecks",
+                            "value": "@not(empty(body('Find_available_language')))"
+                          },
+                          "runAfter": {
+                            "Find_available_language": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      },
+                      "runtimeConfiguration": {
+                        "concurrency": {
+                          "repetitions": 1
+                        }
+                      },
+                      "runAfter": {
+                        "Reset_available_focus": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Available_culture_focus": {
+                      "type": "Foreach",
+                      "foreach": "@items('Each_group')?['CultureFocusId']?['results']",
+                      "actions": {
+                        "Find_available_culture": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Group_members')",
+                            "where": "@and(and(equals(item()?['status'],'Active'),equals(item()?['participationStatus'],'Active'),equals(item()?['openToConnections'],true),not(empty(item()?['accountKey'])),or(not(empty(item()?['teachIds'])),not(empty(item()?['learnIds'])),not(empty(item()?['shareCultureIds'])),not(empty(item()?['learnCultureIds'])))),contains(item()?['shareCultureIds'],items('Available_culture_focus')))"
+                          },
+                          "runAfter": {}
+                        },
+                        "Record_available_culture": {
+                          "type": "AppendToArrayVariable",
+                          "inputs": {
+                            "name": "AvailableFocusChecks",
+                            "value": "@not(empty(body('Find_available_culture')))"
+                          },
+                          "runAfter": {
+                            "Find_available_culture": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      },
+                      "runtimeConfiguration": {
+                        "concurrency": {
+                          "repetitions": 1
+                        }
+                      },
+                      "runAfter": {
+                        "Available_language_focus": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Unavailable_focus": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@variables('AvailableFocusChecks')",
+                        "where": "@not(equals(item(),true))"
+                      },
+                      "runAfter": {
+                        "Available_culture_focus": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Group_adapter": {
+                      "type": "Compose",
+                      "inputs": {
+                        "groupId": "@items('Each_group')?['Id']",
+                        "exchangeType": "@items('Each_group')?['ExchangeType']",
+                        "state": "@items('Each_group')?['State']",
+                        "capacity": "@items('Each_group')?['Capacity']",
+                        "setupComplete": "@items('Each_group')?['SetupComplete']",
+                        "languageFocusIds": "@items('Each_group')?['LanguageFocusId']?['results']",
+                        "cultureFocusIds": "@items('Each_group')?['CultureFocusId']?['results']",
+                        "memberProfileIds": "@body('Member_profile_ids')",
+                        "focusSharersAvailable": "@empty(body('Unavailable_focus'))"
+                      },
+                      "runAfter": {
+                        "Unavailable_focus": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Group_fit_Language_focus": {
+                      "type": "Foreach",
+                      "foreach": "@outputs('Group_adapter')?['languageFocusIds']",
+                      "actions": {
+                        "Group_fit_Language_Sharers": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Group_members')",
+                            "where": "@and(equals(item()?['status'],'Active'),contains(item()?['teachIds'],items('Group_fit_Language_focus')))"
+                          },
+                          "runAfter": {}
+                        },
+                        "Group_fit_Language_Sharers_ids": {
+                          "type": "Select",
+                          "inputs": {
+                            "from": "@body('Group_fit_Language_Sharers')",
+                            "select": "@item()?['profileId']"
+                          },
+                          "runAfter": {
+                            "Group_fit_Language_Sharers": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Group_fit_Language_Learners": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Group_members')",
+                            "where": "@and(equals(item()?['status'],'Active'),contains(item()?['learnIds'],items('Group_fit_Language_focus')))"
+                          },
+                          "runAfter": {
+                            "Group_fit_Language_Sharers_ids": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Group_fit_Language_Learners_ids": {
+                          "type": "Select",
+                          "inputs": {
+                            "from": "@body('Group_fit_Language_Learners')",
+                            "select": "@item()?['profileId']"
+                          },
+                          "runAfter": {
+                            "Group_fit_Language_Learners": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Group_fit_Language_Check": {
+                          "type": "AppendToArrayVariable",
+                          "inputs": {
+                            "name": "FocusChecks",
+                            "value": {
+                              "kind": "Language",
+                              "focusId": "@items('Group_fit_Language_focus')",
+                              "supported": "@and(not(empty(body('Group_fit_Language_Sharers_ids'))),not(empty(body('Group_fit_Language_Learners_ids'))),greater(length(union(body('Group_fit_Language_Sharers_ids'),body('Group_fit_Language_Learners_ids'))),1))"
+                            }
+                          },
+                          "runAfter": {
+                            "Group_fit_Language_Learners_ids": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      },
+                      "runtimeConfiguration": {
+                        "concurrency": {
+                          "repetitions": 1
+                        }
+                      },
+                      "runAfter": {
+                        "Group_adapter": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Group_fit_Culture_focus": {
+                      "type": "Foreach",
+                      "foreach": "@outputs('Group_adapter')?['cultureFocusIds']",
+                      "actions": {
+                        "Group_fit_Culture_Sharers": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Group_members')",
+                            "where": "@and(equals(item()?['status'],'Active'),contains(item()?['shareCultureIds'],items('Group_fit_Culture_focus')))"
+                          },
+                          "runAfter": {}
+                        },
+                        "Group_fit_Culture_Sharers_ids": {
+                          "type": "Select",
+                          "inputs": {
+                            "from": "@body('Group_fit_Culture_Sharers')",
+                            "select": "@item()?['profileId']"
+                          },
+                          "runAfter": {
+                            "Group_fit_Culture_Sharers": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Group_fit_Culture_Learners": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Group_members')",
+                            "where": "@and(equals(item()?['status'],'Active'),contains(item()?['learnCultureIds'],items('Group_fit_Culture_focus')))"
+                          },
+                          "runAfter": {
+                            "Group_fit_Culture_Sharers_ids": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Group_fit_Culture_Learners_ids": {
+                          "type": "Select",
+                          "inputs": {
+                            "from": "@body('Group_fit_Culture_Learners')",
+                            "select": "@item()?['profileId']"
+                          },
+                          "runAfter": {
+                            "Group_fit_Culture_Learners": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Group_fit_Culture_Check": {
+                          "type": "AppendToArrayVariable",
+                          "inputs": {
+                            "name": "FocusChecks",
+                            "value": {
+                              "kind": "Culture",
+                              "focusId": "@items('Group_fit_Culture_focus')",
+                              "supported": "@and(not(empty(body('Group_fit_Culture_Sharers_ids'))),not(empty(body('Group_fit_Culture_Learners_ids'))),greater(length(union(body('Group_fit_Culture_Sharers_ids'),body('Group_fit_Culture_Learners_ids'))),1))"
+                            }
+                          },
+                          "runAfter": {
+                            "Group_fit_Culture_Learners_ids": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      },
+                      "runtimeConfiguration": {
+                        "concurrency": {
+                          "repetitions": 1
+                        }
+                      },
+                      "runAfter": {
+                        "Group_fit_Language_focus": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Group_fit_Unsupported": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@variables('FocusChecks')",
+                        "where": "@not(equals(item()?['supported'],true))"
+                      },
+                      "runAfter": {
+                        "Group_fit_Culture_focus": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Group_fit_Unrelated_members": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@body('Group_members')",
+                        "where": "@not(and(equals(item()?['status'],'Active'),or(not(empty(intersection(item()?['teachIds'],outputs('Group_adapter')?['languageFocusIds']))),not(empty(intersection(item()?['learnIds'],outputs('Group_adapter')?['languageFocusIds']))),not(empty(intersection(item()?['shareCultureIds'],outputs('Group_adapter')?['cultureFocusIds']))),not(empty(intersection(item()?['learnCultureIds'],outputs('Group_adapter')?['cultureFocusIds']))))))"
+                      },
+                      "runAfter": {
+                        "Group_fit_Unsupported": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Group_fit_Result": {
+                      "type": "Compose",
+                      "inputs": {
+                        "purposeValid": "@and(or(and(equals(outputs('Group_adapter')?['exchangeType'],'Language'),not(empty(outputs('Group_adapter')?['languageFocusIds'])),not(not(empty(outputs('Group_adapter')?['cultureFocusIds'])))),and(equals(outputs('Group_adapter')?['exchangeType'],'Culture'),not(empty(outputs('Group_adapter')?['cultureFocusIds'])),not(not(empty(outputs('Group_adapter')?['languageFocusIds'])))),and(equals(outputs('Group_adapter')?['exchangeType'],'Combined'),not(empty(outputs('Group_adapter')?['languageFocusIds'])),not(empty(outputs('Group_adapter')?['cultureFocusIds'])))),and(equals(length(intersection(outputs('Group_adapter')?['languageFocusIds'],outputs('Shared_Catalogues')?['concreteLanguageIds'])),length(outputs('Group_adapter')?['languageFocusIds'])),equals(length(intersection(outputs('Group_adapter')?['cultureFocusIds'],outputs('Shared_Catalogues')?['cultureIds'])),length(outputs('Group_adapter')?['cultureFocusIds']))),equals(length(outputs('Group_adapter')?['memberProfileIds']),length(union(outputs('Group_adapter')?['memberProfileIds'],outputs('Group_adapter')?['memberProfileIds']))),equals(length(body('Group_members')),length(outputs('Group_adapter')?['memberProfileIds'])),empty(body('Group_fit_Unsupported')),empty(body('Group_fit_Unrelated_members')))",
+                        "capacityValid": "@and(greaterOrEquals(outputs('Group_adapter')?['capacity'],2),lessOrEquals(outputs('Group_adapter')?['capacity'],if(equals(outputs('Group_adapter')?['exchangeType'],'Language'),3,10)),greaterOrEquals(outputs('Group_adapter')?['capacity'],length(outputs('Group_adapter')?['memberProfileIds'])))",
+                        "candidateParticipates": "@and(equals(outputs('Actor')?['status'],'Active'),or(not(empty(intersection(outputs('Actor')?['teachIds'],outputs('Group_adapter')?['languageFocusIds']))),not(empty(intersection(outputs('Actor')?['learnIds'],outputs('Group_adapter')?['languageFocusIds']))),not(empty(intersection(outputs('Actor')?['shareCultureIds'],outputs('Group_adapter')?['cultureFocusIds']))),not(empty(intersection(outputs('Actor')?['learnCultureIds'],outputs('Group_adapter')?['cultureFocusIds'])))))",
+                        "compatible": "@and(and(or(and(equals(outputs('Group_adapter')?['exchangeType'],'Language'),not(empty(outputs('Group_adapter')?['languageFocusIds'])),not(not(empty(outputs('Group_adapter')?['cultureFocusIds'])))),and(equals(outputs('Group_adapter')?['exchangeType'],'Culture'),not(empty(outputs('Group_adapter')?['cultureFocusIds'])),not(not(empty(outputs('Group_adapter')?['languageFocusIds'])))),and(equals(outputs('Group_adapter')?['exchangeType'],'Combined'),not(empty(outputs('Group_adapter')?['languageFocusIds'])),not(empty(outputs('Group_adapter')?['cultureFocusIds'])))),and(equals(length(intersection(outputs('Group_adapter')?['languageFocusIds'],outputs('Shared_Catalogues')?['concreteLanguageIds'])),length(outputs('Group_adapter')?['languageFocusIds'])),equals(length(intersection(outputs('Group_adapter')?['cultureFocusIds'],outputs('Shared_Catalogues')?['cultureIds'])),length(outputs('Group_adapter')?['cultureFocusIds']))),equals(length(outputs('Group_adapter')?['memberProfileIds']),length(union(outputs('Group_adapter')?['memberProfileIds'],outputs('Group_adapter')?['memberProfileIds']))),equals(length(body('Group_members')),length(outputs('Group_adapter')?['memberProfileIds'])),empty(body('Group_fit_Unsupported')),empty(body('Group_fit_Unrelated_members'))),and(greaterOrEquals(outputs('Group_adapter')?['capacity'],2),lessOrEquals(outputs('Group_adapter')?['capacity'],if(equals(outputs('Group_adapter')?['exchangeType'],'Language'),3,10)),greaterOrEquals(outputs('Group_adapter')?['capacity'],length(outputs('Group_adapter')?['memberProfileIds']))),and(equals(outputs('Actor')?['status'],'Active'),or(not(empty(intersection(outputs('Actor')?['teachIds'],outputs('Group_adapter')?['languageFocusIds']))),not(empty(intersection(outputs('Actor')?['learnIds'],outputs('Group_adapter')?['languageFocusIds']))),not(empty(intersection(outputs('Actor')?['shareCultureIds'],outputs('Group_adapter')?['cultureFocusIds']))),not(empty(intersection(outputs('Actor')?['learnCultureIds'],outputs('Group_adapter')?['cultureFocusIds']))))),and(equals(outputs('Actor')?['status'],'Active'),equals(outputs('Actor')?['participationStatus'],'Active'),equals(outputs('Actor')?['openToConnections'],true),not(empty(outputs('Actor')?['accountKey'])),or(not(empty(outputs('Actor')?['teachIds'])),not(empty(outputs('Actor')?['learnIds'])),not(empty(outputs('Actor')?['shareCultureIds'])),not(empty(outputs('Actor')?['learnCultureIds'])))),equals(outputs('Group_adapter')?['state'],'Open'),equals(outputs('Group_adapter')?['setupComplete'],true),equals(outputs('Group_adapter')?['focusSharersAvailable'],true),greater(outputs('Group_adapter')?['capacity'],length(outputs('Group_adapter')?['memberProfileIds'])),not(contains(outputs('Group_adapter')?['memberProfileIds'],outputs('Actor')?['profileId'])))"
+                      },
+                      "runAfter": {
+                        "Group_fit_Unrelated_members": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Show_group": {
+                      "type": "If",
+                      "expression": "@and(outputs('Group_fit_Result')?['compatible'],equals(length(body('Accepted_source')),1),empty(body('Uncommitted_members')))",
+                      "actions": {
+                        "Each_group_member": {
+                          "type": "Foreach",
+                          "foreach": "@body('Group_members')",
+                          "actions": {
+                            "Member_raw": {
+                              "type": "Query",
+                              "inputs": {
+                                "from": "@body('Qualified_source')",
+                                "where": "@equals(item()?['ID'],items('Each_group_member')?['profileId'])"
+                              },
+                              "runAfter": {}
+                            },
+                            "Member_teachLanguages_rows": {
+                              "type": "Query",
+                              "inputs": {
+                                "from": "@body('Active_language')",
+                                "where": "@contains(items('Each_group_member')?['teachIds'],item()?['Id'])"
+                              },
+                              "runAfter": {
+                                "Member_raw": [
+                                  "Succeeded"
+                                ]
+                              }
+                            },
+                            "Member_teachLanguages": {
+                              "type": "Select",
+                              "inputs": {
+                                "from": "@body('Member_teachLanguages_rows')",
+                                "select": {
+                                  "id": "@item()?['Id']",
+                                  "label": "@item()?['Title']"
+                                }
+                              },
+                              "runAfter": {
+                                "Member_teachLanguages_rows": [
+                                  "Succeeded"
+                                ]
+                              }
+                            },
+                            "Member_learnLanguages_rows": {
+                              "type": "Query",
+                              "inputs": {
+                                "from": "@body('Active_language')",
+                                "where": "@contains(items('Each_group_member')?['learnIds'],item()?['Id'])"
+                              },
+                              "runAfter": {
+                                "Member_teachLanguages": [
+                                  "Succeeded"
+                                ]
+                              }
+                            },
+                            "Member_learnLanguages": {
+                              "type": "Select",
+                              "inputs": {
+                                "from": "@body('Member_learnLanguages_rows')",
+                                "select": {
+                                  "id": "@item()?['Id']",
+                                  "label": "@item()?['Title']"
+                                }
+                              },
+                              "runAfter": {
+                                "Member_learnLanguages_rows": [
+                                  "Succeeded"
+                                ]
+                              }
+                            },
+                            "Member_shareCultures_rows": {
+                              "type": "Query",
+                              "inputs": {
+                                "from": "@body('Active_culture')",
+                                "where": "@contains(items('Each_group_member')?['shareCultureIds'],item()?['Id'])"
+                              },
+                              "runAfter": {
+                                "Member_learnLanguages": [
+                                  "Succeeded"
+                                ]
+                              }
+                            },
+                            "Member_shareCultures": {
+                              "type": "Select",
+                              "inputs": {
+                                "from": "@body('Member_shareCultures_rows')",
+                                "select": {
+                                  "id": "@item()?['Id']",
+                                  "label": "@item()?['Title']"
+                                }
+                              },
+                              "runAfter": {
+                                "Member_shareCultures_rows": [
+                                  "Succeeded"
+                                ]
+                              }
+                            },
+                            "Member_learnCultures_rows": {
+                              "type": "Query",
+                              "inputs": {
+                                "from": "@body('Active_culture')",
+                                "where": "@contains(items('Each_group_member')?['learnCultureIds'],item()?['Id'])"
+                              },
+                              "runAfter": {
+                                "Member_shareCultures": [
+                                  "Succeeded"
+                                ]
+                              }
+                            },
+                            "Member_learnCultures": {
+                              "type": "Select",
+                              "inputs": {
+                                "from": "@body('Member_learnCultures_rows')",
+                                "select": {
+                                  "id": "@item()?['Id']",
+                                  "label": "@item()?['Title']"
+                                }
+                              },
+                              "runAfter": {
+                                "Member_learnCultures_rows": [
+                                  "Succeeded"
+                                ]
+                              }
+                            },
+                            "Member_zone_rows": {
+                              "type": "Query",
+                              "inputs": {
+                                "from": "@body('Active_timezone')",
+                                "where": "@equals(item()?['Id'],items('Each_group_member')?['timezoneId'])"
+                              },
+                              "runAfter": {
+                                "Member_learnCultures": [
+                                  "Succeeded"
+                                ]
+                              }
+                            },
+                            "Member_display": {
+                              "type": "Compose",
+                              "inputs": {
+                                "profileId": "@items('Each_group_member')?['profileId']",
+                                "displayName": "@first(body('Member_raw'))?['Participantaccount']?['DisplayName']",
+                                "teachLanguages": "@body('Member_teachLanguages')",
+                                "learnLanguages": "@body('Member_learnLanguages')",
+                                "shareCultures": "@body('Member_shareCultures')",
+                                "learnCultures": "@body('Member_learnCultures')",
+                                "timeZone": {
+                                  "id": "@first(union(body('Member_zone_rows'),createArray(json('{}'))))?['Id']",
+                                  "label": "@first(union(body('Member_zone_rows'),createArray(json('{}'))))?['Title']",
+                                  "ianaId": "@first(union(body('Member_zone_rows'),createArray(json('{}'))))?['IANA_ID']"
+                                },
+                                "learningFocus": "@coalesce(first(body('Member_raw'))?['Learningfocus'],'')",
+                                "comments": "@coalesce(first(body('Member_raw'))?['Comments'],'')"
+                              },
+                              "runAfter": {
+                                "Member_zone_rows": [
+                                  "Succeeded"
+                                ]
+                              }
+                            },
+                            "Member_public": {
+                              "type": "ParseJson",
+                              "inputs": {
+                                "content": "@outputs('Member_display')",
+                                "schema": {
+                                  "type": "object",
+                                  "additionalProperties": false,
+                                  "required": [
+                                    "profileId",
+                                    "displayName",
+                                    "teachLanguages",
+                                    "learnLanguages",
+                                    "shareCultures",
+                                    "learnCultures",
+                                    "timeZone",
+                                    "learningFocus",
+                                    "comments"
+                                  ],
+                                  "properties": {
+                                    "profileId": {
+                                      "type": "integer",
+                                      "minimum": 1
+                                    },
+                                    "displayName": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    },
+                                    "teachLanguages": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "required": [
+                                          "id",
+                                          "label"
+                                        ],
+                                        "properties": {
+                                          "id": {
+                                            "type": "integer",
+                                            "minimum": 1
+                                          },
+                                          "label": {
+                                            "type": "string"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "learnLanguages": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "required": [
+                                          "id",
+                                          "label"
+                                        ],
+                                        "properties": {
+                                          "id": {
+                                            "type": "integer",
+                                            "minimum": 1
+                                          },
+                                          "label": {
+                                            "type": "string"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "shareCultures": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "required": [
+                                          "id",
+                                          "label"
+                                        ],
+                                        "properties": {
+                                          "id": {
+                                            "type": "integer",
+                                            "minimum": 1
+                                          },
+                                          "label": {
+                                            "type": "string"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "learnCultures": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "required": [
+                                          "id",
+                                          "label"
+                                        ],
+                                        "properties": {
+                                          "id": {
+                                            "type": "integer",
+                                            "minimum": 1
+                                          },
+                                          "label": {
+                                            "type": "string"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "timeZone": {
+                                      "type": "object",
+                                      "additionalProperties": false,
+                                      "required": [
+                                        "id",
+                                        "label",
+                                        "ianaId"
+                                      ],
+                                      "properties": {
+                                        "id": {
+                                          "type": [
+                                            "integer",
+                                            "null"
+                                          ],
+                                          "minimum": 1
+                                        },
+                                        "label": {
+                                          "type": [
+                                            "string",
+                                            "null"
+                                          ]
+                                        },
+                                        "ianaId": {
+                                          "type": [
+                                            "string",
+                                            "null"
+                                          ]
+                                        }
+                                      }
+                                    },
+                                    "learningFocus": {
+                                      "type": "string"
+                                    },
+                                    "comments": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              },
+                              "runAfter": {
+                                "Member_display": [
+                                  "Succeeded"
+                                ]
+                              }
+                            },
+                            "Append_member_display": {
+                              "type": "AppendToArrayVariable",
+                              "inputs": {
+                                "name": "MemberDisplays",
+                                "value": "@body('Member_public')"
+                              },
+                              "runAfter": {
+                                "Member_public": [
+                                  "Succeeded"
+                                ]
+                              }
+                            }
+                          },
+                          "runtimeConfiguration": {
+                            "concurrency": {
+                              "repetitions": 1
+                            }
+                          },
+                          "runAfter": {}
+                        },
+                        "Rows_language_focus": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Active_language')",
+                            "where": "@contains(items('Each_group')?['LanguageFocusId']?['results'],item()?['Id'])"
+                          },
+                          "runAfter": {
+                            "Each_group_member": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Display_language_focus": {
+                          "type": "Select",
+                          "inputs": {
+                            "from": "@body('Rows_language_focus')",
+                            "select": {
+                              "id": "@item()?['Id']",
+                              "label": "@item()?['Title']"
+                            }
+                          },
+                          "runAfter": {
+                            "Rows_language_focus": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Rows_culture_focus": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Active_culture')",
+                            "where": "@contains(items('Each_group')?['CultureFocusId']?['results'],item()?['Id'])"
+                          },
+                          "runAfter": {
+                            "Display_language_focus": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Display_culture_focus": {
+                          "type": "Select",
+                          "inputs": {
+                            "from": "@body('Rows_culture_focus')",
+                            "select": {
+                              "id": "@item()?['Id']",
+                              "label": "@item()?['Title']"
+                            }
+                          },
+                          "runAfter": {
+                            "Rows_culture_focus": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Append_group": {
+                          "type": "AppendToArrayVariable",
+                          "inputs": {
+                            "name": "Groups",
+                            "value": {
+                              "groupId": "@items('Each_group')?['Id']",
+                              "name": "@items('Each_group')?['Title']",
+                              "exchangeType": "@items('Each_group')?['ExchangeType']",
+                              "languageFocus": "@body('Display_language_focus')",
+                              "cultureFocus": "@body('Display_culture_focus')",
+                              "memberCount": "@length(body('Physical_members'))",
+                              "capacity": "@items('Each_group')?['Capacity']",
+                              "freeSlots": "@sub(items('Each_group')?['Capacity'],length(body('Physical_members')))",
+                              "joinAvailable": true,
+                              "description": "@coalesce(items('Each_group')?['Purpose'],'')",
+                              "members": "@variables('MemberDisplays')"
+                            }
+                          },
+                          "runAfter": {
+                            "Display_culture_focus": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {}
+                      },
+                      "runAfter": {
+                        "Group_fit_Result": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "runtimeConfiguration": {
+                    "concurrency": {
+                      "repetitions": 1
+                    }
+                  },
+                  "runAfter": {
+                    "Open_groups": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "runAfter": {
+                "Potential_groups": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_ErrorCode": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Response_size": {
+          "type": "Compose",
+          "inputs": "@length(string(createArray(variables('People'),variables('Groups'))))",
+          "runAfter": {
+            "Discovery_reads": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          }
+        },
+        "Discovery_report": {
+          "type": "Compose",
+          "inputs": {
+            "kind": "TandemDiscovery",
+            "schemaVersion": 1,
+            "sourceTicket": 7,
+            "packageBuildId": "7c8589d0-fdea-4db8-9d44-46b7d8548acf",
+            "rulesVersion": 1,
+            "runReference": "@workflow()?['run']?['name']",
+            "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF",
+            "writes": 0,
+            "success": "@and(and(equals(actions('Discovery_reads')?['status'],'Succeeded'),empty(variables('ErrorCode'))),lessOrEquals(outputs('Response_size'),250000))",
+            "peopleCount": "@if(and(and(equals(actions('Discovery_reads')?['status'],'Succeeded'),empty(variables('ErrorCode'))),lessOrEquals(outputs('Response_size'),250000)),length(variables('People')),0)",
+            "groupCount": "@if(and(and(equals(actions('Discovery_reads')?['status'],'Succeeded'),empty(variables('ErrorCode'))),lessOrEquals(outputs('Response_size'),250000)),length(variables('Groups')),0)",
+            "code": "@if(and(and(equals(actions('Discovery_reads')?['status'],'Succeeded'),empty(variables('ErrorCode'))),lessOrEquals(outputs('Response_size'),250000)),'OK',if(not(empty(variables('ErrorCode'))),variables('ErrorCode'),if(greater(outputs('Response_size'),250000),'RESPONSE_BOUND','READ_OR_DATA_FAILED')))",
+            "ordinaryUserAccessVerified": false
+          },
+          "runAfter": {
+            "Response_size": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Respond_to_a_Power_App_or_flow": {
+          "runAfter": {
+            "Discovery_report": [
+              "Succeeded"
+            ]
+          },
+          "type": "Response",
+          "kind": "PowerApp",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "candidatesjson": {
+                  "title": "candidatesjson",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "errormessage": {
+                  "title": "errormessage",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "groupsjson": {
+                  "title": "groupsjson",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "resultcode": {
+                  "title": "resultcode",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "runreference": {
+                  "title": "runreference",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "mode": {
+                  "title": "mode",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "additionalProperties": {}
+            },
+            "statusCode": 200,
+            "body": {
+              "candidatesjson": "@if(outputs('Discovery_report')?['success'],string(variables('People')),'[]')",
+              "groupsjson": "@if(outputs('Discovery_report')?['success'],string(variables('Groups')),'[]')",
+              "errormessage": "@if(outputs('Discovery_report')?['success'],'',if(equals(outputs('Discovery_report')?['code'],'PROFILE_UNAVAILABLE'),'Please save a valid Active profile and enable new connections before using Discovery.','Discovery could not complete. Please try again or report the run reference.'))",
+              "resultcode": "@outputs('Discovery_report')?['code']",
+              "runreference": "@outputs('Discovery_report')?['runReference']",
+              "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF"
+            }
+          }
+        }
+      }
+    },
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "connectionName": "IMPORT_SELECT_EXISTING_SHAREPOINT_CONNECTION",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+        "tier": "NotSpecified",
+        "apiName": "sharepointonline",
+        "isProcessSimpleApiReferenceConversionAlreadyDone": false
+      }
+    },
+    "flowFailureAlertSubscribed": false,
+    "isManaged": false
+  }
+}

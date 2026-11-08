@@ -1,0 +1,235 @@
+{
+  "schemaVersion": 1,
+  "sourceTicket": 7,
+  "state": "OWNER_SMOKE_PARTIAL_PASS_POPULATED_AND_ACCESS_PENDING",
+  "flow": "TandemDiscovery v2",
+  "packageBuildId": "7c8589d0-fdea-4db8-9d44-46b7d8548acf",
+  "package": "artifacts/tandem_discovery/TandemDiscovery-v2.zip",
+  "readOnly": true,
+  "writes": 0,
+  "sourceExportSha256": "7b4dc1e5df96769615088d897cf86030a2622a47dc7db56a414dbe75f41085a9",
+  "rulesSource": "scripts/power_automate/compatibility.py",
+  "rulesSourceSha256": "dfe0dcd587a5a348080dde288183ed3dff2d02d1f652f0ae23010b2e6e649c72",
+  "input": {
+    "number": {
+      "type": "number",
+      "meaning": "Existing ParticipantId reference; positive integer validated, never authority. Trigger shape preserved byte-for-byte as object equality."
+    }
+  },
+  "callerBinding": {
+    "connectionSource": "Invoker",
+    "source": "Preserved exported Raw authentication expression and Invoker reference; no owner fallback.",
+    "algorithm": "Read current SharePoint user through that same Invoker connection; query own Participants record via ParticipantaccountId, require exactly one and exact input reference before Get_item/Candidate_source.",
+    "tenantCallerBindingVerified": false,
+    "ordinaryUserAccessVerified": false,
+    "releaseGate": "#42 protected data/access method and two-account proof; owner-only preview first. Do not grant list-wide raw access or substitute owner credentials.",
+    "ownerCurrentUserPathSucceeded": true,
+    "ownerEvidence": "Owner own-reference/availability path ran; actual Run-only UI selector and two-account/tampered-reference tenant proof remain unverified."
+  },
+  "outputs": {
+    "candidatesjson": "Text JSON array, compatible people only; existing profileId/displayName/fitType preserved, adds profile and directional match arrays.",
+    "errormessage": "Text; empty on successful complete search, sanitized message on data/bound/availability failure.",
+    "groupsjson": "Text JSON array, operational compatible joinable groups only; empty alongside people on incomplete/error.",
+    "resultcode": "Text OK / explicit availability, bound, commitment-schema or read/data failure.",
+    "runreference": "Text workflow run reference for operator diagnostics.",
+    "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF; not a deployed access certification."
+  },
+  "personEntry": {
+    "profileId": "Internal action reference",
+    "displayName": "Approved display name",
+    "fitType": "Language/Culture/Combined",
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profileId",
+        "displayName",
+        "teachLanguages",
+        "learnLanguages",
+        "shareCultures",
+        "learnCultures",
+        "timeZone",
+        "learningFocus",
+        "comments"
+      ],
+      "properties": {
+        "profileId": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "teachLanguages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "label"
+            ],
+            "properties": {
+              "id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "label": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "learnLanguages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "label"
+            ],
+            "properties": {
+              "id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "label": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "shareCultures": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "label"
+            ],
+            "properties": {
+              "id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "label": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "learnCultures": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "label"
+            ],
+            "properties": {
+              "id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "label": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "timeZone": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "label",
+            "ianaId"
+          ],
+          "properties": {
+            "id": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1
+            },
+            "label": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "ianaId": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "learningFocus": {
+          "type": "string"
+        },
+        "comments": {
+          "type": "string"
+        }
+      }
+    },
+    "match": {
+      "canLearnLanguageIds": "Concrete language/culture integer catalogue ID array; directional explanation; labels resolve from approved profile label arrays.",
+      "canShareLanguageIds": "Concrete language/culture integer catalogue ID array; directional explanation; labels resolve from approved profile label arrays.",
+      "canLearnCultureIds": "Concrete language/culture integer catalogue ID array; directional explanation; labels resolve from approved profile label arrays.",
+      "canShareCultureIds": "Concrete language/culture integer catalogue ID array; directional explanation; labels resolve from approved profile label arrays."
+    }
+  },
+  "groupEntry": {
+    "groupId": "Internal action reference",
+    "name": "Group Title",
+    "exchangeType": "Language/Culture/Combined",
+    "languageFocus": "Array {id,label}",
+    "cultureFocus": "Array {id,label}",
+    "memberCount": "Count of all physical Active episodes, including paused members; duplicates/incomplete profiles reject eligibility rather than freeing a slot.",
+    "capacity": "Current positive integer/type-valid Capacity",
+    "freeSlots": "Capacity minus physical Active count",
+    "joinAvailable": true,
+    "description": "Purpose or empty",
+    "members": "Array of typed approved public profile objects; no raw identity/status/episode/operation fields."
+  },
+  "availability": "Validation Active AND participation Active AND OpenToConnections=true; optional valid timezone; maintained #9 pair/group rules. Any language excluded, never wildcard.",
+  "groupAdapter": "Fresh Open/SetupComplete/empty WriteOwner rows; accepted OperationComplete source request and accepted complete MembershipKey episodes; correct lookup/episode references, current physical count and available sharer for every focus. Exact membership target/actor authority and writer atomicity remain consuming Flow proof; no production certification inferred from local simulation.",
+  "groupSchemaGate": "Connection Requests list ID observed in #12 inventory. OperationComplete Boolean is checked live before potential group reads; Status/commit row mapping remains native-test pending. Missing commit schema yields GROUP_COMMIT_SCHEMA_UNVERIFIED and no partial people/groups. No request schema is created here.",
+  "bounds": {
+    "profiles": 500,
+    "peopleResults": 50,
+    "groups": 100,
+    "groupWorkUnits": 100,
+    "memberships": 2000,
+    "requests": 500,
+    "catalogue": 5000,
+    "responseChars": 250000
+  },
+  "paging": "Explicit bound/error on any next link or over-bound collection; no continuation inputs and no silent truncation. Rendering/work budgets prevent unbounded Data Operations loops; synchronous tenant latency/load still unverified.",
+  "tests": {
+    "localSuite": 242,
+    "newGeneratedFlowCases": 48,
+    "tenant": "OWNER_SMOKE_PARTIAL_PASS",
+    "blocked": [
+      "#42 ordinary-user protected-data/two-account access proof",
+      "Populated live group commitment schema/data and dynamic availability integration",
+      "Worst-case tenant pagination/latency/load; explicit bounds locally verified"
+    ],
+    "ownerSmokeEvidence": "artifacts/tandem_discovery/results/owner-smoke.evidence.json",
+    "ownerPausedRun": "08584074350262917105745395996CU25",
+    "ownerActiveEmptyRun": "08584074348343616902680114159CU10"
+  },
+  "schemaMapping": [
+    "config/tenant_schema_mapping.json",
+    "config/group_schema_mapping.json"
+  ],
+  "cutover": "Create as new. Preserve existing flow and published app; add new flow to owner Studio preview and use temporary test button. Verify Run-only SharePoint Provided by run-only user; do not substitute owner/embedded credentials. No participant rollout before access proof.",
+  "selfServiceAccessRequirement": "No routine individual participant grants; group-based sharing/access where existing tenant group is verified. Do not remove authentication or switch Invoker to owner credentials; #42 owns protected-data/caller design."
+}

@@ -425,3 +425,50 @@ Final audit build `cb49aded-f121-410e-b7df-d9646be892dd`, run `08584074372941101
 All five direct-setting changes read back: group Title required; WriteOwner optional blank nonunique Text/255; native integer/type-specific capacity formula/message; membership Group and Participant indexes. Source/membership keys remain required unique/indexed, correct links/focus choices/types, JoinedAt required/LeftAt optional, membership Title unused optional, State default Closed and SetupComplete default No. Other mapped business field IDs/properties/XML semantics unchanged. Formula bracket normalization is equivalent. Actual mapping in `config/group_schema_mapping.json`; raw report `artifacts/group_schema/results/final-audit.owner-report.json`. Raw inspector schemaVerified=false remains intentionally fixed; local reviewed mapping/readback is now verified.
 
 #12 Ready for review / PR #76 ready. No owner rerun or settings package needed; owner chose manual UI changes. 194 local tests previously passed; no executable change in final evidence recording. No row rejection/creation/migration, ordinary-user privacy or consuming-flow/history behavior claimed. No migration exceptions in these observed empty lists. Dynamic count/focus/identity/Ended/history guards remain respective Flow scope; #48 migration remains separate. Source/contract review and merge remain; next focused implementation is #7 Discovery after merge, #61 still Ready for testing. Earlier pending-index entries are historical.
+
+
+## #7 Discovery owner-preview build — 2026-11-08
+
+PR #76 merged `39ebc0cd48c428602a0434a12db0c99ac77a9de5`; #12 closed/Done. #7 is sole active ticket. Actual TandemDiscovery export inspected (source hash `7b4dc1e5df96769615088d897cf86030a2622a47dc7db56a414dbe75f41085a9`): Power Apps V2 number reference, SharePoint Invoker source with Raw authentication, Get item/Get items and candidatesjson/errormessage response. No ordinary-user access proof or owner-credential fallback inferred.
+
+Built `artifacts/tandem_discovery/TandemDiscovery-v2.zip`, build `7c8589d0-fdea-4db8-9d44-46b7d8548acf`, **165 actions / depth 6** (limits 500/8). Preserves actual trigger/Invoker expression, resolves current SharePoint user and unique own profile before candidate reads, uses unchanged #9 normalization/pair/group source, approved typed person/member/group allowlist and fresh membership counts/sharer availability. Optional timezone, culture-only and deferred Any language policy preserved. No writes. Fixed reads are bounded; rendering <=50 people, total group focus/member work <=100 units and response <=250000 characters; any incomplete/over-bound read returns no partial success. Tenant synchronous latency/load not certified.
+
+242 local tests pass, including 48 generated Discovery graph/packaging cases (own/tampered references, availability, blank zone/culture/Any, source/member commitment, group state/count/focus/history, structured-field rejection, read/page/count/work/response limits and Invoker preservation). Native import/run NOT RUN; mode OWNER_PREVIEW_PENDING_ACCESS_PROOF. #42 privacy/ordinary-user two-account proof deferred; do not publish a participant endpoint or change permissions. Candidate groups additionally require live Connection Requests.OperationComplete Boolean plus accepted/complete source/episodes; missing schema fails explicitly, no field creation in #7. Current empty group lists allow an owner people/empty-group smoke without claiming populated group proof. Exact contract and remaining gates in config/discovery_flow_contract.json and inline #7 handover. Existing raw export remains user-owned/untracked, no source replacement or production cutover.
+
+
+### #7 owner smoke — Paused rejected, Active empty success (2026-11-08)
+
+Build `7c8589d0-fdea-4db8-9d44-46b7d8548acf`. Owner run `08584074350262917105745395996CU25` returned PROFILE_UNAVAILABLE/success=false while own Participation status was Paused. Owner manually changed it to Active; fresh run `08584074348343616902680114159CU10` returned OK/success=true, peopleCount=0/groupCount=0, writes=0, ordinaryUserAccessVerified=false. Exact reports and scoped evidence saved under `artifacts/tandem_discovery/results/`. No flow/package change needed for this expected availability result.
+
+This proves owner-context invocation/own-reference path, Paused rejection and Active empty-result completion, not populated compatibility/projection, another candidate's availability, native tampered-ID/two-account proof, imported Run-only selector, group commitment schema or worst-case native bounds/latency. No published app/cutover claimed. #7 remains In progress / PR #77 draft. 242 local tests previously passed; only evidence/config/docs changed.
+
+Owner restated self-service access: avoid individual participant approvals/grants; use verified existing group-based app/flow access. The shown SharePoint connection consent is separate from run/data authorization. Invoker is preserved; no switch to an owner connection and no new permission changes. #42 owns the final protected-data/caller boundary; owner smoke does not resolve it. Remaining versioned tests stay unchecked in issue #7.
+
+
+## #7 resumed implementation review — 2026-11-08
+
+Owner deferred the audience-group/IT question and requested continued #7 work.
+#39 assessment is queued Planned with draft #43 and successful owner metadata
+run 08584074326403190336298551812CU15 retained; no access method or permission
+cutover is approved. #7 is the sole active ticket during this review handoff.
+The separate caller/backend modes observed in #39's helper do not change
+TandemDiscovery v2's Invoker-only connection or prove ordinary-user access.
+
+Existing build 7c8589d0-fdea-4db8-9d44-46b7d8548acf remains unchanged:
+165 actions / depth 6, zero writes. Re-ran the full local suite: 242 passed.
+Rechecked the existing ZIP checksum against review metadata; no rebuild/import
+is needed. PR #77 is ready for implementation review only; #7 stays open and
+does not acquire a whole-ticket Ready label from this partial PR.
+
+The versioned checkbox handover remains inline in issue #7. Owner Paused/Active
+empty-result tests are passed. Populated compatibility/projection, candidate
+availability, native tampered reference, group commitment/slot/history and native
+load/latency remain unexecuted. Request OperationComplete Boolean/live mapping
+and operational groups remain explicit integration prerequisites, not permission
+to fabricate production requests or groups. #42 access and ordinary-user rollout
+remain blocked/deferred. No colleague test, production credential change, app
+publication, source-flow replacement or additional import is requested now.
+
+After implementation review/merge, retain #7's remaining tests and blocked cases
+for later handover; the next build batch is #10 personal send, #62 inbox and #63
+cancellation, with one focused production-flow ticket active at a time.
