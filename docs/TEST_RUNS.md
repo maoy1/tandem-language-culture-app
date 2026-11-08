@@ -925,3 +925,23 @@ whole-schema audit evidence above remain separately scoped.
   without resetting identity/unrelated selections. No fixture cleanup yet.
 - #61 revalidation / #7/#10 availability exclusion / #64/#68 derived membership
   integration portions remain separately owned; do not mark their outcomes passed.
+
+### UI6-20261108-02 - #6 owner save-preservation PASS (bounded variant)
+
+- Owner explicitly confirmed: real choices appeared, Paused/No persisted after
+  saving, validation and reopening; participant account and selections unchanged.
+- **PASS:** choice-binding correction and basic save/validation/reopen portion of
+  UI6-002 / PAR-002 / REG-009. This supersedes the sample-choice issue, not every
+  scenario in the full test catalogue. No new permission/connector introduced.
+- App: Tandem Participant Registration, existing Form1; account role: owner.
+  Exact app version/publish time, fixture item ID and flow run reference were
+  not supplied. Publication is pending confirmation; do not call this a verified
+  published-version run. No actual new-profile creation/default pass is claimed.
+- **NOT RUN / unconfirmed:** UI6-001 new defaults/creation; UI6-002 second
+  unrelated-edit cycle; UI6-003 Inactive; UI6-004 Active/No/Yes; UI6-005 language/
+  culture fixture variants; UI6-006 group/membership side effects. Full #61/#7/#10
+  integration acceptance remains with those owners. Prior local suite: 79 PASS;
+  no rerun needed for this documentation-only evidence update.
+- Continue with Studio Save/Publish to the existing audience and record its
+  version/time. Keep #6 In progress until actual delivery/test context is recorded;
+  hand remaining acceptance to testers after review rather than close prematurely.

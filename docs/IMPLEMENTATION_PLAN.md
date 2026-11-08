@@ -20,7 +20,8 @@ config/ticket_scope_map.json transfer of 246 former checklist items.
 - [x] #66: owner confirmed all five writes Skipped on a new repeat, SETUP_VERIFIED; own schema tests passed.
 - [x] PR #69 merged; #66 closed and labelled Done.
 - [x] #6: owner confirmed both fields added to Form1.
-- [ ] #6 In progress: correct Participation status sample Items to SharePoint Choices; verify three real choices, new defaults, save/reopen preservation and actual app version.
+- [x] #6: real choices and basic Paused/No save/validation/reopen preservation passed; account/selections unchanged.
+- [ ] #6 In progress: record Studio save/published app version; review delivery and hand over remaining new-default/state/fixture test variants without claiming them passed.
 - [ ] #5 registration UI and #61 submission remain separately owned; do not claim Discovery integration before #7/#10 implementation.
 
 See POC_03_PARTICIPANT_SELF_REGISTRATION.md for #6 Studio steps and UI6 tests.

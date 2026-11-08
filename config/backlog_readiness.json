@@ -190,22 +190,22 @@
       "ticketType": "App",
       "status": "In progress",
       "flowScope": "Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to {{mygroups_app}} and {{mygroups}}.",
-      "implementationReadiness": "#66 verified fields available; owner confirmed exact Form1 path and edit access. Two auto-bound Studio fields in progress.",
-      "implementationEvidence": "Owner confirmed Form1 path and both cards added. Participation status currently shows sample Items; supplied Choices binding correction is awaiting confirmation. 79 local tests pass; live save/default/version evidence pending.",
-      "evidence": "Card-add owner report only; sample-choice issue unresolved. No #6 save/PAR pass claimed.",
+      "implementationReadiness": "Owner confirmed controls and real choices; basic Paused/No save/validation/reopen passed. Studio save/publication/version context pending.",
+      "implementationEvidence": "UI6-20261108-02 owner PASS: real choices, Paused/No retained after save/validation/reopen, account/selections unchanged. Not all defaults/state/fixture variants confirmed.",
+      "evidence": "Core owner save-preservation PASS; app version/publication not supplied. Local suite 79 PASS; receiving flow/privacy tests separately owned.",
       "proposedExperience": [
         "Choose Active/Paused/Inactive and Yes/No in own existing profile form.",
         "New mode uses Active/Yes; edits save stored selections including No, Paused and Inactive.",
         "Existing identity, selections and memberships remain unchanged by these two form fields.",
         "Discovery/request flows consume availability under #7/#10; membership badges under #64/#68."
       ],
-      "remainingWork": "Verify real Choice binding, New-mode defaults, saved Paused/Inactive/No preservation and actual app version; capture receiving-flow integration limits.",
+      "remainingWork": "Record saved/published app version; review PR #70 and hand over remaining new-default/Inactive/Active/fixture variants. Do not rerun the already passed basic Paused/No case without a new reason.",
       "testReferences": [
         "PAR-001:007",
         "REG-009",
         "DISC-004"
       ],
-      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
+      "testStatus": "PASS core choice-binding and basic Paused/No preserve/save/validate/reopen variant; other UI6 variants NOT RUN/unconfirmed, published-version context pending.",
       "testHandoff": "POC_03_PARTICIPANT_SELF_REGISTRATION.md current #6 section: UI6-001:006 exact version/role/fixtures/steps/expected persistence/errors/cleanup. Receiving flow integration remains separately scoped.",
       "flows": [],
       "scopeBoundary": "Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64.",

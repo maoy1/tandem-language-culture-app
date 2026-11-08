@@ -73,8 +73,9 @@ See POC_SHAREPOINT_SETUP.md and TEST_RUNS.md for versions and finish line.
 Only #6 is actively In progress. Add the two generated availability data cards
 to the existing Form1 using #66 verified fields. New registrations default
 Active/Yes; edits preserve stored choices and validation remains independent.
-The form contract/checks and exact UI handover are prepared; live card addition,
-save/reopen and app-version evidence are pending. No app package/update capability
+Owner confirmed both cards and real choices; basic Paused/No preservation after
+save/validation/reopen passed with account/selections unchanged. Saved/published
+app-version evidence and other UI test variants are pending. No app package/update capability
 is inferred from successful flow imports. See POC_03_PARTICIPANT_SELF_REGISTRATION.md.
 
 ## Implemented SharePoint baseline

@@ -34,9 +34,10 @@ The local validator checks it against
 ## Current #6 app change - participation controls
 
 Issue #6 is **In progress**. #66 schema/mappings/own tests are complete, PR #69
-merged and #66 closed. Owner confirmed both cards added in Studio. Participation status currently
-shows Item 1/Item 2 sample values; its Items correction below is pending owner
-confirmation. No save/reopen, defaults or publication PASS is claimed.
+merged and #66 closed. Owner confirmed both cards added, real Participation status choices displayed,
+and Paused/No persisted after saving, validation and reopening; account and
+selections stayed unchanged (UI6-20261108-02). Studio save/publication/version
+evidence and other UI6 variants are pending; no blanket PAR/defaults PASS.
 Current form path confirmed by the owner:
 `MainScreen1 > ScreenContainer1 > BodyContainer1 > RightContainer1 > MainContainer1 > Form1`.
 
@@ -78,6 +79,10 @@ References: [generated data cards](https://learn.microsoft.com/en-us/power-apps/
 [canvas source limitations](https://learn.microsoft.com/en-us/power-apps/maker/canvas-apps/power-apps-yaml).
 
 ### Own UI test handover - #6
+
+Observed pass: real choices plus basic Paused/No save/validate/reopen; see
+UI6-20261108-02. The second unrelated-edit cycle, other states, new-profile
+defaults and fixture variants below are not yet confirmed.
 
 Record the saved/published app version and tested account role. Use the owner
 profile/synthetic allowed fixtures; normal-colleague privacy proof remains

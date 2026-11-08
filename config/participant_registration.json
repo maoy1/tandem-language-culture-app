@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "deploymentStatus": "issue6_studio_cards_added_choice_binding_and_tests_pending",
+  "deploymentStatus": "issue6_owner_choices_and_paused_no_preservation_pass_publication_and_remaining_tests_pending",
   "list": "Participants",
   "identity": {
     "field": "ParticipantAccount",
