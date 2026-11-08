@@ -190,28 +190,28 @@
       "ticketType": "App",
       "status": "Ready for review",
       "flowScope": "Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64.",
-      "implementationReadiness": "Both app controls implemented; core owner save-preservation passed; Version 16 recorded. PR #70 ready for review; remaining own variants testable after merge.",
-      "implementationEvidence": "Version 16 saved 2026-11-08 15:34:26 Europe/Berlin, owner supplied after Live-version query. Real choices and core Paused/No save/validate/reopen PASS; app export/player retest not inspected.",
-      "evidence": "UI6-20261108-02 core PASS; UI6-20261108-03 Version 16 context. Local 79 PASS. Remaining variants NOT RUN; no full acceptance claim.",
+      "implementationReadiness": "Corrected Combo box initialization and own UI criteria owner-confirmed; Live Version 19 reported. PR #70 review/merge remains.",
+      "implementationEvidence": "UI6-20261108-06: New Active/open Yes, saved choices preserved, language/culture-only save/reopen without identity/unrelated changes confirmed. Working typed table defaults documented.",
+      "evidence": "Owner-reported Version 19 and own UI acceptance PASS; timestamps/fixture IDs not supplied. Flow/group integration transferred explicitly, not passed.",
       "proposedExperience": [
         "Choose Active/Paused/Inactive and Yes/No in own existing profile form.",
         "New mode uses Active/Yes; edits save stored selections including No, Paused and Inactive.",
         "Existing identity, selections and memberships remain unchanged by these two form fields.",
         "Discovery/request flows consume availability under #7/#10; membership badges under #64/#68."
       ],
-      "remainingWork": "Review/merge PR #70, then Ready for testing for documented remaining default/state/fixture variants; no new field construction known missing.",
+      "remainingWork": "Review/merge PR #70 then close #6 on its App scope. Flow validation/Discovery/request and integrated group tests stay #61/#7/#10/#25.",
       "testReferences": [
-        "PAR-001:007",
-        "REG-009",
-        "DISC-004"
+        "UI6-001:006 (App portions)",
+        "REG-009 (App persistence)",
+        "PAR-001:007 (split owner portions; see integration handoffs)"
       ],
-      "testStatus": "Core owner check PASS; Version 16 target identified. Remaining UI6 variants NOT RUN/unconfirmed; published-player test not inferred from Studio report.",
-      "testHandoff": "Tandem Participant Registration Version 16; saved 2026-11-08 15:34:26 Europe/Berlin. Reload Live player and use UI6-001:006 steps/fixtures/expected results/errors/cleanup in POC_03_PARTICIPANT_SELF_REGISTRATION.md; unavailable fixture/integration portions explicitly blocked.",
+      "testStatus": "PASS scoped App controls/defaults/persistence by owner report. Receiving-flow and operational-group integration variants remain Planned/Blocked/NOT RUN with owners.",
+      "testHandoff": "Version 19; own UI criteria owner-confirmed. POC_03 guide and participation_integration_handoffs.json retain exact regression and receiving-flow checks/blockers. No new group fixture fabricated.",
       "flows": [],
       "scopeBoundary": "Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64.",
       "prerequisites": [
-        "#66 availability fields",
-        "#61 for validation-preservation variants; #7 for discovery integration"
+        "#66 Done; availability fields verified.",
+        "Receiving-flow/group cases retained separately under #61/#7/#10/#25; not a whole-ticket completion gate for App #6."
       ],
       "validity": "Valid",
       "sourceTickets": [
@@ -1634,5 +1634,6 @@
         46
       ]
     }
-  }
+  },
+  "participationIntegrationHandoffs": "config/participation_integration_handoffs.json"
 }

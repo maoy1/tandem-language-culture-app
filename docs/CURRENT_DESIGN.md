@@ -70,15 +70,19 @@ See POC_SHAREPOINT_SETUP.md and TEST_RUNS.md for versions and finish line.
 
 ## Current app work - #6
 
-#6 is Ready for review in PR #70. The two availability cards are added to
-Form1 using #66 verified fields; target app is owner-reported Version 16
-(saved 2026-11-08 15:34:26 Europe/Berlin). New registrations default
-Active/Yes; edits preserve stored choices and validation remains independent.
-Owner confirmed both cards and real choices; basic Paused/No preservation after
-save/validation/reopen passed with account/selections unchanged. The saved version is recorded; remaining new-default/state/fixture variants
-are pending for testing after review. Publication completion time and a separate
-published-player retest were not supplied. No app package/update capability
-is inferred from successful flow imports. See POC_03_PARTICIPANT_SELF_REGISTRATION.md.
+Corrected owner-reported Live target is **Version 19**. The Participation status
+Combo box DataCardValue2 uses DefaultSelectedItems with table-returning branches:
+New filters the Active Choice; Edit wraps Parent.Default's saved Record. The
+outer card reads ThisItem.'Participation status'; inner legacy Default is Blank().
+Owner confirms Active/Yes new defaults, saved choices preserved, and language/
+culture-only save/reopen preserving identity/unrelated fields. #6 is Ready for
+review in PR #70; after merge it can close on its own UI scope.
+
+Flow revalidation stays #61, candidate exclusion #7 and stale request rejection
+#10. Group side effects need an operational fixture and #25 integrated testing;
+derived displays remain #64/#68. Exact retained cases/blockers are in
+config/participation_integration_handoffs.json. No ordinary-user privacy, full
+backend acceptance or new hosting/connector capability is inferred from UI checks.
 
 ## Implemented SharePoint baseline
 

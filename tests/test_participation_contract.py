@@ -16,7 +16,10 @@ def field(schema,name):
 @pytest.mark.parametrize('key,value',[
     ('defaultsApplyOnlyToNewProfiles',False),('preserveExistingChoices',False),
     ('validationMayReset',True),('newProfileOpenDefault',False),
-    ('newProfileDefault','Paused'),('membershipSideEffects','delete_membership')])
+    ('newProfileDefault','Paused'),('membershipSideEffects','delete_membership'),
+    ('defaultSource','sharepoint_form_new_mode'),('defaultSource','explicit_new_mode_card_default'),
+    ('newProfileDefaultType','text'),('newProfileDefaultType','choice_record'),
+    ('existingProfileDefaultSource','always_active')])
 def test_rejects_contracts_that_reset_availability_or_change_memberships(key,value):
     policy,schema=load();policy['participation'][key]=value
     assert any('Participation contract' in e for e in validate(policy,schema))

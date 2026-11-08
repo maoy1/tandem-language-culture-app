@@ -1,0 +1,73 @@
+{
+  "sourceTicket": 6,
+  "date": "2026-11-08",
+  "policy": "App inputs belong to #6; receiving flows and integrated group effects own backend verification. Tests retained, not waived or passed by transfer.",
+  "handoffs": [
+    {
+      "id": "PAR_VALIDATION_PRESERVATION",
+      "sourceTicket": 6,
+      "ownerTickets": [
+        61
+      ],
+      "cases": [
+        "PAR-002",
+        "PAR-003"
+      ],
+      "status": "Pending target-flow acceptance",
+      "test": "Set Paused/No (then Inactive), change Comments through app, save; inspect matching item-ID submission run succeeded and reread participation/openness unchanged. Flow writes only changed validation Status; no group/member writes.",
+      "gate": "Existing baseline preservation has a bounded owner pass; #61 full catalogue/create/edit package acceptance still Planned."
+    },
+    {
+      "id": "PAR_DISCOVERY_AVAILABILITY",
+      "sourceTicket": 6,
+      "ownerTickets": [
+        7
+      ],
+      "cases": [
+        "DISC-004",
+        "PAR-002",
+        "PAR-003",
+        "PAR-004",
+        "PAR-005"
+      ],
+      "status": "Blocked: target availability-aware flow pending",
+      "test": "Use two permitted compatible fixtures. Active/Yes/validation Active target appears; Paused, Inactive or openness No target absent; restore Active/Yes and verify reappearance when compatible.",
+      "gate": "No target-flow package/full target run available; ordinary-user authority proof is separately gated."
+    },
+    {
+      "id": "PAR_REQUEST_AVAILABILITY",
+      "sourceTicket": 6,
+      "ownerTickets": [
+        10
+      ],
+      "cases": [
+        "REQ-006"
+      ],
+      "status": "Blocked: target request availability guard pending",
+      "test": "Discover eligible target, then target pauses/deactivates/closes before Send. Stale-card/direct target send returns unavailable and creates no new Pending request/group/member. Existing requests are not automatically cancelled.",
+      "gate": "Target availability/authority/duplicate-guard implementation and permitted sender/recipient fixture required."
+    },
+    {
+      "id": "PAR_GROUP_SIDE_EFFECTS",
+      "sourceTicket": 6,
+      "ownerTickets": [
+        25
+      ],
+      "relatedTickets": [
+        11,
+        12,
+        13,
+        14,
+        64,
+        68
+      ],
+      "cases": [
+        "PAR-006",
+        "PAR-007"
+      ],
+      "status": "Blocked until operational group/membership fixture exists",
+      "test": "Capture group ID/state/capacity and current membership IDs/count. Pause/reactivate/change personal openness via app. Same memberships/group state/capacity remain; no automatic rejoin/reopening. Derived badges match actual memberships.",
+      "gate": "Create permitted fixture through the implemented acceptance workflow; do not fabricate authoritative rows. #64/#68 own derived read/display cases."
+    }
+  ]
+}

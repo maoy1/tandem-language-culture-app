@@ -33,97 +33,116 @@ The local validator checks it against
 
 ## Current #6 app change - participation controls
 
-Issue #6 is **Ready for review** in PR #70; remaining cases go to Ready for testing after review/merge. #66 schema/mappings/own tests are complete, PR #69
-merged and #66 closed. Owner confirmed both cards added, real Participation status choices displayed,
-and Paused/No persisted after saving, validation and reopening; account and
-selections stayed unchanged (UI6-20261108-02). Owner reported **Version 16**,
-saved **2026-11-08 15:34:26 Europe/Berlin**, after the requested Live-version
-check. Publishing started at 15:34:34; completion time was not supplied.
-The owner check preceded the version report; do not relabel it as a separately
-observed published-player retest. Remaining UI6 variants are not passed.
-Current form path confirmed by the owner:
+**Ready for review, PR #70; owner-reported corrected Live target: Version 19.**
+Owner confirms New defaults Active/open Yes, saved choices preserved on edits,
+and language/culture-only save/reopen without identity/unrelated changes. Exact
+Version 19 timestamp/fixture IDs were not supplied; no whole-backend PASS follows.
+Version 16 is historical and contained the new-default failure. See TEST_RUNS.md.
+
+The owner edits the existing registration app with its existing SharePoint
+connection; no new connector, role grant, CLI/sign-in, licence or flow is needed.
+Verified form path:
 `MainScreen1 > ScreenContainer1 > BodyContainer1 > RightContainer1 > MainContainer1 > Form1`.
+Actual fields are `ParticipationStatus` (Choice) and `OpenToConnections` (Boolean).
 
-### Smallest supported Studio update
+### Working Version 19 bindings
 
-1. Open the existing **Tandem Participant Registration** app in Studio. In
-   **Data**, refresh its existing **Participants** data source. This uses the
-   existing connection/edit access; do not add a new connector or permission.
-2. Select **Form1** at the path above. Choose **Edit fields > Add field**.
-   Select **Participation status** and **Open to new connections**, then Add.
-   Actual internal names are `ParticipationStatus` and `OpenToConnections`.
-3. Verify the generated controls. If Participation status shows Item 1/Item 2,
-   select its dropdown/Combo box inside the card, choose **Items** beside the
-   formula bar, and set `Choices([@Participants].'Participation status')`.
-   Display the **Value** field and allow a single selection. Expected choices:
-   Active, Paused, Inactive. Keep the card DataField `ParticipationStatus` and
-   its selected-record Update binding; do not replace it with a text input.
-   The openness card is a Boolean Yes/No control. Both inherit
-   the form's display mode. Use the app's existing Edit/pencil action to edit;
-   grey controls in View mode alone are not a broken binding.
-4. Use the existing save action/form submission. Do not replace it with a Patch,
-   add an OnVisible default reset, overwrite form Item/identity, or change the
-   working Person/lookup cards. New mode uses data-source defaults Active/Yes;
-   Edit mode reads stored values, including Paused/Inactive and false/No.
-   Existing blank legacy choices must not be silently interpreted as new profiles.
-5. Preview first and verify the cases below. Save the app draft; record the app
-   version/time. Publish the tested version to the existing owner/test audience
-   when ready. No new sharing/access grant or wider rollout is part of #6.
+Refresh Participants and add the two fields to Form1. Participation status's
+inner control is **Combo box DataCardValue2**, single selection; Items is
+`Choices([@Participants].'Participation status')`, DisplayFields is `["Value"]`.
+Keep the card's generated DataField/selected-record Update binding.
 
-There is no flow package for this App ticket. No app edit session/export is
-available to the agent. Microsoft documents generated `.pa.yaml` as read-only
-outside supported Git Integration; no unverified offline app rewrite or new
-Dataverse/CLI/sign-in dependency is introduced. Adding the two auto-bound fields
-is the necessary bounded owner edit; formulas are only changed if actual generated
-bindings fail, after inspecting their control names/properties.
+**Outer Participation status card > Default:**
 
-References: [generated data cards](https://learn.microsoft.com/en-us/power-apps/maker/canvas-apps/working-with-cards),
-[form New/Edit defaults](https://learn.microsoft.com/en-us/power-apps/maker/canvas-apps/controls/control-form-detail),
-[canvas source limitations](https://learn.microsoft.com/en-us/power-apps/maker/canvas-apps/power-apps-yaml).
+```powerfx
+ThisItem.'Participation status'
+```
 
-### Own UI test handover - #6
+**Inner DataCardValue2 > Default:**
 
-Observed pass: real choices plus basic Paused/No save/validate/reopen; see
-UI6-20261108-02. The second unrelated-edit cycle, other states, new-profile
-defaults and fixture variants below are not yet confirmed.
+```powerfx
+Blank()
+```
 
-Test target: **Tandem Participant Registration, Version 16**, saved
-2026-11-08 15:34:26 Europe/Berlin (owner-reported version). Use the Versions
-row marked Live and reload the player so a cached older version is not tested.
-Record the actual version and account role for each test. Use the owner
-profile/synthetic allowed fixtures; normal-colleague privacy proof remains
-deferred under #18/#39-#42. Capture its item ID and initial language/culture,
-time-zone, Comments, identity, participation and openness before changing it.
-Do not delete a real profile to manufacture a new-registration test.
+**Inner DataCardValue2 > DefaultSelectedItems:**
 
-| Case | Steps | Expected persisted result / limits |
+```powerfx
+If(
+    Form1.Mode = FormMode.New,
+    Filter(
+        Choices([@Participants].'Participation status'),
+        Value = "Active"
+    ),
+    [Parent.Default]
+)
+```
+
+The two branches return tables of Choice records, preserving the existing parent
+record on Edit. Do not compare a text Active value with Parent.Default's Record,
+or put the selection formula into the Combo box's legacy Default property.
+The three copyable `.powerfx` files are in artifacts/participation_controls.
+Open to new connections keeps its generated Boolean binding; the owner confirmed
+new Yes and saved choices including No. Use the existing form Save/checkmark.
+No reset-on-open, identity replacement or group/membership write is introduced.
+
+### Own App acceptance and integration ownership
+
+#6 owns these three UI criteria, all owner-confirmed for the corrected controls:
+
+1. Show Active/Paused/Inactive and Yes/No using the verified fields.
+2. New-mode defaults Active/Yes; edits preserve stored choices.
+3. Save/reopen language/culture-only profiles preserving identity and unrelated values.
+
+The earlier wording also put backend behavior into #6. These checks are now
+explicitly handed to their implementation owners in
+config/participation_integration_handoffs.json. Nothing is dropped or marked passed
+merely because ownership moved. #6 review/closure uses its App scope, not completion
+of the later production flows. New-profile record creation/duplicate-identity
+variants remain #5/#61; #6's default rendering is independently testable.
+
+| Check | Receiving owner | How to test / current limit |
 |---|---|---|
-| UI6-001 / PAR-001 defaults | In New mode inspect both fields; cancel if this account already has a profile. For actual creation use a permitted new test account/fixture with a useful language/culture selection. | New-mode Active/Yes. Actual new save creates one own profile with those values; merely inspecting/cancelling is only a rendering pass. |
-| UI6-002 / PAR-002, REG-009 | Edit existing profile to Paused and No; save, let existing validation finish, reopen/refresh; edit only Comments and save/reopen again. | Same item/account; Paused and No both survive, other selections retained. Read saved fields in SharePoint, not just UI. |
-| UI6-003 / PAR-003 | Change Paused to Inactive; save/reopen, make an unrelated edit and reopen again. | Inactive and stored openness survive; no automatic reset to Active. |
-| UI6-004 / PAR-004, PAR-005 controls | Return to Active with openness No, save/reopen; then set Yes and save/reopen. | False/No is genuinely persisted before Yes; neither value is treated as a missing/default value. |
-| UI6-005 / PAR-002/003 culture/language variants | Repeat preserve/save checks with a permitted culture-only profile and a language-only profile. | Same item/account and relevant lookups retained; no language requirement on culture-only. If no allowed fixture exists, mark that variant NOT RUN. |
-| UI6-006 / PAR-006/007 side effects | If a completed group/membership fixture exists, change only the two participant controls. | Group state/capacity and membership rows unchanged. If no fixture exists, mark this variant NOT RUN; never invent a group by editing authoritative rows. |
+| Validation preserves participation | #61 | Set Paused/No, change Comments, Save; inspect the matching item-ID submission run, then reread Paused/No. Repeat with Inactive. Baseline owner preservation passed; full #61 target acceptance still Planned. |
+| No membership/group side effects | #25 integrated test; #64/#68 derived displays | With a permitted operational group fixture, capture group/membership IDs/state/capacity/count; pause/reactivate/change openness. All unchanged; no auto-rejoin/reopen. Blocked if no fixture. |
+| Discovery excludes unavailable targets | #7 | Compatible Active/Yes/validated target appears; Paused, Inactive and No target absent; restoring eligibility permits appearance. Target-flow implementation pending. |
+| Request rejects stale unavailable target | #10 | Target becomes unavailable after discovery; Send rejects without a new request/group/member. Target-flow guard pending; existing requests are not auto-cancelled. |
 
-On a save failure, keep entered data, inspect Form1.Error and the affected card's
-error, and report the first exact message. Confirm the card DataField is the
-verified internal name and its generated Update is the user-selected value.
-Do not remove required identity/uniqueness or change privacy/connection settings.
-If validation resets participation/openness, preserve the failed case/run reference
-and fix its field writes under #61; do not mask it with an app reset.
+To check the **existing validation baseline now**, do not inspect the app alone:
+open Tandem participant submission in Power Automate > Run history after your
+Comments edit; find the run whose item ID matches the profile. It must succeed.
+Reopen the stored Participants item and confirm ParticipationStatus/Openness are
+unchanged; validation Status is a different field and may be recomputed. If no
+edit-triggered run exists, record that case Blocked for #61 instead of passing it.
+This is not completion of #61's catalogue/error/loop/creation acceptance.
 
-Discovery/request exclusion is implemented/tested by #7/#10 using these fields.
-UI6 tests prove the app saves/retains the input; they do not prove exclusion before
-those flows are ready. PAR-006/007 membership-derived badges/views belong to
-#64/#68; #6 owns only absence of unintended form writes. Record integration
-portions as Blocked/NOT RUN with the receiving ticket, not as blanket PASS.
+Do not create group rows manually to unblock a test. Wait for the relevant
+group creation/schema fixture (#11/#12), then run the #25 integrated case.
+Discovery/request tests need the #7/#10 packages and permitted compatible test
+profiles/caller context; their current Planned status is not a #6 implementation gap.
 
-After tests, restore the fixture's original participation/openness/Comments through
-the app and confirm the original item ID remains. Return version/role, case IDs,
-saved values and exact errors. No new registration/group history should be deleted
-as routine cleanup. The edited app version is now identified; repository policy checks alone still
-do not prove the remaining UI cases. After PR #70 review/merge, mark #6 Ready
-for testing until its own remaining variants pass; do not close it prematurely.
+### Tester handover and evidence
+
+Use the corrected **Version 19** Live player after reload. Owner is the verified
+test role; ordinary-user privacy tests remain deferred #18/#39-#42. Capture the
+actual version, role, fixture item ID and initial selections/participation/openness.
+Do not delete a real profile to force New mode: inspect/cancel New if an account
+already has a unique profile. Use a permitted new fixture for actual creation.
+
+Retain UI6-001:006 and PAR-001:007 as stable bug/regression references. Their App
+portions are accepted by owner confirmation; exact per-state detailed sequences
+were not separately logged. Backend/creation/group portions have the receiving
+owners above. Do not convert those portions into blanket PASS.
+
+On failure, record the exact card/Form1.Error, selected input, saved value and
+matching flow run ID. Preserve entered data; fix the failing layer. Restore test
+participation/openness/Comments through the app; keep identity and business history.
+After PR #70 review/merge, #6 can close on its passed UI scope. Receiving flow/
+integration tickets stay open until their own packages and tests are complete.
+
+References: [Combo box defaults](https://learn.microsoft.com/en-us/power-apps/maker/canvas-apps/controls/control-combo-box),
+[form modes](https://learn.microsoft.com/en-us/power-platform/power-fx/reference/function-form).
+No automated app-export rewriting is claimed; the owner edited/tested the actual
+app, and these bindings/configs are the reviewable repository handover.
 
 ## Historical SharePoint setup (superseded where #66 changed metadata)
 

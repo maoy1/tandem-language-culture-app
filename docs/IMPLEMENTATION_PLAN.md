@@ -4,7 +4,7 @@ The approved design is CURRENT_DESIGN.md. This plan reflects the owner's
 annotations to Combined Requirements v0.2. GitHub tickets hold implementation
 acceptance and status; planning completion does not imply deployment.
 
-## Current checkpoint - #6 Version 16 ready for review; #66 complete
+## Current checkpoint - #6 Version 19 UI accepted, ready for review
 
 #46 is accepted/closed. Tracking now separates Flow, App, Shared technical and
 Overview tickets. One production flow has one owner; old partial work/evidence
@@ -22,8 +22,9 @@ config/ticket_scope_map.json transfer of 246 former checklist items.
 - [x] #6: owner confirmed both fields added to Form1.
 - [x] #6: real choices and basic Paused/No save/validation/reopen preservation passed; account/selections unchanged.
 - [x] #6: owner reported Version 16, saved 2026-11-08 15:34:26 Europe/Berlin; implementation context recorded.
-- [ ] Review/merge PR #70; then #6 Ready for testing for remaining default/state/fixture variants. Keep the passed core check and untested variants distinct.
-- [ ] #5 registration UI and #61 submission remain separately owned; do not claim Discovery integration before #7/#10 implementation.
+- [x] #6: working Combo box table-default binding; owner confirms New Active/open Yes, edit preservation and language/culture-only save/reopen; corrected Live Version 19 recorded.
+- [ ] Review/merge PR #70, then close #6 on its passed App scope. Backend integration checks retained under #61/#7/#10/#25, not waived or used to hold #6 indefinitely.
+- [ ] Next implementation after #6 review: #5 registration UI, then #61 submission validation per the ordered batch. Do not claim #7/#10 availability integration passed before those flows are implemented.
 
 See POC_03_PARTICIPANT_SELF_REGISTRATION.md for #6 Studio steps and UI6 tests.
 POC_SHAREPOINT_SETUP.md retains the completed #66 package/mapping evidence.

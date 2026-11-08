@@ -106,7 +106,9 @@ def validate(policy: dict[str, Any], schema: dict[str, Any]) -> list[str]:
     required_policy = {
         "field": "ParticipationStatus", "opennessField": "OpenToConnections",
         "newProfileDefault": "Active", "newProfileOpenDefault": True,
-        "defaultSource": "sharepoint_form_new_mode",
+        "defaultSource": "explicit_combo_box_new_mode",
+        "newProfileDefaultType": "choice_table",
+        "existingProfileDefaultSource": "stored_choice_record_table",
         "defaultsApplyOnlyToNewProfiles": True, "preserveExistingChoices": True,
         "validationMayReset": False, "membershipSideEffects": "none",
         "binding": "generated_sharepoint_data_cards",

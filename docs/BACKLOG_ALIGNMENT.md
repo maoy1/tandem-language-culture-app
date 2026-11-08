@@ -32,7 +32,7 @@ implementation as activity or mixed several flows in one implementation ticket.
 being worked now, at most one non-overview ticket. Queued partial work is Planned
 with evidence retained. PR #60 is merged. #66 delivery is ready for review after
 owner setup/readback and final schema audit passed. Owner confirmed all five writes skipped on a new repeat; own schema tests passed.
-PR #69 is merged and #66 closed; #6 implementation is ready for review in PR #70; remaining acceptance waits for testing after merge. Ready stages remain real handovers. Superseded is
+PR #69 is merged and #66 closed; #6 corrected UI accepted by owner for Version 19; PR #70 ready for review. Receiving-flow/group checks stay with #61/#7/#10/#25. Ready stages remain real handovers. Superseded is
 closed as not planned, not Done. Closed historical #1-#4/#46 remain Done.
 
 **48 issues total:** 40 focused open tickets, 6 Done, 2 Superseded (#22/#24).
