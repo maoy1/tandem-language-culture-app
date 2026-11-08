@@ -85,7 +85,7 @@ backend acceptance or new hosting/connector capability is inferred from UI check
 
 ## Current registration form work - #5
 
-#5 is Ready for review. Owner confirmed Live Version 19 checks A/B passed:
+#5 is Done after merged PR #71. Owner confirmed Live Version 19 checks A/B passed:
 all four multi-lookups persist with optional time zone cleared and identity
 unchanged; all-four-empty Save retains input and leaves the saved item unchanged.
 Existing culture-only/identity evidence is retained. No app rebuild was needed.
@@ -328,3 +328,18 @@ is not confirmed in v0.2; keep #15 for later review rather than silently require
 Excluded: separate paid hosting, automatic AI matching/assignment, in-app chat/video,
 detailed scheduling, mandatory Location catalogue, required native SharePoint
 Location input, participant Role and required participant-entered identity email.
+
+## Validation flow testing handover — #61
+
+#61 is Ready for testing on owner direction; no non-overview ticket is In progress. Target contract and tenant handover are in
+FLOW_61_PARTICIPANT_SUBMISSION.md and participant_submission_contract.json.
+Current owner export inspected; event/connection alias mapping preserved in a
+new import package (26 actions / depth 3), with active-catalogue checks and
+ETag-protected changed Status only. 101 local tests passed. Owner valid/no-change and necessary Active correction/readback/follow-up passed
+for item 38; feedback accepted/published as owner-reported Live Version 26.
+Remaining scoped target acceptance variants stay pending; no whole-ticket completion.
+
+Owner chooses PR #72 merge and tester handover with remaining acceptance retained.
+See TEST_HANDOVER_61.md for Live-26/build context, role/setup, steps/expected
+results, cleanup and blocked cases. #61 stays open; no whole acceptance or
+ordinary-user access pass is implied.

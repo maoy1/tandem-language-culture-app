@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "deploymentStatus": "version19_issue6_done_issue5_form_acceptance_passed_review_pending",
+  "deploymentStatus": "version26_issue61_ready_for_testing_acceptance_pending",
   "list": "Participants",
   "identity": {
     "field": "ParticipantAccount",
@@ -79,6 +79,12 @@
     "app": "Tandem Participant Registration",
     "version": 19,
     "evidence": "artifacts/participation_controls/version19.owner-report.json",
-    "remainingAcceptance": "Ticket #6 complete via merged #70; #5 own Version 19 A/B UI acceptance passed, review/merge pending. Backend/group cases remain with receiving tickets."
+    "remainingAcceptance": "Own App scopes #5/#6 complete after merged #71/#70. Backend and protected integration remain with receiving tickets."
+  },
+  "currentRelease": {
+    "app": "Tandem Participant Registration",
+    "version": 26,
+    "state": "Live_owner_reported",
+    "evidence": "artifacts/participant_submission/results/version26.owner-report.json"
   }
 }

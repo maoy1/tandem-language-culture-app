@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "sourceTicket": 61,
+  "flow": "Participant submission",
+  "deliveryState": "READY_FOR_TESTING_OWNER_REQUESTED_HANDOVER",
+  "runtime": "Power Automate with existing SharePoint connection; no new service or runtime",
+  "trigger": {
+    "event": "SharePoint item created or modified",
+    "listRole": "Participants",
+    "input": "Preserved When_an_item_is_created_or_modified / GetOnUpdatedItems, one-minute polling, splitOn body/value, triggerBody()['ID']; site/list match current source Get_item.",
+    "authoritativeProfile": "Read current saved item, not stale trigger field values"
+  },
+  "schemaMapping": "config/tenant_schema_mapping.json",
+  "rules": {
+    "requiredAccount": "Existing nonblank single Person lookup; never resolve or rewrite identity",
+    "requireAny": [
+      "Teachlanguages",
+      "Learnlanguages",
+      "ShareCultures",
+      "LearnCultures"
+    ],
+    "optionalTimezone": "Blank allowed; a supplied lookup must resolve to an active Timezone catalog item",
+    "catalogues": "Each supplied positive integer lookup ID must exist in its exact mapped list and be Active=true",
+    "availability": "ParticipationStatus and OpenToConnections never affect validation; never reset them",
+    "specialValues": "Any language is an existing active catalogue item; do not interpret its key as an ID or a validator bypass"
+  },
+  "writes": {
+    "allowOnly": [
+      "Status"
+    ],
+    "valid": "Active",
+    "invalid": "Needs review",
+    "unchanged": "No write",
+    "prohibited": [
+      "Participantaccount",
+      "ParticipationStatus",
+      "OpenToConnections",
+      "selections",
+      "Comments",
+      "Learningfocus",
+      "groups",
+      "memberships",
+      "requests",
+      "catalogue rows"
+    ]
+  },
+  "failureContract": {
+    "failedRead": "Explicit failed run; do not treat unavailable/malformed/incomplete reads as empty catalogues or success",
+    "concurrentEdit": "Exact current-item ETag used in IF-MATCH on Status-only POST/MERGE; retries disabled. HTTP 412 fails run; later event reads current data. No stale overwrite or success report.",
+    "postWrite": "Read back and verify Status without claiming unrelated fields were written",
+    "selfTrigger": "Follow-up reads current item and skips unchanged Status; no sustained loop"
+  },
+  "appFeedback": "Owner applied/accepted minimal profile-check copy, changed-value Refresh tested in Preview, and reports published Live Version 26. No separate replay in Live player reported.",
+  "deploymentGate": "Generated Create-as-new package; stop existing validator before import, select existing SharePoint connection, ensure only v2 enabled, run owner smoke. Source export retained locally for recovery.",
+  "limits": {
+    "maxActionDefinitions": 500,
+    "maxNesting": 8,
+    "measuredActions": 26,
+    "measuredNesting": 3
+  },
+  "tenantAcceptance": "Owner passes item-38 no-change/correction/readback/follow-up and preservation, v2-only cutover, plus directed empty-profile Needs review/restoration and changed-value UI Refresh. New invalid-run IDs not supplied; invalid no-op follow-up, catalogue/creation/failure/conflict variants pending.",
+  "packageBuildId": "88637754-4c91-4833-9dcf-5116d8bfb77e",
+  "artifact": "artifacts/participant_submission/TandemParticipantSubmission-v2.zip",
+  "runtimeEvidence": {
+    "validNoChange": "artifacts/participant_submission/results/valid-no-change.owner-report.json",
+    "originalValidatorDisabled": "Owner confirmed original off and only v2 enabled",
+    "participantFieldPreservation": "Owner visually confirmed third row is SharePoint ID 38 and confirmed identity/selections/participation/openness preserved across tested sequence.",
+    "activeCorrection": "artifacts/participant_submission/results/active-correction.owner-report.json",
+    "activeCorrectionFollowup": "artifacts/participant_submission/results/active-correction-followup.owner-report.json",
+    "profileCorrelation": "artifacts/participant_submission/results/owner-cutover-and-correlation.json",
+    "invalidRestoreAndRefresh": "artifacts/participant_submission/results/feedback-transitions.owner-report.json"
+  },
+  "appRelease": {
+    "version": 26,
+    "state": "Live_owner_reported",
+    "evidence": "artifacts/participant_submission/results/version26.owner-report.json",
+    "exactPublishTime": null
+  },
+  "testHandover": "docs/TEST_HANDOVER_61.md",
+  "acceptanceDecision": "Owner requests merge and Ready for testing rather than personally completing full acceptance. Issue stays open; remaining cases not waived/passed."
+}

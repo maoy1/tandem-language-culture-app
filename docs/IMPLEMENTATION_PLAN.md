@@ -4,7 +4,7 @@ The approved design is CURRENT_DESIGN.md. This plan reflects the owner's
 annotations to Combined Requirements v0.2. GitHub tickets hold implementation
 acceptance and status; planning completion does not imply deployment.
 
-## Current checkpoint - #5 registration form review; #6 complete
+## Current checkpoint - #61 Ready for testing; implementation may move on
 
 #46 is accepted/closed. Tracking now separates Flow, App, Shared technical and
 Overview tickets. One production flow has one owner; old partial work/evidence
@@ -24,8 +24,8 @@ config/ticket_scope_map.json transfer of 246 former checklist items.
 - [x] #6: owner reported Version 16, saved 2026-11-08 15:34:26 Europe/Berlin; implementation context recorded.
 - [x] #6: working Combo box table-default binding; owner confirms New Active/open Yes, edit preservation and language/culture-only save/reopen; corrected Live Version 19 recorded.
 - [x] PR #70 merged; #6 closed/Done on owner-confirmed Version 19 UI scope. Backend integration checks remain #61/#7/#10/#25.
-- [x] #5: owner confirmed Live Version 19 A/B PASS for blank-zone/multi-selection persistence and all-four-empty guard/input retention/no saved-item change. Ready for review; merge pending.
-- [ ] Next: #61 submission validation package after #5 handover; no manual rebuilding or backend PASS inferred from form checks.
+- [x] #5: owner confirmed Live Version 19 A/B PASS for blank-zone/multi-selection persistence and all-four-empty guard/input retention/no saved-item change. PR #71 merged; #5 closed/Done.
+- [x] #61 implementation/testing handover: current export inspected; 26-action/depth-3 package generated; 101 local tests passed. Owner valid/no-change and necessary Active correction/readback/follow-up passed (item 38); feedback accepted/published as owner-reported Live Version 26; remaining scoped target acceptance pending.
 
 See POC_03_PARTICIPANT_SELF_REGISTRATION.md for #6 Studio steps and UI6 tests.
 POC_SHAREPOINT_SETUP.md retains the completed #66 package/mapping evidence.
@@ -48,7 +48,7 @@ Sole production-flow ownership:
 | TandemMyGroups | #64 | Core |
 | TandemRespondGroupJoinRequest | #65 | Core |
 
-Next focused batches (one selected non-overview ticket at a time; #5 review is the current checkpoint):
+Next focused batches (one selected non-overview ticket at a time; #61 is current):
 
 1. **#66 Shared technical:** verify participant/catalogue field
    mappings and availability defaults once; flag any permitted setup first.
@@ -81,7 +81,7 @@ rather than require every parent/dependency closed. Minimal app-call smoke tests
 belong to Flow tickets; full layout belongs to App tickets. Disposable proof
 harnesses belong to their explicitly scoped Shared technical evidence, not an
 untracked production service. In progress is active work only, max one. Queued
-partial work stays Planned. Superseded is not Done. PR #60 is merged. #66 and #6 are Done after merged PRs #69/#70. #5 own Version 19 UI acceptance passed and awaits review/merge. No non-overview ticket is In progress.
+partial work stays Planned. Superseded is not Done. PR #60 is merged. #66 and #6 are Done after merged PRs #69/#70. #5 is Done after merged #71. #61 is the sole In progress scope.
 
 ## Ticket execution agreement - #45
 
@@ -428,3 +428,10 @@ evidence in TEST_RUNS.md.
 
 One ticket/branch/PR per delivery batch; finish/review the current PR before
 starting the next implementation batch. Keep incomplete tickets open.
+
+## Owner testing handover decision — 2026-11-08
+
+Owner asks to merge #72 and mark #61 Ready for testing so other authorized testers
+can cover the remaining cases. TEST_HANDOVER_61.md preserves passed/pending/blocked
+variants and access/fixture gates. #61 stays open, not Done; no full-test pass
+required from the owner before moving implementation forward. No active WIP.

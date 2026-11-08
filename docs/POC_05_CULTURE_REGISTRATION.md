@@ -1,7 +1,7 @@
 # POC-05 registration form acceptance
 
 Issue [#5](https://github.com/maoy1/tandem-language-culture-app/issues/5), **App**;
-currently Ready for review; own UI acceptance passed. Target is the existing Tandem Participant Registration
+Done after merged PR #71; own UI acceptance passed. Target is the existing Tandem Participant Registration
 **Version 19**, reported Live by the owner. #66 schema and #6 participation
 controls are Done (PRs #69/#70 merged). This guide covers form behavior only;
 the production submission flow belongs to #61. No new flow ZIP or app rebuild

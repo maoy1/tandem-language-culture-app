@@ -1068,3 +1068,256 @@ whole-schema audit evidence above remain separately scoped.
   tests retain their prior pending/blocked status. No PASS by scope transfer.
 - Documentation/deployment metadata only: JSON parsed and diff checked; prior
   84-test code-suite result retained, not rerun or presented as tenant UI proof.
+
+### CLOSE5-START61-20261108 — merged form acceptance; validation preparation
+
+- PR #71 merged at b80f0529590f9212a1ac382a03d1af3a44db37af; #5 closed,
+  lifecycle corrected to Done. Version 19 A/B results retain their owner scope.
+- #61 is the sole In progress ticket on codex/issue-61-submission-validation.
+  Target contract/test handover prepared; current source export requested.
+  No matching current submission export found in either local checkout and no
+  connected tenant-flow read tool is available. No replacement package/live edit.
+- Target catalogue/failure/concurrency/feedback cases remain NOT RUN. Historical
+  REG-014/015 results remain scoped. Package action/nesting counts cannot yet be
+  measured; delivery gate remains 500 actions / 8 nesting levels.
+
+### BUILD61-20261108 — current export inspected; package prepared
+
+- Owner supplied Tandem–Participantsubmission_20261108154030.zip. Its exact
+  trigger/current-item mapping and existing changed-only Status branches reviewed.
+  Missing catalogue validation and conditional update protection added to v2.
+- Build 88637754-4c91-4833-9dcf-5116d8bfb77e: **26 action definitions / depth 3**.
+  Trigger/recurrence/splitOn/site/list preserved; original connection instance IDs
+  replaced by existing-connection import mapping. Original export untracked/local.
+- Complete verbose reads parsed strictly; unknown/inactive IDs produce Needs
+  review, blank zone allowed, changed Status-only MERGE uses exact ETag/no retry;
+  failed/malformed/incomplete reads and failed readback cannot emit success.
+- **101 pytest passed** (17 new tests); JSON/artifact structure/diff checked. Pure
+  policy evaluation is local, not import/runtime evidence. No target tenant PASS.
+- Exact cutover/smoke/recovery and deferred detailed cases documented. Actual
+  Form1.OnSuccess/validation label requested before feedback integration. #61
+  stays In progress: import/smoke, feedback and target cases pending.
+
+### UI61-PREP-20261108 — actual save notification inspected
+
+- Owner supplied Form1.OnSuccess: Notify("Registration saved", NotificationType.Success).
+  No validation-label formula was supplied. Do not infer a missing label or edit
+  any unknown existing navigation/reset behavior.
+- Prepared informational OnSuccess, last-saved-ID latest Status label and manual
+  Refresh formulas. Studio application, formula/layout verification, new Live
+  version and owner feedback acceptance are **NOT RUN**. Last confirmed app is 19.
+- No per-edit completion marker exists, so latest stored Active does not prove
+  the newest edit finished validation. Feedback text preserves that distinction.
+- No runtime Python/extra connector or schema field added. Local suite remains
+  101 passed from BUILD61; static Power Fx handover is not Power Apps execution.
+
+### RUN61-20261108-01 — valid Active no-change smoke PASS
+
+- Owner pasted Validation_report for build 88637754-4c91-4833-9dcf-5116d8bfb77e,
+  run 08584074536792033395422259203CU09, participant item 38.
+  Report retained in artifacts/participant_submission/results/valid-no-change.owner-report.json.
+- **PASS (owner report)**: valid=true, status=Active, statusChanged=false,
+  result=NO_CHANGE. Target package ran successfully through catalogue/current-item
+  validation and the no-change branch for this profile. Import/run is established;
+  no independent inspection of import settings or disabled original is inferred.
+- The Status-write branch was not exercised. Conditional MERGE permissions,
+  changed-write/readback, necessary-write follow-up no-op, invalid/missing IDs,
+  failure/conflict handling, creation and identity/availability preservation remain
+  pending target cases; no full REG/PAR family PASS is inferred.
+- Owner has not yet explicitly confirmed original validator off, v2 saved-field
+  preservation or application/publication of prepared feedback formulas.
+- Next bounded case: keep item 38's valid selections, change only validation Status
+  to Needs review in the permitted Participants list, observe v2 restore Active,
+  successful patch/readback and follow-up NO_CHANGE. Do not change Participation
+  status. Compare identity/selections/availability; retain original data.
+- No production code or package changed. Prior 101-test local result retained;
+  JSON and diff checked for this evidence-only update. #61 remains In progress.
+
+### RUN61-20261108-02 — necessary Active correction/readback PASS
+
+- Owner supplied matching build 88637754-4c91-4833-9dcf-5116d8bfb77e,
+  run 08584074534387722777188625214CU11, item 38: valid=true, Status Active,
+  statusChanged=true, STATUS_UPDATED. Exact report in
+  artifacts/participant_submission/results/active-correction.owner-report.json.
+- **PASS (owner report)**: target necessary Status-write path and successful
+  readback for the tested profile. Validation_report is reached only after
+  Update_validation_status, Verify_status and Require_status_readback succeed.
+- Initial NO_CHANGE run preceded this correction; it is not the post-write
+  follow-up. Follow-up NO_CHANGE/update Skipped remains pending. No sustained-loop,
+  independent field-preservation or original-validator-disabled pass inferred.
+- Invalid/unknown/inactive selections, creation, failure/conflict, and applied/
+  published app feedback retain prior pending states. No full REG/PAR case family
+  or whole #61 completion claimed. No new import, package or app change required
+  to inspect the already-triggered next matching-item run.
+- Evidence/metadata only: JSON and diff checked; prior 101 local tests retained,
+  not rerun. #61 remains In progress; PR #72 remains draft.
+
+### RUN61-20261108-03 — Active correction follow-up no-op PASS
+
+- Owner returned the requested subsequent run after the STATUS_UPDATED run:
+  08584074534064918346698562621CU26, item 38, same build
+  88637754-4c91-4833-9dcf-5116d8bfb77e; valid=true, Active,
+  statusChanged=false, NO_CHANGE. Raw report retained in
+  artifacts/participant_submission/results/active-correction-followup.owner-report.json.
+- **PASS (owner report)**: observed Active correction -> readback -> requested
+  follow-up no-op, following RUN61-20261108-02. This is the target REG-015 Active
+  correction/follow-up portion; it does not certify global loop/race safety or
+  the invalid/Needs review branch. Exact timestamps not supplied.
+- Original-validator disabled state and preserved identity/selections/availability
+  still lack explicit owner confirmation. App feedback application/publication,
+  invalid/catalogue/creation/failure/conflict target cases retain pending scope.
+- No package/code change; JSON parsed and diff checked. Prior 101 local tests
+  retained, not rerun. #61 In progress; PR #72 draft. No repeat edit needed for
+  this now-passed Active correction/follow-up sequence.
+
+### CORRELATE61-20261108 — v2-only confirmed; selected-profile ID mismatch
+
+- Owner confirms original validator off and only v2 enabled: cutover confirmation
+  accepted. Owner also confirms identity/selections/participation/openness unchanged,
+  but corrects the selected profile to item 3 and says they do not have item 38.
+- All three supplied raw Validation_reports explicitly contain itemId 38. Preserve
+  them unchanged. Their run-level outcomes remain as reported; do not silently
+  rename them to 3 or treat them as correlated to the selected profile.
+- Earlier item-38 attribution to the intended edited fixture was provisional and
+  is now unresolved. Field-preservation statement is retained for the owner-selected
+  profile, without claiming correlation to the reported runs. Clarify built-in
+  SharePoint ID versus third row/profile before end-to-end fixture acceptance.
+- No new edit/rerun requested until identity correlation is clear. No duplicate
+  validator, flow mapping fault or corruption inferred solely from the mismatch.
+- Evidence: results/owner-cutover-and-correlation.json under participant_submission.
+  #61 remains In progress, PR #72 draft; no code/package changes or pytest rerun.
+
+### CORRELATE61-20261108-RESOLVED — 3 meant third row
+
+- Owner clarifies **the third row**, not built-in SharePoint ID 3. The apparent
+  item-3/item-38 discrepancy is resolved by this clarification. Raw run reports
+  retain itemId 38; no source report was changed or relabelled.
+- Accept the owner preservation confirmation for the selected/tested profile:
+  identity, selections, participation status and openness remained unchanged.
+  Original validator off / only v2 enabled is already explicitly confirmed.
+- Target Active correction/readback/follow-up and bounded preservation portions
+  now pass on owner evidence. The SharePoint ID column itself was not independently
+  inspected; no broader multi-account or privacy proof follows.
+- No rerun is needed for this passed sequence. Applied/published app feedback,
+  invalid/catalogue/creation/failure/conflict cases retain their pending scope;
+  #61 In progress, PR #72 draft. Earlier unresolved-correlation notes are history.
+- Evidence metadata/docs only; JSON parsed/diff checked; prior 101 local tests
+  retained. No package, flow, app or permission change.
+
+### UI61-NEXT-20261108 — ID visually confirmed; feedback handover continues
+
+- Owner displayed SharePoint ID and confirms the selected third row is item 38.
+  Correlation is now visually owner-confirmed, beyond the earlier row clarification.
+  No new run needed; the supplied sequence and preservation confirmation match.
+- Next bounded #61 implementation step: existing prepared Form1.OnSuccess,
+  latest-stored validation label and Refresh button. Only original save notification
+  has been observed so far; Studio application/layout/formula test, publication,
+  new Live version and scoped feedback result remain pending. Version 19 remains
+  the last confirmed published app version. No tenant action taken by agent.
+- Guide reconciled to current smoke results; historical notes retained here.
+  Remaining detailed negative cases remain unexecuted, respecting build-first
+  priority; no full acceptance or Ready/Done claim. Metadata/docs-only change;
+  JSON/diff checked, prior 101 code tests retained without rerun.
+
+### UI61-LAYOUT-20261108 — feedback footer appearance accepted
+
+- Owner supplied tree showing Form1, ValidationLabel and RefreshButton as siblings
+  under MainContainer1. Guided moving label/button into a horizontal footer below
+  Form1, with flexible label width/wrapping and fixed button width.
+- Owner replies “looks good, continue”: **PASS for owner-accepted footer appearance
+  only**. Exact resulting properties were not independently inspected. No applied
+  Status-text/Refresh functional test or new published version supplied.
+- Next guided step: align white registration header using its actual title's
+  parent container; fixed-width navigation/actions, flexible-width title. Preserve
+  existing action and visibility bindings. No live change performed by agent.
+- Evidence: results/feedback-layout.owner-report.json. #61 In progress; PR #72
+  draft; runtime feedback and remaining scoped negative cases remain pending.
+  Evidence/docs only; JSON/diff checked; 101 local code tests retained, not rerun.
+
+### UI61-REFRESH-20261108 — Active label and click acknowledgment observed
+
+- Owner screenshot shows full latest-stored validation Active text and Refresh
+  button after footer layout work; owner accepts other header arrangement.
+  Actual header parent SelectedRecordHeaderContainer1 observed in supplied tree.
+- Label1 formula is Signed in as plus User().Email; guided hide duplicate header
+  identity label because top blue banner already shows it. Exact hidden state not
+  separately confirmed. Existing action/visibility logic otherwise retained.
+- Owner confirms the added “Refreshing validation status…” notification appears
+  on clicking Refresh. This proves the action fires, not that changed server data
+  was fetched. An unchanged Active label was previously over-described as a
+  feedback PASS; that claim is qualified here. Changed-value refresh proof pending.
+- Refresh artifact synchronized to the owner-applied Notify; Refresh sequence.
+  It acknowledges a request, not completed validation or a successful data read.
+- Next one bounded owner test: capture four original lookup selections for item
+  38, clear them through SharePoint (bypassing App guard), wait for v2 Needs review,
+  then click App Refresh and observe Needs review. Restore original selections,
+  wait for Active, Refresh again. Preserve identity/availability. No new import.
+- New Live version not supplied; last confirmed 19. #61 In progress / PR #72
+  draft. No code/package change; JSON/diff checked, prior 101 local tests retained.
+
+### UI61-TRANSITIONS-20261108 — changed-value refresh owner PASS; wording revision
+
+- Owner responds “all fine” to the directed item-38 clear-four-selections -> v2
+  Needs review -> App Refresh Needs review -> restore exact originals -> v2 Active
+  -> Refresh Active check. **PASS (owner report)** for that invalid/restore and
+  changed-value UI sequence. Raw invalid Validation_report/run IDs not supplied;
+  no invalid no-op follow-up or catalogue-negative proof inferred.
+- Owner quotes the full latest-stored Active/background/earlier-edit text and
+  finds it confusing. Revised Text artifact only: “Last profile check: Passed” or
+  “Needs attention” / “Not yet confirmed”, plus one short contextual helper line.
+  Data lookup, status selection and Refresh behavior unchanged. “Last” preserves
+  the existing limitation: this is not a per-edit completion marker.
+- Shortened wording application/appearance acceptance and new Live version not
+  yet supplied. Last confirmed published app remains 19. #61 In progress / PR #72
+  draft. No new import/flow/schema/permission change. JSON/diff checked; no new
+  tests for this low-impact copy/evidence change; prior 101 local tests retained.
+
+### UI61-WORDING-FINAL-20261108 — final copy applied/accepted
+
+- Owner rejects all background/earlier-edit/refresh explanatory text on the normal
+  result and confirms “ok, done” after final wording guidance. Accept as owner
+  application/wording confirmation: “Last profile check: Passed” alone. Invalid
+  result: “Last profile check: Needs attention” plus “Review your profile details
+  and save again.” Keep existing Refresh button and prior tested data binding.
+- Text artifact synchronized; no normal-result helper line. Lookup/error handling
+  and validation/availability separation retained. This is presentation copy only,
+  not a new validation-completion marker or tenant-flow change.
+- Save/Publish/new Live version still pending. Latest confirmed release remains
+  19. Prior changed-value Refresh and invalid/restore owner passes retained; other
+  scoped cases retain existing pending gates. #61 In progress / PR #72 draft.
+- JSON/diff checked. No tests added/rerun for copy-only change; prior 101 local
+  code tests retained. No whole-ticket completion claimed.
+
+### UI61-LIVE26-20261108 — feedback release published, owner reported
+
+- In response to Save/Publish and Live-version request, owner confirms done and
+  supplies **Version 26**. Accept as Live publication evidence for Tandem
+  Participant Registration with final feedback wording. Exact save/publish times
+  not supplied; no timestamps copied from earlier Version 16/19 releases.
+- Versioned evidence: artifacts/participant_submission/results/version26.owner-report.json.
+  Existing Preview changed-value Refresh/invalid-restore, wording/layout and target
+  flow sequence passes retain their scope. No separate Live-26 replay reported.
+- Original validator off / only v2 and profile ID 38 correlation/preservation
+  remain confirmed. No new flow build/import necessary for the copy publication.
+- Target invalid follow-up, catalogue negatives, creation, failure/conflict and
+  unexecuted account/availability variants retain pending/fixture gates. #61 stays
+  open/In progress; PR #72 draft. No whole acceptance or broader access claim.
+- Evidence/deployment metadata only; JSON and diff checked; 101 local code-test
+  result retained without rerun. A passed Preview variant is not retroactively
+  labelled as a separately executed Live-version test.
+
+### HANDOVER61-20261108 — owner requests merge and Ready for testing
+
+- Owner explicitly prefers moving on and asking others to test rather than
+  personally completing #61 acceptance. Prepare #72 merge and testing handover.
+- Implementation is imported/owner-smoked, final feedback published Live 26;
+  101 local tests and 26 actions/depth 3 remain recorded. No code/package change.
+- TEST_HANDOVER_61.md records passed owner cases, remaining target variants,
+  operator versus authorized app-tester roles, exact steps/outcomes/cleanup,
+  reporting and access/fixture/harness blockers. No send/invitation/grant action.
+- Lifecycle Ready for testing; issue remains open, not Done. Counts retain 38
+  open / 10 closed / 8 Done, WIP 0. Merge does not turn unexecuted tests into PASS.
+- Ordinary-user access not implied by publication. Already authorized testers may
+  use their own profiles; unavailable/unverified access is a blocked case under
+  #39/#40/#41. Detailed tests handed over, not silently removed from #61 scope.
+- JSON/diff checked for handover-only changes; prior 101-test result retained.

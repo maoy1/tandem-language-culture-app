@@ -1,0 +1,12 @@
+{
+  "kind": "ParticipantSubmissionValidation",
+  "schemaVersion": 1,
+  "sourceTicket": 61,
+  "packageBuildId": "88637754-4c91-4833-9dcf-5116d8bfb77e",
+  "runReference": "08584074534387722777188625214CU11",
+  "itemId": 38,
+  "valid": true,
+  "status": "Active",
+  "statusChanged": true,
+  "result": "STATUS_UPDATED"
+}

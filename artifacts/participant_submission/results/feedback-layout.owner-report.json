@@ -1,0 +1,30 @@
+{
+  "sourceTicket": 61,
+  "reportedDate": "2026-11-08",
+  "ownerReply": "looks good, continue",
+  "scope": "Owner accepts guided feedback footer appearance; no automatic inference of Status text correctness, button behavior or published version.",
+  "observedTreeBeforeChange": {
+    "MainContainer1": [
+      "Form1",
+      "ValidationLabel",
+      "RefreshButton"
+    ]
+  },
+  "guidedArrangement": {
+    "MainContainer1": [
+      "Form1",
+      "ValidationFooter"
+    ],
+    "ValidationFooter": [
+      "ValidationLabel",
+      "RefreshButton"
+    ]
+  },
+  "headerLayout": "Next guided step; actual header parent name/auto-layout properties not yet inspected.",
+  "runtimeFeedbackTest": "Owner reports all fine for directed Needs review -> restore Active sequence and both Refresh label changes; no run JSON/version supplied.",
+  "latestConfirmedLiveVersion": 19,
+  "headerAppearance": "Owner reports other header elements look good; actual tree parent SelectedRecordHeaderContainer1.",
+  "headerExtraLabel": "Label1 displays Signed in as plus User().Email; guided hide duplicate because top blue banner already displays identity. Hidden state not separately confirmed.",
+  "validationLabel": "Final wording owner accepted/applied: Last profile check: Passed alone; Needs attention plus Review your profile details and save again. No background/earlier-edit/refresh helper sentence for Passed.",
+  "refreshClick": "Owner confirms Refreshing validation status notification appears after click."
+}
