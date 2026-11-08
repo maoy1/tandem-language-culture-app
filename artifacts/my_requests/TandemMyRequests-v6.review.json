@@ -1,6 +1,6 @@
 {
   "sourceTicket": 62,
-  "packageBuildId": "51130189-433c-4808-b605-031e92bd439c",
+  "packageBuildId": "b108407d-4714-4d58-9852-0ffc3099c1e9",
   "actions": 228,
   "maximumActionDepth": 4,
   "bounds": {
@@ -28,11 +28,11 @@
     "direction"
   ],
   "sourceShapeChange": "Retain every original Request_rows field including created and Created desc, ID desc ordering; add group/type/completion/availability/actions. Full UI binding pending.",
-  "packageSha256": "1fc799b1525210609f5c8d19dac97d271a47c4a3a463f9d1f2d9c230904793c3",
-  "generatorSha256": "6795fe33ebdb3096d36180f2b5bea77fc8597ac127639c75af296870bbb0f3d3",
+  "packageSha256": "e44592098013a550ea6341dcf699d12722423e4d1d6434076a35379662ab2da8",
+  "generatorSha256": "23d13a85e3dbd303ba9896fd1556838098fb3c7d9f691532015541a3cfb8be6d",
   "tenantResult": "NOT_IMPORTED_NOT_TESTED",
   "ordinaryUserAccessVerified": false,
-  "requestSchema": "METADATA_VERIFIED_BY_PREFLIGHT_READER_RETEST_PENDING",
+  "requestSchema": "VERIFIED_REQUEST_SCHEMA_READER_V6_RUNTIME_RETEST_PENDING",
   "referenceAdapter": "SenderParticipantId/RecipientParticipantId Number with XML Decimals=0; whole-valued numeric refs normalized to int before canonical keys/public IDs.",
   "limits": {
     "actions": 500,
@@ -40,7 +40,6 @@
   },
   "globalActionNamesUnique": true,
   "schemaPreflightRunReference": "08584074285601068216673996565CU29",
-  "fix": "Scalar XPath string() extraction for Decimals and lookup List attributes; avoid attribute-node serialization and cardinality assumptions.",
-  "priorNativeResult": "Owner-reported matching Sender metadata rejected with query body []; reader runtime not passed.",
-  "nativeRetest": "NOT_RUN"
+  "fix": "Nullable legacy profile Status/ParticipationStatus/OpenToConnections; null stays unavailable, no defaults or row writes.",
+  "priorNativeResult": "Owner reported Data_profiles parse failures for two legacy null participation/openness rows. V5 progressed beyond metadata gates; full history success not yet verified."
 }

@@ -11,7 +11,7 @@ from .build_import_probe import build_package as envelope
 from .schema_audit import measure
 
 ROOT = Path(__file__).resolve().parents[2]
-NAME = 'TandemMyRequests v5'
+NAME = 'TandemMyRequests v6'
 BOUNDS = {'requests': 500, 'memberships': 2000, 'profiles': 500, 'groups': 100, 'fields': 500, 'responseChars': 250000}
 REQUESTS = '3d17485d-1dac-41f0-a1af-24e45daa4567'
 
@@ -162,7 +162,7 @@ def build_actions(original, people, groups, build_id):
         'requests': obj({'Id': integer(), 'Created': text(), 'SenderParticipantId': {'type': 'number', 'minimum': 1}, 'RecipientParticipantId': {'type': ['number', 'null'], 'minimum': 1}, 'TargetGroupId': integer(True),
                          'RequestType': choice('Personal', 'Group'), 'Status': choice('Pending', 'Accepted', 'Declined', 'Cancelled'),
                          'SendOperationKey': text(), 'ConnectionKey': text(), 'WinningOperationKey': {'type': ['string', 'null']}, 'OperationComplete': {'type': 'boolean'}}),
-        'profiles': obj({'Id': integer(), 'Status': {'type': 'string'}, 'ParticipationStatus': choice('Active', 'Paused', 'Inactive'), 'OpenToConnections': {'type': 'boolean'}}),
+        'profiles': obj({'Id': integer(), 'Status': {'type': ['string', 'null']}, 'ParticipationStatus': {'type': ['string', 'null'], 'enum': ['Active', 'Paused', 'Inactive', None]}, 'OpenToConnections': {'type': ['boolean', 'null']}}),
         'groups': obj({'Id': integer(), 'SourceRequestId': integer(), 'SetupComplete': {'type': 'boolean'}, 'State': choice('Open', 'Closed', 'Ended'), 'Capacity': {'type': 'integer', 'minimum': 2, 'maximum': 10}, 'WriteOwner': {'type': ['string', 'null']}}),
         'memberships': obj({'Id': integer(), 'GroupId': integer(), 'ParticipantId': integer(), 'MembershipStatus': choice('Active', 'Left'), 'MembershipKey': text(), 'LeftAt': {'type': ['string', 'null']}}),
     }

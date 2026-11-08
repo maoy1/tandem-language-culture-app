@@ -1,10 +1,10 @@
 {
-  "name": "9c1e8a33-9321-4204-bd17-bf82d3605b36",
-  "id": "/providers/Microsoft.Flow/flows/9c1e8a33-9321-4204-bd17-bf82d3605b36",
+  "name": "7a2c420a-799f-4067-b1f2-2b21ca791812",
+  "id": "/providers/Microsoft.Flow/flows/7a2c420a-799f-4067-b1f2-2b21ca791812",
   "type": "Microsoft.Flow/flows",
   "properties": {
     "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
-    "displayName": "TandemMyRequests v5",
+    "displayName": "TandemMyRequests v6",
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
@@ -1972,18 +1972,28 @@
                         "minimum": 1
                       },
                       "Status": {
-                        "type": "string"
+                        "type": [
+                          "string",
+                          "null"
+                        ]
                       },
                       "ParticipationStatus": {
-                        "type": "string",
+                        "type": [
+                          "string",
+                          "null"
+                        ],
                         "enum": [
                           "Active",
                           "Paused",
-                          "Inactive"
+                          "Inactive",
+                          null
                         ]
                       },
                       "OpenToConnections": {
-                        "type": "boolean"
+                        "type": [
+                          "boolean",
+                          "null"
+                        ]
                       }
                     }
                   }

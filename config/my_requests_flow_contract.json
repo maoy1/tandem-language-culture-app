@@ -308,18 +308,19 @@
     "Action buttons call #63/#11/#65 with their own stable intent contracts and refresh this reader after outcome.",
     "Owner import/smoke is still required. #39 audience/ordinary participant access/privacy remain postponed.",
     "Full UI binding under #67 remains explicitly PENDING; preserved shape/order do not prove existing screen, labels, output refresh or action binding works.",
-    "Parent updates the existing inline issue handover with v5 and observed Number-column mapping; no new draft handover file or PR."
+    "Parent updates the existing inline issue handover with v6 and observed Number-column mapping; no new draft handover file or PR."
   ],
-  "nativeStatus": "V4_OWNER_METADATA_GATE_FAILURE; V5_FIX_LOCAL_PASS_NATIVE_RETEST_PENDING",
-  "packageVersion": "v5",
-  "packageBuildId": "51130189-433c-4808-b605-031e92bd439c",
-  "packageSha256": "1fc799b1525210609f5c8d19dac97d271a47c4a3a463f9d1f2d9c230904793c3",
+  "nativeStatus": "V5_PROFILE_PARSE_FAILED_NULL_AVAILABILITY; V6_LOCAL_PASS_RETEST_PENDING",
+  "packageVersion": "v6",
+  "packageBuildId": "b108407d-4714-4d58-9852-0ffc3099c1e9",
+  "packageSha256": "e44592098013a550ea6341dcf699d12722423e4d1d6434076a35379662ab2da8",
   "referenceAdapter": "Read SenderParticipantId/RecipientParticipantId as positive number / nullable positive number. Explicit equals(x,int(x)) for sender and equals(coalesce(recipient,0),int(coalesce(recipient,0))) gate rejects fractions; normalize both to int BEFORE canonical connection-key validation, authority comparisons and public projection. Null group recipient retained. System Id/TargetGroupId remain integer. Decimals=0 alone is not integer authority.",
   "ownerSetupPrerequisites": [
     "Request schema verified by preflight dd0c91b6-13b4-41e0-affd-ebafeeb87404 run08584074285601068216673996565CU29; no list changes requested for this fix.",
     "Import v5 Create as new, same existing Invoker connection, own ParticipantId; return Respond action Outputs.",
     "Native reader/business/privacy acceptance remains pending."
   ],
-  "importDisplayName": "TandemMyRequests v5",
-  "metadataAttributeAdapter": "XPath string(/Field/@Decimals) and string(/Field/@List) return scalar values, same as verified preflight; no bare attribute node-array comparison."
+  "importDisplayName": "TandemMyRequests v6",
+  "metadataAttributeAdapter": "XPath string(/Field/@Decimals) and string(/Field/@List) return scalar values, same as verified preflight; no bare attribute node-array comparison.",
+  "legacyAvailability": "Null Status/ParticipationStatus/OpenToConnections preserved; profile is unavailable for new acceptance. Authorized history/cancel/decline stay readable. No null-to-Active/Yes default, write, deletion, rejoin or membership-state change."
 }

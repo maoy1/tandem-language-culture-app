@@ -1,9 +1,9 @@
 {
   "sourceTicket": 62,
-  "packageBuildId": "51130189-433c-4808-b605-031e92bd439c",
-  "packageSha256": "1fc799b1525210609f5c8d19dac97d271a47c4a3a463f9d1f2d9c230904793c3",
-  "localNewTests": 123,
-  "fullWorktreeSuite": 365,
+  "packageBuildId": "b108407d-4714-4d58-9852-0ffc3099c1e9",
+  "packageSha256": "e44592098013a550ea6341dcf699d12722423e4d1d6434076a35379662ab2da8",
+  "localNewTests": 131,
+  "fullWorktreeSuite": 373,
   "testsResult": "PASS",
   "command": "C:/projects/small_projects/tandem-language-culture-app/.venv/Scripts/python.exe -X utf8 -m pytest -q",
   "testsCwd": "Dedicated #62 managed worktree",
@@ -19,7 +19,7 @@
   "readableDefinitionEqualsZip": true,
   "createAsNew": true,
   "rawSourceCommitted": false,
-  "nativeImportSmoke": "V4 failed Sender metadata gate; V5 NOT RUN",
+  "nativeImportSmoke": "V5 reached Data_profiles then failed on legacy nulls; V6 NOT RUN",
   "ordinaryUserPrivacy": "NOT RUN; postponed #39",
   "actualRequestMetadata": "Verified correct by owner readback; scalar XPath bug fixed in reader, no schema change needed.",
   "limitations": [
@@ -35,5 +35,5 @@
   "referenceAdapter": "Read SenderParticipantId/RecipientParticipantId as positive number / nullable positive number. Explicit equals(x,int(x)) for sender and equals(coalesce(recipient,0),int(coalesce(recipient,0))) gate rejects fractions; normalize both to int BEFORE canonical connection-key validation, authority comparisons and public projection. Null group recipient retained. System Id/TargetGroupId remain integer. Decimals=0 alone is not integer authority.",
   "preflightBuildId": "f7fd078d-740a-4d68-a8fe-31ca2abc9e54",
   "preflightRunReference": "08584074297422149453962972460CU27",
-  "fixRegression": "Serialized XML-attribute node/array/scalar representations plus exact returned Sender field; old comparison rejects valid field, scalar-value comparison passes."
+  "fixRegression": "Legacy null availability in unrelated rows allows empty history; related Pending history preserves cancel/decline but not acceptance; malformed non-null types still fail."
 }

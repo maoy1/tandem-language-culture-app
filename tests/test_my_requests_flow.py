@@ -464,3 +464,28 @@ def test_exact_owner_sender_field_without_fake_decimals_property_matches_metadat
     server.fields['requests']=[actual if x['InternalName']=='SenderParticipantId' else x for x in server.fields['requests']]
     result=execute(server);assert result.response['resultcode']=='OK'
     assert result.outputs['requests_field_SenderParticipantId']==[actual]
+
+
+def test_empty_history_allows_unrelated_legacy_null_availability_without_defaults_or_writes():
+    server=Fake();server.own=[{'Id':3}];server.data['requests']=[]
+    for profile in server.data['profiles'][:2]:profile.update(ParticipationStatus=None,OpenToConnections=None)
+    before=deepcopy(server.data);result=execute(server,actor=3)
+    assert result.response['resultcode']=='OK' and public(result)==[]
+    assert server.data==before
+    assert result.body('Data_profiles')[0]['ParticipationStatus'] is None
+    assert result.body('Data_profiles')[0]['OpenToConnections'] is None
+
+
+@pytest.mark.parametrize('field',['Status','ParticipationStatus','OpenToConnections'])
+def test_null_profile_availability_keeps_pending_history_and_cancel_decline_but_not_accept(field):
+    server=Fake();server.data['profiles'][2][field]=None;before=deepcopy(server.data)
+    result=execute(server);entry=row(result,2)
+    assert result.response['resultcode']=='OK' and entry['availability']=='UnavailablePending'
+    assert entry['actions']['decline'] and not entry['actions']['accept']
+    assert row(result,1)['actions']['cancel'] and server.data==before
+
+
+@pytest.mark.parametrize('field,value',[('ParticipationStatus',True),('ParticipationStatus','Unknown'),('OpenToConnections','true'),('Status',{})])
+def test_malformed_availability_remains_a_data_error(field,value):
+    server=Fake();server.data['profiles'][0][field]=value
+    failure(execute(server),'DATA_INTEGRITY')
