@@ -443,3 +443,32 @@ Build `7c8589d0-fdea-4db8-9d44-46b7d8548acf`. Owner run `08584074350262917105745
 This proves owner-context invocation/own-reference path, Paused rejection and Active empty-result completion, not populated compatibility/projection, another candidate's availability, native tampered-ID/two-account proof, imported Run-only selector, group commitment schema or worst-case native bounds/latency. No published app/cutover claimed. #7 remains In progress / PR #77 draft. 242 local tests previously passed; only evidence/config/docs changed.
 
 Owner restated self-service access: avoid individual participant approvals/grants; use verified existing group-based app/flow access. The shown SharePoint connection consent is separate from run/data authorization. Invoker is preserved; no switch to an owner connection and no new permission changes. #42 owns the final protected-data/caller boundary; owner smoke does not resolve it. Remaining versioned tests stay unchecked in issue #7.
+
+
+## #7 resumed implementation review — 2026-11-08
+
+Owner deferred the audience-group/IT question and requested continued #7 work.
+#39 assessment is queued Planned with draft #43 and successful owner metadata
+run 08584074326403190336298551812CU15 retained; no access method or permission
+cutover is approved. #7 is the sole active ticket during this review handoff.
+The separate caller/backend modes observed in #39's helper do not change
+TandemDiscovery v2's Invoker-only connection or prove ordinary-user access.
+
+Existing build 7c8589d0-fdea-4db8-9d44-46b7d8548acf remains unchanged:
+165 actions / depth 6, zero writes. Re-ran the full local suite: 242 passed.
+Rechecked the existing ZIP checksum against review metadata; no rebuild/import
+is needed. PR #77 is ready for implementation review only; #7 stays open and
+does not acquire a whole-ticket Ready label from this partial PR.
+
+The versioned checkbox handover remains inline in issue #7. Owner Paused/Active
+empty-result tests are passed. Populated compatibility/projection, candidate
+availability, native tampered reference, group commitment/slot/history and native
+load/latency remain unexecuted. Request OperationComplete Boolean/live mapping
+and operational groups remain explicit integration prerequisites, not permission
+to fabricate production requests or groups. #42 access and ordinary-user rollout
+remain blocked/deferred. No colleague test, production credential change, app
+publication, source-flow replacement or additional import is requested now.
+
+After implementation review/merge, retain #7's remaining tests and blocked cases
+for later handover; the next build batch is #10 personal send, #62 inbox and #63
+cancellation, with one focused production-flow ticket active at a time.

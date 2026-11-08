@@ -188,7 +188,8 @@
         7,
         6
       ],
-      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/7"
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/7",
+      "implementationReview": "PR #77 ready for implementation review; 242 tests rerun; unchanged owner-tested package. Remaining native/access tests unchecked in issue #7; no rollout or closure."
     },
     {
       "number": 8,
@@ -901,7 +902,7 @@
       "number": 39,
       "title": "[Shared technical] Self-service access prerequisite assessment",
       "ticketType": "Shared technical",
-      "status": "Deferred",
+      "status": "Planned",
       "flowScope": "Read-only capability inventory and feasible-method recommendation; actual two-user proof is #40.",
       "implementationReadiness": "Assessment can resume; owner deferred access work",
       "implementationEvidence": "Draft #43 partial assessment; Invoker source is not caller authorization.",
@@ -926,7 +927,8 @@
       "sourceTickets": [
         39
       ],
-      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/39"
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/39",
+      "resumedAssessmentEvidence": "PR #43; owner metadata run 08584074326403190336298551812CU15 passed; audience/IT follow-up owner-deferred. No privacy cutover or two-account proof."
     },
     {
       "number": 40,
