@@ -1363,3 +1363,25 @@ whole-schema audit evidence above remain separately scoped.
   proof rerun requested. No production/schema/profile state changed by proof.
 - Evidence/docs only; JSON/diff and source hash checked. Prior 121 local tests
   retained, not rerun for report/status changes. WIP 0; no issue closed yet.
+
+### CLOSE9-START47-20261108 — bounded coordination/reference and preflight
+
+- PR #73 merged at 6879bd90b1321a695143bd327e3aa3a52e9eece2; #9 closed, label
+  corrected to Done. #61 remains Ready for testing; separate cleanup #74 still open.
+- #47 sole In progress on codex/issue-47-bounded-coordination. Proposed shared
+  group token + immutable intent/result receipts, stable duplicate keys, terminal
+  CAS and completion/readback gates; no native schema/data/permission change.
+- **152 pytest passed** (31 new tests), including all **70 order-preserving
+  last-slot reference schedules**, terminal/cancel races, partial setup/retry,
+  receipt failure, episode history/capacity/state and unique committed event tests.
+- These are isolated reference scenarios assuming atomic CAS/native uniqueness,
+  trusted complete adapters, common-writer guard and known stopped retry boundary.
+  They do NOT establish native SharePoint multi-item/cross-flow certification.
+- Read-only preflight ffd55bdf-ce46-4327-96bc-9e0cddc09ecd: **5 actions / depth 1**,
+  only web identity/effective permission metadata GETs. No fixture created and no
+  live data read/write. Existing SharePoint mapping selected at import. **NOT RUN**.
+- Native fixture setup/permission/unique-key/CAS/race and unknown-write recovery
+  still gated; future proposed metadata not applied. NOT-002 delivery remains
+  with #49/#21 channel/idempotency proof, beyond unique committed event identity.
+- Current handover is inline in #47 with checkboxes, expected report/errors and
+  explicit next native-fixture gate. #47 not Ready/Done; draft code/design review.

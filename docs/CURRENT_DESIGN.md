@@ -331,7 +331,7 @@ Location input, participant Role and required participant-entered identity email
 
 ## Validation flow testing handover — #61
 
-#61 is Ready for testing on owner direction; #9 is Ready for review; no non-overview ticket is In progress. Target contract and tenant handover are in
+#61 is Ready for testing on owner direction; #9 is Done after merged #73; #47 is the sole In progress ticket. Target contract and tenant handover are in
 FLOW_61_PARTICIPANT_SUBMISSION.md and participant_submission_contract.json.
 Current owner export inspected; event/connection alias mapping preserved in a
 new import package (26 actions / depth 3), with active-catalogue checks and
@@ -360,3 +360,15 @@ availability mapping remains each consuming flow's evidence, not assumed here.
 passed all 39 synthetic cases with no failures. Own shared proof accepted; #73
 review/merge pending. No live consumer/authorization/group-availability certification
 is inferred. Any language remains deferred; no further proof rerun requested.
+
+## Shared bounded coordination preparation — #47
+
+PR #73 merged; #9 own artifact complete. #47 proposes one group-specific owner
+token plus saved operation receipt, stable request/episode keys and completion
+gates. No lease-steal timer or general transaction/repair platform. Known stopped
+prefix retry is bounded; unknown effects retain ownership for reconciliation or
+rare exceptional support. Native JSON intent comparison needs no hash connector.
+COORDINATION_CONTRACT.md / coordination_contract.json describe un-applied metadata,
+consumer boundaries and assumptions. 152 local tests / 70 model schedules pass;
+native cross-item fixture proof NOT RUN. Read-only metadata preflight is ready to
+verify fixture permissions; no fixture/production schema or data change yet.

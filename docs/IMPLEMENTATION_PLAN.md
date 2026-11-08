@@ -4,7 +4,7 @@ The approved design is CURRENT_DESIGN.md. This plan reflects the owner's
 annotations to Combined Requirements v0.2. GitHub tickets hold implementation
 acceptance and status; planning completion does not imply deployment.
 
-## Current checkpoint - #9 proof passed, review pending; #61 Ready for testing
+## Current focus - #47 bounded coordination; #9 complete; #61 Ready for testing
 
 #46 is accepted/closed. Tracking now separates Flow, App, Shared technical and
 Overview tickets. One production flow has one owner; old partial work/evidence
@@ -48,7 +48,7 @@ Sole production-flow ownership:
 | TandemMyGroups | #64 | Core |
 | TandemRespondGroupJoinRequest | #65 | Core |
 
-Next focused batches (one selected non-overview ticket at a time; #9 is current):
+Next focused batches (one selected non-overview ticket at a time; #47 is current):
 
 1. **#66 Shared technical:** verify participant/catalogue field
    mappings and availability defaults once; flag any permitted setup first.
@@ -81,7 +81,7 @@ rather than require every parent/dependency closed. Minimal app-call smoke tests
 belong to Flow tickets; full layout belongs to App tickets. Disposable proof
 harnesses belong to their explicitly scoped Shared technical evidence, not an
 untracked production service. In progress is active work only, max one. Queued
-partial work stays Planned. Superseded is not Done. PR #60 is merged. #66 and #6 are Done after merged PRs #69/#70. #5 is Done after merged #71. #61 remains Ready for testing; #9 is Ready for review; no active In progress scope.
+partial work stays Planned. Superseded is not Done. PR #60 is merged. #66 and #6 are Done after merged PRs #69/#70. #5 is Done after merged #71. #61 remains Ready for testing; #9 is Done after merged #73; #47 is the sole In progress scope.
 
 ## Ticket execution agreement - #45
 
@@ -451,3 +451,11 @@ Matching-build/source-hash tenant proof run 08584074461495133197897516907CU19
 reports 39 cases, allPassed true, no failures. Own bounded proof passed; #9 Ready
 for review in #73, no owner rerun needed. Consumer integrations remain separate.
 #61 remains Ready for testing. Next implementation after this review is #47.
+
+## #47 implementation — 2026-11-08
+
+PR #73 merged (6879bd90b1321a695143bd327e3aa3a52e9eece2); #9 closed/Done.
+#47 now owns bounded shared coordination contract/reference proof and read-only
+fixture-permission preflight. 152 local tests, 70 reference schedules; native
+cross-item proof and new metadata/fixture prerequisites still pending. Preflight
+5 actions/depth 1, no writes. #61 remains Ready for testing; #74 cleanup still open.

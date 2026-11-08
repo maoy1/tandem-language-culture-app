@@ -20,11 +20,11 @@
   },
   "counts": {
     "allTickets": 48,
-    "openTickets": 38,
-    "closedTickets": 10,
-    "done": 8,
+    "openTickets": 37,
+    "closedTickets": 11,
+    "done": 9,
     "superseded": 2,
-    "inProgress": 0
+    "inProgress": 1
   },
   "flowCountNote": "12 singly-owned core production flows (notification provisional), plus 1 Deferred reminder flow. Access/migration helpers remain undecided; no duplicate owners for the same production flow.",
   "flowInventory": [
@@ -217,37 +217,6 @@
         8
       ],
       "url": "https://github.com/maoy1/tandem-language-culture-app/issues/8"
-    },
-    {
-      "number": 9,
-      "title": "[Shared technical] Reusable compatibility rules for generated flows",
-      "ticketType": "Shared technical",
-      "status": "Ready for review",
-      "flowScope": "One maintained rule/normalization source and synthetic contract fixtures for package generation; no separately hosted runtime or assumed child flow.",
-      "implementationReadiness": "Shared source/normalization/adapters and 39-case connector-free proof complete; matching-build tenant proof owner-passed. Review/merge pending.",
-      "implementationEvidence": "compatibility.py builds reusable normalization/person/group expressions; 121 local tests pass including generated-action subset execution; proof 45 actions/depth 4, no connectors/data operations.",
-      "evidence": "Run 08584074461495133197897516907CU19 / matching build and source SHA: testCount=39, allPassed=true, failedCases=[]. Summary retained; no production integration inferred.",
-      "proposedExperience": [
-        "The app requests candidates from a flow.",
-        "The flow owns normalization, eligibility and projection.",
-        "Participant/group paths use one maintained compatibility source rather than UI formulas."
-      ],
-      "remainingWork": "Review/merge PR #73 to complete own Shared technical scope. Production #7/#10/#11/#17/#65 own separate deployment/authority/availability/mapping tests.",
-      "testReferences": [
-        "DISC-001:011",
-        "REQ-001",
-        "REQ-003"
-      ],
-      "testStatus": "Own synthetic reference and target proof PASS (39 cases); 121 local tests previously passed. Consumer integration not certified.",
-      "testHandoff": "Issue #9 contains full handover, now-verified synthetic case checkboxes and exact matching-build run. No further owner proof rerun needed.",
-      "flows": [],
-      "scopeBoundary": "One maintained rule/normalization source and synthetic contract fixtures for package generation; no separately hosted runtime or assumed child flow.",
-      "prerequisites": [],
-      "validity": "Valid",
-      "sourceTickets": [
-        9
-      ],
-      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/9"
     },
     {
       "number": 10,
@@ -1096,26 +1065,26 @@
       "number": 47,
       "title": "[Shared technical] Shared conditional writes and bounded recovery",
       "ticketType": "Shared technical",
-      "status": "Planned",
+      "status": "In progress",
       "flowScope": "Minimum cross-flow decision/duplicate/capacity protection and proof; not a second acceptance engine or elaborate locking platform.",
-      "implementationReadiness": "Needs bounded shared-capacity/recovery design and proof",
-      "implementationEvidence": "ETag mechanism owner-tested; #57 keys/five conditional writes statically reviewed; last-slot/cross-list recovery not proven.",
-      "evidence": "ETag mechanism owner-tested; #57 keys/five conditional writes statically reviewed; last-slot/cross-list recovery not proven.",
+      "implementationReadiness": "Bounded protocol/metadata contract, exact-ETag helper, reference race/failure tests and read-only fixture-permission preflight built; native fixture prerequisites/proof pending.",
+      "implementationEvidence": "152 local tests including 70 reference interleavings. Preflight 5 actions/depth 1, two metadata GETs, no fixture/data writes. Native cross-item behavior not certified.",
+      "evidence": "coordination.py reference axioms and coordination_contract.json; preflight ffd55bdf-ce46-4327-96bc-9e0cddc09ecd NOT RUN. No proposed production metadata applied.",
       "proposedExperience": [
         "Only one valid Pending decision wins.",
         "Retry interrupted work without duplicate logical results.",
         "Protect last slot across every capacity-changing writer.",
         "Hide incomplete setup/report truthfully; rare support may be exceptional."
       ],
-      "remainingWork": "Minimum cross-flow decision/duplicate/capacity protection and proof; not a second acceptance engine or elaborate locking platform.",
+      "remainingWork": "Owner read-only preflight; verify isolated fixture native unique/CAS/race/recovery behavior; contract review. Consumer integrations remain separately owned.",
       "testReferences": [
         "REQ-002",
         "REQ-007:011",
         "LEAVE-005",
         "NOT-002"
       ],
-      "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
-      "testHandoff": "Not a whole-ticket test-ready handover until its own implementation/version/setup and mandatory cases are available.",
+      "testStatus": "Local reference/helper PASS; native fixture proof NOT RUN. NOT-002 external delivery blocked on #49/#21 channel choice.",
+      "testHandoff": "Issue #47 contains exact preflight import/existing connection mapping, report/error expectations and verification checkboxes, plus separate native-proof/access/metadata gates.",
       "flows": [],
       "scopeBoundary": "Minimum cross-flow decision/duplicate/capacity protection and proof; not a second acceptance engine or elaborate locking platform.",
       "prerequisites": [],
@@ -1611,16 +1580,47 @@
         5
       ],
       "url": "https://github.com/maoy1/tandem-language-culture-app/issues/5"
+    },
+    {
+      "number": 9,
+      "title": "[Shared technical] Reusable compatibility rules for generated flows",
+      "ticketType": "Shared technical",
+      "status": "Done",
+      "flowScope": "One maintained rule/normalization source and synthetic contract fixtures for package generation; no separately hosted runtime or assumed child flow.",
+      "implementationReadiness": "Shared source/normalization/adapters and 39-case connector-free proof complete; matching-build tenant proof owner-passed. Review/merge pending.",
+      "implementationEvidence": "compatibility.py builds reusable normalization/person/group expressions; 121 local tests pass including generated-action subset execution; proof 45 actions/depth 4, no connectors/data operations.",
+      "evidence": "Run 08584074461495133197897516907CU19 / matching build and source SHA: testCount=39, allPassed=true, failedCases=[]. Summary retained; no production integration inferred.",
+      "proposedExperience": [
+        "The app requests candidates from a flow.",
+        "The flow owns normalization, eligibility and projection.",
+        "Participant/group paths use one maintained compatibility source rather than UI formulas."
+      ],
+      "remainingWork": "None in own shared scope; PR #73 merged and #9 closed. Consumers retain independent integration acceptance.",
+      "testReferences": [
+        "DISC-001:011",
+        "REQ-001",
+        "REQ-003"
+      ],
+      "testStatus": "Own synthetic reference and target proof PASS (39 cases); 121 local tests previously passed. Consumer integration not certified.",
+      "testHandoff": "Issue #9 contains full handover, now-verified synthetic case checkboxes and exact matching-build run. No further owner proof rerun needed.",
+      "flows": [],
+      "scopeBoundary": "One maintained rule/normalization source and synthetic contract fixtures for package generation; no separately hosted runtime or assumed child flow.",
+      "prerequisites": [],
+      "validity": "Valid",
+      "sourceTickets": [
+        9
+      ],
+      "url": "https://github.com/maoy1/tandem-language-culture-app/issues/9"
     }
   ],
   "publication": {
     "status": "verified",
     "date": "2026-11-08",
     "issuesVerified": 48,
-    "openBodiesVerified": 38,
+    "openBodiesVerified": 37,
     "typeAndLifecycleExactlyOne": true,
     "uniqueProductionFlowOwners": 13,
-    "activeWork": 0,
+    "activeWork": 1,
     "stateChanges": {
       "supersededNotPlanned": [
         22,
