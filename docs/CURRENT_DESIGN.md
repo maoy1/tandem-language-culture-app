@@ -62,8 +62,9 @@ language/culture multi-lookups and optional single time zone already existed.
 Catalogue label requiredness and time-zone IANA_ID required/unique/index settings
 were corrected. Existing values, legacy Status choices and IANA_ID lookup display
 were preserved; optional Windows conversion metadata is absent and unused.
-Repeat/idempotency and a fresh full audit remain pending, as does app/flow
-acceptance. No ordinary-user privacy or rollout claim follows from owner setup.
+Final full audit is Verified (zero findings); setup repeat returned SETUP_VERIFIED.
+The individual five-write skip trace and PR #69 review remain pending, as does
+app/flow acceptance under its separate owners. No ordinary-user privacy or rollout claim follows from owner setup.
 See POC_SHAREPOINT_SETUP.md and TEST_RUNS.md for versions and finish line.
 
 ## Implemented SharePoint baseline

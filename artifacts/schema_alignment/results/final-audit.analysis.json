@@ -1,0 +1,150 @@
+{
+  "sourceTicket": 66,
+  "packageBuildId": "1fd35100-e381-48b7-9d53-aa927d1131ed",
+  "runReference": "08584074601682073516023990276cU14",
+  "status": "Verified",
+  "mapping": {
+    "language": {
+      "listId": "3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63",
+      "listTitle": "Language catalogue",
+      "fields": {
+        "Title": {
+          "internalName": "Title",
+          "id": "fa564e0f-0c70-4ab9-b863-0177e6ddd247",
+          "type": "Text"
+        },
+        "ISOCode": {
+          "internalName": "ISOcode",
+          "id": "eb208831-6cae-47c2-886b-a72832a41150",
+          "type": "Text"
+        },
+        "Aliases": {
+          "internalName": "Aliases",
+          "id": "aa11638a-1194-4c87-93b3-90b278c380c3",
+          "type": "Note"
+        },
+        "Active": {
+          "internalName": "Active",
+          "id": "f76a42f9-f759-48ed-97bc-c160a251a525",
+          "type": "Boolean"
+        }
+      }
+    },
+    "timezone": {
+      "listId": "7beddfff-1881-4a82-8003-29933b836350",
+      "listTitle": "Timezone catalog",
+      "fields": {
+        "Title": {
+          "internalName": "Title",
+          "id": "fa564e0f-0c70-4ab9-b863-0177e6ddd247",
+          "type": "Text"
+        },
+        "IANAId": {
+          "internalName": "IANA_ID",
+          "id": "2c179581-99f9-4700-9fed-f2e667fc3e8c",
+          "type": "Text"
+        },
+        "Active": {
+          "internalName": "Active",
+          "id": "c6ad6b65-b71b-4168-b020-206dbdbeb747",
+          "type": "Boolean"
+        }
+      }
+    },
+    "culture": {
+      "listId": "cf7ed5b4-2e11-4a0a-a417-6c63ed60f614",
+      "listTitle": "Culture catalogue",
+      "fields": {
+        "Title": {
+          "internalName": "Title",
+          "id": "fa564e0f-0c70-4ab9-b863-0177e6ddd247",
+          "type": "Text"
+        },
+        "CultureKey": {
+          "internalName": "CultureKey",
+          "id": "d0e6a6eb-5e7d-4174-9028-6538935830d7",
+          "type": "Text"
+        },
+        "Active": {
+          "internalName": "Active",
+          "id": "152464b4-c583-4723-996a-4180f149ed1c",
+          "type": "Boolean"
+        }
+      }
+    },
+    "participants": {
+      "listId": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
+      "listTitle": "Participants",
+      "fields": {
+        "Title": {
+          "internalName": "Title",
+          "id": "fa564e0f-0c70-4ab9-b863-0177e6ddd247",
+          "type": "Text"
+        },
+        "ParticipantAccount": {
+          "internalName": "Participantaccount",
+          "id": "aa74f84e-f60d-46a2-87f9-077066fa0aa7",
+          "type": "User"
+        },
+        "TeachLanguages": {
+          "internalName": "Teachlanguages",
+          "id": "0fd2f608-2dd5-42ff-98af-e254d27c53f4",
+          "type": "LookupMulti",
+          "lookupDisplayField": "Title"
+        },
+        "LearnLanguages": {
+          "internalName": "Learnlanguages",
+          "id": "2ee6e265-13e2-4edb-9697-25de94813850",
+          "type": "LookupMulti",
+          "lookupDisplayField": "Title"
+        },
+        "ShareCultures": {
+          "internalName": "ShareCultures",
+          "id": "977a0475-48dd-4fb6-aead-5988b53ad4e8",
+          "type": "LookupMulti",
+          "lookupDisplayField": "Title"
+        },
+        "LearnCultures": {
+          "internalName": "LearnCultures",
+          "id": "6f867b12-ce01-4108-9fae-4cbfc0930fa6",
+          "type": "LookupMulti",
+          "lookupDisplayField": "Title"
+        },
+        "TimeZone": {
+          "internalName": "Timezone",
+          "id": "1f70ca97-ca1c-4e0d-b582-7b4a21caaa6f",
+          "type": "Lookup",
+          "lookupDisplayField": "IANA_ID"
+        },
+        "LearningFocus": {
+          "internalName": "Learningfocus",
+          "id": "78719378-153a-4cc6-b2f9-b1fa015f9ac8",
+          "type": "Note"
+        },
+        "Comments": {
+          "internalName": "Comments",
+          "id": "34535588-ae1a-4c6e-bc06-cb3a17402bc3",
+          "type": "Note"
+        },
+        "Status": {
+          "internalName": "Status",
+          "id": "b347b436-6c26-4ed3-b047-d7ab30983b36",
+          "type": "Choice"
+        },
+        "ParticipationStatus": {
+          "internalName": "ParticipationStatus",
+          "id": "f4f3990e-4735-4ada-9bfa-183c7e5e83b1",
+          "type": "Choice"
+        },
+        "OpenToConnections": {
+          "internalName": "OpenToConnections",
+          "id": "73d20d97-3063-46f1-9633-f9b1be961b4a",
+          "type": "Boolean"
+        }
+      }
+    }
+  },
+  "findings": [],
+  "changesApplied": false,
+  "nextStep": "Record SCHEMA-001 evidence; verify SCHEMA-002 alignment/repeat and remaining setup evidence before closing #66."
+}

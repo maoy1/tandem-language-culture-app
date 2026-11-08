@@ -832,8 +832,9 @@ the app/flow versions separately.
 | Setup original import | InvalidConcurrencyConfiguration: Request trigger concurrency plus synchronous Response | FAIL, superseded by v2 | Failed build 850d5ca8-b2f3-491c-bed4-9c77996899ca; no execution/write claim |
 | SCHEMA-002 v2 dry preview | applyRequested false; preflightReady true; DRY_RUN_READY; ManageLists checked on 3 affected lists | PASS | 08584074626663573896315130256CU26; results/dry-run.json |
 | SCHEMA-002 v2 five-setting apply/readback | applyRequested true; preflightReady true; setupVerified true; SETUP_VERIFIED | PASS, bounded apply variant | 08584074626043544351187724959CU01; results/apply.json |
-| SCHEMA-002 repeat/idempotency | Requires repeat SETUP_VERIFIED with all five Create_/Update_ writes Skipped | NOT RUN | Follow handover steps; no duplicate/skip proof yet |
-| SCHEMA-001/002 final whole-schema audit | Requires fresh Audit_report analysis Verified with no unexplained findings | NOT RUN | Full post-apply audit not supplied yet |
+| SCHEMA-002 repeat result | applyRequested/preflightReady/setupVerified true, SETUP_VERIFIED again | PASS, final-state repeat; individual write skips unconfirmed | 08584074600200045376372808433CU02; results/repeat.json |
+| SCHEMA-002 five-write skip trace | Need owner confirmation all five Create_/Update_ HTTP actions Skipped; summary has no action trace | PENDING confirmation | No extra run requested |
+| SCHEMA-001/002 final whole-schema audit | Complete collection, errors [], all contract fields/defaults/requiredness/unique/index/lookups correct; normalized observed metadata analyzed Verified, no findings | PASS | 08584074601682073516023990276cU14; results/final-audit.metadata.json and final-audit.analysis.json |
 | Local repository/package suite | 63 passed; ZIP/manifest checks, guards/readback, computed-Title/IANA/legacy metadata regressions, exact concurrency regression; max 500 actions / depth 8 enforced | PASS, local only | Agent pytest; not tenant execution of every error variant |
 
 Five verified changes: ParticipationStatus required Choice default Active;
@@ -843,8 +844,7 @@ field schema only, not participant rows/choices/permissions or working flows.
 Successful readback is not whole-feature acceptance or new-form/save behavior.
 
 No business records were created; required schema is intentionally retained.
-Turn off disposable helpers after final evidence. Delivery review and the two
-remaining variants keep #66 open; #5/#6/#61 and privacy tests are separate owners.
+Turn off disposable helpers after final evidence. Delivery review and pending write-skip confirmation keep #66 open; #5/#6/#61 and privacy tests are separate owners.
 
 ## New run template
 
@@ -883,3 +883,12 @@ expected/actual results. For example: “REG-003 fails: blank time zone still ca
 a required-field error in the published test app.” The assistant should locate
 the test and relevant feature ticket, inspect version-specific evidence, fix on
 the appropriate branch, and append retest results after verification.
+
+### SCHEMA-20261108-02 - pending screenshot/run correlation
+
+Owner supplied a screenshot with Create ParticipationStatus green/Succeeded.
+The screenshot does not show its run reference; the initial apply is expected to
+create this field. Correlate its Setup_report.runReference before attributing it
+to the repeat run or declaring a repeat failure/pass. No new run is requested.
+The five-write skip trace remains unconfirmed; final-state repeat summary and
+whole-schema audit evidence above remain separately scoped.

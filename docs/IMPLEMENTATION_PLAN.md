@@ -16,7 +16,8 @@ config/ticket_scope_map.json transfer of 246 former checklist items.
 - [x] Published/verified all 48 types/lifecycle labels, 41 focused open bodies, 2 Superseded handoffs and WIP 0 pending review.
 - [x] PR #60 merged; focused-ticket implementation resumed.
 - [x] #66: metadata inspection, permission preview and five-setting apply/readback succeeded.
-- [ ] #66: review the delivery PR, repeat setup (all five writes skipped), run a fresh full audit; then close on its own acceptance.
+- [x] #66: fresh whole-schema audit Verified with no findings; repeat setup returned SETUP_VERIFIED.
+- [ ] #66: review PR #69 and confirm five writes Skipped in the existing repeat run; then close on its own acceptance.
 - [ ] Next selected implementation: #6 participation controls; #5 registration UI and #61 submission remain separately owned.
 
 See POC_SHAREPOINT_SETUP.md for exact #66 packages, mappings and remaining tests.
@@ -73,7 +74,7 @@ belong to Flow tickets; full layout belongs to App tickets. Disposable proof
 harnesses belong to their explicitly scoped Shared technical evidence, not an
 untracked production service. In progress is active work only, max one. Queued
 partial work stays Planned. Superseded is not Done. PR #60 is merged. #66 is
-ready for delivery review; final repeat/full-audit checks are still pending.
+ready for delivery review; only five-write skip confirmation and delivery review remain.
 
 ## Ticket execution agreement - #45
 
@@ -113,8 +114,8 @@ steps and verify setup before relying on them. No additional paid platform,
 permission expansion or CLI/sign-in dependency is assumed.
 
 #66 packages are implemented/imported. Owner supplied metadata collection, dry
-preview and successful apply/readback evidence on 2026-11-08. Final repeat and
-fresh full-audit variants of SCHEMA-001/002 are NOT RUN; see TEST_RUNS.md.
+preview and successful apply/readback evidence on 2026-11-08. Final full audit is Verified and repeat returned SETUP_VERIFIED; individual
+five-write skip confirmation is pending. See TEST_RUNS.md and PR #69.
 
 ## Completed package experiment checkpoint (#28)
 

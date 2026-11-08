@@ -7,7 +7,7 @@
   "auditRunReference": "08584074638260638544180416987CU28",
   "setupBuildId": "1080ab9d-fec5-4c42-92ef-4988bb36390f",
   "setupApplyRunReference": "08584074626043544351187724959CU01",
-  "status": "Setup readback passed; repeat/idempotency and fresh full audit pending",
+  "status": "Final full-schema audit verified; repeat returned SETUP_VERIFIED; individual five-write skip confirmation pending",
   "lists": {
     "participants": {
       "listId": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
@@ -16,59 +16,68 @@
         "Title": {
           "internalName": "Title",
           "type": "Text",
-          "required": false
+          "required": false,
+          "id": "fa564e0f-0c70-4ab9-b863-0177e6ddd247"
         },
         "ParticipantAccount": {
           "internalName": "Participantaccount",
           "type": "User",
           "required": true,
           "unique": true,
-          "indexed": true
+          "indexed": true,
+          "id": "aa74f84e-f60d-46a2-87f9-077066fa0aa7"
         },
         "TeachLanguages": {
           "internalName": "Teachlanguages",
           "type": "LookupMulti",
           "required": false,
           "targetRole": "language",
-          "lookupDisplayField": "Title"
+          "lookupDisplayField": "Title",
+          "id": "0fd2f608-2dd5-42ff-98af-e254d27c53f4"
         },
         "LearnLanguages": {
           "internalName": "Learnlanguages",
           "type": "LookupMulti",
           "required": false,
           "targetRole": "language",
-          "lookupDisplayField": "Title"
+          "lookupDisplayField": "Title",
+          "id": "2ee6e265-13e2-4edb-9697-25de94813850"
         },
         "ShareCultures": {
           "internalName": "ShareCultures",
           "type": "LookupMulti",
           "required": false,
           "targetRole": "culture",
-          "lookupDisplayField": "Title"
+          "lookupDisplayField": "Title",
+          "id": "977a0475-48dd-4fb6-aead-5988b53ad4e8"
         },
         "LearnCultures": {
           "internalName": "LearnCultures",
           "type": "LookupMulti",
           "required": false,
           "targetRole": "culture",
-          "lookupDisplayField": "Title"
+          "lookupDisplayField": "Title",
+          "id": "6f867b12-ce01-4108-9fae-4cbfc0930fa6"
         },
         "TimeZone": {
           "internalName": "Timezone",
           "type": "Lookup",
           "required": false,
           "targetRole": "timezone",
-          "lookupDisplayField": "IANA_ID"
+          "lookupDisplayField": "IANA_ID",
+          "id": "1f70ca97-ca1c-4e0d-b582-7b4a21caaa6f"
         },
         "LearningFocus": {
           "internalName": "Learningfocus",
           "type": "Note",
-          "required": false
+          "required": false,
+          "id": "78719378-153a-4cc6-b2f9-b1fa015f9ac8"
         },
         "Comments": {
           "internalName": "Comments",
           "type": "Note",
-          "required": false
+          "required": false,
+          "id": "34535588-ae1a-4c6e-bc06-cb3a17402bc3"
         },
         "Status": {
           "internalName": "Status",
@@ -86,7 +95,8 @@
           "consumerValues": [
             "Active",
             "Needs review"
-          ]
+          ],
+          "id": "b347b436-6c26-4ed3-b047-d7ab30983b36"
         },
         "ParticipationStatus": {
           "internalName": "ParticipationStatus",
@@ -98,14 +108,16 @@
             "Paused",
             "Inactive"
           ],
-          "evidence": "setup-v2 apply readback; fresh full audit pending"
+          "evidence": "final audit 08584074601682073516023990276cU14",
+          "id": "f4f3990e-4735-4ada-9bfa-183c7e5e83b1"
         },
         "OpenToConnections": {
           "internalName": "OpenToConnections",
           "type": "Boolean",
           "required": true,
           "defaultValue": true,
-          "evidence": "setup-v2 apply readback; fresh full audit pending"
+          "evidence": "final audit 08584074601682073516023990276cU14",
+          "id": "73d20d97-3063-46f1-9633-f9b1be961b4a"
         }
       }
     },
@@ -117,25 +129,29 @@
           "internalName": "Title",
           "type": "Text",
           "required": true,
-          "evidence": "setup-v2 apply readback"
+          "evidence": "final audit 08584074601682073516023990276cU14",
+          "id": "fa564e0f-0c70-4ab9-b863-0177e6ddd247"
         },
         "ISOCode": {
           "internalName": "ISOcode",
           "type": "Text",
           "required": true,
           "unique": true,
-          "indexed": true
+          "indexed": true,
+          "id": "eb208831-6cae-47c2-886b-a72832a41150"
         },
         "Aliases": {
           "internalName": "Aliases",
           "type": "Note",
-          "required": false
+          "required": false,
+          "id": "aa11638a-1194-4c87-93b3-90b278c380c3"
         },
         "Active": {
           "internalName": "Active",
           "type": "Boolean",
           "required": false,
-          "defaultValue": true
+          "defaultValue": true,
+          "id": "f76a42f9-f759-48ed-97bc-c160a251a525"
         }
       },
       "activeCatalogueCount": 28
@@ -147,20 +163,23 @@
         "Title": {
           "internalName": "Title",
           "type": "Text",
-          "required": true
+          "required": true,
+          "id": "fa564e0f-0c70-4ab9-b863-0177e6ddd247"
         },
         "CultureKey": {
           "internalName": "CultureKey",
           "type": "Text",
           "required": true,
           "unique": true,
-          "indexed": true
+          "indexed": true,
+          "id": "d0e6a6eb-5e7d-4174-9028-6538935830d7"
         },
         "Active": {
           "internalName": "Active",
           "type": "Boolean",
           "required": false,
-          "defaultValue": true
+          "defaultValue": true,
+          "id": "152464b4-c583-4723-996a-4180f149ed1c"
         }
       },
       "activeCatalogueCount": 85
@@ -173,7 +192,8 @@
           "internalName": "Title",
           "type": "Text",
           "required": true,
-          "evidence": "setup-v2 apply readback"
+          "evidence": "final audit 08584074601682073516023990276cU14",
+          "id": "fa564e0f-0c70-4ab9-b863-0177e6ddd247"
         },
         "IANAId": {
           "internalName": "IANA_ID",
@@ -181,13 +201,15 @@
           "required": true,
           "unique": true,
           "indexed": true,
-          "evidence": "setup-v2 apply readback"
+          "evidence": "final audit 08584074601682073516023990276cU14",
+          "id": "2c179581-99f9-4700-9fed-f2e667fc3e8c"
         },
         "Active": {
           "internalName": "Active",
           "type": "Boolean",
           "required": false,
-          "defaultValue": true
+          "defaultValue": true,
+          "id": "c6ad6b65-b71b-4168-b020-206dbdbeb747"
         }
       },
       "activeCatalogueCount": 18,
@@ -203,5 +225,7 @@
     "New defaults are schema metadata, not proof of app initialization or edit preservation (#5/#6/#61).",
     "Existing Any language entry (key any) is a programme sentinel, not an ISO code. Matching semantics belong to #9; no vocabulary changed here.",
     "Culture/participant save, catalogue Active validation and ordinary-user privacy remain with their own tickets."
-  ]
+  ],
+  "finalAuditRunReference": "08584074601682073516023990276cU14",
+  "repeatSetupRunReference": "08584074600200045376372808433CU02"
 }

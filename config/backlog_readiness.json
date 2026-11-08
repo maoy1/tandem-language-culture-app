@@ -1457,21 +1457,21 @@
       "ticketType": "Shared technical",
       "status": "Ready for review",
       "flowScope": "One-time actual field/catalogue mapping and required delta for #5/#6/#61; no app layout or production flow ownership.",
-      "implementationReadiness": "Packages implemented/imported; owner five-setting apply/readback passed. Review delivery, then repeat/idempotency and fresh full-audit acceptance.",
-      "implementationEvidence": "SCHEMA-20261108-01: initial Audit_report, setup-v2 DRY_RUN_READY and SETUP_VERIFIED supplied by owner; actual mapping in config/tenant_schema_mapping.json.",
-      "evidence": "Owner setup-v2 build 1080ab9d-fec5-4c42-92ef-4988bb36390f apply run 08584074626043544351187724959CU01: SETUP_VERIFIED; final repeat/full audit pending.",
+      "implementationReadiness": "Packages implemented/imported; preview/apply/readback, repeat result and final full audit passed. PR #69 review and individual five-write skip confirmation remain.",
+      "implementationEvidence": "SCHEMA-20261108-01: full final normalized metadata analyzed Verified, zero findings; preview/apply and repeat SETUP_VERIFIED. Exact mapping/field IDs retained.",
+      "evidence": "Final audit run 08584074601682073516023990276cU14 Verified; repeat run 08584074600200045376372808433CU02 SETUP_VERIFIED. PR #69 ready for review.",
       "proposedExperience": [
         "Import/run supplied metadata helper with the existing owner SharePoint connection.",
         "Preview verified permissions and bounded missing settings, then explicitly apply the prepared delta.",
         "Use exact observed mappings; repeat safely and confirm whole schema before closing this ticket."
       ],
-      "remainingWork": "Delivery review plus final repeat (five schema writes skipped) and fresh complete audit; no mandatory code implementation known missing.",
+      "remainingWork": "PR #69 review plus confirmation of five skipped schema writes in supplied successful repeat; no new audit/import required.",
       "testReferences": [
         "SCHEMA-001",
         "SCHEMA-002"
       ],
-      "testStatus": "Initial inspection, permission preview and five-setting apply/readback PASS; repeat/idempotency and fresh full audit NOT RUN.",
-      "testHandoff": "POC_SHAREPOINT_SETUP.md: exact audit/setup-v2 artifacts, prerequisites, inputs, expected outputs, persisted settings, errors, cleanup and evidence. After review use Ready for testing until own remaining cases pass.",
+      "testStatus": "Final schema audit Verified, zero findings; preview/apply/readback and repeat SETUP_VERIFIED PASS. Individual five-write skip trace pending confirmation.",
+      "testHandoff": "POC_SHAREPOINT_SETUP.md: inspect the existing repeat run once for five skipped writes; no new import/audit needed. PR #69 review precedes Ready for testing/closure.",
       "flows": [],
       "scopeBoundary": "One-time actual field/catalogue mapping and required delta for #5/#6/#61; no app layout or production flow ownership.",
       "prerequisites": [],

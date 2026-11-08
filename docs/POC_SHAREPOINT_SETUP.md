@@ -6,8 +6,9 @@ registration POC. The design authority is
 design authority wins.
 
 The #46 contract is accepted. #66 has now inspected the actual participant and
-catalogue schema and applied the bounded changes below; final repeat/full-audit
-acceptance remains pending. Discovery display is approved in MVP_FIELD_CONTRACT.md;
+catalogue schema, applied the bounded changes below and verified the final full
+audit. Five-write skip confirmation in the successful repeat and PR #69 review
+remain pending. Discovery display is approved in MVP_FIELD_CONTRACT.md;
 notifications remain undecided (#49). Catalogue time zone is optional for
 participants; migration is the final phase (#48).
 
@@ -16,8 +17,10 @@ participants; migration is the final phase (#48).
 The accepted contract is #46; actual internal names and list IDs are now in
 [tenant_schema_mapping.json](../config/tenant_schema_mapping.json). This mapping
 combines the owner-returned full metadata audit with the successful bounded setup
-readback. It is not an export of employee registrations. Fresh full audit and
-repeat/idempotency checks below remain outstanding. Runtime app behavior stays
+readback. It is not an export of employee registrations. Final audit
+`08584074601682073516023990276cU14` analyzed **Verified**, zero findings. Repeat
+`08584074600200045376372808433CU02` returned **SETUP_VERIFIED**. Only the five
+individual write statuses and delivery review remain outstanding. Runtime app behavior stays
 with #5/#6/#61; ordinary-user access remains a separate deferred proof.
 
 ### Packages and prerequisites
@@ -57,32 +60,39 @@ updates or deletes, internal-name changes, lookup-display changes, permission
 changes or working-flow replacement are included. New-field defaults do not
 establish how old profiles are initialized by the app.
 
-### Remaining acceptance checks (SCHEMA-001/002)
+### Final acceptance and remaining confirmation (SCHEMA-001/002)
 
-1. In the already imported **TandemSchemaSetup v2**, run again with
-   **ApplyChanges = Yes**, after the prior run has ended. Expected:
-   `SETUP_VERIFIED`, `setupVerified: true`, and all five **Create_/Update_**
-   HTTP actions **Skipped** because settings already match. Readback actions
-   still run. Return Setup_report Outputs and confirm the five writes skipped.
-2. Run the already imported **TandemSchemaAudit** again. Expected:
-   `collectionComplete: true`, `errors: []`, no truncation, both new required
-   participant fields/defaults present, and all required/unique/index/lookup
-   mappings correct. Paste **Audit_report Outputs** for local analysis. The
-   collector's success alone means collection succeeded, not schema alignment.
-3. The agent analyzes that actual report with `schema_audit.analyze`, which
-   excludes SharePoint's computed Title aliases and preserves the working
-   IANA_ID display and legacy Status choices. Expected **Verified**, no unexplained
-   findings; existing account and four lookup settings remain correct. Record the
-   repeat and audit run references before closing #66 on its own acceptance.
-4. If permission, metadata, duplicate-key, queued-index or readback checks fail,
-   report the first failed action/output; keep the case Pending/Blocked. Successful
-   earlier field operations remain; there is no multi-field rollback. Repeat only
-   after diagnosing the error. Never delete/recreate lists or perform deduplication
-   as a workaround. SharePoint handles a duplicate key introduced after preview by
-   rejecting uniqueness; readback cannot falsely report setup verified.
-5. After evidence is retained, turn off the disposable helpers. No test/business
-   records were created and no business-column cleanup is required. Required
-   schema stays. Do not grant these owner-connection helpers to participants.
+Final full-audit metadata and analysis are retained in
+`artifacts/schema_alignment/results/final-audit.metadata.json` and
+`final-audit.analysis.json`. The metadata file is an explicitly normalized
+extraction of contract fields/all vocabulary rows from the owner's supplied
+report; system columnIndex/formatting are omitted. Existing mappings and new
+field IDs were checked against the supplied final report, not assumed from the
+desired schema. Analysis returned Verified with zero findings.
+
+1. **Remaining check, no rerun:** open the already successful setup repeat run
+   `08584074600200045376372808433CU02`. Expand **Apply only when ready > True >
+   Apply setup**, then each **Ensure...** condition. All five **Create_/Update_**
+   HTTP actions should be grey/**Skipped**; Verify/readback actions should be
+   green. Return that confirmation; Setup_report itself contains no action trace.
+2. **Already passed:** fresh full audit has collectionComplete true, errors [],
+   no truncation, both required new fields/defaults, correct catalogue
+   required/unique/index settings and preserved identity/optional lookups. No new
+   audit/import is requested. Repeat summary reports SETUP_VERIFIED/true.
+3. Review/merge **PR #69**, record the skipped-write confirmation, then close #66
+   on its own acceptance. App/flow save behavior and privacy proof stay with their
+   owners. If review is complete while that test remains, use Ready for testing.
+4. For a future reproduction: run setup with ApplyChanges = No first; expect
+   DRY_RUN_READY. After verified permissions/preview, run with Yes; expect
+   SETUP_VERIFIED. Repeating Yes should skip all five writes. Run Audit_report
+   and analyze the actual metadata; collector success alone is not alignment PASS.
+5. Denied permission, incompatible collision, blank/duplicate keys, queued index
+   or failed readback is Pending/Blocked. Report the first failed action/output.
+   Earlier successful field operations remain; there is no multi-field rollback.
+   Never delete/recreate lists, rename columns or deduplicate as a workaround.
+6. After evidence is retained, turn off disposable helpers. No business rows were
+   created; required schema stays. Do not share owner-connection helpers with
+   participants. Run the setup helper once at a time.
 
 ### Optional local authoring commands (Bash)
 
