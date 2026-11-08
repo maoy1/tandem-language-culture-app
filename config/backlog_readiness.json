@@ -1204,7 +1204,7 @@
         "The flow reads current saved values and validates catalogue selections.",
         "See validation feedback without admin approval or resetting personal choices."
       ],
-      "remainingWork": "Tester execution/results for remaining scoped cases; issue stays open until own acceptance. docs/TEST_HANDOVER_61.md retains pending/blocked access/fixture/harness variants.",
+      "remainingWork": "Tester execution/results for remaining scoped cases; issue stays open until own acceptance. https://github.com/maoy1/tandem-language-culture-app/issues/61 (issue description) retains pending/blocked access/fixture/harness variants.",
       "testReferences": [
         "REG-001:004",
         "REG-006:009",
@@ -1214,7 +1214,7 @@
         "PAR-003"
       ],
       "testStatus": "Owner flow/core profile preservation and invalid/restore Refresh passes; final copy accepted and Live 26 reported. Remaining target variants pending.",
-      "testHandoff": "docs/TEST_HANDOVER_61.md: Live app 26 / flow build 88637754-4c91-4833-9dcf-5116d8bfb77e; exact owner/synthetic setup, steps, expected outcomes, cleanup and blocked ordinary-user/negative fixtures.",
+      "testHandoff": "https://github.com/maoy1/tandem-language-culture-app/issues/61 (issue description): Live app 26 / flow build 88637754-4c91-4833-9dcf-5116d8bfb77e; exact owner/synthetic setup, steps, expected outcomes, cleanup and blocked ordinary-user/negative fixtures.",
       "flows": [
         "Participant submission"
       ],
