@@ -1,0 +1,145 @@
+{
+  "kind": "TandemCoordinationFixture",
+  "schemaVersion": 1,
+  "sourceTicket": 47,
+  "packageBuildId": "b54d7cee-971d-4af3-924f-e81d5fefaec9",
+  "runReference": "08584074408126043497852268406CU03",
+  "writeRequested": true,
+  "fixtureCreated": true,
+  "fixtureTitle": "Tandem47Fixture_b54d7cee971d4af3",
+  "fixtureListId": "abade32d-8b24-4b30-b2e0-668d10238acb",
+  "runPrefix": "run:08584074408126043497852268406CU03",
+  "permissionGatePassed": true,
+  "testCount": 10,
+  "allPassed": false,
+  "failedCases": [
+    {
+      "case": "CAPACITY_VS_JOIN",
+      "passed": false,
+      "details": {
+        "actorAStatus": 0,
+        "actorBStatus": 0,
+        "memberCount": 2,
+        "capacity": 3
+      }
+    }
+  ],
+  "results": [
+    {
+      "case": "UNIQUE_PRIMARY",
+      "passed": true,
+      "details": {
+        "httpStatus": 502,
+        "errorCode": 502,
+        "nativeErrorCodes": [
+          "-2130575169",
+          "Microsoft.SharePoint.SPDuplicateValuesFoundException"
+        ],
+        "errorMessage": "The list item could not be added or updated because duplicate values were found in the following field(s) in the list: [Title].\r\nclientRequestId: 237f2ff6-de6e-4da9-927b-e166946803ba\r\nserviceRequestId: ecec4ca2-0078-8000-3ef1-d6e70454ddd8"
+      }
+    },
+    {
+      "case": "UNIQUE_SECONDARY",
+      "passed": true,
+      "details": {
+        "httpStatus": 502,
+        "errorCode": 502,
+        "nativeErrorCodes": [
+          "-2130575169",
+          "Microsoft.SharePoint.SPDuplicateValuesFoundException"
+        ],
+        "errorMessage": "The list item could not be added or updated because duplicate values were found in the following field(s) in the list: [KeyB].\r\nclientRequestId: 806bdc06-44dc-420e-9abe-c64a689ed1a6\r\nserviceRequestId: ecec4ca2-30fb-8000-3ef1-dc29e484c4a5"
+      }
+    },
+    {
+      "case": "STALE_TERMINAL",
+      "passed": true,
+      "details": {}
+    },
+    {
+      "case": "PARALLEL_TERMINAL",
+      "passed": true,
+      "details": {
+        "statuses": [
+          412,
+          412,
+          204
+        ]
+      }
+    },
+    {
+      "case": "LAST_SLOT_TWO_ACCEPTORS",
+      "passed": true,
+      "details": {
+        "actorAStatus": 412,
+        "actorBStatus": 204,
+        "memberCount": 3,
+        "capacity": 3
+      }
+    },
+    {
+      "case": "CAPACITY_VS_JOIN",
+      "passed": false,
+      "details": {
+        "actorAStatus": 0,
+        "actorBStatus": 0,
+        "memberCount": 2,
+        "capacity": 3
+      }
+    },
+    {
+      "case": "LEAVE_VS_JOIN",
+      "passed": true,
+      "details": {
+        "actorAStatus": 412,
+        "actorBStatus": 204,
+        "memberCount": 1,
+        "capacity": 3
+      }
+    },
+    {
+      "case": "KNOWN_PREFIX_REPLAY",
+      "passed": true,
+      "details": {
+        "httpStatus": 502,
+        "errorCode": 502,
+        "nativeErrorCodes": [
+          "-2130575169",
+          "Microsoft.SharePoint.SPDuplicateValuesFoundException"
+        ],
+        "errorMessage": "The list item could not be added or updated because duplicate values were found in the following field(s) in the list: [Title, KeyB].\r\nclientRequestId: e632fcdb-8f4c-4fac-a399-e405528acccd\r\nserviceRequestId: f9ec4ca2-105f-8000-3ef1-d4cd8520814b",
+        "faultMode": "Intentional non-I/O action failure at known prefix; no network timeout or killed-run claim."
+      }
+    },
+    {
+      "case": "LEFT_EPISODE_HISTORY",
+      "passed": true,
+      "details": {
+        "httpStatus": 502,
+        "errorCode": 502,
+        "nativeErrorCodes": [
+          "-2130575169",
+          "Microsoft.SharePoint.SPDuplicateValuesFoundException"
+        ],
+        "errorMessage": "The list item could not be added or updated because duplicate values were found in the following field(s) in the list: [Title, KeyB].\r\nclientRequestId: 45fbe3fc-aeed-48a1-86c9-ddf8aa34e317\r\nserviceRequestId: fcec4ca2-c012-8000-3ef1-d926b2f2c9f3"
+      }
+    },
+    {
+      "case": "COMMITTED_EVENT_UNIQUE",
+      "passed": true,
+      "details": {
+        "httpStatus": 502,
+        "errorCode": 502,
+        "nativeErrorCodes": [
+          "-2130575169",
+          "Microsoft.SharePoint.SPDuplicateValuesFoundException"
+        ],
+        "errorMessage": "The list item could not be added or updated because duplicate values were found in the following field(s) in the list: [Title, KeyB].\r\nclientRequestId: e9f435f1-e232-45cb-9747-3636a84c7e18\r\nserviceRequestId: fdec4ca2-4066-8000-3ef1-d6f93fa684d0",
+        "delivery": "Not attempted; no channel/delivery guarantee."
+      }
+    }
+  ],
+  "productionWrites": 0,
+  "deletes": 0,
+  "scope": "Only this build-tagged synthetic list. Native primitives/selected two-branch races and controlled known-prefix recovery; not all production flow integrations or genuine network-unknown recovery."
+}
