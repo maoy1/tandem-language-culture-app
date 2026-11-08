@@ -5,18 +5,96 @@ registration POC. The design authority is
 [CURRENT_DESIGN.md](CURRENT_DESIGN.md). If this guide conflicts with it, the
 design authority wins.
 
-This guide describes the implemented registration baseline. The approved v0.2
-target (#45) adds controlled culture fields and separate
-statuses after #46 defines their exact contract. Do not create those columns
-from this baseline guide yet. Target time zone is optional; no participant size
-preference or Comments notice. Exact Discovery display fields remain undecided;
-notifications remain undecided (#49). Catalogue time zone stays; Excel inspection
-and migration are the final phase (#48).
+The #46 contract is accepted. #66 has now inspected the actual participant and
+catalogue schema and applied the bounded changes below; final repeat/full-audit
+acceptance remains pending. Discovery display is approved in MVP_FIELD_CONTRACT.md;
+notifications remain undecided (#49). Catalogue time zone is optional for
+participants; migration is the final phase (#48).
 
-POC-05 now has a separate [culture registration delta guide](POC_05_CULTURE_REGISTRATION.md).
-The JSON schema/policy are prepared for that delta, explicitly pending tenant
-setup/tests; they no longer claim to be an export of the baseline below. Use the
-delta guide after its prerequisite checks, rather than recreating existing lists.
+## #66 schema alignment handover - 2026-11-08
+
+The accepted contract is #46; actual internal names and list IDs are now in
+[tenant_schema_mapping.json](../config/tenant_schema_mapping.json). This mapping
+combines the owner-returned full metadata audit with the successful bounded setup
+readback. It is not an export of employee registrations. Fresh full audit and
+repeat/idempotency checks below remain outstanding. Runtime app behavior stays
+with #5/#6/#61; ordinary-user access remains a separate deferred proof.
+
+### Packages and prerequisites
+
+- [TandemSchemaAudit.zip](../artifacts/schema_alignment/TandemSchemaAudit.zip):
+  build `1fd35100-e381-48b7-9d53-aa927d1131ed`, 73 actions / maximum depth 5;
+  owner imported/ran successfully. Reads field metadata and catalogue values;
+  never reads participant rows or changes data/settings.
+- [TandemSchemaSetup-v2.zip](../artifacts/schema_alignment/TandemSchemaSetup-v2.zip):
+  build `1080ab9d-fec5-4c42-92ef-4988bb36390f`, 47 actions / maximum depth 4;
+  owner imported/ran preview and apply successfully. This is the supported setup
+  artifact. Only v2 is delivered; synchronous Response has no trigger concurrency.
+- Each ZIP has adjacent readable `.definition.json` and `.review.json` files.
+  Use the existing owner SharePoint connection; both are disposable setup helpers,
+  not production flows or a participant authorization method. No new connection,
+  role grant, premium connector, account or licence was introduced.
+- Setup verifies list ManageLists permission, exact target identities/types,
+  missing-field collisions, complete bounded catalogue reads, nonblank labels/keys
+  and duplicate keys before any write. Preview defaults to ApplyChanges = No.
+  Each helper must be run once at a time; do not start overlapping apply runs.
+
+### Verified minimum delta
+
+| List/field | Actual setting after apply readback |
+|---|---|
+| Participants.ParticipationStatus | Required Choice Active/Paused/Inactive; default Active |
+| Participants.OpenToConnections | Required Yes/No; default Yes |
+| Language catalogue.Title | Required |
+| Timezone catalog.Title | Required |
+| Timezone catalog.IANA_ID | Required, indexed, unique |
+
+Existing account uniqueness and optional four multi-lookups were already correct.
+`Timezone` remains optional, single Lookup displaying `IANA_ID`. Existing Status
+choices are preserved; validation uses Active/Needs review. Optional Windows
+conversion metadata is not deployed or required by the IANA-based MVP. No row
+updates or deletes, internal-name changes, lookup-display changes, permission
+changes or working-flow replacement are included. New-field defaults do not
+establish how old profiles are initialized by the app.
+
+### Remaining acceptance checks (SCHEMA-001/002)
+
+1. In the already imported **TandemSchemaSetup v2**, run again with
+   **ApplyChanges = Yes**, after the prior run has ended. Expected:
+   `SETUP_VERIFIED`, `setupVerified: true`, and all five **Create_/Update_**
+   HTTP actions **Skipped** because settings already match. Readback actions
+   still run. Return Setup_report Outputs and confirm the five writes skipped.
+2. Run the already imported **TandemSchemaAudit** again. Expected:
+   `collectionComplete: true`, `errors: []`, no truncation, both new required
+   participant fields/defaults present, and all required/unique/index/lookup
+   mappings correct. Paste **Audit_report Outputs** for local analysis. The
+   collector's success alone means collection succeeded, not schema alignment.
+3. The agent analyzes that actual report with `schema_audit.analyze`, which
+   excludes SharePoint's computed Title aliases and preserves the working
+   IANA_ID display and legacy Status choices. Expected **Verified**, no unexplained
+   findings; existing account and four lookup settings remain correct. Record the
+   repeat and audit run references before closing #66 on its own acceptance.
+4. If permission, metadata, duplicate-key, queued-index or readback checks fail,
+   report the first failed action/output; keep the case Pending/Blocked. Successful
+   earlier field operations remain; there is no multi-field rollback. Repeat only
+   after diagnosing the error. Never delete/recreate lists or perform deduplication
+   as a workaround. SharePoint handles a duplicate key introduced after preview by
+   rejecting uniqueness; readback cannot falsely report setup verified.
+5. After evidence is retained, turn off the disposable helpers. No test/business
+   records were created and no business-column cleanup is required. Required
+   schema stays. Do not grant these owner-connection helpers to participants.
+
+### Optional local authoring commands (Bash)
+
+These build/analyze packages locally; deployed workflows run in Power Automate.
+Output paths must be new: builders refuse to overwrite delivered versions.
+
+```bash
+./.venv/Scripts/python.exe -m pytest -q
+./.venv/Scripts/python.exe scripts/power_automate/build_schema_audit.py --site-url https://reedelsevier.sharepoint.com/sites/OG-TandemOrg --output /tmp/TandemSchemaAudit-new.zip
+./.venv/Scripts/python.exe scripts/power_automate/schema_setup.py --site-url https://reedelsevier.sharepoint.com/sites/OG-TandemOrg --output /tmp/TandemSchemaSetup-new.zip
+./.venv/Scripts/python.exe scripts/power_automate/analyze_schema_audit.py /tmp/audit-report.json --output /tmp/audit-mapping-new.json
+```
 
 ## Architecture
 

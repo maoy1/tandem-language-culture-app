@@ -4,7 +4,7 @@ The approved design is CURRENT_DESIGN.md. This plan reflects the owner's
 annotations to Combined Requirements v0.2. GitHub tickets hold implementation
 acceptance and status; planning completion does not imply deployment.
 
-## Current focus - #45 focused-ticket restructuring (PR #60)
+## Current focus - #66 schema alignment; PR #60 merged
 
 #46 is accepted/closed. Tracking now separates Flow, App, Shared technical and
 Overview tickets. One production flow has one owner; old partial work/evidence
@@ -14,7 +14,12 @@ config/ticket_scope_map.json transfer of 246 former checklist items.
 - [x] Prepare 41 focused open scopes and 8 new successor tickets.
 - [x] Route every original acceptance item to an active focused owner.
 - [x] Published/verified all 48 types/lifecycle labels, 41 focused open bodies, 2 Superseded handoffs and WIP 0 pending review.
-- [ ] Review/merge updated PR #60 before feature implementation.
+- [x] PR #60 merged; focused-ticket implementation resumed.
+- [x] #66: metadata inspection, permission preview and five-setting apply/readback succeeded.
+- [ ] #66: review the delivery PR, repeat setup (all five writes skipped), run a fresh full audit; then close on its own acceptance.
+- [ ] Next selected implementation: #6 participation controls; #5 registration UI and #61 submission remain separately owned.
+
+See POC_SHAREPOINT_SETUP.md for exact #66 packages, mappings and remaining tests.
 
 Sole production-flow ownership:
 
@@ -67,8 +72,8 @@ rather than require every parent/dependency closed. Minimal app-call smoke tests
 belong to Flow tickets; full layout belongs to App tickets. Disposable proof
 harnesses belong to their explicitly scoped Shared technical evidence, not an
 untracked production service. In progress is active work only, max one. Queued
-partial work stays Planned. Superseded is not Done. After audit publish, no issue
-is active pending PR #60 review; the chosen next scope becomes active on start.
+partial work stays Planned. Superseded is not Done. PR #60 is merged. #66 is
+ready for delivery review; final repeat/full-audit checks are still pending.
 
 ## Ticket execution agreement - #45
 
@@ -107,9 +112,9 @@ probe success does not prove automated App editing. Flag required unavoidable
 steps and verify setup before relying on them. No additional paid platform,
 permission expansion or CLI/sign-in dependency is assumed.
 
-#66 is the first scoped schema work item after PR #60 review/merge. Its detailed
-SCHEMA-001/002 plan is in the issue. Scope/test planning is clear; no live audit,
-field change, import package or schema PASS has yet been produced for #66.
+#66 packages are implemented/imported. Owner supplied metadata collection, dry
+preview and successful apply/readback evidence on 2026-11-08. Final repeat and
+fresh full-audit variants of SCHEMA-001/002 are NOT RUN; see TEST_RUNS.md.
 
 ## Completed package experiment checkpoint (#28)
 

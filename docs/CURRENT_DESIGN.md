@@ -36,7 +36,7 @@ operational dependencies before relying on them.
 
 | Area | Decision | Delivery |
 |---|---|---|
-| Time zone | Optional single selection from the Time zone catalogue; blank never blocks registration/discovery | Requiredness change pending #5 |
+| Time zone | Optional single selection from the Time zone catalogue; blank never blocks registration/discovery | SharePoint optional verified #66; app acceptance #5 |
 | Location derivation | Lower priority; reconsider only when cheap and supported | Later; no profile-location dependency |
 | Discovery audience | Present compatible available profiles/groups, not all profiles | #7, #16, #42 |
 | Discovery fields / Comments | Person/group display approved 2026-11-08; email/admin/system data excluded; no Comments notice | #46 contract; implement/test #7/#16/#42 |
@@ -51,6 +51,20 @@ operational dependencies before relying on them.
 | Exceptions | Necessary admin support permitted; avoid routine organiser matching | #13/#14 |
 | Excel import | Inspect/map/migrate at the end of implementation | #48; before launch if existing-data launch requirement remains |
 | Hosting | Standalone hosting alternative rejected under no-budget constraint | All tickets |
+
+## Observed schema update - #66, 2026-11-08
+
+Owner metadata audit and setup-v2 apply/readback succeeded. Actual casing, list
+IDs, lookup display fields and observed settings are in
+config/tenant_schema_mapping.json. ParticipationStatus (required Choice, default
+Active) and OpenToConnections (required Boolean, default Yes) were added. Both
+language/culture multi-lookups and optional single time zone already existed.
+Catalogue label requiredness and time-zone IANA_ID required/unique/index settings
+were corrected. Existing values, legacy Status choices and IANA_ID lookup display
+were preserved; optional Windows conversion metadata is absent and unused.
+Repeat/idempotency and a fresh full audit remain pending, as does app/flow
+acceptance. No ordinary-user privacy or rollout claim follows from owner setup.
+See POC_SHAREPOINT_SETUP.md and TEST_RUNS.md for versions and finish line.
 
 ## Implemented SharePoint baseline
 
@@ -67,7 +81,7 @@ Active.
 |---|---|
 | ParticipantAccount | Required unique single Person identity; locked to signed-in user in the app |
 | TeachLanguages / LearnLanguages | Multi-value Language catalogue lookups |
-| TimeZone | Required in implemented baseline; approved target is optional, change pending #5 |
+| TimeZone | Optional single lookup verified by #66 metadata audit; displays IANA_ID; app acceptance remains #5 |
 | LearningFocus / Comments | Optional multiple-line text |
 | Status | Flow-managed validation baseline: Active / Needs review |
 | Title | Hidden technical text |

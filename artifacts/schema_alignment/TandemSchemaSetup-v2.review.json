@@ -1,0 +1,56 @@
+{
+  "ticket": 66,
+  "flowName": "TandemSchemaSetup",
+  "packageBuildId": "1080ab9d-fec5-4c42-92ef-4988bb36390f",
+  "sha256": "25c7fc0040b6d6a72970f347d67bbcb157bd4506c53c3bd2bb88e767c5d3db96",
+  "actions": 47,
+  "maximumActionDepth": 4,
+  "limits": {
+    "actions": 500,
+    "nesting": 8
+  },
+  "defaultMode": "Read-only dry run; ApplyChanges omitted/false never writes",
+  "productionFlow": false,
+  "prerequisite": "Existing owner SharePoint connection; ManageLists verified per affected list before any write",
+  "tenantImportAndRun": "NOT RUN",
+  "noParticipantRowReadsOrWrites": true,
+  "evidenceSource": "Owner-returned Audit_report build 1fd35100-e381-48b7-9d53-aa927d1131ed, run 08584074638260638544180416987CU28",
+  "unchanged": "Participant identity/selections, legacy Status choices, IANA_ID lookup display, optional Windows metadata, existing row values and permissions",
+  "writeScope": [
+    {
+      "role": "participants",
+      "create": "ParticipationStatus",
+      "required": true,
+      "default": "Active"
+    },
+    {
+      "role": "participants",
+      "create": "OpenToConnections",
+      "required": true,
+      "default": "1"
+    },
+    {
+      "role": "language",
+      "field": "Title",
+      "settings": {
+        "Required": true
+      }
+    },
+    {
+      "role": "timezone",
+      "field": "Title",
+      "settings": {
+        "Required": true
+      }
+    },
+    {
+      "role": "timezone",
+      "field": "IANA_ID",
+      "settings": {
+        "Required": true,
+        "Indexed": true,
+        "EnforceUniqueValues": true
+      }
+    }
+  ]
+}

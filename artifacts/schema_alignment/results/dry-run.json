@@ -1,0 +1,27 @@
+{
+  "kind": "TandemSchemaSetup",
+  "schemaVersion": 1,
+  "sourceTicket": 66,
+  "packageBuildId": "1080ab9d-fec5-4c42-92ef-4988bb36390f",
+  "runReference": "08584074626663573896315130256CU26",
+  "applyRequested": false,
+  "preflightReady": true,
+  "setupVerified": false,
+  "result": "DRY_RUN_READY",
+  "scope": "Two new participant fields; required language/timezone Title; required indexed unique IANA_ID. No row writes, no deletes, no permissions or working-flow changes.",
+  "recovery": "If any write fails, prior successful schema operations remain. Re-run dry mode to recheck. Never claim rollback; rerun audit after apply.",
+  "permissionEvidence": {
+    "participants": {
+      "High": "2147483647",
+      "Low": "4294705151"
+    },
+    "language": {
+      "High": "2147483647",
+      "Low": "4294705151"
+    },
+    "timezone": {
+      "High": "2147483647",
+      "Low": "4294705151"
+    }
+  }
+}

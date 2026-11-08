@@ -1,0 +1,207 @@
+{
+  "schemaVersion": 1,
+  "sourceTicket": 66,
+  "observedDate": "2026-11-08",
+  "evidenceSource": "Owner-pasted metadata-only Audit_report and setup reports in chat; derived mapping, not an unmodified raw audit export.",
+  "auditBuildId": "1fd35100-e381-48b7-9d53-aa927d1131ed",
+  "auditRunReference": "08584074638260638544180416987CU28",
+  "setupBuildId": "1080ab9d-fec5-4c42-92ef-4988bb36390f",
+  "setupApplyRunReference": "08584074626043544351187724959CU01",
+  "status": "Setup readback passed; repeat/idempotency and fresh full audit pending",
+  "lists": {
+    "participants": {
+      "listId": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
+      "listTitle": "Participants",
+      "fields": {
+        "Title": {
+          "internalName": "Title",
+          "type": "Text",
+          "required": false
+        },
+        "ParticipantAccount": {
+          "internalName": "Participantaccount",
+          "type": "User",
+          "required": true,
+          "unique": true,
+          "indexed": true
+        },
+        "TeachLanguages": {
+          "internalName": "Teachlanguages",
+          "type": "LookupMulti",
+          "required": false,
+          "targetRole": "language",
+          "lookupDisplayField": "Title"
+        },
+        "LearnLanguages": {
+          "internalName": "Learnlanguages",
+          "type": "LookupMulti",
+          "required": false,
+          "targetRole": "language",
+          "lookupDisplayField": "Title"
+        },
+        "ShareCultures": {
+          "internalName": "ShareCultures",
+          "type": "LookupMulti",
+          "required": false,
+          "targetRole": "culture",
+          "lookupDisplayField": "Title"
+        },
+        "LearnCultures": {
+          "internalName": "LearnCultures",
+          "type": "LookupMulti",
+          "required": false,
+          "targetRole": "culture",
+          "lookupDisplayField": "Title"
+        },
+        "TimeZone": {
+          "internalName": "Timezone",
+          "type": "Lookup",
+          "required": false,
+          "targetRole": "timezone",
+          "lookupDisplayField": "IANA_ID"
+        },
+        "LearningFocus": {
+          "internalName": "Learningfocus",
+          "type": "Note",
+          "required": false
+        },
+        "Comments": {
+          "internalName": "Comments",
+          "type": "Note",
+          "required": false
+        },
+        "Status": {
+          "internalName": "Status",
+          "type": "Choice",
+          "required": false,
+          "indexed": true,
+          "choices": [
+            "Draft",
+            "Active",
+            "Waiting",
+            "Matched",
+            "Inactive",
+            "Needs review"
+          ],
+          "consumerValues": [
+            "Active",
+            "Needs review"
+          ]
+        },
+        "ParticipationStatus": {
+          "internalName": "ParticipationStatus",
+          "type": "Choice",
+          "required": true,
+          "defaultValue": "Active",
+          "choices": [
+            "Active",
+            "Paused",
+            "Inactive"
+          ],
+          "evidence": "setup-v2 apply readback; fresh full audit pending"
+        },
+        "OpenToConnections": {
+          "internalName": "OpenToConnections",
+          "type": "Boolean",
+          "required": true,
+          "defaultValue": true,
+          "evidence": "setup-v2 apply readback; fresh full audit pending"
+        }
+      }
+    },
+    "language": {
+      "listId": "3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63",
+      "listTitle": "Language catalogue",
+      "fields": {
+        "Title": {
+          "internalName": "Title",
+          "type": "Text",
+          "required": true,
+          "evidence": "setup-v2 apply readback"
+        },
+        "ISOCode": {
+          "internalName": "ISOcode",
+          "type": "Text",
+          "required": true,
+          "unique": true,
+          "indexed": true
+        },
+        "Aliases": {
+          "internalName": "Aliases",
+          "type": "Note",
+          "required": false
+        },
+        "Active": {
+          "internalName": "Active",
+          "type": "Boolean",
+          "required": false,
+          "defaultValue": true
+        }
+      },
+      "activeCatalogueCount": 28
+    },
+    "culture": {
+      "listId": "cf7ed5b4-2e11-4a0a-a417-6c63ed60f614",
+      "listTitle": "Culture catalogue",
+      "fields": {
+        "Title": {
+          "internalName": "Title",
+          "type": "Text",
+          "required": true
+        },
+        "CultureKey": {
+          "internalName": "CultureKey",
+          "type": "Text",
+          "required": true,
+          "unique": true,
+          "indexed": true
+        },
+        "Active": {
+          "internalName": "Active",
+          "type": "Boolean",
+          "required": false,
+          "defaultValue": true
+        }
+      },
+      "activeCatalogueCount": 85
+    },
+    "timezone": {
+      "listId": "7beddfff-1881-4a82-8003-29933b836350",
+      "listTitle": "Timezone catalog",
+      "fields": {
+        "Title": {
+          "internalName": "Title",
+          "type": "Text",
+          "required": true,
+          "evidence": "setup-v2 apply readback"
+        },
+        "IANAId": {
+          "internalName": "IANA_ID",
+          "type": "Text",
+          "required": true,
+          "unique": true,
+          "indexed": true,
+          "evidence": "setup-v2 apply readback"
+        },
+        "Active": {
+          "internalName": "Active",
+          "type": "Boolean",
+          "required": false,
+          "defaultValue": true
+        }
+      },
+      "activeCatalogueCount": 18,
+      "optionalUndeployed": [
+        "WindowsId"
+      ]
+    }
+  },
+  "consumerNotes": [
+    "Logical names in sharepoint_schema.json are not actual tenant internal names. Resolve through this mapping.",
+    "Preserve existing IANA_ID lookup display; Title is a representative-city label, not the IANA identifier.",
+    "Legacy Status choices and optional WindowsId absence are preserved; no existing values removed.",
+    "New defaults are schema metadata, not proof of app initialization or edit preservation (#5/#6/#61).",
+    "Existing Any language entry (key any) is a programme sentinel, not an ISO code. Matching semantics belong to #9; no vocabulary changed here.",
+    "Culture/participant save, catalogue Active validation and ordinary-user privacy remain with their own tickets."
+  ]
+}
