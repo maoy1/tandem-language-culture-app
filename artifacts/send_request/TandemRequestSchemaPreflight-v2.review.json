@@ -1,14 +1,14 @@
 {
   "sourceTicket": 10,
-  "packageBuildId": "f7fd078d-740a-4d68-a8fe-31ca2abc9e54",
-  "flowName": "TandemRequestSchemaPreflight",
+  "packageBuildId": "dd0c91b6-13b4-41e0-affd-ebafeeb87404",
+  "flowName": "TandemRequestSchemaPreflight v2",
   "actions": 18,
   "maximumActionDepth": 3,
   "limits": {
     "actions": 500,
     "nesting": 8
   },
-  "sha256": "8ab3fa1966468525a169c3c608a3b00cd065f6db02292971460bc3dca615eb10",
+  "sha256": "a5ee3a2590acad54c23979f373c93d2f54a8c8b9fcab30a52c18c00f6e24440a",
   "rulesSourceSha256": "dfe0dcd587a5a348080dde288183ed3dff2d02d1f652f0ae23010b2e6e649c72",
   "connectionSource": "Invoker",
   "ownerCredentialFallback": false,

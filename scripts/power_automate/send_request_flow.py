@@ -11,9 +11,9 @@ from .build_import_probe import build_package as envelope
 from .schema_audit import measure, ALL
 
 ROOT=Path(__file__).resolve().parents[2]
-NAME='TandemSendRequest v2'
+NAME='TandemSendRequest v3'
 REQUESTS='3d17485d-1dac-41f0-a1af-24e45daa4567'
-EXPECTED={'SenderParticipant':'Lookup','RecipientParticipant':'Lookup','TargetGroup':'Lookup',
+EXPECTED={'SenderParticipantId':'Number','RecipientParticipantId':'Number','TargetGroup':'Lookup',
  'RequestType':'Choice','Status':'Choice','SendOperationKey':'Text','ConnectionKey':'Text',
  'WinningOperationKey':'Text','OperationComplete':'Boolean'}
 
@@ -71,20 +71,22 @@ def build_actions(source, people, groups, build_id):
     s['Require_uuid']=gate(uuid_test,'INVALID_INTENT','Input_intent');s['Read_invoker']['runAfter']=d.after('Require_uuid')
     s['Operation_key']=d.compose("@concat('personal:',string(outputs('Own_profile')?['Id']),':',toLower(body('Input_intent')?['intent']))",'Require_own_profile')
     s['Connection_key']=d.compose("@concat('open:person:',string(if(less(outputs('Own_profile')?['Id'],body('Input_reference')),outputs('Own_profile')?['Id'],body('Input_reference'))),':',string(if(less(outputs('Own_profile')?['Id'],body('Input_reference')),body('Input_reference'),outputs('Own_profile')?['Id'])))",'Operation_key')
-    s['Read_request_list']=http(base+'?$select=Id,BaseTemplate','Connection_key')
+    s['Read_request_list']=http(base+'?$select=Id,BaseTemplate,ItemCount','Connection_key')
     s['Read_request_fields']=http(base+'/fields?$select=InternalName,TypeAsString,Required,Hidden,ReadOnlyField,Indexed,EnforceUniqueValues,SchemaXml&$top=5000','Read_request_list')
     prior='Read_request_fields';matches=[]
     for field,kind in EXPECTED.items():
         terms=["equals(item()?['InternalName'],'"+field+"')","equals(item()?['TypeAsString'],'"+kind+"')","equals(item()?['Hidden'],false)","equals(item()?['ReadOnlyField'],false)"]
-        terms.append("equals(item()?['Required'],"+str(field in ['SenderParticipant','RequestType','Status','SendOperationKey','ConnectionKey']).lower()+')')
+        terms.append("equals(item()?['Required'],"+str(field in ['SenderParticipantId','RequestType','Status','SendOperationKey','ConnectionKey']).lower()+')')
         if field not in ['SendOperationKey','ConnectionKey']:terms.append("equals(item()?['EnforceUniqueValues'],false)")
         if field in ['SendOperationKey','ConnectionKey']:
             terms += ["equals(item()?['Required'],true)","equals(item()?['Indexed'],true)","equals(item()?['EnforceUniqueValues'],true)"]
-        if field=='SenderParticipant':terms.append("equals(item()?['Required'],true)")
-        if field in ['RecipientParticipant','TargetGroup']:terms.append("equals(item()?['Required'],false)")
+        if field=='SenderParticipantId':terms.append("equals(item()?['Required'],true)")
+        if field in ['RecipientParticipantId','TargetGroup']:terms.append("equals(item()?['Required'],false)")
         if kind=='Lookup':
             target=groups['lists']['groups']['listId'] if field=='TargetGroup' else people['lists']['participants']['listId']
             terms.append("equals(replace(replace(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@List)'))),'{',''),'}',''),'"+target+"')")
+        if kind=='Number':
+            terms.append("equals(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@Decimals)')),'0')")
         if kind=='Choice':
             choices=['Personal','Group'] if field=='RequestType' else ['Pending','Accepted','Declined','Cancelled']
             terms.extend("contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'"+c+"')" for c in choices)
@@ -188,7 +190,7 @@ def build_package(output,export=None,source=None,preflight=False):
     source=source or original_source(export);people=json.loads((ROOT/'config/tenant_schema_mapping.json').read_text());groups=json.loads((ROOT/'config/group_schema_mapping.json').read_text())
     if source['properties']['connectionReferences']['shared_sharepointonline']['source']!='Invoker':raise ValueError('Invoker required')
     site=source['properties']['definition']['actions']['Get_item']['inputs']['parameters']['dataset'];build_id=str(uuid4())
-    flow_name='TandemRequestSchemaPreflight' if preflight else NAME
+    flow_name='TandemRequestSchemaPreflight v2' if preflight else NAME
     actions=(build_preflight_actions if preflight else build_actions)(source,people,groups,build_id)
     with TemporaryDirectory() as temp:
         p=Path(temp)/'base.zip';envelope(p,sharepoint_site=site)

@@ -18,9 +18,10 @@ def fields():
     rows=[]
     for n,t in send.EXPECTED.items():
         xml=''
+        if t=='Number':xml='<Field Decimals="0" />'
         if t=='Lookup':xml='<Field List="'+(GROUPS['lists']['groups']['listId'] if n=='TargetGroup' else PEOPLE['lists']['participants']['listId'])+'" />'
         if t=='Choice':xml='<Field FillInChoice="FALSE"><CHOICES>'+''.join('<CHOICE>'+v+'</CHOICE>' for v in (['Personal','Group'] if n=='RequestType' else ['Pending','Accepted','Declined','Cancelled']))+'</CHOICES></Field>'
-        rows.append({'InternalName':n,'TypeAsString':t,'Required':n in ['SendOperationKey','ConnectionKey','SenderParticipant','RequestType','Status'],'Hidden':False,'ReadOnlyField':False,'Indexed':n in ['SendOperationKey','ConnectionKey'],'EnforceUniqueValues':n in ['SendOperationKey','ConnectionKey'],'SchemaXml':xml})
+        rows.append({'InternalName':n,'TypeAsString':t,'Required':n in ['SendOperationKey','ConnectionKey','SenderParticipantId','RequestType','Status'],'Hidden':False,'ReadOnlyField':False,'Indexed':n in ['SendOperationKey','ConnectionKey'],'EnforceUniqueValues':n in ['SendOperationKey','ConnectionKey'],'SchemaXml':xml})
     return rows
 
 class Server(Fake):
@@ -84,7 +85,7 @@ def test_schema_unknown_never_writes(variant):
     s=Server()
     if variant=='missing':s.fields.pop()
     if variant=='unique':next(x for x in s.fields if x['InternalName']=='ConnectionKey')['EnforceUniqueValues']=False
-    if variant=='lookup':s.fields[0]['SchemaXml']='<Field List="other-list" />'
+    if variant=='lookup':next(x for x in s.fields if x['InternalName']=='TargetGroup')['SchemaXml']='<Field List="other-list" />'
     if variant=='choice':next(x for x in s.fields if x['InternalName']=='RequestType')['SchemaXml']='<Field><CHOICES><CHOICE>Wrong</CHOICE></CHOICES></Field>'
     if variant=='paging':s.schema_page=True
     r=execute(s);assert r.response['resultcode']=='REQUEST_SCHEMA_UNVERIFIED' and s.writes==0
@@ -157,7 +158,7 @@ def test_actual_export_adapter_finds_nested_request_actions_and_preserves_auth(t
 
 
 def test_metadata_preflight_requires_status_type_and_canonical_choices():
-    for field,change in [('Status',{'Required':False}),('RequestType',{'SchemaXml':'<Field FillInChoice="TRUE"><CHOICES><CHOICE>Personal</CHOICE><CHOICE>Group</CHOICE></CHOICES></Field>'}),('SenderParticipant',{'ReadOnlyField':True})]:
+    for field,change in [('Status',{'Required':False}),('RequestType',{'SchemaXml':'<Field FillInChoice="TRUE"><CHOICES><CHOICE>Personal</CHOICE><CHOICE>Group</CHOICE></CHOICES></Field>'}),('SenderParticipantId',{'ReadOnlyField':True})]:
         server=Server();next(x for x in server.fields if x['InternalName']==field).update(change)
         runner=execute(server);assert runner.response['resultcode']=='REQUEST_SCHEMA_UNVERIFIED' and server.writes==0
 
@@ -165,3 +166,35 @@ def test_metadata_preflight_requires_status_type_and_canonical_choices():
 def test_replay_rejects_incoherent_winning_marker_without_writing():
     s=Server();execute(s);s.rows[0]['WinningOperationKey']='unexpected-live-decision'
     r=execute(s);assert r.response['resultcode']=='INTENT_CONFLICT' and s.writes==1
+
+
+def test_observed_number_columns_are_preserved_and_missing_coordination_is_reported():
+    report=json.loads((send.ROOT/'artifacts/send_request/results/initial-schema.owner-report.json').read_text())
+    server=Server();server.fields=deepcopy(report['fields'])
+    runner=FlowRunner(server);runner.run(send.build_preflight_actions(source(),PEOPLE,GROUPS,'observed-schema'))
+    actual=json.loads(runner.response['reportjson'])
+    assert actual['collectionComplete'] and not actual['schemaVerified'] and server.writes==0
+    assert len(runner.outputs['Schema_SenderParticipantId'])==1
+    assert not runner.outputs['Schema_RecipientParticipantId']  # Current Required=true; group-target shape needs optional.
+    assert not runner.outputs['Schema_SendOperationKey']
+
+
+@pytest.mark.parametrize('variant',['oldLookup','fractionalColumn','wrongRecipientRequired'])
+def test_number_metadata_contract_not_replaced_by_legacy_lookup_guess(variant):
+    server=Server();field=next(x for x in server.fields if x['InternalName']=='SenderParticipantId')
+    if variant=='oldLookup':field.update(InternalName='SenderParticipant',TypeAsString='Lookup',SchemaXml='<Field List="'+PEOPLE['lists']['participants']['listId']+'" />')
+    if variant=='fractionalColumn':field['SchemaXml']='<Field Decimals="2" />'
+    if variant=='wrongRecipientRequired':next(x for x in server.fields if x['InternalName']=='RecipientParticipantId')['Required']=True
+    result=execute(server);assert result.response['resultcode']=='REQUEST_SCHEMA_UNVERIFIED' and server.writes==0
+
+
+def test_readback_accepts_whole_number_reference_representation():
+    server=Server();request=server.request
+    def coerce(p):
+        result=request(p)
+        if p.get('parameters/method')=='POST' and server.rows:
+            server.rows[-1].update(SenderParticipantId=1.0,RecipientParticipantId=2.0)
+        return result
+    server.request=coerce
+    assert execute(server).response['resultcode']=='SAVED'
+    assert execute(server).response['resultcode']=='REPLAY' and server.writes==1

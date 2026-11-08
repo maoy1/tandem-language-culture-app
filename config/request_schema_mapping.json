@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "sourceTicket": 10,
+  "listId": "3d17485d-1dac-41f0-a1af-24e45daa4567",
+  "observedRunReference": "08584074297422149453962972460CU27",
+  "observedMapping": {
+    "SenderParticipantId": {
+      "id": "{7909dcd2-f0b9-4158-9b9a-2017cb156fcd}",
+      "type": "Number",
+      "required": true,
+      "decimals": 0
+    },
+    "RecipientParticipantId": {
+      "id": "{e23db904-ddb4-451d-aa37-9b59b375b1ca}",
+      "type": "Number",
+      "required": true,
+      "decimals": 0
+    },
+    "Status": "Verified required Choice Pending/Accepted/Declined/Cancelled; default Pending, no fill-in"
+  },
+  "ownerReportedRows": "EMPTY",
+  "mappingVerified": false,
+  "reason": "Current numeric party mapping observed; six new fields and recipient optionality not applied/verified.",
+  "preserve": [
+    "SenderParticipantId field 7909dcd2-f0b9-4158-9b9a-2017cb156fcd Number required Decimals=0",
+    "RecipientParticipantId field e23db904-ddb4-451d-aa37-9b59b375b1ca Number Decimals=0",
+    "Status choices/default/type"
+  ],
+  "plannedChanges": {
+    "RecipientParticipantId": "Required=false only; keep Number/Decimals=0",
+    "RequestType": "Choice Personal/Group; required; default Personal",
+    "TargetGroup": "Lookup Groups, Title; optional",
+    "SendOperationKey": "Text, required, unique/indexed",
+    "ConnectionKey": "Text, required, unique/indexed",
+    "WinningOperationKey": "Text, optional blank",
+    "OperationComplete": "Boolean, optional, default No"
+  },
+  "migration": "None needed for owner-confirmed empty list. If rows appear before setup, stop and re-assess; no backfill/delete is authorized by metadata collection."
+}

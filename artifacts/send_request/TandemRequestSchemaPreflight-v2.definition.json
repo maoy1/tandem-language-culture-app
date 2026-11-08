@@ -1,10 +1,10 @@
 {
-  "name": "a389a9a6-2810-490b-8907-d4f0ea8ac244",
-  "id": "/providers/Microsoft.Flow/flows/a389a9a6-2810-490b-8907-d4f0ea8ac244",
+  "name": "389fb535-07f2-4031-8860-6daec5cdce84",
+  "id": "/providers/Microsoft.Flow/flows/389fb535-07f2-4031-8860-6daec5cdce84",
   "type": "Microsoft.Flow/flows",
   "properties": {
     "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
-    "displayName": "TandemRequestSchemaPreflight",
+    "displayName": "TandemRequestSchemaPreflight v2",
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
@@ -59,7 +59,7 @@
                 "parameters": {
                   "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
                   "parameters/method": "GET",
-                  "parameters/uri": "_api/web/lists(guid'3d17485d-1dac-41f0-a1af-24e45daa4567')?$select=Id,BaseTemplate",
+                  "parameters/uri": "_api/web/lists(guid'3d17485d-1dac-41f0-a1af-24e45daa4567')?$select=Id,BaseTemplate,ItemCount",
                   "parameters/headers": {
                     "Accept": "application/json;odata=verbose"
                   }
@@ -98,11 +98,11 @@
                 ]
               }
             },
-            "Schema_SenderParticipant": {
+            "Schema_SenderParticipantId": {
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_request_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'SenderParticipant'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Required'],true),equals(replace(replace(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@List)'))),'{',''),'}',''),'fd3adf46-f81d-4a7b-a80c-567fde0175dc'))"
+                "where": "@and(equals(item()?['InternalName'],'SenderParticipantId'),equals(item()?['TypeAsString'],'Number'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Required'],true),equals(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@Decimals)')),'0'))"
               },
               "runAfter": {
                 "Read_request_fields": [
@@ -110,14 +110,14 @@
                 ]
               }
             },
-            "Schema_RecipientParticipant": {
+            "Schema_RecipientParticipantId": {
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_request_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'RecipientParticipant'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Required'],false),equals(replace(replace(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@List)'))),'{',''),'}',''),'fd3adf46-f81d-4a7b-a80c-567fde0175dc'))"
+                "where": "@and(equals(item()?['InternalName'],'RecipientParticipantId'),equals(item()?['TypeAsString'],'Number'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Required'],false),equals(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@Decimals)')),'0'))"
               },
               "runAfter": {
-                "Schema_SenderParticipant": [
+                "Schema_SenderParticipantId": [
                   "Succeeded"
                 ]
               }
@@ -129,7 +129,7 @@
                 "where": "@and(equals(item()?['InternalName'],'TargetGroup'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Required'],false),equals(replace(replace(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@List)'))),'{',''),'}',''),'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'))"
               },
               "runAfter": {
-                "Schema_RecipientParticipant": [
+                "Schema_RecipientParticipantId": [
                   "Succeeded"
                 ]
               }
@@ -208,7 +208,7 @@
             },
             "Require_request_schema": {
               "type": "If",
-              "expression": "@and(and(not(equals(body('Read_request_fields')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_request_fields')?['d']?['results'],json('[]'))),5000),empty(body('Read_request_fields')?['d']?['__next'])),equals(body('Read_request_list')?['d']?['Id'],'3d17485d-1dac-41f0-a1af-24e45daa4567'),equals(body('Read_request_list')?['d']?['BaseTemplate'],100),equals(length(body('Schema_SenderParticipant')),1),equals(length(body('Schema_RecipientParticipant')),1),equals(length(body('Schema_TargetGroup')),1),equals(length(body('Schema_RequestType')),1),equals(length(body('Schema_Status')),1),equals(length(body('Schema_SendOperationKey')),1),equals(length(body('Schema_ConnectionKey')),1),equals(length(body('Schema_WinningOperationKey')),1),equals(length(body('Schema_OperationComplete')),1))",
+              "expression": "@and(and(not(equals(body('Read_request_fields')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_request_fields')?['d']?['results'],json('[]'))),5000),empty(body('Read_request_fields')?['d']?['__next'])),equals(body('Read_request_list')?['d']?['Id'],'3d17485d-1dac-41f0-a1af-24e45daa4567'),equals(body('Read_request_list')?['d']?['BaseTemplate'],100),equals(length(body('Schema_SenderParticipantId')),1),equals(length(body('Schema_RecipientParticipantId')),1),equals(length(body('Schema_TargetGroup')),1),equals(length(body('Schema_RequestType')),1),equals(length(body('Schema_Status')),1),equals(length(body('Schema_SendOperationKey')),1),equals(length(body('Schema_ConnectionKey')),1),equals(length(body('Schema_WinningOperationKey')),1),equals(length(body('Schema_OperationComplete')),1))",
               "actions": {},
               "else": {
                 "actions": {
@@ -250,7 +250,7 @@
             "kind": "TandemRequestSchemaPreflight",
             "schemaVersion": 1,
             "sourceTicket": 10,
-            "packageBuildId": "f7fd078d-740a-4d68-a8fe-31ca2abc9e54",
+            "packageBuildId": "dd0c91b6-13b4-41e0-affd-ebafeeb87404",
             "runReference": "@workflow()?['run']?['name']",
             "readOnly": true,
             "itemRowsRead": 0,
@@ -260,8 +260,8 @@
             "requestList": "@body('Read_request_list')?['d']",
             "fields": "@coalesce(body('Read_request_fields')?['d']?['results'],json('[]'))",
             "expectedFields": {
-              "SenderParticipant": "Lookup",
-              "RecipientParticipant": "Lookup",
+              "SenderParticipantId": "Number",
+              "RecipientParticipantId": "Number",
               "TargetGroup": "Lookup",
               "RequestType": "Choice",
               "Status": "Choice",
