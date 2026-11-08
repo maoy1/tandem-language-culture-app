@@ -206,6 +206,8 @@ inventing an expected channel, field allowlist or migration-confirmation rule.
 | ACC-005 | New ordinary user opens published app through intended audience route | Self-onboarding works without per-user manual grants; verify data and flow access separately |
 | OPS-001 | Normal registration/search/request/join/leave | No routine organiser approvals, matching or manual count/permission repair |
 | OPS-002 | Supported test of rejected input, denied access or transient flow failure | Clear safe error; no raw credentials/data leak, false success or automatic paid fallback |
+| OPS-003 | Import generated disposable TandemImportProbe ZIP as Create as new, then manually run | Separate flow, no working-flow update/connector dependency; success true and message IMPORT_PROBE_OK. Check import permission/policy first. This proves only the connector-free package path; results recorded separately in TEST_RUNS.md |
+| OPS-004 | Import TandemSharePointImportProbe as new, map an existing SharePoint connection, turn on and manually run | GET reads site technical ID only; response success true and SHAREPOINT_IMPORT_PROBE_OK. No list/record writes. Owner-only connection probe, not participant authorization or full deployment acceptance |
 | NOT-001 | Run selected request-notification events after #49 decision | Correct channel/recipient/link and safe retry/failure handling; REQUIREMENT PENDING until matrix agreed |
 | MIG-001 | Final-phase dry run of actual source mappings | Exception report for ambiguous/missing/duplicate data; no silent dropping or guessing; DEFERRED to #48 |
 | MIG-002 | Repeat accepted migration; reconcile profiles/groups/memberships | No duplicates, preserved source, correct links/counts and explicit confirmation state; DEFERRED to #48 |

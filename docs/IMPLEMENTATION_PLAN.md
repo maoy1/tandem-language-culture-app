@@ -4,6 +4,59 @@ The approved design is CURRENT_DESIGN.md. This plan reflects the owner's
 annotations to Combined Requirements v0.2. GitHub tickets hold implementation
 acceptance and status; planning completion does not imply deployment.
 
+## Current focus - disposable import experiment (#28)
+
+Owner approved this bounded authoring-method experiment on 2026-11-08 after
+pausing the #11 app-controls batch. No team assignments or app-control steps
+have been confirmed. #57 is merged; backend configuration review is complete,
+not runtime acceptance. Functional feature construction stays paused during
+this probe.
+
+Prepared locally: artifacts/import_probe/TandemImportProbe.zip plus readable
+definition/review JSON, built by scripts/power_automate/build_import_probe.py.
+The package follows the observed legacy export envelope but is generated from
+scratch: fresh IDs, one New flow resource, empty connector maps/references,
+Power Apps (V2) with no inputs, Compose + Response only. No SharePoint calls,
+data/notification actions, schedule or original working-flow identifiers.
+
+Local checks: 26 pytest passed (4 probe safety checks + 22 existing checks),
+ZIP CRC/JSON/manifest checked, no original export identifiers/site/account
+bindings copied. Initial restricted pytest run had 4 temporary-folder setup
+errors; the permitted rerun passed all 26. This is not tenant import proof.
+
+Owner-confirmed OPS-003 PASS (2026-11-08): package imported, initially off;
+owner turned it on and supplied response statusCode 200, success true,
+message IMPORT_PROBE_OK. This establishes connector-free import/run for this
+account/environment, not a general role/policy audit. Keep the original
+preparation evidence in TEST_RUNS.md. Owner chose to stay with legacy packages;
+no Dataverse migration, new environment or licence dependency.
+
+OPS-004 also passed (owner-reported import and test). Prepared
+artifacts/import_probe/TandemSharePointImportProbe.zip and readable definition/
+review JSON. Import as NEW TandemSharePointImportProbe and bind the existing
+SharePoint connection once. It uses the standard SharePoint HTTP action already
+exercised by the owner; one GET _api/web?$select=Id reads only site identity.
+No lists, business records, writes, notifications or schedules. The disposable
+probe uses an embedded owner connection; it is not participant caller binding.
+Owner confirmed import and test succeeded using the selected existing connection;
+raw action/response output was not supplied. Stop/report a
+blocked connection or permission/licence prompt; do not change access/settings.
+
+OPS-004 steps:
+1. Import package as Create as new; select the existing SharePoint connection.
+2. Turn on the new probe if imported off; Test > Manually > Run flow.
+3. Read_site_identity and Response should succeed; response success true,
+   message SHAREPOINT_IMPORT_PROBE_OK. Record actual result/error.
+4. Only after this passes, choose a small remaining business-flow package.
+   Do not replace the existing response flow or claim full #28 acceptance.
+
+Local checks: 30 pytest passed; ZIP CRC, JSON and connector-resource mappings
+checked. Owner confirms OPS-004 import/test succeeded. No business-feature
+rollout or team handoff yet. Review/merge this #28 experiment batch before
+resuming #11 app controls and selecting the next small business-flow package.
+Keep #28 open for the remaining reproducibility acceptance. Official guidance:
+https://learn.microsoft.com/en-us/power-automate/export-import-flow-non-solution
+
 ## Working process
 
 Owner direction (2026-10-31): build the end-to-end app/flow path first and resume
@@ -158,7 +211,7 @@ Detailed tests remain deferred until the integrated core is built, with missing
 identity/state/compatibility/reliability behavior tracked as implementation,
 not merely unexecuted tests. See TEST_RUNS.md for the evidence checkpoint.
 
-## Current focus - bounded #11 backend build
+## Completed #11 backend configuration batch
 
 Latest owner checkpoint (recorded 2026-11-07): cleanup membership Left writes,
 unfinished-group Ended write and feedback are owner-confirmed saved. Blocks 1
@@ -215,9 +268,9 @@ findings: Decline stop flag false, final Choice Value, ParticipantId input label
 Structural checks: 77 actions, depth 6, valid action/sibling references, five
 versioned MERGEs and one response. The sanitized reference explicitly records
 the action overlay and retains the source-export fingerprints/history.
-PR #57 is ready for owner review as partial configuration delivery; it does
-not close #11/#12/#47 or establish end-to-end behavior. Pause before app controls
-until the owner has reviewed/merged this backend batch.
+PR #57 is merged as partial configuration delivery; it does not close
+#11/#12/#47 or establish end-to-end behavior. App controls are paused for the
+owner-approved import experiment described at the top of this plan.
 
 Do not add My groups, notification configuration, group-join features or a new
 architecture to this backend batch.
@@ -258,6 +311,7 @@ evidence in TEST_RUNS.md.
 - #54: merged partial discovery reference/app build; #7/#9 remain open.
 - #55: merged tracking alignment.
 - #56: merged partial #10 request history/cancellation record; #10 remains open.
+- #57: merged response/group backend reference; #11/#12/#47 remain open.
 
 One ticket/branch/PR per delivery batch; finish/review the current PR before
 starting the next implementation batch. Keep incomplete tickets open.

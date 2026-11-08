@@ -1,0 +1,41 @@
+{
+  "caseId": "OPS-003",
+  "flowName": "TandemImportProbe",
+  "package": "TandemImportProbe.zip",
+  "sha256": "3471027d66ad42d733374af5bdc21e769bf067567244ff8e727e46b613bc89f2",
+  "reviewStatus": "tenant_import_and_run_pass_owner_reported",
+  "purpose": "Verify a generated non-solution package can be imported as a new disposable flow.",
+  "localChecks": {
+    "pytestPassed": 26,
+    "newSafetyTests": 4,
+    "archiveCrc": "valid",
+    "jsonEntries": 5,
+    "flowResources": 1,
+    "actions": 2,
+    "maximumActionDepth": 1,
+    "connectorDependencies": 0,
+    "existingExportIdentifiersCopied": false,
+    "scheduledTrigger": false
+  },
+  "expectedRunResult": {
+    "success": true,
+    "message": "IMPORT_PROBE_OK"
+  },
+  "tenantPrerequisites": {
+    "legacyPackageImportAvailable": "observed by owner successful import",
+    "environmentMakerPermission": "effective import capability demonstrated for this account; role assignment not inspected",
+    "nonSolutionImportAllowedByPolicy": "import succeeded in this environment; policy configuration not inspected"
+  },
+  "importInstruction": "Create as new only; target display name TandemImportProbe. Do not select Update or an existing flow.",
+  "tenantImportResult": "PASS - owner reports import succeeded",
+  "limitations": "Connector-free import and run only. No proof of SharePoint connection mapping, generated complex flows, ordinary-user permissions or full deployment reproducibility.",
+  "documentation": "https://learn.microsoft.com/en-us/power-automate/export-import-flow-non-solution",
+  "tenantRunResult": {
+    "result": "PASS - owner supplied response action output",
+    "statusCode": "200",
+    "body": {
+      "success": true,
+      "message": "IMPORT_PROBE_OK"
+    }
+  }
+}

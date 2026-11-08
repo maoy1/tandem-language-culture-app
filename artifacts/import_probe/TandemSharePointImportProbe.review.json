@@ -1,0 +1,36 @@
+{
+  "caseId": "OPS-004",
+  "flowName": "TandemSharePointImportProbe",
+  "package": "TandemSharePointImportProbe.zip",
+  "sha256": "9c8aa68e542bec5d2224c25fa16ab01674382cc9bf687262f7883e9038db1de3",
+  "reviewStatus": "tenant_import_and_run_pass_owner_reported",
+  "localChecks": {
+    "pytestPassed": 30,
+    "archiveCrc": "valid",
+    "jsonEntries": 5,
+    "actions": 2,
+    "flowResources": 1,
+    "connectionResources": 1
+  },
+  "operation": {
+    "connector": "SharePoint",
+    "operationId": "HttpRequest",
+    "method": "GET",
+    "uri": "_api/web?$select=Id",
+    "purpose": "Read site technical ID only; no lists, participant records, writes, notifications or schedules"
+  },
+  "connectionBinding": "Select an existing permitted SharePoint connection on import. Embedded source is for owner-only disposable test, not participant caller authorization. No credentials or original connection identifiers embedded.",
+  "prerequisites": {
+    "sharepointHttpActionAndOwnerConnection": "Owner confirms the imported SharePoint probe test succeeded using the selected existing connection",
+    "legacyImport": "owner confirmed for connector-free probe",
+    "permissionOrLicenceChanges": "none proposed; stop if blocked or prompted for unavailable access"
+  },
+  "expectedRunResult": {
+    "success": true,
+    "message": "SHAREPOINT_IMPORT_PROBE_OK"
+  },
+  "tenantImportResult": "PASS - owner reports import succeeded",
+  "tenantRunResult": "PASS - owner reports test succeeded; raw action/response output not supplied",
+  "limitations": "Does not prove participant access, Power Apps caller binding, list-field mapping, writes, complex flow packaging or full deployment reproducibility.",
+  "evidenceScope": "Owner-reported import and manual test success only; expected response body was not independently inspected."
+}

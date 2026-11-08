@@ -46,6 +46,34 @@ agreed SharePoint schema, participant flow, and removed design elements.
 See the [backlog alignment notes](docs/BACKLOG_ALIGNMENT.md) for the written
 alignment of the existing GitHub tickets with the current design.
 
+## Disposable flow-package import probe
+
+Current authoring-method experiment (#28): the prepared
+[probe ZIP](artifacts/import_probe/TandemImportProbe.zip) contains only a
+Power Apps (V2) trigger and two built-in actions, with no connectors/data calls.
+Import **as new** named **TandemImportProbe**, then manually test. Expected:
+success true, message IMPORT_PROBE_OK. It must not update a working flow.
+
+Owner confirmed the connector-free import and run: success true and message
+IMPORT_PROBE_OK (OPS-003). The probe imported off and was turned on before testing.
+
+Also passed: [read-only SharePoint probe ZIP](artifacts/import_probe/TandemSharePointImportProbe.zip)
+(OPS-004). Import as NEW **TandemSharePointImportProbe** and select the existing
+SharePoint connection. Turn on if needed, then manually run. Expected: success
+true, message SHAREPOINT_IMPORT_PROBE_OK. One GET reads site technical ID only;
+no list/record operations. Embedded owner connection is only for this disposable
+experiment, not participant authorization. Owner confirmed import and test
+succeeded (OPS-004); raw response output was not supplied. Stop on access/licence
+prompts when reproducing in another environment.
+
+The optional local builder is scripts/power_automate/build_import_probe.py;
+--sharepoint-site with --output selects the second probe. Python is development
+tooling only. 30 local tests pass. Owner chose legacy packages for now, keeping
+SharePoint data and existing entitlements. Neither probe establishes complex-flow
+import, ordinary-participant access or full reproducibility. Generated ZIPs are
+experimental, not officially certified ALM packages. See the current
+[implementation plan](docs/IMPLEMENTATION_PLAN.md).
+
 ## Local Python environment
 
 The repository uses the ignored `.venv` directory for local Python tools:
