@@ -320,3 +320,22 @@ def test_no_setvariable_self_reference():
             if a['type'] == 'SetVariable': assert "variables('" + a['inputs']['name'] + "')" not in str(a['inputs']['value'])
             walk(a.get('actions', {})); walk(a.get('else', {}).get('actions', {}))
     walk(flow.build_actions(source(), PEOPLE, GROUPS, 'fixture'))
+
+
+@pytest.mark.parametrize('field', ['SenderParticipant', 'RecipientParticipant', 'TargetGroup', 'RequestType', 'Status', 'WinningOperationKey', 'OperationComplete'])
+def test_benign_request_indexes_are_allowed(field):
+    f = Fake(); next(x for x in f.fields['requests'] if x['InternalName'] == field)['Indexed'] = True
+    r = execute(f)
+    assert r.response['resultcode'] == 'OK' and len(public(r)) == 2
+
+
+@pytest.mark.parametrize('field,required', [('RequestType', False), ('Status', False), ('WinningOperationKey', True), ('OperationComplete', True)])
+def test_required_request_flags_remain_exact(field, required):
+    f = Fake(); next(x for x in f.fields['requests'] if x['InternalName'] == field)['Required'] = required
+    failure(execute(f), 'REQUEST_SCHEMA_UNVERIFIED')
+
+
+@pytest.mark.parametrize('flag', ['Hidden', 'ReadOnlyField'])
+def test_request_fields_must_be_visible_and_writable_as_shared_contract(flag):
+    f = Fake(); next(x for x in f.fields['requests'] if x['InternalName'] == 'Status')[flag] = True
+    failure(execute(f), 'REQUEST_SCHEMA_UNVERIFIED')

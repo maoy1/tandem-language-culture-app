@@ -67,75 +67,86 @@
   },
   "runtimeMetadataGate": {
     "listIdentity": "Expected list GUID and BaseTemplate 100 each run.",
-    "fields": "Complete bounded fields response; exact InternalName/type, required/indexed/unique flags below; SchemaXml XPath exact Lookup List target and exact Choice set/cardinality. Mismatch/missing/renamed/malformed = REQUEST_SCHEMA_UNVERIFIED, no guessed writes or automatic schema changes.",
+    "fields": "Complete bounded fields response; exact InternalName/type, required/unique flags and Hidden=false/ReadOnlyField=false on Requests; require Indexed=true for unique key fields, permit extra benign indexes on other request fields. SchemaXml XPath exact Lookup List target and exact Choice set/cardinality. Mismatch/missing/renamed/malformed = REQUEST_SCHEMA_UNVERIFIED; no guessed writes or automatic schema changes.",
     "expected": {
       "requests": {
         "SenderParticipant": {
           "TypeAsString": "Lookup",
           "Required": true,
           "EnforceUniqueValues": false,
-          "Indexed": false,
-          "LookupList": "fd3adf46-f81d-4a7b-a80c-567fde0175dc"
+          "LookupList": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
+          "Hidden": false,
+          "ReadOnlyField": false
         },
         "RecipientParticipant": {
           "TypeAsString": "Lookup",
           "Required": false,
           "EnforceUniqueValues": false,
-          "Indexed": false,
-          "LookupList": "fd3adf46-f81d-4a7b-a80c-567fde0175dc"
+          "LookupList": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
+          "Hidden": false,
+          "ReadOnlyField": false
         },
         "TargetGroup": {
           "TypeAsString": "Lookup",
           "Required": false,
           "EnforceUniqueValues": false,
-          "Indexed": false,
-          "LookupList": "4bf1b37f-edce-40c5-8fa0-36543a2d0cd6"
+          "LookupList": "4bf1b37f-edce-40c5-8fa0-36543a2d0cd6",
+          "Hidden": false,
+          "ReadOnlyField": false
         },
         "RequestType": {
           "TypeAsString": "Choice",
           "Required": true,
           "EnforceUniqueValues": false,
-          "Indexed": false,
           "Choices": [
             "Personal",
             "Group"
-          ]
+          ],
+          "Hidden": false,
+          "ReadOnlyField": false
         },
         "Status": {
           "TypeAsString": "Choice",
           "Required": true,
           "EnforceUniqueValues": false,
-          "Indexed": false,
           "Choices": [
             "Pending",
             "Accepted",
             "Declined",
             "Cancelled"
-          ]
+          ],
+          "Hidden": false,
+          "ReadOnlyField": false
         },
         "SendOperationKey": {
           "TypeAsString": "Text",
           "Required": true,
           "EnforceUniqueValues": true,
-          "Indexed": true
+          "Indexed": true,
+          "Hidden": false,
+          "ReadOnlyField": false
         },
         "ConnectionKey": {
           "TypeAsString": "Text",
           "Required": true,
           "EnforceUniqueValues": true,
-          "Indexed": true
+          "Indexed": true,
+          "Hidden": false,
+          "ReadOnlyField": false
         },
         "WinningOperationKey": {
           "TypeAsString": "Text",
           "Required": false,
           "EnforceUniqueValues": false,
-          "Indexed": false
+          "Hidden": false,
+          "ReadOnlyField": false
         },
         "OperationComplete": {
           "TypeAsString": "Boolean",
           "Required": false,
           "EnforceUniqueValues": false,
-          "Indexed": false
+          "Hidden": false,
+          "ReadOnlyField": false
         }
       },
       "profiles": {
@@ -259,5 +270,8 @@
     "Action buttons call #63/#11/#65 with their own stable intent contracts and refresh this reader after outcome.",
     "Owner import/smoke is still required. #39 audience/ordinary participant access/privacy remain postponed."
   ],
-  "nativeStatus": "NOT_IMPORTED_NOT_TESTED; neither native runtime nor privacy certified."
+  "nativeStatus": "NOT_IMPORTED_NOT_TESTED; neither native runtime nor privacy certified.",
+  "packageVersion": "v2",
+  "packageBuildId": "cc596793-1183-473f-a679-2eac64893eec",
+  "packageSha256": "c7bd5c29ab23822aba43c6b8a25239432c6a2ae5382800801ec3fce9b0bb75ef"
 }

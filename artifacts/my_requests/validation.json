@@ -1,9 +1,9 @@
 {
   "sourceTicket": 62,
-  "packageBuildId": "00a00014-7b10-4a25-9a6c-9fb46ea8eeee",
-  "packageSha256": "bde0689ded2d474be338f7aa71752f04b7b9a243949e33fc8c7323fba6c23705",
-  "localNewTests": 88,
-  "fullWorktreeSuite": 330,
+  "packageBuildId": "cc596793-1183-473f-a679-2eac64893eec",
+  "packageSha256": "c7bd5c29ab23822aba43c6b8a25239432c6a2ae5382800801ec3fce9b0bb75ef",
+  "localNewTests": 101,
+  "fullWorktreeSuite": 343,
   "testsResult": "PASS",
   "command": "C:/projects/small_projects/tandem-language-culture-app/.venv/Scripts/python.exe -X utf8 -m pytest -q",
   "testsCwd": "Dedicated #62 managed worktree",
@@ -27,5 +27,7 @@
     "Full-list bounds and conservative malformed/legacy gates can block all rows.",
     "Request required/nullable flags and exact vocabulary are proposed until report.",
     "Compatibility/guard/CAS/action runtime belongs to action flows; availability/actions are hints."
-  ]
+  ],
+  "packageVersion": "v2",
+  "reviewFix": "Permit extra benign Requests indexes while retaining required true key indexes/uniqueness, exact required flags, and Hidden=false/ReadOnlyField=false."
 }

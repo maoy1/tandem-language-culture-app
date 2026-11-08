@@ -2,9 +2,9 @@
 
 Scope: read-only own sent/personal received/current operational active-group incoming requests and Pending/terminal history. No leader, production deployment, schema writes, membership/group/notification changes or access work.
 
-Exact version: artifacts/my_requests/TandemMyRequests-v1.zip
-Build ID: 00a00014-7b10-4a25-9a6c-9fb46ea8eeee
-ZIP SHA256: bde0689ded2d474be338f7aa71752f04b7b9a243949e33fc8c7323fba6c23705
+Exact version: artifacts/my_requests/TandemMyRequests-v2.zip
+Build ID: cc596793-1183-473f-a679-2eac64893eec
+ZIP SHA256: c7bd5c29ab23822aba43c6b8a25239432c6a2ae5382800801ec3fce9b0bb75ef
 Source export: TandemMyRequests_20261108220317.zip
 Source SHA256: 34befb29df105e601ee32dfaf321c307938ed15a82884f1c2c1df794958e574f
 Raw export is not committed. Original EXACT number ParticipantId trigger, Invoker Raw authentication, site and connection metadata are preserved; connectionName is the import-select-existing placeholder. Existing requestsjson/errormessage retained. Reference equality to server-resolved own participant is mandatory. Original request references/status/direction retained; system created omitted from approved minimal public shape. Added type/group references, processing/completed, availability and action hints. No display-name resolution is needed.
@@ -35,4 +35,6 @@ Cleanup: remove only the newly imported preview flow after review if disposable;
 
 Parent integration: review/cherry-pick this #62 commit; publish this draft INLINE under #62; update shared design/plan/evidence yourself. Bind #67 to the new flow, preserve number ParticipantId call, parse requestsjson only on OK, display sanitized unavailable/processing states, and refresh after consuming action-flow outcomes. Additive outputs require app refresh/rebind; full screen layout remains #67. No shared utility dependency or shared-doc edits are included. Do not push/create PR or mark ready/closed without parent review and scoped native acceptance.
 
-Local validation: 88 new #62 emitted-graph tests PASS; full worktree suite 330 PASS (9.67s). Exact delivered ZIP/readable definition/original trigger/auth/site/connection metadata (except import connectionName), SHA hashes, Create-as-new envelope, unique names and 223/depth4 were independently checked. See validation.json. Native import/run and ordinary-user/privacy remain NOT RUN.
+Local validation: 101 new #62 emitted-graph tests PASS; full worktree suite 343 PASS (11.00s). Exact delivered ZIP/readable definition/original trigger/auth/site/connection metadata (except import connectionName), SHA hashes, Create-as-new envelope, unique names and 223/depth4 were independently checked. See validation.json. Native import/run and ordinary-user/privacy remain NOT RUN.
+
+Focused parent review fix in v2: Requests non-key fields accept extra benign indexes; no Indexed=false equality is enforced there. SendOperationKey/ConnectionKey still require Required=true, unique=true and Indexed=true. RequestType/Status remain Required=true; WinningOperationKey/OperationComplete remain Required=false. All requested custom request fields require Hidden=false and ReadOnlyField=false. Added SenderParticipant Indexed=true success and equivalent cases for six other non-key fields, required-flag rejection cases and Hidden/ReadOnly rejection cases. v1 is superseded and removed from the working artifact folder. No shared-document edits.

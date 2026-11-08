@@ -1,6 +1,6 @@
 {
-  "name": "6d947b8c-29a1-413a-81c8-4d013a322662",
-  "id": "/providers/Microsoft.Flow/flows/6d947b8c-29a1-413a-81c8-4d013a322662",
+  "name": "7de2f49b-24d8-4d46-878e-39723337abe3",
+  "id": "/providers/Microsoft.Flow/flows/7de2f49b-24d8-4d46-878e-39723337abe3",
   "type": "Microsoft.Flow/flows",
   "properties": {
     "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
@@ -234,7 +234,7 @@
                 "parameters": {
                   "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
                   "parameters/method": "GET",
-                  "parameters/uri": "_api/web/lists(guid'3d17485d-1dac-41f0-a1af-24e45daa4567')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,SchemaXml&$top=501",
+                  "parameters/uri": "_api/web/lists(guid'3d17485d-1dac-41f0-a1af-24e45daa4567')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,Hidden,ReadOnlyField,SchemaXml&$top=501",
                   "parameters/headers": {
                     "Accept": "application/json;odata=verbose"
                   }
@@ -285,7 +285,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_requests_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'SenderParticipant'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],false),equals(toLower(replace(replace(first(union(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/@List'),createArray(''))),'{',''),'}','')),'fd3adf46-f81d-4a7b-a80c-567fde0175dc'))"
+                "where": "@and(equals(item()?['InternalName'],'SenderParticipant'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(toLower(replace(replace(first(union(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/@List'),createArray(''))),'{',''),'}','')),'fd3adf46-f81d-4a7b-a80c-567fde0175dc'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
               },
               "runAfter": {
                 "requests_metadata_complete": [
@@ -328,7 +328,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_requests_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'RecipientParticipant'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],false),equals(toLower(replace(replace(first(union(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/@List'),createArray(''))),'{',''),'}','')),'fd3adf46-f81d-4a7b-a80c-567fde0175dc'))"
+                "where": "@and(equals(item()?['InternalName'],'RecipientParticipant'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(toLower(replace(replace(first(union(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/@List'),createArray(''))),'{',''),'}','')),'fd3adf46-f81d-4a7b-a80c-567fde0175dc'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
               },
               "runAfter": {
                 "requests_field_SenderParticipant_gate": [
@@ -371,7 +371,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_requests_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'TargetGroup'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],false),equals(toLower(replace(replace(first(union(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/@List'),createArray(''))),'{',''),'}','')),'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'))"
+                "where": "@and(equals(item()?['InternalName'],'TargetGroup'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(toLower(replace(replace(first(union(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/@List'),createArray(''))),'{',''),'}','')),'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
               },
               "runAfter": {
                 "requests_field_RecipientParticipant_gate": [
@@ -414,7 +414,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_requests_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'RequestType'),equals(item()?['TypeAsString'],'Choice'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],false),equals(length(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()')),2),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Personal'),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Group'))"
+                "where": "@and(equals(item()?['InternalName'],'RequestType'),equals(item()?['TypeAsString'],'Choice'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(length(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()')),2),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Personal'),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Group'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
               },
               "runAfter": {
                 "requests_field_TargetGroup_gate": [
@@ -457,7 +457,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_requests_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'Status'),equals(item()?['TypeAsString'],'Choice'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],false),equals(length(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()')),4),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Pending'),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Accepted'),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Declined'),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Cancelled'))"
+                "where": "@and(equals(item()?['InternalName'],'Status'),equals(item()?['TypeAsString'],'Choice'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(length(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()')),4),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Pending'),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Accepted'),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Declined'),contains(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/CHOICES/CHOICE/text()'),'Cancelled'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
               },
               "runAfter": {
                 "requests_field_RequestType_gate": [
@@ -500,7 +500,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_requests_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'SendOperationKey'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],true),equals(item()?['Indexed'],true))"
+                "where": "@and(equals(item()?['InternalName'],'SendOperationKey'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],true),equals(item()?['Indexed'],true),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
               },
               "runAfter": {
                 "requests_field_Status_gate": [
@@ -543,7 +543,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_requests_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'ConnectionKey'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],true),equals(item()?['Indexed'],true))"
+                "where": "@and(equals(item()?['InternalName'],'ConnectionKey'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],true),equals(item()?['Indexed'],true),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
               },
               "runAfter": {
                 "requests_field_SendOperationKey_gate": [
@@ -586,7 +586,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_requests_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'WinningOperationKey'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],false))"
+                "where": "@and(equals(item()?['InternalName'],'WinningOperationKey'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
               },
               "runAfter": {
                 "requests_field_ConnectionKey_gate": [
@@ -629,7 +629,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_requests_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'OperationComplete'),equals(item()?['TypeAsString'],'Boolean'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],false))"
+                "where": "@and(equals(item()?['InternalName'],'OperationComplete'),equals(item()?['TypeAsString'],'Boolean'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
               },
               "runAfter": {
                 "requests_field_WinningOperationKey_gate": [
@@ -737,7 +737,7 @@
                 "parameters": {
                   "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
                   "parameters/method": "GET",
-                  "parameters/uri": "_api/web/lists(guid'fd3adf46-f81d-4a7b-a80c-567fde0175dc')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,SchemaXml&$top=501",
+                  "parameters/uri": "_api/web/lists(guid'fd3adf46-f81d-4a7b-a80c-567fde0175dc')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,Hidden,ReadOnlyField,SchemaXml&$top=501",
                   "parameters/headers": {
                     "Accept": "application/json;odata=verbose"
                   }
@@ -896,7 +896,7 @@
                 "parameters": {
                   "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
                   "parameters/method": "GET",
-                  "parameters/uri": "_api/web/lists(guid'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,SchemaXml&$top=501",
+                  "parameters/uri": "_api/web/lists(guid'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,Hidden,ReadOnlyField,SchemaXml&$top=501",
                   "parameters/headers": {
                     "Accept": "application/json;odata=verbose"
                   }
@@ -1227,7 +1227,7 @@
                 "parameters": {
                   "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
                   "parameters/method": "GET",
-                  "parameters/uri": "_api/web/lists(guid'db611ec3-7fa3-477a-878e-effbbb195cb8')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,SchemaXml&$top=501",
+                  "parameters/uri": "_api/web/lists(guid'db611ec3-7fa3-477a-878e-effbbb195cb8')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,Hidden,ReadOnlyField,SchemaXml&$top=501",
                   "parameters/headers": {
                     "Accept": "application/json;odata=verbose"
                   }

@@ -42,7 +42,7 @@ def field_contracts(people, groups):
     g = groups['lists']['groups']['listId']
     def field(t, required=False, unique=False, indexed=False, **extra):
         return {'TypeAsString': t, 'Required': required, 'EnforceUniqueValues': unique, 'Indexed': indexed, **extra}
-    return {
+    contracts = {
         'requests': {
             'SenderParticipant': field('Lookup', True, LookupList=p),
             'RecipientParticipant': field('Lookup', False, LookupList=p),
@@ -63,6 +63,12 @@ def field_contracts(people, groups):
                         for name, v in groups['lists']['members']['fields'].items()
                         if name in ['Group', 'Participant', 'MembershipStatus', 'MembershipKey', 'LeftAt']},
     }
+    # Extra indexes do not change request semantics; retain positive key requirements.
+    for expected in contracts['requests'].values():
+        if expected.get('Indexed') is False:
+            del expected['Indexed']
+        expected.update(Hidden=False, ReadOnlyField=False)
+    return contracts
 
 
 def read_source(path):
@@ -120,7 +126,7 @@ def build_actions(original, people, groups, build_id):
         s[identity] = http(base(role) + '?$select=Id,BaseTemplate', prev)
         verified = role + '_list_verified'
         s[verified] = gate(verified, "and(equals(toLower(body('" + identity + "')?['d']?['Id']),'" + targets[role] + "'),equals(body('" + identity + "')?['d']?['BaseTemplate'],100))", 'REQUEST_SCHEMA_UNVERIFIED', identity)
-        s[read] = http(base(role) + '/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,SchemaXml&$top=501', verified)
+        s[read] = http(base(role) + '/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,Hidden,ReadOnlyField,SchemaXml&$top=501', verified)
         bounded = role + '_metadata_complete'
         s[bounded] = gate(bounded, complete(read, 500), 'REQUEST_SCHEMA_UNVERIFIED', read); prev = bounded
         for name, expected in fields.items():
