@@ -1,0 +1,17 @@
+{
+  "sourceTicket": 66,
+  "date": "2026-11-08",
+  "flow": "TandemSchemaSetup v2",
+  "result": "PASS",
+  "runReference": null,
+  "runReferenceLimitation": "Owner performed a new repeat; its reference was not supplied. Do not attribute this screenshot to earlier run references.",
+  "ownerReport": {
+    "allFiveSchemaWritesSkipped": true,
+    "setupVerified": true,
+    "result": "SETUP_VERIFIED"
+  },
+  "screenshot": "repeat-skipped.png",
+  "screenshotSHA256": "2bb78054745255ab5735a59f77b6f0ddee85f02dcd046e923d208a3bf37ddd10",
+  "screenshotObserved": "Create ParticipationStatus and Create OpenToConnections grey/skipped; Apply setup succeeded. Owner explicitly confirms all five writes skipped.",
+  "earlierScreenshotResolved": "Owner identified earlier green-create screenshot as original apply run 08584074626043544351187724959CU01; expected first-apply creation, not a repeat failure."
+}

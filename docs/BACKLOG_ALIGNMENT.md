@@ -30,9 +30,9 @@ implementation as activity or mixed several flows in one implementation ticket.
 
 **Activity is independent of partial implementation:** In progress means actively
 being worked now, at most one non-overview ticket. Queued partial work is Planned
-with evidence retained. After this tracking batch, no issue is actively In
-progress while PR #60 awaits review; a selected next ticket becomes active only
-when implementation begins. Ready stages remain real handovers. Superseded is
+with evidence retained. PR #60 is merged. #66 delivery is ready for review after
+owner setup/readback and final schema audit passed. Owner confirmed all five writes skipped on a new repeat; own schema tests passed.
+Only PR #69 review/merge remains for #66. Ready stages remain real handovers. Superseded is
 closed as not planned, not Done. Closed historical #1-#4/#46 remain Done.
 
 **48 issues total:** 41 focused open tickets, 5 Done, 2 Superseded (#22/#24).
@@ -96,7 +96,7 @@ evidence remain available; no employee payloads/raw exports are copied here.
 | [#63](https://github.com/maoy1/tandem-language-culture-app/issues/63) | Flow | Planned | One sender-cancellation flow for personal and group requests; no history screen ownership. |
 | [#64](https://github.com/maoy1/tandem-language-culture-app/issues/64) | Flow | Planned | One reader for own operational groups/members/counts/free slots and membership-derived profile status. |
 | [#65](https://github.com/maoy1/tandem-language-culture-app/issues/65) | Flow | Planned | One active-member Accept/Decline flow for an existing-group join; new-group personal acceptance remains #11. |
-| [#66](https://github.com/maoy1/tandem-language-culture-app/issues/66) | Shared technical | Planned | One-time actual field/catalogue mapping and required delta for #5/#6/#61; no app layout or production flow ownership. |
+| [#66](https://github.com/maoy1/tandem-language-culture-app/issues/66) | Shared technical | Ready for review | One-time actual field/catalogue mapping and required delta for #5/#6/#61; no app layout or production flow ownership. |
 | [#67](https://github.com/maoy1/tandem-language-culture-app/issues/67) | App | Planned | Sent/Received/group incoming screen, display/dialogs/navigation only; each flow remains independently owned. |
 | [#68](https://github.com/maoy1/tandem-language-culture-app/issues/68) | App | Planned | Own-group display, membership-derived status and group-control UI only; reader/update/leave flows separately owned. |
 

@@ -815,6 +815,37 @@ the app/flow versions separately.
 - Existing local suite rerun: 30 passed (configuration/package tests only).
 - This metadata PASS does not finish #45's MVP overview or any implementation.
 
+### SCHEMA-20261108-01 - #66 owner schema audit and setup-v2
+
+- Date: 2026-11-08, Europe/Berlin; exact local start times not supplied.
+- Tester: owner, existing SharePoint connection; agent reviewed pasted outputs.
+- No ordinary-participant account, new licence/role grant or participant row fixture.
+- Audit build `1fd35100-e381-48b7-9d53-aa927d1131ed`, 73 actions / depth 5.
+- Setup-v2 build `1080ab9d-fec5-4c42-92ef-4988bb36390f`, 47 actions / depth 4.
+- Full raw participant metadata report remains in the owner chat; derived technical
+  mappings/counts only in config/tenant_schema_mapping.json. No employee rows.
+
+| Case/variant | Actual result | Status | Run reference/evidence |
+|---|---|---|---|
+| SCHEMA-001 initial metadata collection | collectionComplete true, errors []; 4 lists, no truncation; 28 language / 85 culture / 18 time-zone active values | PASS, inspection variant | 08584074638260638544180416987CU28 |
+| SCHEMA-001 initial alignment | Account unique/required/indexed, four optional multi-lookups and optional single time zone correct; two availability fields missing, catalogue requiredness/time-zone key settings needed delta | NEEDS CHANGE, then bounded correction below | Derived tenant mapping; preserve IANA_ID display/legacy choices |
+| Setup original import | InvalidConcurrencyConfiguration: Request trigger concurrency plus synchronous Response | FAIL, superseded by v2 | Failed build 850d5ca8-b2f3-491c-bed4-9c77996899ca; no execution/write claim |
+| SCHEMA-002 v2 dry preview | applyRequested false; preflightReady true; DRY_RUN_READY; ManageLists checked on 3 affected lists | PASS | 08584074626663573896315130256CU26; results/dry-run.json |
+| SCHEMA-002 v2 five-setting apply/readback | applyRequested true; preflightReady true; setupVerified true; SETUP_VERIFIED | PASS, bounded apply variant | 08584074626043544351187724959CU01; results/apply.json |
+| SCHEMA-002 repeat result | applyRequested/preflightReady/setupVerified true, SETUP_VERIFIED again | PASS, final-state repeat; individual write skips unconfirmed | 08584074600200045376372808433CU02; results/repeat.json |
+| SCHEMA-002 five-write skip trace | Need owner confirmation all five Create_/Update_ HTTP actions Skipped; summary has no action trace | PENDING confirmation | No extra run requested |
+| SCHEMA-001/002 final whole-schema audit | Complete collection, errors [], all contract fields/defaults/requiredness/unique/index/lookups correct; normalized observed metadata analyzed Verified, no findings | PASS | 08584074601682073516023990276cU14; results/final-audit.metadata.json and final-audit.analysis.json |
+| Local repository/package suite | 63 passed; ZIP/manifest checks, guards/readback, computed-Title/IANA/legacy metadata regressions, exact concurrency regression; max 500 actions / depth 8 enforced | PASS, local only | Agent pytest; not tenant execution of every error variant |
+
+Five verified changes: ParticipationStatus required Choice default Active;
+OpenToConnections required Boolean default Yes; language Title required;
+time-zone Title required; IANA_ID required/indexed/unique. HTTP writes affect
+field schema only, not participant rows/choices/permissions or working flows.
+Successful readback is not whole-feature acceptance or new-form/save behavior.
+
+No business records were created; required schema is intentionally retained.
+Turn off disposable helpers after final evidence. Own schema acceptance is now passed; only delivery review/merge keeps #66 open; #5/#6/#61 and privacy tests are separate owners.
+
 ## New run template
 
 Copy this section for an execution. Record one row per case (or split a case into
@@ -852,3 +883,29 @@ expected/actual results. For example: “REG-003 fails: blank time zone still ca
 a required-field error in the published test app.” The assistant should locate
 the test and relevant feature ticket, inspect version-specific evidence, fix on
 the appropriate branch, and append retest results after verification.
+
+### SCHEMA-20261108-02 - pending screenshot/run correlation
+
+Owner supplied a screenshot with Create ParticipationStatus green/Succeeded.
+The screenshot does not show its run reference; the initial apply is expected to
+create this field. Correlate its Setup_report.runReference before attributing it
+to the repeat run or declaring a repeat failure/pass. No new run is requested.
+The five-write skip trace remains unconfirmed; final-state repeat summary and
+whole-schema audit evidence above remain separately scoped.
+
+### SCHEMA-20261108-03 - #66 safe-repeat confirmation PASS
+
+- Owner identified the earlier green-create screenshot as original apply run
+  `08584074626043544351187724959CU01`; first-apply creation was expected.
+- Owner ran the imported setup-v2 again and explicitly reported **all five writes
+  Skipped**, `setupVerified: true`, `result: SETUP_VERIFIED`.
+- Supplied screenshot shows Create ParticipationStatus and Create OpenToConnections
+  grey/skipped and Apply setup succeeded. Other three write skips are owner-reported.
+- Evidence: artifacts/schema_alignment/results/idempotency-confirmation.json and
+  repeat-skipped.png. The new run reference was not supplied; do not reuse the
+  earlier repeat reference for this screenshot. No further rerun is requested.
+- **SCHEMA-002 safe repeat: PASS**. This supersedes the earlier pending trace and
+  screenshot-correlation states while preserving their history. Initial metadata,
+  permission preview, apply/readback and final full audit had already passed.
+- All own #66 schema checks passed. Review/merge PR #69, then close #66. Ordinary
+  app/flow/privacy tests remain separately owned. No business-row cleanup required.

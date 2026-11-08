@@ -1,0 +1,1289 @@
+{
+  "kind": "TandemSchemaAudit",
+  "schemaVersion": 1,
+  "packageBuildId": "1fd35100-e381-48b7-9d53-aa927d1131ed",
+  "readOnly": true,
+  "sourceTicket": 66,
+  "runReference": "08584074601682073516023990276cU14",
+  "collectionComplete": true,
+  "writeCapability": "NOT_VERIFIED_NO_WRITES",
+  "lists": [
+    {
+      "role": "participants",
+      "id": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
+      "title": "Participants",
+      "fields": [
+        {
+          "id": "fa564e0f-0c70-4ab9-b863-0177e6ddd247",
+          "internalName": "Title",
+          "displayName": "Title",
+          "type": "Text",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": null
+        },
+        {
+          "id": "aa74f84e-f60d-46a2-87f9-077066fa0aa7",
+          "internalName": "Participantaccount",
+          "displayName": "Participant account",
+          "type": "User",
+          "required": true,
+          "unique": true,
+          "indexed": true,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": null
+        },
+        {
+          "id": "0fd2f608-2dd5-42ff-98af-e254d27c53f4",
+          "internalName": "Teachlanguages",
+          "displayName": "Teach languages",
+          "type": "LookupMulti",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": "<Field Type=\"LookupMulti\" List=\"3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63\" ShowField=\"Title\" />"
+        },
+        {
+          "id": "2ee6e265-13e2-4edb-9697-25de94813850",
+          "internalName": "Learnlanguages",
+          "displayName": "Learn languages",
+          "type": "LookupMulti",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": "<Field Type=\"LookupMulti\" List=\"3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63\" ShowField=\"Title\" />"
+        },
+        {
+          "id": "977a0475-48dd-4fb6-aead-5988b53ad4e8",
+          "internalName": "ShareCultures",
+          "displayName": "Cultures I can share",
+          "type": "LookupMulti",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": "<Field Type=\"LookupMulti\" List=\"cf7ed5b4-2e11-4a0a-a417-6c63ed60f614\" ShowField=\"Title\" />"
+        },
+        {
+          "id": "6f867b12-ce01-4108-9fae-4cbfc0930fa6",
+          "internalName": "LearnCultures",
+          "displayName": "Cultures of interest",
+          "type": "LookupMulti",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": "<Field Type=\"LookupMulti\" List=\"cf7ed5b4-2e11-4a0a-a417-6c63ed60f614\" ShowField=\"Title\" />"
+        },
+        {
+          "id": "1f70ca97-ca1c-4e0d-b582-7b4a21caaa6f",
+          "internalName": "Timezone",
+          "displayName": "Time zone",
+          "type": "Lookup",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": "<Field Type=\"Lookup\" List=\"7beddfff-1881-4a82-8003-29933b836350\" ShowField=\"IANA_ID\" />"
+        },
+        {
+          "id": "78719378-153a-4cc6-b2f9-b1fa015f9ac8",
+          "internalName": "Learningfocus",
+          "displayName": "Learning focus",
+          "type": "Note",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": null
+        },
+        {
+          "id": "34535588-ae1a-4c6e-bc06-cb3a17402bc3",
+          "internalName": "Comments",
+          "displayName": "Comments",
+          "type": "Note",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": null
+        },
+        {
+          "id": "b347b436-6c26-4ed3-b047-d7ab30983b36",
+          "internalName": "Status",
+          "displayName": "Status",
+          "type": "Choice",
+          "required": false,
+          "unique": false,
+          "indexed": true,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": "<Field Type=\"Choice\"><CHOICES><CHOICE>Draft</CHOICE><CHOICE>Active</CHOICE><CHOICE>Waiting</CHOICE><CHOICE>Matched</CHOICE><CHOICE>Inactive</CHOICE><CHOICE>Needs review</CHOICE></CHOICES></Field>"
+        },
+        {
+          "id": "f4f3990e-4735-4ada-9bfa-183c7e5e83b1",
+          "internalName": "ParticipationStatus",
+          "displayName": "Participation status",
+          "type": "Choice",
+          "required": true,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": "Active",
+          "schemaXml": "<Field Type=\"Choice\"><CHOICES><CHOICE>Active</CHOICE><CHOICE>Paused</CHOICE><CHOICE>Inactive</CHOICE></CHOICES></Field>"
+        },
+        {
+          "id": "73d20d97-3063-46f1-9633-f9b1be961b4a",
+          "internalName": "OpenToConnections",
+          "displayName": "Open to new connections",
+          "type": "Boolean",
+          "required": true,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": "1",
+          "schemaXml": null
+        },
+        {
+          "id": "bc91a437-52e7-49e1-8c4e-4698904b2b6d",
+          "internalName": "LinkTitleNoMenu",
+          "displayName": "Title",
+          "type": "Computed",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": true,
+          "defaultValue": null,
+          "schemaXml": null
+        },
+        {
+          "id": "82642ec8-ef9b-478f-acf9-31f7d45fbc31",
+          "internalName": "LinkTitle",
+          "displayName": "Title",
+          "type": "Computed",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": true,
+          "defaultValue": null,
+          "schemaXml": null
+        },
+        {
+          "id": "5f190d91-3dbc-4489-9878-3c092caf35b6",
+          "internalName": "LinkTitle2",
+          "displayName": "Title",
+          "type": "Computed",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": true,
+          "readOnly": true,
+          "defaultValue": null,
+          "schemaXml": null
+        }
+      ],
+      "columnIndex": [],
+      "fieldsTruncated": false,
+      "valuesTruncated": false,
+      "values": []
+    },
+    {
+      "role": "language",
+      "id": "3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63",
+      "title": "Language catalogue",
+      "fields": [
+        {
+          "id": "fa564e0f-0c70-4ab9-b863-0177e6ddd247",
+          "internalName": "Title",
+          "displayName": "Title",
+          "type": "Text",
+          "required": true,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": null
+        },
+        {
+          "id": "eb208831-6cae-47c2-886b-a72832a41150",
+          "internalName": "ISOcode",
+          "displayName": "ISO code",
+          "type": "Text",
+          "required": true,
+          "unique": true,
+          "indexed": true,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": null
+        },
+        {
+          "id": "aa11638a-1194-4c87-93b3-90b278c380c3",
+          "internalName": "Aliases",
+          "displayName": "Aliases",
+          "type": "Note",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": null
+        },
+        {
+          "id": "f76a42f9-f759-48ed-97bc-c160a251a525",
+          "internalName": "Active",
+          "displayName": "Active",
+          "type": "Boolean",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": "1",
+          "schemaXml": null
+        },
+        {
+          "id": "bc91a437-52e7-49e1-8c4e-4698904b2b6d",
+          "internalName": "LinkTitleNoMenu",
+          "displayName": "Title",
+          "type": "Computed",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": true,
+          "defaultValue": null,
+          "schemaXml": null
+        },
+        {
+          "id": "82642ec8-ef9b-478f-acf9-31f7d45fbc31",
+          "internalName": "LinkTitle",
+          "displayName": "Title",
+          "type": "Computed",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": true,
+          "defaultValue": null,
+          "schemaXml": null
+        },
+        {
+          "id": "5f190d91-3dbc-4489-9878-3c092caf35b6",
+          "internalName": "LinkTitle2",
+          "displayName": "Title",
+          "type": "Computed",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": true,
+          "readOnly": true,
+          "defaultValue": null,
+          "schemaXml": null
+        }
+      ],
+      "columnIndex": [],
+      "fieldsTruncated": false,
+      "valuesTruncated": false,
+      "values": [
+        {
+          "id": 57,
+          "title": "Arabic",
+          "key": "ar",
+          "active": true
+        },
+        {
+          "id": 58,
+          "title": "Chinese",
+          "key": "zh",
+          "active": true
+        },
+        {
+          "id": 59,
+          "title": "Danish",
+          "key": "da",
+          "active": true
+        },
+        {
+          "id": 60,
+          "title": "Dutch",
+          "key": "nl",
+          "active": true
+        },
+        {
+          "id": 61,
+          "title": "English",
+          "key": "en",
+          "active": true
+        },
+        {
+          "id": 62,
+          "title": "Filipino",
+          "key": "tl",
+          "active": true
+        },
+        {
+          "id": 63,
+          "title": "Finnish",
+          "key": "fi",
+          "active": true
+        },
+        {
+          "id": 64,
+          "title": "French",
+          "key": "fr",
+          "active": true
+        },
+        {
+          "id": 65,
+          "title": "German",
+          "key": "de",
+          "active": true
+        },
+        {
+          "id": 66,
+          "title": "Greek",
+          "key": "el",
+          "active": true
+        },
+        {
+          "id": 67,
+          "title": "Hindi",
+          "key": "hi",
+          "active": true
+        },
+        {
+          "id": 68,
+          "title": "Hungarian",
+          "key": "hu",
+          "active": true
+        },
+        {
+          "id": 69,
+          "title": "Indonesian",
+          "key": "id",
+          "active": true
+        },
+        {
+          "id": 70,
+          "title": "Italian",
+          "key": "it",
+          "active": true
+        },
+        {
+          "id": 71,
+          "title": "Japanese",
+          "key": "ja",
+          "active": true
+        },
+        {
+          "id": 72,
+          "title": "Korean",
+          "key": "ko",
+          "active": true
+        },
+        {
+          "id": 73,
+          "title": "Polish",
+          "key": "pl",
+          "active": true
+        },
+        {
+          "id": 74,
+          "title": "Portuguese",
+          "key": "pt",
+          "active": true
+        },
+        {
+          "id": 75,
+          "title": "Romanian",
+          "key": "ro",
+          "active": true
+        },
+        {
+          "id": 76,
+          "title": "Russian",
+          "key": "ru",
+          "active": true
+        },
+        {
+          "id": 77,
+          "title": "Slovenian",
+          "key": "sl",
+          "active": true
+        },
+        {
+          "id": 78,
+          "title": "Spanish",
+          "key": "es",
+          "active": true
+        },
+        {
+          "id": 79,
+          "title": "Swedish",
+          "key": "sv",
+          "active": true
+        },
+        {
+          "id": 80,
+          "title": "Tamil",
+          "key": "ta",
+          "active": true
+        },
+        {
+          "id": 81,
+          "title": "Thai",
+          "key": "th",
+          "active": true
+        },
+        {
+          "id": 82,
+          "title": "Turkish",
+          "key": "tr",
+          "active": true
+        },
+        {
+          "id": 83,
+          "title": "Cantonese",
+          "key": "yue",
+          "active": true
+        },
+        {
+          "id": 84,
+          "title": "Any language",
+          "key": "any",
+          "active": true
+        }
+      ]
+    },
+    {
+      "role": "culture",
+      "id": "cf7ed5b4-2e11-4a0a-a417-6c63ed60f614",
+      "title": "Culture catalogue",
+      "fields": [
+        {
+          "id": "fa564e0f-0c70-4ab9-b863-0177e6ddd247",
+          "internalName": "Title",
+          "displayName": "Title",
+          "type": "Text",
+          "required": true,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": null
+        },
+        {
+          "id": "d0e6a6eb-5e7d-4174-9028-6538935830d7",
+          "internalName": "CultureKey",
+          "displayName": "Culture Key",
+          "type": "Text",
+          "required": true,
+          "unique": true,
+          "indexed": true,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": null
+        },
+        {
+          "id": "152464b4-c583-4723-996a-4180f149ed1c",
+          "internalName": "Active",
+          "displayName": "Active",
+          "type": "Boolean",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": "1",
+          "schemaXml": null
+        },
+        {
+          "id": "bc91a437-52e7-49e1-8c4e-4698904b2b6d",
+          "internalName": "LinkTitleNoMenu",
+          "displayName": "Title",
+          "type": "Computed",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": true,
+          "defaultValue": null,
+          "schemaXml": null
+        },
+        {
+          "id": "82642ec8-ef9b-478f-acf9-31f7d45fbc31",
+          "internalName": "LinkTitle",
+          "displayName": "Title",
+          "type": "Computed",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": true,
+          "defaultValue": null,
+          "schemaXml": null
+        },
+        {
+          "id": "5f190d91-3dbc-4489-9878-3c092caf35b6",
+          "internalName": "LinkTitle2",
+          "displayName": "Title",
+          "type": "Computed",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": true,
+          "readOnly": true,
+          "defaultValue": null,
+          "schemaXml": null
+        }
+      ],
+      "columnIndex": [],
+      "fieldsTruncated": false,
+      "valuesTruncated": false,
+      "values": [
+        {
+          "id": 1,
+          "title": "Algeria",
+          "key": "algeria",
+          "active": true
+        },
+        {
+          "id": 2,
+          "title": "Argentina",
+          "key": "argentina",
+          "active": true
+        },
+        {
+          "id": 3,
+          "title": "Australia",
+          "key": "australia",
+          "active": true
+        },
+        {
+          "id": 4,
+          "title": "Austria",
+          "key": "austria",
+          "active": true
+        },
+        {
+          "id": 5,
+          "title": "Bangladesh",
+          "key": "bangladesh",
+          "active": true
+        },
+        {
+          "id": 6,
+          "title": "Belgium",
+          "key": "belgium",
+          "active": true
+        },
+        {
+          "id": 7,
+          "title": "Brazil",
+          "key": "brazil",
+          "active": true
+        },
+        {
+          "id": 8,
+          "title": "Bulgaria",
+          "key": "bulgaria",
+          "active": true
+        },
+        {
+          "id": 9,
+          "title": "Cambodia",
+          "key": "cambodia",
+          "active": true
+        },
+        {
+          "id": 10,
+          "title": "Cameroon",
+          "key": "cameroon",
+          "active": true
+        },
+        {
+          "id": 11,
+          "title": "Canada",
+          "key": "canada",
+          "active": true
+        },
+        {
+          "id": 12,
+          "title": "Chile",
+          "key": "chile",
+          "active": true
+        },
+        {
+          "id": 13,
+          "title": "China",
+          "key": "china",
+          "active": true
+        },
+        {
+          "id": 14,
+          "title": "Colombia",
+          "key": "colombia",
+          "active": true
+        },
+        {
+          "id": 15,
+          "title": "Costa Rica",
+          "key": "costa-rica",
+          "active": true
+        },
+        {
+          "id": 16,
+          "title": "Croatia",
+          "key": "croatia",
+          "active": true
+        },
+        {
+          "id": 17,
+          "title": "Czechia",
+          "key": "czechia",
+          "active": true
+        },
+        {
+          "id": 18,
+          "title": "Denmark",
+          "key": "denmark",
+          "active": true
+        },
+        {
+          "id": 19,
+          "title": "Ecuador",
+          "key": "ecuador",
+          "active": true
+        },
+        {
+          "id": 20,
+          "title": "Egypt",
+          "key": "egypt",
+          "active": true
+        },
+        {
+          "id": 21,
+          "title": "Ethiopia",
+          "key": "ethiopia",
+          "active": true
+        },
+        {
+          "id": 22,
+          "title": "Finland",
+          "key": "finland",
+          "active": true
+        },
+        {
+          "id": 23,
+          "title": "France",
+          "key": "france",
+          "active": true
+        },
+        {
+          "id": 24,
+          "title": "Germany",
+          "key": "germany",
+          "active": true
+        },
+        {
+          "id": 25,
+          "title": "Ghana",
+          "key": "ghana",
+          "active": true
+        },
+        {
+          "id": 26,
+          "title": "Greece",
+          "key": "greece",
+          "active": true
+        },
+        {
+          "id": 27,
+          "title": "Hong Kong",
+          "key": "hong-kong",
+          "active": true
+        },
+        {
+          "id": 28,
+          "title": "Hungary",
+          "key": "hungary",
+          "active": true
+        },
+        {
+          "id": 29,
+          "title": "Iceland",
+          "key": "iceland",
+          "active": true
+        },
+        {
+          "id": 30,
+          "title": "India",
+          "key": "india",
+          "active": true
+        },
+        {
+          "id": 31,
+          "title": "Indonesia",
+          "key": "indonesia",
+          "active": true
+        },
+        {
+          "id": 32,
+          "title": "Iran",
+          "key": "iran",
+          "active": true
+        },
+        {
+          "id": 33,
+          "title": "Iraq",
+          "key": "iraq",
+          "active": true
+        },
+        {
+          "id": 34,
+          "title": "Ireland",
+          "key": "ireland",
+          "active": true
+        },
+        {
+          "id": 35,
+          "title": "Israel",
+          "key": "israel",
+          "active": true
+        },
+        {
+          "id": 36,
+          "title": "Italy",
+          "key": "italy",
+          "active": true
+        },
+        {
+          "id": 37,
+          "title": "Jamaica",
+          "key": "jamaica",
+          "active": true
+        },
+        {
+          "id": 38,
+          "title": "Japan",
+          "key": "japan",
+          "active": true
+        },
+        {
+          "id": 39,
+          "title": "Jordan",
+          "key": "jordan",
+          "active": true
+        },
+        {
+          "id": 40,
+          "title": "Kenya",
+          "key": "kenya",
+          "active": true
+        },
+        {
+          "id": 41,
+          "title": "Lebanon",
+          "key": "lebanon",
+          "active": true
+        },
+        {
+          "id": 42,
+          "title": "Lithuania",
+          "key": "lithuania",
+          "active": true
+        },
+        {
+          "id": 43,
+          "title": "Luxembourg",
+          "key": "luxembourg",
+          "active": true
+        },
+        {
+          "id": 44,
+          "title": "Malaysia",
+          "key": "malaysia",
+          "active": true
+        },
+        {
+          "id": 45,
+          "title": "Malta",
+          "key": "malta",
+          "active": true
+        },
+        {
+          "id": 46,
+          "title": "Mexico",
+          "key": "mexico",
+          "active": true
+        },
+        {
+          "id": 47,
+          "title": "Morocco",
+          "key": "morocco",
+          "active": true
+        },
+        {
+          "id": 48,
+          "title": "Nepal",
+          "key": "nepal",
+          "active": true
+        },
+        {
+          "id": 49,
+          "title": "Netherlands",
+          "key": "netherlands",
+          "active": true
+        },
+        {
+          "id": 50,
+          "title": "New Zealand",
+          "key": "new-zealand",
+          "active": true
+        },
+        {
+          "id": 51,
+          "title": "Nigeria",
+          "key": "nigeria",
+          "active": true
+        },
+        {
+          "id": 52,
+          "title": "Norway",
+          "key": "norway",
+          "active": true
+        },
+        {
+          "id": 53,
+          "title": "Pakistan",
+          "key": "pakistan",
+          "active": true
+        },
+        {
+          "id": 54,
+          "title": "Peru",
+          "key": "peru",
+          "active": true
+        },
+        {
+          "id": 55,
+          "title": "Philippines",
+          "key": "philippines",
+          "active": true
+        },
+        {
+          "id": 56,
+          "title": "Poland",
+          "key": "poland",
+          "active": true
+        },
+        {
+          "id": 57,
+          "title": "Portugal",
+          "key": "portugal",
+          "active": true
+        },
+        {
+          "id": 58,
+          "title": "Romania",
+          "key": "romania",
+          "active": true
+        },
+        {
+          "id": 59,
+          "title": "Saudi Arabia",
+          "key": "saudi-arabia",
+          "active": true
+        },
+        {
+          "id": 60,
+          "title": "Senegal",
+          "key": "senegal",
+          "active": true
+        },
+        {
+          "id": 61,
+          "title": "Serbia",
+          "key": "serbia",
+          "active": true
+        },
+        {
+          "id": 62,
+          "title": "Singapore",
+          "key": "singapore",
+          "active": true
+        },
+        {
+          "id": 63,
+          "title": "Slovakia",
+          "key": "slovakia",
+          "active": true
+        },
+        {
+          "id": 64,
+          "title": "Slovenia",
+          "key": "slovenia",
+          "active": true
+        },
+        {
+          "id": 65,
+          "title": "South Africa",
+          "key": "south-africa",
+          "active": true
+        },
+        {
+          "id": 66,
+          "title": "South Korea",
+          "key": "south-korea",
+          "active": true
+        },
+        {
+          "id": 67,
+          "title": "Spain",
+          "key": "spain",
+          "active": true
+        },
+        {
+          "id": 68,
+          "title": "Sri Lanka",
+          "key": "sri-lanka",
+          "active": true
+        },
+        {
+          "id": 69,
+          "title": "Sweden",
+          "key": "sweden",
+          "active": true
+        },
+        {
+          "id": 70,
+          "title": "Switzerland",
+          "key": "switzerland",
+          "active": true
+        },
+        {
+          "id": 71,
+          "title": "Taiwan",
+          "key": "taiwan",
+          "active": true
+        },
+        {
+          "id": 72,
+          "title": "Tanzania",
+          "key": "tanzania",
+          "active": true
+        },
+        {
+          "id": 73,
+          "title": "Thailand",
+          "key": "thailand",
+          "active": true
+        },
+        {
+          "id": 74,
+          "title": "Tunisia",
+          "key": "tunisia",
+          "active": true
+        },
+        {
+          "id": 75,
+          "title": "Türkiye",
+          "key": "turkiye",
+          "active": true
+        },
+        {
+          "id": 76,
+          "title": "Uganda",
+          "key": "uganda",
+          "active": true
+        },
+        {
+          "id": 77,
+          "title": "Ukraine",
+          "key": "ukraine",
+          "active": true
+        },
+        {
+          "id": 78,
+          "title": "United Arab Emirates",
+          "key": "united-arab-emirates",
+          "active": true
+        },
+        {
+          "id": 79,
+          "title": "United Kingdom",
+          "key": "united-kingdom",
+          "active": true
+        },
+        {
+          "id": 80,
+          "title": "United States",
+          "key": "united-states",
+          "active": true
+        },
+        {
+          "id": 81,
+          "title": "Uruguay",
+          "key": "uruguay",
+          "active": true
+        },
+        {
+          "id": 82,
+          "title": "Venezuela",
+          "key": "venezuela",
+          "active": true
+        },
+        {
+          "id": 83,
+          "title": "Vietnam",
+          "key": "vietnam",
+          "active": true
+        },
+        {
+          "id": 84,
+          "title": "Zambia",
+          "key": "zambia",
+          "active": true
+        },
+        {
+          "id": 85,
+          "title": "Zimbabwe",
+          "key": "zimbabwe",
+          "active": true
+        }
+      ]
+    },
+    {
+      "role": "timezone",
+      "id": "7beddfff-1881-4a82-8003-29933b836350",
+      "title": "Timezone catalog",
+      "fields": [
+        {
+          "id": "fa564e0f-0c70-4ab9-b863-0177e6ddd247",
+          "internalName": "Title",
+          "displayName": "Title",
+          "type": "Text",
+          "required": true,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": null
+        },
+        {
+          "id": "2c179581-99f9-4700-9fed-f2e667fc3e8c",
+          "internalName": "IANA_ID",
+          "displayName": "IANA_ID",
+          "type": "Text",
+          "required": true,
+          "unique": true,
+          "indexed": true,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": null,
+          "schemaXml": null
+        },
+        {
+          "id": "c6ad6b65-b71b-4168-b020-206dbdbeb747",
+          "internalName": "Active",
+          "displayName": "Active",
+          "type": "Boolean",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": false,
+          "defaultValue": "1",
+          "schemaXml": null
+        },
+        {
+          "id": "bc91a437-52e7-49e1-8c4e-4698904b2b6d",
+          "internalName": "LinkTitleNoMenu",
+          "displayName": "Title",
+          "type": "Computed",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": true,
+          "defaultValue": null,
+          "schemaXml": null
+        },
+        {
+          "id": "82642ec8-ef9b-478f-acf9-31f7d45fbc31",
+          "internalName": "LinkTitle",
+          "displayName": "Title",
+          "type": "Computed",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": false,
+          "readOnly": true,
+          "defaultValue": null,
+          "schemaXml": null
+        },
+        {
+          "id": "5f190d91-3dbc-4489-9878-3c092caf35b6",
+          "internalName": "LinkTitle2",
+          "displayName": "Title",
+          "type": "Computed",
+          "required": false,
+          "unique": false,
+          "indexed": false,
+          "hidden": true,
+          "readOnly": true,
+          "defaultValue": null,
+          "schemaXml": null
+        }
+      ],
+      "columnIndex": [],
+      "fieldsTruncated": false,
+      "valuesTruncated": false,
+      "values": [
+        {
+          "id": 37,
+          "title": "Amsterdam / Rotterdam / Utrecht",
+          "key": "Europe/Amsterdam",
+          "active": true
+        },
+        {
+          "id": 38,
+          "title": "Paris / Versailles / Dijon",
+          "key": "Europe/Paris",
+          "active": true
+        },
+        {
+          "id": 39,
+          "title": "Berlin / Munich / Frankfurt",
+          "key": "Europe/Berlin",
+          "active": true
+        },
+        {
+          "id": 40,
+          "title": "London / Manchester / Exeter",
+          "key": "Europe/London",
+          "active": true
+        },
+        {
+          "id": 41,
+          "title": "Madrid / Seville",
+          "key": "Europe/Madrid",
+          "active": true
+        },
+        {
+          "id": 42,
+          "title": "Milan / Rome",
+          "key": "Europe/Rome",
+          "active": true
+        },
+        {
+          "id": 43,
+          "title": "Copenhagen",
+          "key": "Europe/Copenhagen",
+          "active": true
+        },
+        {
+          "id": 44,
+          "title": "Istanbul",
+          "key": "Europe/Istanbul",
+          "active": true
+        },
+        {
+          "id": 45,
+          "title": "New York / Philadelphia",
+          "key": "America/New_York",
+          "active": true
+        },
+        {
+          "id": 46,
+          "title": "Chicago / St. Louis",
+          "key": "America/Chicago",
+          "active": true
+        },
+        {
+          "id": 47,
+          "title": "Denver / Boulder",
+          "key": "America/Denver",
+          "active": true
+        },
+        {
+          "id": 48,
+          "title": "Toronto / Montreal",
+          "key": "America/Toronto",
+          "active": true
+        },
+        {
+          "id": 49,
+          "title": "São Paulo / Rio de Janeiro",
+          "key": "America/Sao_Paulo",
+          "active": true
+        },
+        {
+          "id": 50,
+          "title": "Delhi / Bengaluru",
+          "key": "Asia/Kolkata",
+          "active": true
+        },
+        {
+          "id": 51,
+          "title": "Seoul",
+          "key": "Asia/Seoul",
+          "active": true
+        },
+        {
+          "id": 52,
+          "title": "Shanghai / Beijing",
+          "key": "Asia/Shanghai",
+          "active": true
+        },
+        {
+          "id": 53,
+          "title": "Singapore",
+          "key": "Asia/Singapore",
+          "active": true
+        },
+        {
+          "id": 54,
+          "title": "Tokyo",
+          "key": "Asia/Tokyo",
+          "active": true
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "evidenceNormalization": "Derived extraction from owner-pasted full final Audit_report in chat: contract fields and all vocabulary rows retained; unrelated system columnIndex and formatting omitted; SchemaXml reduced to observed lookup/choice attributes and values. Not an unmodified raw export. Inherited mapping properties were rechecked against this final supplied report."
+}
