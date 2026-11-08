@@ -1,10 +1,10 @@
 {
-  "name": "9533894a-20d7-46e8-a640-5af8473c3b33",
-  "id": "/providers/Microsoft.Flow/flows/9533894a-20d7-46e8-a640-5af8473c3b33",
+  "name": "30ff0d83-3895-4a0e-89c2-939b360fc5e7",
+  "id": "/providers/Microsoft.Flow/flows/30ff0d83-3895-4a0e-89c2-939b360fc5e7",
   "type": "Microsoft.Flow/flows",
   "properties": {
     "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
-    "displayName": "TandemCancelRequest v2",
+    "displayName": "TandemCancelRequest v3",
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
@@ -546,11 +546,11 @@
                 ]
               }
             },
-            "Request_schema_SenderParticipant": {
+            "Request_schema_SenderParticipantId": {
               "type": "Query",
               "inputs": {
                 "from": "@body('Request_schema_read')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'SenderParticipant'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],true),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
+                "where": "@and(equals(item()?['InternalName'],'SenderParticipantId'),equals(item()?['TypeAsString'],'Number'),equals(item()?['Required'],true),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
               },
               "runAfter": {
                 "Request_schema_bound": [
@@ -558,13 +558,13 @@
                 ]
               }
             },
-            "Request_schema_SenderParticipant_one": {
+            "Request_schema_SenderParticipantId_one": {
               "type": "If",
-              "expression": "@equals(length(body('Request_schema_SenderParticipant')),1)",
+              "expression": "@equals(length(body('Request_schema_SenderParticipantId')),1)",
               "actions": {},
               "else": {
                 "actions": {
-                  "Request_schema_SenderParticipant_one_error": {
+                  "Request_schema_SenderParticipantId_one_error": {
                     "type": "SetVariable",
                     "inputs": {
                       "name": "ErrorCode",
@@ -572,11 +572,11 @@
                     },
                     "runAfter": {}
                   },
-                  "Request_schema_SenderParticipant_one_stop": {
+                  "Request_schema_SenderParticipantId_one_stop": {
                     "type": "Compose",
                     "inputs": "@div(1,0)",
                     "runAfter": {
-                      "Request_schema_SenderParticipant_one_error": [
+                      "Request_schema_SenderParticipantId_one_error": [
                         "Succeeded"
                       ]
                     }
@@ -584,18 +584,18 @@
                 }
               },
               "runAfter": {
-                "Request_schema_SenderParticipant": [
+                "Request_schema_SenderParticipantId": [
                   "Succeeded"
                 ]
               }
             },
-            "Request_schema_SenderParticipant_target": {
+            "Request_schema_SenderParticipantId_decimals": {
               "type": "If",
-              "expression": "@equals(replace(replace(toLower(string(xpath(xml(first(body('Request_schema_SenderParticipant'))?['SchemaXml']),'string(/Field/@List)'))),'{',''),'}',''),'fd3adf46-f81d-4a7b-a80c-567fde0175dc')",
+              "expression": "@equals(string(xpath(xml(first(body('Request_schema_SenderParticipantId'))?['SchemaXml']),'string(/Field/@Decimals)')),'0')",
               "actions": {},
               "else": {
                 "actions": {
-                  "Request_schema_SenderParticipant_target_error": {
+                  "Request_schema_SenderParticipantId_decimals_error": {
                     "type": "SetVariable",
                     "inputs": {
                       "name": "ErrorCode",
@@ -603,11 +603,11 @@
                     },
                     "runAfter": {}
                   },
-                  "Request_schema_SenderParticipant_target_stop": {
+                  "Request_schema_SenderParticipantId_decimals_stop": {
                     "type": "Compose",
                     "inputs": "@div(1,0)",
                     "runAfter": {
-                      "Request_schema_SenderParticipant_target_error": [
+                      "Request_schema_SenderParticipantId_decimals_error": [
                         "Succeeded"
                       ]
                     }
@@ -615,30 +615,30 @@
                 }
               },
               "runAfter": {
-                "Request_schema_SenderParticipant_one": [
+                "Request_schema_SenderParticipantId_one": [
                   "Succeeded"
                 ]
               }
             },
-            "Request_schema_RecipientParticipant": {
+            "Request_schema_RecipientParticipantId": {
               "type": "Query",
               "inputs": {
                 "from": "@body('Request_schema_read')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'RecipientParticipant'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],false),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
+                "where": "@and(equals(item()?['InternalName'],'RecipientParticipantId'),equals(item()?['TypeAsString'],'Number'),equals(item()?['Required'],false),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
               },
               "runAfter": {
-                "Request_schema_SenderParticipant_target": [
+                "Request_schema_SenderParticipantId_decimals": [
                   "Succeeded"
                 ]
               }
             },
-            "Request_schema_RecipientParticipant_one": {
+            "Request_schema_RecipientParticipantId_one": {
               "type": "If",
-              "expression": "@equals(length(body('Request_schema_RecipientParticipant')),1)",
+              "expression": "@equals(length(body('Request_schema_RecipientParticipantId')),1)",
               "actions": {},
               "else": {
                 "actions": {
-                  "Request_schema_RecipientParticipant_one_error": {
+                  "Request_schema_RecipientParticipantId_one_error": {
                     "type": "SetVariable",
                     "inputs": {
                       "name": "ErrorCode",
@@ -646,11 +646,11 @@
                     },
                     "runAfter": {}
                   },
-                  "Request_schema_RecipientParticipant_one_stop": {
+                  "Request_schema_RecipientParticipantId_one_stop": {
                     "type": "Compose",
                     "inputs": "@div(1,0)",
                     "runAfter": {
-                      "Request_schema_RecipientParticipant_one_error": [
+                      "Request_schema_RecipientParticipantId_one_error": [
                         "Succeeded"
                       ]
                     }
@@ -658,18 +658,18 @@
                 }
               },
               "runAfter": {
-                "Request_schema_RecipientParticipant": [
+                "Request_schema_RecipientParticipantId": [
                   "Succeeded"
                 ]
               }
             },
-            "Request_schema_RecipientParticipant_target": {
+            "Request_schema_RecipientParticipantId_decimals": {
               "type": "If",
-              "expression": "@equals(replace(replace(toLower(string(xpath(xml(first(body('Request_schema_RecipientParticipant'))?['SchemaXml']),'string(/Field/@List)'))),'{',''),'}',''),'fd3adf46-f81d-4a7b-a80c-567fde0175dc')",
+              "expression": "@equals(string(xpath(xml(first(body('Request_schema_RecipientParticipantId'))?['SchemaXml']),'string(/Field/@Decimals)')),'0')",
               "actions": {},
               "else": {
                 "actions": {
-                  "Request_schema_RecipientParticipant_target_error": {
+                  "Request_schema_RecipientParticipantId_decimals_error": {
                     "type": "SetVariable",
                     "inputs": {
                       "name": "ErrorCode",
@@ -677,11 +677,11 @@
                     },
                     "runAfter": {}
                   },
-                  "Request_schema_RecipientParticipant_target_stop": {
+                  "Request_schema_RecipientParticipantId_decimals_stop": {
                     "type": "Compose",
                     "inputs": "@div(1,0)",
                     "runAfter": {
-                      "Request_schema_RecipientParticipant_target_error": [
+                      "Request_schema_RecipientParticipantId_decimals_error": [
                         "Succeeded"
                       ]
                     }
@@ -689,7 +689,7 @@
                 }
               },
               "runAfter": {
-                "Request_schema_RecipientParticipant_one": [
+                "Request_schema_RecipientParticipantId_one": [
                   "Succeeded"
                 ]
               }
@@ -701,7 +701,7 @@
                 "where": "@and(equals(item()?['InternalName'],'TargetGroup'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],false),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
               },
               "runAfter": {
-                "Request_schema_RecipientParticipant_target": [
+                "Request_schema_RecipientParticipantId_decimals": [
                   "Succeeded"
                 ]
               }
@@ -1252,13 +1252,13 @@
                       "maximum": 2147483647
                     },
                     "SenderParticipantId": {
-                      "type": "integer",
+                      "type": "number",
                       "minimum": 1,
                       "maximum": 2147483647
                     },
                     "RecipientParticipantId": {
                       "type": [
-                        "integer",
+                        "number",
                         "null"
                       ],
                       "minimum": 1,
@@ -1334,7 +1334,7 @@
             },
             "Before_row_checks": {
               "type": "If",
-              "expression": "@and(equals(body('Before_row')?['Id'],body('Input')?['number_1']),equals(body('Before_row')?['SenderParticipantId'],outputs('Actor')?['Id']),equals(body('Before_row')?['__metadata']?['type'],body('Read_list_type')?['d']?['ListItemEntityTypeFullName']),not(empty(trim(body('Before_row')?['SendOperationKey']))),or(and(equals(body('Before_row')?['RequestType'],'Personal'),greater(coalesce(body('Before_row')?['RecipientParticipantId'],0),0),not(equals(body('Before_row')?['RecipientParticipantId'],body('Before_row')?['SenderParticipantId'])),equals(body('Before_row')?['TargetGroupId'],null)),and(equals(body('Before_row')?['RequestType'],'Group'),equals(body('Before_row')?['RecipientParticipantId'],null),greater(coalesce(body('Before_row')?['TargetGroupId'],0),0))),or(and(equals(body('Before_row')?['Status'],'Pending'),equals(body('Before_row')?['OperationComplete'],false),empty(body('Before_row')?['WinningOperationKey']),equals(body('Before_row')?['ConnectionKey'],if(equals(body('Before_row')?['RequestType'],'Personal'),concat('open:person:',string(if(less(body('Before_row')?['SenderParticipantId'],coalesce(body('Before_row')?['RecipientParticipantId'],0)),body('Before_row')?['SenderParticipantId'],coalesce(body('Before_row')?['RecipientParticipantId'],0))),':',string(if(greater(body('Before_row')?['SenderParticipantId'],coalesce(body('Before_row')?['RecipientParticipantId'],0)),body('Before_row')?['SenderParticipantId'],coalesce(body('Before_row')?['RecipientParticipantId'],0)))),concat('open:group:',string(body('Before_row')?['TargetGroupId']),':participant:',string(body('Before_row')?['SenderParticipantId']))))),and(equals(body('Before_row')?['Status'],'Accepted'),equals(body('Before_row')?['OperationComplete'],false),not(empty(body('Before_row')?['WinningOperationKey'])),equals(body('Before_row')?['ConnectionKey'],if(equals(body('Before_row')?['RequestType'],'Personal'),concat('open:person:',string(if(less(body('Before_row')?['SenderParticipantId'],coalesce(body('Before_row')?['RecipientParticipantId'],0)),body('Before_row')?['SenderParticipantId'],coalesce(body('Before_row')?['RecipientParticipantId'],0))),':',string(if(greater(body('Before_row')?['SenderParticipantId'],coalesce(body('Before_row')?['RecipientParticipantId'],0)),body('Before_row')?['SenderParticipantId'],coalesce(body('Before_row')?['RecipientParticipantId'],0)))),concat('open:group:',string(body('Before_row')?['TargetGroupId']),':participant:',string(body('Before_row')?['SenderParticipantId']))))),and(not(equals(body('Before_row')?['Status'],'Pending')),equals(body('Before_row')?['OperationComplete'],true),not(empty(body('Before_row')?['WinningOperationKey'])),equals(body('Before_row')?['ConnectionKey'],concat('history:request:',string(body('Before_row')?['Id']))))))",
+              "expression": "@and(equals(body('Before_row')?['SenderParticipantId'],int(body('Before_row')?['SenderParticipantId'])),equals(coalesce(body('Before_row')?['RecipientParticipantId'],0),int(coalesce(body('Before_row')?['RecipientParticipantId'],0))),equals(body('Before_row')?['Id'],body('Input')?['number_1']),equals(body('Before_row')?['SenderParticipantId'],outputs('Actor')?['Id']),equals(body('Before_row')?['__metadata']?['type'],body('Read_list_type')?['d']?['ListItemEntityTypeFullName']),not(empty(trim(body('Before_row')?['SendOperationKey']))),or(and(equals(body('Before_row')?['RequestType'],'Personal'),greater(coalesce(body('Before_row')?['RecipientParticipantId'],0),0),not(equals(body('Before_row')?['RecipientParticipantId'],body('Before_row')?['SenderParticipantId'])),equals(body('Before_row')?['TargetGroupId'],null)),and(equals(body('Before_row')?['RequestType'],'Group'),equals(body('Before_row')?['RecipientParticipantId'],null),greater(coalesce(body('Before_row')?['TargetGroupId'],0),0))),or(and(equals(body('Before_row')?['Status'],'Pending'),equals(body('Before_row')?['OperationComplete'],false),empty(body('Before_row')?['WinningOperationKey']),equals(body('Before_row')?['ConnectionKey'],if(equals(body('Before_row')?['RequestType'],'Personal'),concat('open:person:',string(if(less(int(body('Before_row')?['SenderParticipantId']),int(coalesce(body('Before_row')?['RecipientParticipantId'],0))),int(body('Before_row')?['SenderParticipantId']),int(coalesce(body('Before_row')?['RecipientParticipantId'],0)))),':',string(if(greater(int(body('Before_row')?['SenderParticipantId']),int(coalesce(body('Before_row')?['RecipientParticipantId'],0))),int(body('Before_row')?['SenderParticipantId']),int(coalesce(body('Before_row')?['RecipientParticipantId'],0))))),concat('open:group:',string(body('Before_row')?['TargetGroupId']),':participant:',string(int(body('Before_row')?['SenderParticipantId'])))))),and(equals(body('Before_row')?['Status'],'Accepted'),equals(body('Before_row')?['OperationComplete'],false),not(empty(body('Before_row')?['WinningOperationKey'])),equals(body('Before_row')?['ConnectionKey'],if(equals(body('Before_row')?['RequestType'],'Personal'),concat('open:person:',string(if(less(int(body('Before_row')?['SenderParticipantId']),int(coalesce(body('Before_row')?['RecipientParticipantId'],0))),int(body('Before_row')?['SenderParticipantId']),int(coalesce(body('Before_row')?['RecipientParticipantId'],0)))),':',string(if(greater(int(body('Before_row')?['SenderParticipantId']),int(coalesce(body('Before_row')?['RecipientParticipantId'],0))),int(body('Before_row')?['SenderParticipantId']),int(coalesce(body('Before_row')?['RecipientParticipantId'],0))))),concat('open:group:',string(body('Before_row')?['TargetGroupId']),':participant:',string(int(body('Before_row')?['SenderParticipantId'])))))),and(not(equals(body('Before_row')?['Status'],'Pending')),equals(body('Before_row')?['OperationComplete'],true),not(empty(body('Before_row')?['WinningOperationKey'])),equals(body('Before_row')?['ConnectionKey'],concat('history:request:',string(body('Before_row')?['Id']))))))",
               "actions": {},
               "else": {
                 "actions": {
@@ -1508,13 +1508,13 @@
                           "maximum": 2147483647
                         },
                         "SenderParticipantId": {
-                          "type": "integer",
+                          "type": "number",
                           "minimum": 1,
                           "maximum": 2147483647
                         },
                         "RecipientParticipantId": {
                           "type": [
-                            "integer",
+                            "number",
                             "null"
                           ],
                           "minimum": 1,
@@ -1590,7 +1590,7 @@
                 },
                 "After_row_checks": {
                   "type": "If",
-                  "expression": "@and(equals(body('After_row')?['Id'],body('Input')?['number_1']),equals(body('After_row')?['SenderParticipantId'],outputs('Actor')?['Id']),equals(body('After_row')?['__metadata']?['type'],body('Read_list_type')?['d']?['ListItemEntityTypeFullName']),not(empty(trim(body('After_row')?['SendOperationKey']))),or(and(equals(body('After_row')?['RequestType'],'Personal'),greater(coalesce(body('After_row')?['RecipientParticipantId'],0),0),not(equals(body('After_row')?['RecipientParticipantId'],body('After_row')?['SenderParticipantId'])),equals(body('After_row')?['TargetGroupId'],null)),and(equals(body('After_row')?['RequestType'],'Group'),equals(body('After_row')?['RecipientParticipantId'],null),greater(coalesce(body('After_row')?['TargetGroupId'],0),0))),or(and(equals(body('After_row')?['Status'],'Pending'),equals(body('After_row')?['OperationComplete'],false),empty(body('After_row')?['WinningOperationKey']),equals(body('After_row')?['ConnectionKey'],if(equals(body('After_row')?['RequestType'],'Personal'),concat('open:person:',string(if(less(body('After_row')?['SenderParticipantId'],coalesce(body('After_row')?['RecipientParticipantId'],0)),body('After_row')?['SenderParticipantId'],coalesce(body('After_row')?['RecipientParticipantId'],0))),':',string(if(greater(body('After_row')?['SenderParticipantId'],coalesce(body('After_row')?['RecipientParticipantId'],0)),body('After_row')?['SenderParticipantId'],coalesce(body('After_row')?['RecipientParticipantId'],0)))),concat('open:group:',string(body('After_row')?['TargetGroupId']),':participant:',string(body('After_row')?['SenderParticipantId']))))),and(equals(body('After_row')?['Status'],'Accepted'),equals(body('After_row')?['OperationComplete'],false),not(empty(body('After_row')?['WinningOperationKey'])),equals(body('After_row')?['ConnectionKey'],if(equals(body('After_row')?['RequestType'],'Personal'),concat('open:person:',string(if(less(body('After_row')?['SenderParticipantId'],coalesce(body('After_row')?['RecipientParticipantId'],0)),body('After_row')?['SenderParticipantId'],coalesce(body('After_row')?['RecipientParticipantId'],0))),':',string(if(greater(body('After_row')?['SenderParticipantId'],coalesce(body('After_row')?['RecipientParticipantId'],0)),body('After_row')?['SenderParticipantId'],coalesce(body('After_row')?['RecipientParticipantId'],0)))),concat('open:group:',string(body('After_row')?['TargetGroupId']),':participant:',string(body('After_row')?['SenderParticipantId']))))),and(not(equals(body('After_row')?['Status'],'Pending')),equals(body('After_row')?['OperationComplete'],true),not(empty(body('After_row')?['WinningOperationKey'])),equals(body('After_row')?['ConnectionKey'],concat('history:request:',string(body('After_row')?['Id']))))))",
+                  "expression": "@and(equals(body('After_row')?['SenderParticipantId'],int(body('After_row')?['SenderParticipantId'])),equals(coalesce(body('After_row')?['RecipientParticipantId'],0),int(coalesce(body('After_row')?['RecipientParticipantId'],0))),equals(body('After_row')?['Id'],body('Input')?['number_1']),equals(body('After_row')?['SenderParticipantId'],outputs('Actor')?['Id']),equals(body('After_row')?['__metadata']?['type'],body('Read_list_type')?['d']?['ListItemEntityTypeFullName']),not(empty(trim(body('After_row')?['SendOperationKey']))),or(and(equals(body('After_row')?['RequestType'],'Personal'),greater(coalesce(body('After_row')?['RecipientParticipantId'],0),0),not(equals(body('After_row')?['RecipientParticipantId'],body('After_row')?['SenderParticipantId'])),equals(body('After_row')?['TargetGroupId'],null)),and(equals(body('After_row')?['RequestType'],'Group'),equals(body('After_row')?['RecipientParticipantId'],null),greater(coalesce(body('After_row')?['TargetGroupId'],0),0))),or(and(equals(body('After_row')?['Status'],'Pending'),equals(body('After_row')?['OperationComplete'],false),empty(body('After_row')?['WinningOperationKey']),equals(body('After_row')?['ConnectionKey'],if(equals(body('After_row')?['RequestType'],'Personal'),concat('open:person:',string(if(less(int(body('After_row')?['SenderParticipantId']),int(coalesce(body('After_row')?['RecipientParticipantId'],0))),int(body('After_row')?['SenderParticipantId']),int(coalesce(body('After_row')?['RecipientParticipantId'],0)))),':',string(if(greater(int(body('After_row')?['SenderParticipantId']),int(coalesce(body('After_row')?['RecipientParticipantId'],0))),int(body('After_row')?['SenderParticipantId']),int(coalesce(body('After_row')?['RecipientParticipantId'],0))))),concat('open:group:',string(body('After_row')?['TargetGroupId']),':participant:',string(int(body('After_row')?['SenderParticipantId'])))))),and(equals(body('After_row')?['Status'],'Accepted'),equals(body('After_row')?['OperationComplete'],false),not(empty(body('After_row')?['WinningOperationKey'])),equals(body('After_row')?['ConnectionKey'],if(equals(body('After_row')?['RequestType'],'Personal'),concat('open:person:',string(if(less(int(body('After_row')?['SenderParticipantId']),int(coalesce(body('After_row')?['RecipientParticipantId'],0))),int(body('After_row')?['SenderParticipantId']),int(coalesce(body('After_row')?['RecipientParticipantId'],0)))),':',string(if(greater(int(body('After_row')?['SenderParticipantId']),int(coalesce(body('After_row')?['RecipientParticipantId'],0))),int(body('After_row')?['SenderParticipantId']),int(coalesce(body('After_row')?['RecipientParticipantId'],0))))),concat('open:group:',string(body('After_row')?['TargetGroupId']),':participant:',string(int(body('After_row')?['SenderParticipantId'])))))),and(not(equals(body('After_row')?['Status'],'Pending')),equals(body('After_row')?['OperationComplete'],true),not(empty(body('After_row')?['WinningOperationKey'])),equals(body('After_row')?['ConnectionKey'],concat('history:request:',string(body('After_row')?['Id']))))))",
                   "actions": {},
                   "else": {
                     "actions": {

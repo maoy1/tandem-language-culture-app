@@ -13,7 +13,7 @@ from .discovery_flow import after, cat, complete, compose, condition, parse, que
 from .schema_audit import ALL, FIELD_SELECT, measure, wdl_string
 
 ROOT = Path(__file__).resolve().parents[2]
-NAME = 'TandemCancelRequest v2'
+NAME = 'TandemCancelRequest v3'
 REQUESTS = '3d17485d-1dac-41f0-a1af-24e45daa4567'
 API = '/providers/Microsoft.PowerApps/apis/shared_sharepointonline'
 MODE = 'OWNER_PREVIEW_PENDING_ACCESS_PROOF'
@@ -54,8 +54,8 @@ def source_adapter(original, mapping):
 
 def expected_fields(people, groups):
     fields = {
-        'SenderParticipant': {'type': 'Lookup', 'required': True, 'target': people},
-        'RecipientParticipant': {'type': 'Lookup', 'required': False, 'target': people},
+        'SenderParticipantId': {'type': 'Number', 'required': True, 'decimals': 0},
+        'RecipientParticipantId': {'type': 'Number', 'required': False, 'decimals': 0},
         'TargetGroup': {'type': 'Lookup', 'required': False, 'target': groups},
         'RequestType': {'type': 'Choice', 'required': True, 'choices': ['Personal', 'Group']},
         'Status': {'type': 'Choice', 'required': True, 'choices': ['Pending', 'Accepted', 'Declined', 'Cancelled']},
@@ -70,8 +70,9 @@ def expected_fields(people, groups):
 def snapshot_schema():
     integer = {'type': 'integer', 'minimum': 1, 'maximum': 2147483647}
     nullable = {**integer, 'type': ['integer', 'null']}
-    fields = {'Id': integer, 'SenderParticipantId': integer,
-              'RecipientParticipantId': nullable, 'TargetGroupId': nullable,
+    number = {**integer, 'type': 'number'}
+    fields = {'Id': integer, 'SenderParticipantId': number,
+              'RecipientParticipantId': {**number, 'type': ['number', 'null']}, 'TargetGroupId': nullable,
               'RequestType': {'type': 'string', 'enum': ['Personal', 'Group']},
               'Status': {'type': 'string', 'enum': ['Pending', 'Accepted', 'Declined', 'Cancelled']},
               'SendOperationKey': {'type': 'string', 'minLength': 1, 'maxLength': 255},
@@ -136,6 +137,10 @@ def build_actions(original, mapping, groups):
             a[check] = gate(check, f"equals(length(body('{find}')),1)", 'REQUEST_SCHEMA_UNVERIFIED', find)
             prev = check
             xml = f"xml(first(body('{find}'))?['SchemaXml'])"
+            if 'decimals' in spec:
+                check = find + '_decimals'
+                a[check] = gate(check, f"equals(string(xpath({xml},'string(/Field/@Decimals)')),'{spec['decimals']}')", 'REQUEST_SCHEMA_UNVERIFIED', prev)
+                prev = check
             if spec.get('target'):
                 target = f"replace(replace(toLower(string(xpath({xml},'string(/Field/@List)'))),'{{',''),'}}','')"
                 check = find + '_target'
@@ -157,16 +162,20 @@ def build_actions(original, mapping, groups):
         a = {prefix + '_parse_guard': setvar('ErrorCode', 'REQUEST_INTEGRITY', previous),
              prefix: parse(f"@body('{read}')?['d']", snapshot_schema(), prefix + '_parse_guard')}
         r = lambda f: row_expr(prefix, f)
-        pair_min = f"if(less({r('SenderParticipantId')},coalesce({r('RecipientParticipantId')},0)),{r('SenderParticipantId')},coalesce({r('RecipientParticipantId')},0))"
-        pair_max = f"if(greater({r('SenderParticipantId')},coalesce({r('RecipientParticipantId')},0)),{r('SenderParticipantId')},coalesce({r('RecipientParticipantId')},0))"
-        live = f"if(equals({r('RequestType')},'Personal'),concat('open:person:',string({pair_min}),':',string({pair_max})),concat('open:group:',string({r('TargetGroupId')}),':participant:',string({r('SenderParticipantId')})))"
+        sender = f"int({r('SenderParticipantId')})"
+        recipient = f"int(coalesce({r('RecipientParticipantId')},0))"
+        pair_min = f"if(less({sender},{recipient}),{sender},{recipient})"
+        pair_max = f"if(greater({sender},{recipient}),{sender},{recipient})"
+        live = f"if(equals({r('RequestType')},'Personal'),concat('open:person:',string({pair_min}),':',string({pair_max})),concat('open:group:',string({r('TargetGroupId')}),':participant:',string({sender})))"
         history = f"concat('history:request:',string({r('Id')}))"
         personal = f"and(equals({r('RequestType')},'Personal'),greater(coalesce({r('RecipientParticipantId')},0),0),not(equals({r('RecipientParticipantId')},{r('SenderParticipantId')})),equals({r('TargetGroupId')},null))"
         group_ = f"and(equals({r('RequestType')},'Group'),equals({r('RecipientParticipantId')},null),greater(coalesce({r('TargetGroupId')},0),0))"
         pending = f"and(equals({r('Status')},'Pending'),equals({r('OperationComplete')},false),empty({r('WinningOperationKey')}),equals({r('ConnectionKey')},{live}))"
         accepting = f"and(equals({r('Status')},'Accepted'),equals({r('OperationComplete')},false),not(empty({r('WinningOperationKey')})),equals({r('ConnectionKey')},{live}))"
         settled = f"and(not(equals({r('Status')},'Pending')),equals({r('OperationComplete')},true),not(empty({r('WinningOperationKey')})),equals({r('ConnectionKey')},{history}))"
-        tests = [f"equals({r('Id')},body('Input')?['number_1'])", f"equals({r('SenderParticipantId')},outputs('Actor')?['Id'])",
+        tests = [f"equals({r('SenderParticipantId')},{sender})",
+                 f"equals(coalesce({r('RecipientParticipantId')},0),{recipient})",
+                 f"equals({r('Id')},body('Input')?['number_1'])", f"equals({r('SenderParticipantId')},outputs('Actor')?['Id'])",
                  f"equals({r('__metadata')}?['type'],body('Read_list_type')?['d']?['ListItemEntityTypeFullName'])",
                  f'not(empty(trim({r("SendOperationKey")})))', f'or({personal},{group_})', f'or({pending},{accepting},{settled})']
         a[prefix + '_checks'] = gate(prefix + '_checks', 'and(' + ','.join(tests) + ')', 'REQUEST_INTEGRITY', prefix)
@@ -308,15 +317,15 @@ def build_package(source, output):
               'operationKey': 'cancel:{trustedParticipantId}:request:{requestId}', 'receipt': 'Atomic immutable terminal request row; no new receipt list.',
               'limits': {'actions': 500, 'depth': 8}, 'mode': MODE,
               'tenantResult': 'NOT_IMPORTED_NOT_TESTED', 'ordinaryUserAccessVerified': False}
-    output.with_suffix('.definition.json').write_text(json.dumps(doc, indent=2) + '\n', encoding='utf-8')
-    output.with_suffix('.review.json').write_text(json.dumps(review, indent=2) + '\n', encoding='utf-8')
+    output.with_suffix('.definition.json').write_bytes((json.dumps(doc, indent=2) + '\n').encode('utf-8'))
+    output.with_suffix('.review.json').write_bytes((json.dumps(review, indent=2) + '\n').encode('utf-8'))
     return review
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', type=Path, default=ROOT / 'artifacts/tandem_discovery/TandemDiscovery-v2.definition.json')
-    parser.add_argument('--output', type=Path, default=ROOT / 'artifacts/cancel_request/TandemCancelRequest-v2.zip')
+    parser.add_argument('--output', type=Path, default=ROOT / 'artifacts/cancel_request/TandemCancelRequest-v3.zip')
     args = parser.parse_args()
     print(json.dumps(build_package(args.source, args.output), indent=2))
 

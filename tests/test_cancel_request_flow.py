@@ -28,6 +28,7 @@ class CancelRunner(FlowRunner):
             try: return ET.fromstring(value)
             except ET.ParseError as exc: raise ValueError('Invalid connector metadata XML') from exc
         def xpath(root, path):
+            if path == 'string(/Field/@Decimals)': return root.attrib.get('Decimals', '')
             if path == 'string(/Field/@List)': return root.attrib.get('List', '')
             if path == 'string(/Field/@FillInChoice)': return root.attrib.get('FillInChoice', '')
             if path == '/Field/CHOICES/CHOICE/text()': return [n.text or '' for n in root.findall('./CHOICES/CHOICE')]
@@ -51,7 +52,7 @@ class CancelRunner(FlowRunner):
                          'lessOrEquals': lambda a,b: a <= b, 'length': len, 'empty': lambda v: v is None or v == '' or v == [],
                          'if': lambda c,a,b: a if c else b, 'intersection': lambda a,b: list(set(a) & set(b)),
                          'coalesce': lambda *v: next((x for x in v if x is not None), None),
-                         'trim': lambda s: s.strip(), 'replace': lambda s,a,b: s.replace(a,b), 'toLower': lambda s: s.lower(), 'json': json.loads,
+                         'int': int, 'trim': lambda s: s.strip(), 'replace': lambda s,a,b: s.replace(a,b), 'toLower': lambda s: s.lower(), 'json': json.loads,
                          'first': lambda a: a[0], 'concat': lambda *v: ''.join(str(x) for x in v),
                          'string': lambda v: json.dumps(v,separators=(',',':')) if isinstance(v,(dict,list,bool)) else str(v),
                          'createArray': lambda *v: list(v), 'div': lambda a,b: a // b,
@@ -82,6 +83,7 @@ def fields(spec):
     rows = []
     for name, rule in spec.items():
         xml = ET.Element('Field', Name=name, Type=rule['type'], FillInChoice='FALSE')
+        if 'decimals' in rule: xml.set('Decimals', str(rule['decimals']))
         if rule.get('target'): xml.set('List', '{' + rule['target'] + '}')
         if rule.get('choices'):
             choices = ET.SubElement(xml, 'CHOICES')
@@ -211,7 +213,7 @@ def test_incomplete_reads_fail_closed(page):
 
 
 @pytest.mark.parametrize('field,prop,value', [
-    ('SenderParticipant','Required',False), ('RecipientParticipant','Required',True), ('TargetGroup','TypeAsString','LookupMulti'),
+    ('SenderParticipantId','Required',False), ('RecipientParticipantId','Required',True), ('TargetGroup','TypeAsString','LookupMulti'),
     ('SendOperationKey','EnforceUniqueValues',False), ('SendOperationKey','Indexed',False), ('ConnectionKey','Required',False),
     ('ConnectionKey','Indexed',False), ('Status','ReadOnlyField',True), ('WinningOperationKey','TypeAsString','Note'),
     ('OperationComplete','TypeAsString','Text'), ('RequestType','Hidden',True), ('TargetGroup','SchemaXml','<Field List="wrong"/>'),
@@ -347,3 +349,65 @@ def test_global_duplicate_names_rejected_even_across_else_branches():
     branches=actions['Cancel_work']['actions']['Choose_pending']
     branches['else']['actions']['Mark_write_attempt']={'type':'Compose','inputs':'invalid','runAfter':{}}
     with pytest.raises(ValueError,match='Duplicate action'): cancel.measure(actions)
+
+
+# Exact observed Number metadata; no private attachment/runtime dependency.
+OBSERVED_NUMBER_FIELDS = [{'InternalName': 'SenderParticipantId', 'TypeAsString': 'Number', 'Required': True, 'Hidden': False, 'ReadOnlyField': False, 'EnforceUniqueValues': False, 'Indexed': False, 'SchemaXml': '<Field Type="Number" DisplayName="SenderParticipantId" Required="TRUE" EnforceUniqueValues="FALSE" Indexed="FALSE" Decimals="0" ID="{7909dcd2-f0b9-4158-9b9a-2017cb156fcd}" SourceID="{3d17485d-1dac-41f0-a1af-24e45daa4567}" StaticName="SenderParticipantId" Name="SenderParticipantId" ColName="float1" RowOrdinal="0"/>'}, {'InternalName': 'RecipientParticipantId', 'TypeAsString': 'Number', 'Required': True, 'Hidden': False, 'ReadOnlyField': False, 'EnforceUniqueValues': False, 'Indexed': False, 'SchemaXml': '<Field Type="Number" DisplayName="RecipientParticipantId" Required="TRUE" EnforceUniqueValues="FALSE" Indexed="FALSE" Decimals="0" ID="{e23db904-ddb4-451d-aa37-9b59b375b1ca}" SourceID="{3d17485d-1dac-41f0-a1af-24e45daa4567}" StaticName="RecipientParticipantId" Name="RecipientParticipantId" ColName="float2" RowOrdinal="0"/>'}]
+
+@pytest.mark.parametrize('kind', ['Personal','Group'])
+def test_observed_number_metadata_passes_after_explicit_recipient_optional_setup(kind):
+    s=Fake(kind)
+    for field in OBSERVED_NUMBER_FIELDS:
+        observed=deepcopy(field)
+        if observed['InternalName']=='RecipientParticipantId':
+            observed['Required']=False
+            xml=ET.fromstring(observed['SchemaXml']); xml.set('Required','FALSE')
+            observed['SchemaXml']=ET.tostring(xml,encoding='unicode')
+        index=next(i for i,f in enumerate(s.fields) if f['InternalName']==observed['InternalName'])
+        s.fields[index]=observed
+    assert execute(s).response['success'] and len(s.writes)==1
+
+
+def test_actual_pre_setup_metadata_is_still_blocked_without_writes():
+    s=Fake()
+    s.fields=deepcopy(OBSERVED_NUMBER_FIELDS)+[f for f in s.fields if f['InternalName']=='Status']
+    r=execute(s)
+    assert r.response['resultcode']=='REQUEST_SCHEMA_UNVERIFIED' and not s.writes and s.read_count==0
+
+
+@pytest.mark.parametrize('field', ['SenderParticipantId','RecipientParticipantId'])
+@pytest.mark.parametrize('old_name', [False,True])
+def test_former_lookup_sender_recipient_metadata_is_rejected(field,old_name):
+    s=Fake(); f=next(f for f in s.fields if f['InternalName']==field)
+    f.update(TypeAsString='Lookup',SchemaXml='<Field Type="Lookup" List="{'+PEOPLE['lists']['participants']['listId']+'}"/>')
+    if old_name: f['InternalName']=field.removesuffix('Id')
+    r=execute(s)
+    assert r.response['resultcode']=='REQUEST_SCHEMA_UNVERIFIED' and not s.writes
+
+
+@pytest.mark.parametrize('field', ['SenderParticipantId','RecipientParticipantId'])
+@pytest.mark.parametrize('decimals', ['2','Auto',None])
+def test_number_metadata_wrong_or_missing_decimals_fails_closed(field,decimals):
+    s=Fake(); f=next(f for f in s.fields if f['InternalName']==field)
+    xml=ET.fromstring(f['SchemaXml'])
+    if decimals is None: xml.attrib.pop('Decimals')
+    else: xml.set('Decimals',decimals)
+    f['SchemaXml']=ET.tostring(xml,encoding='unicode')
+    r=execute(s)
+    assert r.response['resultcode']=='REQUEST_SCHEMA_UNVERIFIED' and not s.writes
+
+
+@pytest.mark.parametrize('kind', ['Personal','Group'])
+def test_whole_float_number_refs_preserve_authority_and_canonical_keys(kind):
+    s=Fake(kind); s.row['SenderParticipantId']=3.0
+    if kind=='Personal': s.row['RecipientParticipantId']=2.0
+    r=execute(s)
+    assert r.response['success'] and s.row['WinningOperationKey']=='cancel:3:request:71'
+    assert s.row['SenderParticipantId']==3.0 and len(s.writes)==1
+
+
+@pytest.mark.parametrize('field,value', [('SenderParticipantId',3.5),('RecipientParticipantId',2.5),('RecipientParticipantId',0.5)])
+def test_fractional_number_refs_never_cancel(field,value):
+    s=Fake(); s.row[field]=value; r=execute(s)
+    assert not r.response['success'] and not s.writes
+    assert r.response['resultcode'] in ['UNAUTHORIZED','REQUEST_INTEGRITY']

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceTicket": 63,
-  "flowName": "TandemCancelRequest v2",
+  "flowName": "TandemCancelRequest v3",
   "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF",
   "state": "OWNER_PREVIEW_PACKAGE_LOCAL_GRAPH_TESTED_NATIVE_NOT_RUN",
   "input": {
@@ -37,19 +37,19 @@
   "baselineFallback": "Checked-in artifacts/tandem_discovery/TandemDiscovery-v2.definition.json suffices; emits fresh documented two-number PowerAppV2 trigger when original export is absent.",
   "mapping": {
     "requestsListId": "3d17485d-1dac-41f0-a1af-24e45daa4567",
-    "status": "PROPOSED_NOT_TENANT_VERIFIED_RUNTIME_GATED",
+    "status": "NUMBER_REFERENCES_OBSERVED_CUSTOM_FIELDS_MISSING_RECIPIENT_OPTIONAL_SETUP_PENDING",
     "participantsListId": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
     "groupsListId": "4bf1b37f-edce-40c5-8fa0-36543a2d0cd6",
     "fields": {
-      "SenderParticipant": {
-        "type": "Lookup",
+      "SenderParticipantId": {
+        "type": "Number",
         "required": true,
-        "target": "fd3adf46-f81d-4a7b-a80c-567fde0175dc"
+        "decimals": 0
       },
-      "RecipientParticipant": {
-        "type": "Lookup",
+      "RecipientParticipantId": {
+        "type": "Number",
         "required": false,
-        "target": "fd3adf46-f81d-4a7b-a80c-567fde0175dc"
+        "decimals": 0
       },
       "TargetGroup": {
         "type": "Lookup",
@@ -93,9 +93,41 @@
         "required": false
       }
     },
-    "gates": "All exact internal names/types/Required; not hidden/read-only. Both send/live keys required unique indexed. Lookup targets exact GUIDs. Choices exact vocabulary/count, no fill-in values. Participantaccount required unique indexed User. Complete field reads only.",
+    "gates": "Exact internal names/types/Required; not hidden/read-only. SenderParticipantId and RecipientParticipantId are existing Number columns with XML Decimals=0, not lookups. Row values must be positive mathematically whole Numbers (recipient may be null for Group), checked by equals(value,int(value)); normalize integers before live-key string construction. Id/TargetGroupId retain integer validation. Both send/live keys required unique indexed; TargetGroup lookup exact Groups GUID; choices exact/count/no fill-in; Participantaccount required unique indexed User; complete bounded reads only.",
     "operationCompleteRequiredExpectation": false,
-    "mismatch": "REQUEST_SCHEMA_UNVERIFIED; do not guess/rename/autocreate/backfill. Parent #10 shared metadata preflight supplies evidence; no extra audit package."
+    "mismatch": "REQUEST_SCHEMA_UNVERIFIED; do not guess/rename/autocreate/backfill. Parent #10 shared metadata preflight supplies evidence; no extra audit package.",
+    "observedPreflight": {
+      "packageBuildId": "f7fd078d-740a-4d68-a8fe-31ca2abc9e54",
+      "runReference": "08584074297422149453962972460CU27",
+      "collectionComplete": true,
+      "schemaVerified": false,
+      "writes": 0,
+      "sender": {
+        "internalName": "SenderParticipantId",
+        "fieldId": "7909dcd2-f0b9-4158-9b9a-2017cb156fcd",
+        "type": "Number",
+        "required": true,
+        "xmlDecimals": 0
+      },
+      "recipient": {
+        "internalName": "RecipientParticipantId",
+        "fieldId": "e23db904-ddb4-451d-aa37-9b59b375b1ca",
+        "type": "Number",
+        "required": true,
+        "xmlDecimals": 0
+      },
+      "missingFields": [
+        "RequestType",
+        "TargetGroup",
+        "SendOperationKey",
+        "ConnectionKey",
+        "WinningOperationKey",
+        "OperationComplete"
+      ],
+      "ownerConfirmedEmpty": true,
+      "migrationOrBackfillRequired": false,
+      "gate": "Owner adds six fields and toggles existing RecipientParticipantId Required off, preserving existing Number columns/IDs, then runs corrected shared preflight. OperationComplete optional Boolean defaults No. No tenant changes performed here."
+    }
   },
   "reads": {
     "fieldBoundPerList": 500,
@@ -157,17 +189,17 @@
   },
   "legacy": "Missing/malformed/incomplete keys, parties, ETag, status or marker -> REQUEST_INTEGRITY; preserve row unchanged. Blank/whitespace send key rejected. Canonical send UUID issuance remains Send scope, not guessed for #17 by cancellation.",
   "package": {
-    "zip": "artifacts/cancel_request/TandemCancelRequest-v2.zip",
-    "buildId": "9533894a-20d7-46e8-a640-5af8473c3b33",
-    "sha256": "b9d6d1341f76af3b2d0b9e710612ff7216ab3e109c394a47531d072503cbbd61",
+    "zip": "artifacts/cancel_request/TandemCancelRequest-v3.zip",
+    "buildId": "30ff0d83-3895-4a0e-89c2-939b360fc5e7",
+    "sha256": "252c97b0ac33c6094f928efb72a86d13742ec543cc7e2edca178a6245959c7cb",
     "import": "Create as new only, existing SharePoint connection, Invoker; never update original.",
     "actions": 138,
     "maximumActionDepth": 5,
     "globalActionNamesUnique": true
   },
   "validation": {
-    "newGraphCases": 80,
-    "fullSuitePassed": 322,
+    "newGraphCases": 98,
+    "fullSuitePassed": 340,
     "tenantImportRun": "NOT RUN",
     "privacyOrdinaryUser": "NOT VERIFIED",
     "limits": {
@@ -179,7 +211,8 @@
     "Separate #63 branch/PR; handover inline in issue #63; shared batch tracking in PR #78.",
     "Compare #10 shared schema preflight with every expected Required/type/nullable/choice/lookup/unique/index setting; mapping disagreement blocks native cancellation. No schema changes from this package.",
     "Owner imports fresh package and checks Run-only Invoker configuration without permission/licence/connector changes.",
-    "Minimal app call: TandemCancelRequestV2.Run(varOwnParticipantId, ThisItem.ID); refresh inbox/history after every outcome. Button enablement is convenience only; flow reauthorizes.",
-    "Original ordinary-user caller/access boundary #23/#42 remains unverified/deferred; no public rollout."
+    "Minimal app call: TandemCancelRequestV3.Run(varOwnParticipantId, ThisItem.ID); refresh inbox/history after every outcome. Button enablement is convenience only; flow reauthorizes.",
+    "Original ordinary-user caller/access boundary #23/#42 remains unverified/deferred; no public rollout.",
+    "Preserve existing SenderParticipantId/RecipientParticipantId Number columns and IDs; do not rename/convert or add duplicate participant lookups. Six missing custom fields and Recipient Optional are owner setup, followed by corrected preflight; runtime NOT VERIFIED."
   ]
 }
