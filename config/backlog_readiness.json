@@ -33,7 +33,7 @@
       "ownerTicket": 7,
       "ticketType": "Flow",
       "phase": "Core",
-      "state": "Owner-preview v2 package built; native invocation/access/group schema proof pending",
+      "state": "Owner-preview smoke partial pass; populated/native tamper/group/access tests pending",
       "inputOutputContract": "Defined and reviewed in this sole flow-owner ticket before package generation",
       "openTechnicalWork": "One flow returning approved compatible people and existing open groups. App layout is #16; rule source is #9; protected access proof is #42."
     },
@@ -153,24 +153,24 @@
       "ticketType": "Flow",
       "status": "In progress",
       "flowScope": "One flow returning approved compatible people and existing open groups. App layout is #16; rule source is #9; protected access proof is #42.",
-      "implementationReadiness": "Owner-preview v2 package built from actual export; preserves Invoker/number input, binds own profile before candidates; native proof/access boundary pending.",
-      "implementationEvidence": "242 local tests (48 generated Discovery cases); 165 actions/depth 6. Maintained #9 source hash unchanged. #12 verified mapping and #47 proof merged. Source export inspected, not copied to Git.",
-      "evidence": "config/discovery_flow_contract.json and artifacts/tandem_discovery/TandemDiscovery-v2 ZIP/definition/review. NOT_IMPORTED_NOT_TESTED; ordinary-user access false; no owner credential fallback.",
+      "implementationReadiness": "Owner-preview v2 imported/invoked: Paused own profile rejected; Active own profile completed with empty results. Populated, actual Run-only selector and ordinary access tests pending.",
+      "implementationEvidence": "242 local tests; 165 actions/depth 6. Native owner Paused 08584074350262917105745395996CU25 => PROFILE_UNAVAILABLE; Active 08584074348343616902680114159CU10 => OK, 0 people/0 groups, writes=0.",
+      "evidence": "artifacts/tandem_discovery/results/owner-smoke.evidence.json and exact owner reports. Empty-result owner pass is not populated matching/ordinary-user proof.",
       "proposedExperience": [
         "Click Discovery from your saved profile.",
         "See compatible people, excluding self/unavailable/invalid profiles.",
         "See approved profile fields including Comments/optional time zone, without email/system data.",
         "Discovery creates no membership or request."
       ],
-      "remainingWork": "Verify imported run-only Invoker connection, owner Studio invocation/current-user binding/data-shape/response smoke. Populated group commitment schema/fixtures and #42 protected two-account ordinary-user proof remain explicit gates. Keep owner-only.",
+      "remainingWork": "Native different-profile tamper rejection and actual Run-only selector evidence; compatible people/group fixtures/projection/availability/commitment and native bounds/load tests. #42 protected group-based participant access remains gated, no routine individual grants.",
       "testReferences": [
         "DISC-001:011",
         "GRP-005:007",
         "LEAVE-003",
         "LEAVE-004"
       ],
-      "testStatus": "Local generated-flow PASS: own/tampered references, unavailable/blank-zone/culture/Any entries, committed groups/history/availability, typed allowlist, reads/count/paging/render/work/response bounds. Native DISC/GRP/LEAVE integration NOT RUN.",
-      "testHandoff": "Inline #7 exact owner-preview import/Run-only check/temporary Studio test button/report and checklist. Preserve old flow/published app; no ordinary-user rollout or automatic schema/data writes.",
+      "testStatus": "Owner native own-profile Paused rejection and Active/empty success PASS. 242 local tests PASS. Remaining DISC/GRP/LEAVE populated/access/load cases NOT RUN; no app publication/cutover confirmed.",
+      "testHandoff": "Keep owner Studio preview and source flow/published app unchanged. Checked/unchecked cases and reports inline #7; no new package or full native pass claimed.",
       "flows": [
         "TandemDiscovery"
       ],

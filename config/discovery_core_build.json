@@ -114,7 +114,7 @@
     "builder": "scripts/power_automate/discovery_flow.py",
     "package": "artifacts/tandem_discovery/TandemDiscovery-v2.zip",
     "packageBuildId": "7c8589d0-fdea-4db8-9d44-46b7d8548acf",
-    "tenantResult": "NOT_IMPORTED_NOT_TESTED",
+    "tenantResult": "OWNER_SMOKE_PARTIAL_PASS",
     "ordinaryUserAccessVerified": false
   }
 }

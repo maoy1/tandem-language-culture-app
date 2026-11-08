@@ -1,0 +1,15 @@
+{
+  "kind": "TandemDiscovery",
+  "schemaVersion": 1,
+  "sourceTicket": 7,
+  "packageBuildId": "7c8589d0-fdea-4db8-9d44-46b7d8548acf",
+  "rulesVersion": 1,
+  "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF",
+  "writes": 0,
+  "peopleCount": 0,
+  "groupCount": 0,
+  "ordinaryUserAccessVerified": false,
+  "runReference": "08584074348343616902680114159CU10",
+  "success": true,
+  "code": "OK"
+}

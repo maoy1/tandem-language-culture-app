@@ -1,0 +1,23 @@
+{
+  "sourceTicket": 7,
+  "evidenceSource": "Owner-pasted Discovery_report outputs and statement that own Participation status was Paused, then changed to Active. No raw source profile data or app/flow screenshots supplied for these runs.",
+  "scope": "Owner-context minimal invocation/availability/empty-result smoke only",
+  "packageBuildId": "7c8589d0-fdea-4db8-9d44-46b7d8548acf",
+  "passed": [
+    "Owner invocation reached own-profile reference guard before PROFILE_UNAVAILABLE on Paused profile.",
+    "Fresh owner run after manual Active change completed with code OK, zero candidates/groups, writes zero."
+  ],
+  "notVerified": [
+    "Populated positive person/group matching or typed field projection in tenant",
+    "Actual imported Run-only selector value as UI evidence; owner path cannot distinguish shared-owner fallback by itself",
+    "Native tampered different-profile rejection and ordinary-user/two-account protected-data proof",
+    "Availability of another compatible candidate (Paused/Inactive/No/Needs review transitions)",
+    "Group request OperationComplete schema/current member episodes when potential joinable groups exist",
+    "Worst-case native bounds/paging/latency and app publication/cutover"
+  ],
+  "reports": [
+    "artifacts/tandem_discovery/results/owner-paused.report.json",
+    "artifacts/tandem_discovery/results/owner-active-empty.report.json"
+  ],
+  "selfServiceRequirement": "Use existing organizational/group-based app/flow access rather than routine individual grants. Connector sign-in/consent is distinct; final protected-data architecture remains #42, not removed/switched by this owner test."
+}

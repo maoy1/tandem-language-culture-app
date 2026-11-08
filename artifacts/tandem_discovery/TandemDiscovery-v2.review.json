@@ -26,7 +26,9 @@
   "ownerCredentialFallback": false,
   "writes": 0,
   "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF",
-  "tenantResult": "NOT_IMPORTED_NOT_TESTED",
+  "tenantResult": "OWNER_SMOKE_PARTIAL_PASS",
   "ordinaryUserAccessVerified": false,
-  "groupDependency": "Connection Requests OperationComplete Boolean must exist when groups exist; accepted/complete source and member episodes required. Missing schema yields explicit error, never partial success."
+  "groupDependency": "Connection Requests OperationComplete Boolean must exist when groups exist; accepted/complete source and member episodes required. Missing schema yields explicit error, never partial success.",
+  "ownerSmokeEvidence": "artifacts/tandem_discovery/results/owner-smoke.evidence.json",
+  "populatedResultsVerified": false
 }

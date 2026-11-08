@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceTicket": 7,
-  "state": "OWNER_PREVIEW_PACKAGE_PENDING_TENANT_RUN",
+  "state": "OWNER_SMOKE_PARTIAL_PASS_POPULATED_AND_ACCESS_PENDING",
   "flow": "TandemDiscovery v2",
   "packageBuildId": "7c8589d0-fdea-4db8-9d44-46b7d8548acf",
   "package": "artifacts/tandem_discovery/TandemDiscovery-v2.zip",
@@ -22,7 +22,9 @@
     "algorithm": "Read current SharePoint user through that same Invoker connection; query own Participants record via ParticipantaccountId, require exactly one and exact input reference before Get_item/Candidate_source.",
     "tenantCallerBindingVerified": false,
     "ordinaryUserAccessVerified": false,
-    "releaseGate": "#42 protected data/access method and two-account proof; owner-only preview first. Do not grant list-wide raw access or substitute owner credentials."
+    "releaseGate": "#42 protected data/access method and two-account proof; owner-only preview first. Do not grant list-wide raw access or substitute owner credentials.",
+    "ownerCurrentUserPathSucceeded": true,
+    "ownerEvidence": "Owner own-reference/availability path ran; actual Run-only UI selector and two-account/tampered-reference tenant proof remain unverified."
   },
   "outputs": {
     "candidatesjson": "Text JSON array, compatible people only; existing profileId/displayName/fitType preserved, adds profile and directional match arrays.",
@@ -214,16 +216,20 @@
   "tests": {
     "localSuite": 242,
     "newGeneratedFlowCases": 48,
-    "tenant": "NOT_IMPORTED_NOT_TESTED",
+    "tenant": "OWNER_SMOKE_PARTIAL_PASS",
     "blocked": [
       "#42 ordinary-user protected-data/two-account access proof",
       "Populated live group commitment schema/data and dynamic availability integration",
       "Worst-case tenant pagination/latency/load; explicit bounds locally verified"
-    ]
+    ],
+    "ownerSmokeEvidence": "artifacts/tandem_discovery/results/owner-smoke.evidence.json",
+    "ownerPausedRun": "08584074350262917105745395996CU25",
+    "ownerActiveEmptyRun": "08584074348343616902680114159CU10"
   },
   "schemaMapping": [
     "config/tenant_schema_mapping.json",
     "config/group_schema_mapping.json"
   ],
-  "cutover": "Create as new. Preserve existing flow and published app; add new flow to owner Studio preview and use temporary test button. Verify Run-only SharePoint Provided by run-only user; do not substitute owner/embedded credentials. No participant rollout before access proof."
+  "cutover": "Create as new. Preserve existing flow and published app; add new flow to owner Studio preview and use temporary test button. Verify Run-only SharePoint Provided by run-only user; do not substitute owner/embedded credentials. No participant rollout before access proof.",
+  "selfServiceAccessRequirement": "No routine individual participant grants; group-based sharing/access where existing tenant group is verified. Do not remove authentication or switch Invoker to owner credentials; #42 owns protected-data/caller design."
 }
