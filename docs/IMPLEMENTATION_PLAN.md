@@ -4,36 +4,112 @@ The approved design is CURRENT_DESIGN.md. This plan reflects the owner's
 annotations to Combined Requirements v0.2. GitHub tickets hold implementation
 acceptance and status; planning completion does not imply deployment.
 
-## Current focus - #46 contract review and merge
+## Current focus - #45 focused-ticket restructuring (PR #60)
 
-PR #58 merged; package experiments passed at their recorded scope. #46 now has
-a bounded finish line: target field/ownership tables and approved Discovery
-exposure documented, receiving tickets identified, owner reviews/merges the PR.
-No flow deployment, concurrency proof or ordinary-user test blocks its closure.
+#46 is accepted/closed. Tracking now separates Flow, App, Shared technical and
+Overview tickets. One production flow has one owner; old partial work/evidence
+does not mean active In progress. See BACKLOG_ALIGNMENT.md and the complete
+config/ticket_scope_map.json transfer of 246 former checklist items.
 
-- [x] Product rules, optional time zone and independent participation agreed.
-- [x] No leader/contact role; all active members see/respond/manage.
-- [x] Optional group-join introduction; no approved length limit yet (#17).
-- [x] Full Discovery display accepted; email/admin/system fields excluded.
-- [x] Scope audit assigns remaining implementation/decisions to existing tickets.
-- [ ] Owner reviews the target technical field tables and merges the #46 PR.
+- [x] Prepare 41 focused open scopes and 8 new successor tickets.
+- [x] Route every original acceptance item to an active focused owner.
+- [x] Published/verified all 48 types/lifecycle labels, 41 focused open bodies, 2 Superseded handoffs and WIP 0 pending review.
+- [ ] Review/merge updated PR #60 before feature implementation.
 
-After #46 closes, review per-flow interfaces in the affected implementation
-batches (#10/#11/#17 etc.), not by reopening/extending #46. #47 owns bounded
-capacity/conflict/recovery design and proof. #39-#42 own deferred identity/access;
-#48 owns migration confirmation; #49 then #21 own notifications. #45 is the
-owner overview and holds the organiser-contact decision before related guidance.
-See MVP_FIELD_CONTRACT.md, '#46 scope audit and handoff', for exact boundaries.
+Sole production-flow ownership:
 
-For each implementation ticket, distinguish Ready for review, Ready for testing
-(with version, steps/expected results and blocked cases) and Done (its own AC
-passed). A dependency may block a particular test/integration without reopening
-an already accepted design ticket. Never close implementation from design-only
-evidence or claim blocked tests passed.
+| Flow | Owner | Phase |
+|---|---|---|
+| TandemDiscovery | #7 | Core |
+| TandemSendRequest | #10 | Core |
+| TandemRespondRequest | #11 | Core |
+| TandemUpdateGroup | #13 | Core |
+| TandemLeaveGroup | #14 | Core |
+| TandemSendGroupJoinRequest | #17 | Core |
+| TandemNotifyRequest (provisional) | #21 | Core |
+| TandemFreshnessReminder | #30 | Later |
+| Participant submission | #61 | Core |
+| TandemMyRequests | #62 | Core |
+| TandemCancelRequest | #63 | Core |
+| TandemMyGroups | #64 | Core |
+| TandemRespondGroupJoinRequest | #65 | Core |
 
-TandemMyRequests is not assumed complete. Under #10, compare its current work
-with the interface contract: preserve if complete/small follow-up, otherwise
-build a fresh package. No replacement is deployed by this planning batch.
+Next focused batches (one selected non-overview ticket at a time):
+
+1. **#66 Shared technical:** verify participant/catalogue field
+   mappings and availability defaults once; flag any permitted setup first.
+2. **#6 App:** participation/openness controls; **#5 App:** complete registration
+   UI. **#61 Flow** owns server validation independently.
+3. **#9 Shared technical** maintained compatibility and **#47 Shared technical**
+   minimal conditional/capacity/recovery artifact and proof. **#12 Shared
+   technical** owns actual group/member schema, not acceptance implementation.
+4. **#7 Flow** Discovery / **#16 App** screen. **#10 Flow** personal send,
+   **#62 Flow** inbox reader, **#63 Flow** cancellation,
+   **#67 App** request screen; assess current MyRequests before rebuild.
+5. **#11 Flow** personal response/new-group creation, **#64 Flow** own
+   groups reader, **#68 App** screen; then **#13 Flow** group update
+   and **#14 Flow** leave. Reuse existing saved work only if it fits the contract.
+6. **#17 Flow** group-join send and **#65 Flow** group-join response.
+7. **#49 Shared technical** notification choice, then **#21 Flow** if required.
+8. **#25-#28 Shared technical** scoped acceptance/data/scale/handover as actual
+   artifacts become testable; **#48 Shared technical** migration is final phase.
+
+Access is its own bounded workstream: #39 assessment -> #40 isolated proof ->
+#41 App registration integration; #42 controlled-candidate adapter/proof and #19/
+#20/#23 shared guards integrate only through the verified method. Ordinary-user
+tests remain owner-deferred, not passed. Unknown permission/setting/connection/
+licence stops the dependent live change. No routine individual admin work or
+paid fallback. #18/#45 are overview rollups, never active development merely
+because children are unfinished. #8/#15/#29-#31 remain Later.
+
+Close each ticket on its own scoped acceptance; record concrete blocked cases
+rather than require every parent/dependency closed. Minimal app-call smoke tests
+belong to Flow tickets; full layout belongs to App tickets. Disposable proof
+harnesses belong to their explicitly scoped Shared technical evidence, not an
+untracked production service. In progress is active work only, max one. Queued
+partial work stays Planned. Superseded is not Done. After audit publish, no issue
+is active pending PR #60 review; the chosen next scope becomes active on start.
+
+## Ticket execution agreement - #45
+
+Before each ticket starts, inspect its current scope/AC and evidence, identify
+exact inputs/outputs and prerequisite gates, and refine the test description.
+Routine technical choices are the agent's work. The owner decides material
+product choices and supplies unavoidable tenant access/actions; do not turn
+technical drafting into repeated owner decisions.
+
+Flow ticket delivery is package-first: importable legacy ZIP, readable definition,
+input/output/connection mapping, local validation, and numbered import/smoke/
+acceptance tests. Manual action-by-action construction is not the default.
+
+Every Flow package has a structural gate: **at most 500 action definitions and
+8 nesting levels**, with measured totals included in its handover. Count all
+branches/control actions, not runtime loop iterations. Reject an over-limit
+package and flatten/redesign before import; keep headroom where practical.
+Child flows/Solutions are not an assumed workaround under the legacy-package
+and existing-entitlement constraints. Official reference:
+https://learn.microsoft.com/en-us/power-automate/limits-and-config
+Shared technical metadata/test probes may also use disposable packages if that
+reduces inspection work; they are not extra production flows.
+
+Each test handover must provide:
+
+1. Verified prerequisites, permitted account role and isolated scope.
+2. Exact artifact/version, fixture/setup and input values.
+3. Numbered actions and expected UI/output/persisted state for each case.
+4. Failure/blocked interpretation, retry/cleanup and sanitized evidence to return.
+5. What has actually passed, what is NOT RUN and what blocks own acceptance.
+
+Minimize manual owner implementation using allowed packaging/tooling. Import,
+existing-connection choice and actual tenant execution may still need the owner.
+App package/edit capabilities must be checked at the relevant App ticket; flow
+probe success does not prove automated App editing. Flag required unavoidable
+steps and verify setup before relying on them. No additional paid platform,
+permission expansion or CLI/sign-in dependency is assumed.
+
+#66 is the first scoped schema work item after PR #60 review/merge. Its detailed
+SCHEMA-001/002 plan is in the issue. Scope/test planning is clear; no live audit,
+field change, import package or schema PASS has yet been produced for #66.
 
 ## Completed package experiment checkpoint (#28)
 

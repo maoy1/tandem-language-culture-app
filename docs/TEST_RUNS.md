@@ -21,7 +21,7 @@ Target scenarios without explicit execution evidence remain NOT RUN or deferred.
 | Tests | State | Reason / linked work |
 |---|---|---|
 | ACC-001–002, ACC-005 | DEFERRED | Owner will arrange normal colleague testing; #18/#39–#42 remain open |
-| DISC-008 | REQUIREMENT PENDING | Exact Discovery display fields not agreed |
+| DISC-008 | DEFERRED / NOT RUN | #46/PR #59 approved display; live projection implementation/execution still pending |
 | NOT-001 | REQUIREMENT PENDING | #49 must select event/channel/recipient behavior |
 | MIG-001–002 | DEFERRED | Actual Excel inspection/migration is final phase #48 |
 | Remaining registration/flow cases and unexecuted case portions | DEFERRED | Owner explicitly prioritizes integrated app/flow construction before the remaining detailed tests (2026-10-31); preserve prior passes/failures and resume after core build |
@@ -777,6 +777,43 @@ the app/flow versions separately.
   group workflow or full #28 reproducibility acceptance inferred.
 - Both disposable probes passed at their stated scope; 30 local tests passed.
   Next is review/merge of the experiment batch, then the next feature batch.
+
+### AUDIT-20261108-01 - #45 backlog/readiness metadata audit
+
+- DOC-001 audit variant PASS: all 40 issues inventoried; 35 open bodies each have
+  proposed experience, flow/readiness assessment, preserved AC and defined case
+  references; remote GitHub reread verified exactly one lifecycle label each.
+- 5 closed issues (#1-#4/#46) labeled Done for their historical/accepted scope.
+  Open: 9 In progress, 8 Planned, 10 Blocked, 8 Deferred; none falsely marked
+  whole-ticket Ready for review/testing. No issue state changed.
+- Source snapshot and per-body before/after comparison retained locally; user
+  edits were checked before mutation. Unrelated labels retained. #31's obsolete
+  Paused-group wording corrected to Closed under the existing approved model.
+- Added planned request/access/data/scale/handover/notification/Later test IDs.
+  Existing local pytest rerun: 30 passed; configuration/package checks only.
+  No new tenant runtime case executed/passed by this audit. Earlier registration,
+  synthetic baseline and import-probe results retain their original scope.
+- Branch codex/issue-45-flow-readiness-audit; actual production versions unknown
+  unless recorded in earlier runs. No live app/flow/list/permissions changed.
+
+### AUDIT-20261108-02 - #45 focused type/scope and activity correction
+
+- DOC-002 metadata audit PASS: 48 issues accounted for; 41 focused open tickets,
+  5 historical Done (#1-#4/#46), 2 Superseded (#22/#24) explicitly closed as
+  not planned only after their successor bodies were published. No unfinished
+  requirement is represented as delivered by retirement.
+- Remote reread verified one focused type and one lifecycle label per issue,
+  13 unique production-flow owners (12 core including provisional notification,
+  one Deferred reminder), all 41 open proposed-experience/own-AC/test sections,
+  and no active In progress issue while audit PR #60 awaits review.
+- Eight successors #61-#68 created; every one of 246 original checklist items
+  has an explicit active destination in config/ticket_scope_map.json. Partial
+  work/evidence preserved as implementation history, not activity or PASS.
+- Earlier AUDIT-20261108-01 counts/status meaning are historical and superseded
+  for current tracking, not rewritten. No runtime test, app, flow, list or
+  permission changed by this restructuring. New SCHEMA/UI definitions are NOT RUN.
+- Existing local suite rerun: 30 passed (configuration/package tests only).
+- This metadata PASS does not finish #45's MVP overview or any implementation.
 
 ## New run template
 

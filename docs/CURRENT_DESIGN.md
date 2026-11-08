@@ -86,9 +86,10 @@ not proof that any existing tenant group lists have the proposed structure.
 Group limits and Discovery display are approved; target technical field tables
 need acceptance. #46 remains open and no schema/form is changed by this proposal.
 
-Finalize exact types, requiredness, defaults, field ownership and exposure in #46
-before schema/form changes in #5/#6. These target fields are approved requirements
-but are not yet deployed:
+#46 accepted the target types/requiredness/defaults/ownership and exposure. #66
+verifies actual participant/catalogue mappings before dependent #5/#6 App
+changes; #61 owns validation. Some setup has owner-reported evidence; the target
+contract does not certify every deployed setting or its runtime acceptance:
 
 - Controlled Cultures I can share and Cultures I am interested in, using a Culture
   catalogue. This supersedes the earlier removal/deferment of controlled culture fields.
@@ -147,7 +148,7 @@ Store group details in Groups and one group/participant episode link in Group
 Members. Keep personal profiles in Participants. Counts, slots and My groups
 derive from active membership links, not editable participant text or presumed
 cross-list calculated columns. Membership rows are workflow-maintained.
-Current #11/#12 implementation uses flow-managed SourceRequestId and membership
+Current #11 creation flow, backed by #12 schema, uses SourceRequestId and membership
 episode MembershipKey for retry identification, plus SetupComplete (default No)
 to distinguish unfinished setup from the participant-controlled lifecycle state.
 Operational My groups/discovery/count derivations must exclude unfinished groups:
@@ -196,6 +197,16 @@ leaving, not a new pause/Inactive membership cascade.
 #47 covers duplicate accepts, simultaneous last-slot joins, retries and partial
 multi-record failure. It is shared acceptance logic/testing for #11/#12/#17,
 not a second matching implementation. Ordinary successful processing is automatic.
+
+## Focused implementation ownership - #45
+
+Each production flow has one Flow ticket. App screens and shared schema/rule/
+authorization artifacts are separate; current owners are listed in
+config/backlog_readiness.json and docs/BACKLOG_ALIGNMENT.md. #61 owns validation,
+#62 request reading, #63 cancellation, #64 My groups reading and #65 group-join
+responses; #66 participant schema and #67/#68 screens are separate. #12 is group
+schema, #16 the Discovery App, #10 personal send and #17 group-join send only.
+#22/#24 are Superseded, not completed. The accepted product rules are unchanged.
 
 ## Contract ticket boundary - #46
 

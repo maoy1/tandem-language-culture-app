@@ -1,0 +1,2638 @@
+{
+  "date": "2026-11-08",
+  "ownerTicket": 45,
+  "policy": "One production flow per Flow ticket; focused App/Shared technical/Overview scopes; no finished work inferred from retirement.",
+  "reused": [
+    {
+      "number": 5,
+      "previousTitle": "[POC-05] Add culture profile fields and optional time zone",
+      "newTitle": "[App] Registration form: culture fields and optional time zone",
+      "ticketType": "App",
+      "scope": "Registration form controls, validation messages and save/reopen behavior only. Backend validation is #61; list schema is #66."
+    },
+    {
+      "number": 6,
+      "previousTitle": "[POC-06] Implement participant participation status",
+      "newTitle": "[App] Participation and openness controls",
+      "ticketType": "App",
+      "scope": "Profile form controls for ParticipationStatus/OpenToConnections only. Membership-derived badges/views belong to #68 and #64."
+    },
+    {
+      "number": 7,
+      "previousTitle": "[POC-07] Implement discovery eligibility logic",
+      "newTitle": "[Flow] TandemDiscovery",
+      "ticketType": "Flow",
+      "scope": "One flow returning approved compatible people and existing open groups. App layout is #16; rule source is #9; protected access proof is #42."
+    },
+    {
+      "number": 8,
+      "previousTitle": "[LATER POC-08] Discovery relevance ranking",
+      "newTitle": "[Shared technical] Later: ranking policy and reusable rule",
+      "ticketType": "Shared technical",
+      "scope": "Future scoring policy/rule artifact; does not own a second TandemDiscovery flow."
+    },
+    {
+      "number": 9,
+      "previousTitle": "[POC-09] Isolate discovery logic from Power Apps UI",
+      "newTitle": "[Shared technical] Reusable compatibility rules for generated flows",
+      "ticketType": "Shared technical",
+      "scope": "One maintained rule/normalization source and synthetic contract fixtures for package generation; no separately hosted runtime or assumed child flow."
+    },
+    {
+      "number": 10,
+      "previousTitle": "[POC-10] Create participant connection request",
+      "newTitle": "[Flow] TandemSendRequest",
+      "ticketType": "Flow",
+      "scope": "Personal connection-request creation only. History is #62, cancellation #63, group-join sending #17."
+    },
+    {
+      "number": 11,
+      "previousTitle": "[POC-11] Accept or decline connection request",
+      "newTitle": "[Flow] TandemRespondRequest",
+      "ticketType": "Flow",
+      "scope": "Personal recipient Accept/Decline flow, including resulting new-group creation. Group-join responses belong to #65."
+    },
+    {
+      "number": 12,
+      "previousTitle": "[POC-12] Create language, culture and combined groups on acceptance",
+      "newTitle": "[Shared technical] Groups and Group Members schema and field mapping",
+      "ticketType": "Shared technical",
+      "scope": "One-time group/membership data contract verification/setup only. #11 owns automatic new-group creation; #64 owns reading/counts."
+    },
+    {
+      "number": 13,
+      "previousTitle": "[POC-13] Implement group lifecycle management",
+      "newTitle": "[Flow] TandemUpdateGroup",
+      "ticketType": "Flow",
+      "scope": "One current-member group update flow; group screen layout is #68."
+    },
+    {
+      "number": 14,
+      "previousTitle": "[POC-14] Implement leave-group behavior",
+      "newTitle": "[Flow] TandemLeaveGroup",
+      "ticketType": "Flow",
+      "scope": "One self-service leave flow; no timer, automatic reopening/ending or replacement assignment."
+    },
+    {
+      "number": 15,
+      "previousTitle": "[LATER POC-15] Review two-active-groups warning scope",
+      "newTitle": "[App] Later: multiple-group warning",
+      "ticketType": "App",
+      "scope": "Optional warning UI only if product chooses it; no core-MVP group limit."
+    },
+    {
+      "number": 16,
+      "previousTitle": "[POC-16] Discover existing open groups",
+      "newTitle": "[App] Discovery screen for people and groups",
+      "ticketType": "App",
+      "scope": "Discovery screen layout/display/navigation only. #7 exclusively owns TandemDiscovery and all matching."
+    },
+    {
+      "number": 17,
+      "previousTitle": "[POC-17] Request to join an existing group",
+      "newTitle": "[Flow] TandemSendGroupJoinRequest",
+      "ticketType": "Flow",
+      "scope": "Group join-request creation only; #65 answers, #62 reads, #63 cancels."
+    },
+    {
+      "number": 18,
+      "previousTitle": "[POC-18] Protect participant access and privacy before wider rollout",
+      "newTitle": "[Overview] Private registration access stages",
+      "ticketType": "Overview",
+      "scope": "Roll up #39 assessment, #40 isolated proof and #41 app integration only; no implementation flow owned here. #42 is separate Discovery access."
+    },
+    {
+      "number": 19,
+      "previousTitle": "[POC-19] Protect group-member actions",
+      "newTitle": "[Shared technical] Current-member authorization guard",
+      "ticketType": "Shared technical",
+      "scope": "Reusable current membership authorization and departure revocation for member actions; no production flow of its own."
+    },
+    {
+      "number": 20,
+      "previousTitle": "[POC-20] Protect requests and memberships",
+      "newTitle": "[Shared technical] Workflow-only membership data writes",
+      "ticketType": "Shared technical",
+      "scope": "Protect raw authoritative Group Members lifecycle data; request visibility/response policy belongs to #23."
+    },
+    {
+      "number": 21,
+      "previousTitle": "[POC-21] Send request notifications",
+      "newTitle": "[Flow] TandemNotifyRequest (channel pending)",
+      "ticketType": "Flow",
+      "scope": "One proposed request-event delivery flow, only after #49 chooses a permitted approach. No delivery runtime approved yet."
+    },
+    {
+      "number": 23,
+      "previousTitle": "[POC-23] Enforce request visibility and response authority",
+      "newTitle": "[Shared technical] Request visibility and response authorization guard",
+      "ticketType": "Shared technical",
+      "scope": "Reusable trusted-caller request visibility/action policy; #62 owns the production reader."
+    },
+    {
+      "number": 25,
+      "previousTitle": "[POC-25] Verify MVP discovery and workflow acceptance cases",
+      "newTitle": "[Shared technical] Integrated MVP acceptance test execution",
+      "ticketType": "Shared technical",
+      "scope": "Cross-feature test matrix, fixtures and versioned execution/report only; no production flow owned."
+    },
+    {
+      "number": 26,
+      "previousTitle": "[POC-26] Generate synthetic scale datasets",
+      "newTitle": "[Shared technical] Synthetic scale dataset generator",
+      "ticketType": "Shared technical",
+      "scope": "Optional local reproducible fixture-generation/validation artifact; no production runtime."
+    },
+    {
+      "number": 27,
+      "previousTitle": "[POC-27] Measure discovery scalability",
+      "newTitle": "[Shared technical] Discovery scalability measurements",
+      "ticketType": "Shared technical",
+      "scope": "Versioned scale measurements/report only; no separate Discovery implementation."
+    },
+    {
+      "number": 28,
+      "previousTitle": "[POC-28] Validate deployment reproducibility",
+      "newTitle": "[Shared technical] Deployment reproducibility and handover proof",
+      "ticketType": "Shared technical",
+      "scope": "Independent-owner deployment instructions/reproduction test; no additional business flow."
+    },
+    {
+      "number": 29,
+      "previousTitle": "[POC-29] Implement participant and group freshness tracking",
+      "newTitle": "[Shared technical] Later: freshness data and confirmation policy",
+      "ticketType": "Shared technical",
+      "scope": "Future freshness field/event/threshold contract; consuming flows remain separately owned."
+    },
+    {
+      "number": 30,
+      "previousTitle": "[POC-30] Implement freshness reminder workflow",
+      "newTitle": "[Flow] Later: TandemFreshnessReminder",
+      "ticketType": "Flow",
+      "scope": "One future scheduled reminder flow, dependent on #29 and approved delivery."
+    },
+    {
+      "number": 31,
+      "previousTitle": "[POC-31] Build admin status overview",
+      "newTitle": "[App] Later: admin status overview",
+      "ticketType": "App",
+      "scope": "Future admin screen/dashboard only; use existing readers or create a focused reader ticket only if later needed."
+    },
+    {
+      "number": 39,
+      "previousTitle": "[POC-18A] Check self-service access prerequisites before building",
+      "newTitle": "[Shared technical] Self-service access prerequisite assessment",
+      "ticketType": "Shared technical",
+      "scope": "Read-only capability inventory and feasible-method recommendation; actual two-user proof is #40."
+    },
+    {
+      "number": 40,
+      "previousTitle": "[POC-18B] Prove own-profile access with two test users",
+      "newTitle": "[Shared technical] Two-user own-profile access proof",
+      "ticketType": "Shared technical",
+      "scope": "One isolated authentication/privacy capability proof, not a production flow or working-app cutover."
+    },
+    {
+      "number": 41,
+      "previousTitle": "[POC-18C] Apply verified access to self-service registration",
+      "newTitle": "[App] Apply proven private access to registration",
+      "ticketType": "App",
+      "scope": "Registration app data-binding/cutover and UI regression only; if proof requires extra backend flows, create one focused ticket per flow before building them."
+    },
+    {
+      "number": 42,
+      "previousTitle": "[POC-18D] Add controlled candidate access during discovery",
+      "newTitle": "[Shared technical] Protected candidate-data access adapter and proof",
+      "ticketType": "Shared technical",
+      "scope": "Verified data-access/response boundary for Discovery; #7 alone owns TandemDiscovery deployment."
+    },
+    {
+      "number": 45,
+      "previousTitle": "[MVP v0.2] Align scope fields and delivery sequence",
+      "newTitle": "[Overview] MVP delivery and focused-ticket roadmap",
+      "ticketType": "Overview",
+      "scope": "Roll up focused App/Flow/Shared technical deliverables and release decisions; not active implementation and not a second owner of child work."
+    },
+    {
+      "number": 47,
+      "previousTitle": "[MVP] Make request acceptance safe under retries and simultaneous joins",
+      "newTitle": "[Shared technical] Shared conditional writes and bounded recovery",
+      "ticketType": "Shared technical",
+      "scope": "Minimum cross-flow decision/duplicate/capacity protection and proof; not a second acceptance engine or elaborate locking platform."
+    },
+    {
+      "number": 48,
+      "previousTitle": "[MVP final phase] Inspect map and migrate existing Excel participants and groups",
+      "newTitle": "[Shared technical] Final-phase existing-data migration",
+      "ticketType": "Shared technical",
+      "scope": "One-off source mapping, migration/reconciliation artifact and execution, not an ongoing intake workflow."
+    },
+    {
+      "number": 49,
+      "previousTitle": "[MVP] Evaluate notification options and agree event channel matrix",
+      "newTitle": "[Shared technical] Notification option and event-matrix decision",
+      "ticketType": "Shared technical",
+      "scope": "Evaluate permitted central in-app/email/Teams/Approvals options and select a bounded matrix; #21 owns any resulting delivery flow."
+    }
+  ],
+  "created": [
+    {
+      "number": 61,
+      "key": "submission",
+      "title": "[Flow] Participant submission validation",
+      "ticketType": "Flow",
+      "sources": [
+        41,
+        6,
+        5
+      ]
+    },
+    {
+      "number": 62,
+      "key": "history",
+      "title": "[Flow] TandemMyRequests",
+      "ticketType": "Flow",
+      "sources": [
+        24,
+        23,
+        17,
+        10
+      ]
+    },
+    {
+      "number": 63,
+      "key": "cancel",
+      "title": "[Flow] TandemCancelRequest",
+      "ticketType": "Flow",
+      "sources": [
+        24,
+        17,
+        10
+      ]
+    },
+    {
+      "number": 64,
+      "key": "mygroups",
+      "title": "[Flow] TandemMyGroups",
+      "ticketType": "Flow",
+      "sources": [
+        12,
+        6
+      ]
+    },
+    {
+      "number": 65,
+      "key": "respond_group",
+      "title": "[Flow] TandemRespondGroupJoinRequest",
+      "ticketType": "Flow",
+      "sources": [
+        24,
+        17,
+        13,
+        11
+      ]
+    },
+    {
+      "number": 66,
+      "key": "participant_schema",
+      "title": "[Shared technical] Participant and catalogue schema alignment",
+      "ticketType": "Shared technical",
+      "sources": [
+        5
+      ]
+    },
+    {
+      "number": 67,
+      "key": "requests_app",
+      "title": "[App] Request inbox screen and action dialogs",
+      "ticketType": "App",
+      "sources": [
+        23,
+        17,
+        11,
+        10
+      ]
+    },
+    {
+      "number": 68,
+      "key": "mygroups_app",
+      "title": "[App] My groups screen and member controls",
+      "ticketType": "App",
+      "sources": [
+        14,
+        12,
+        6
+      ]
+    }
+  ],
+  "superseded": [
+    {
+      "number": 22,
+      "successors": [
+        19,
+        20
+      ],
+      "reason": "Current-member authority and revocation are owned by #19; raw workflow-only membership writes by #20. A separate permission-sync flow is not selected."
+    },
+    {
+      "number": 24,
+      "successors": [
+        47,
+        23,
+        62,
+        63,
+        65,
+        11
+      ],
+      "reason": "Terminal decision/retry guards belong to #47 and consuming action flows; authorized history is #23 and #62. No separate terminal-permission flow is selected."
+    }
+  ],
+  "criterionTransfers": [
+    {
+      "sourceTicket": 49,
+      "sourceCriterion": "49-AC-001",
+      "text": "- [ ] Compare existing email and Teams capabilities against current licence, connector policy, permissions, delivery audience and connection ownership; flag prerequisites before configuring.",
+      "targetTickets": [
+        49
+      ]
+    },
+    {
+      "sourceTicket": 49,
+      "sourceCriterion": "49-AC-002",
+      "text": "- [ ] Agree an event/channel/recipient matrix, starting with request received and answered. Consider availability cancellation and exceptional failure alerts explicitly; do not silently add every draft event to MVP.",
+      "targetTickets": [
+        49
+      ]
+    },
+    {
+      "sourceTicket": 49,
+      "sourceCriterion": "49-AC-003",
+      "text": "- [ ] Distinguish direct notifications from channel announcements; avoid exposing candidate/comments/request details to unrelated channel members.",
+      "targetTickets": [
+        49
+      ]
+    },
+    {
+      "sourceTicket": 49,
+      "sourceCriterion": "49-AC-004",
+      "text": "- [ ] Evaluate how recipients notice and open a request, including a link into the app, without routine organiser emails.",
+      "targetTickets": [
+        49
+      ]
+    },
+    {
+      "sourceTicket": 49,
+      "sourceCriterion": "49-AC-005",
+      "text": "- [ ] Allow necessary exceptional admin support, but avoid per-user notification grants or manual routine dispatch.",
+      "targetTickets": [
+        49
+      ]
+    },
+    {
+      "sourceTicket": 49,
+      "sourceCriterion": "49-AC-006",
+      "text": "- [ ] Agree retry/deduplication and failure reporting; notification failure does not undo request/membership business state.",
+      "targetTickets": [
+        49
+      ]
+    },
+    {
+      "sourceTicket": 49,
+      "sourceCriterion": "49-AC-007",
+      "text": "- [ ] Record the selected MVP events/channels and deferred events before #21 implementation. If no existing permitted option fits, report the constraint; no trial, premium upgrade or paid workaround.",
+      "targetTickets": [
+        49
+      ]
+    },
+    {
+      "sourceTicket": 48,
+      "sourceCriterion": "48-AC-001",
+      "text": "- [ ] Inspect the actual old workbook only when this phase starts; no guessed columns, colour-based statuses, memberships or culture mappings.",
+      "targetTickets": [
+        48
+      ]
+    },
+    {
+      "sourceTicket": 48,
+      "sourceCriterion": "48-AC-002",
+      "text": "- [ ] Document source-to-target field mapping and unresolved rows/colours with the owner; distinguish language/culture sharing from interest.",
+      "targetTickets": [
+        48
+      ]
+    },
+    {
+      "sourceTicket": 48,
+      "sourceCriterion": "48-AC-003",
+      "text": "- [ ] Resolve identities against company accounts without replacing the unique Person identity with a participant-editable email.",
+      "targetTickets": [
+        48
+      ]
+    },
+    {
+      "sourceTicket": 48,
+      "sourceCriterion": "48-AC-004",
+      "text": "- [ ] Dry-run duplicate/missing-data validation and produce an exception report; do not silently drop rows or guess values.",
+      "targetTickets": [
+        48
+      ]
+    },
+    {
+      "sourceTicket": 48,
+      "sourceCriterion": "48-AC-005",
+      "text": "- [ ] Recreate confirmed existing groups/memberships with approved capacities and free slots; unresolved cases are explicit exceptions.",
+      "targetTickets": [
+        48
+      ]
+    },
+    {
+      "sourceTicket": 48,
+      "sourceCriterion": "48-AC-006",
+      "text": "- [ ] Keep migration confirmation independent of participation and validation status; decide whether unconfirmed profiles are discoverable.",
+      "targetTickets": [
+        48
+      ]
+    },
+    {
+      "sourceTicket": 48,
+      "sourceCriterion": "48-AC-007",
+      "text": "- [ ] Use supported existing Microsoft tools; flag any setup/licence prerequisite. One-off human mapping review is allowed; no ongoing Forms-to-list duplication.",
+      "targetTickets": [
+        48
+      ]
+    },
+    {
+      "sourceTicket": 48,
+      "sourceCriterion": "48-AC-008",
+      "text": "- [ ] Make reruns safe and reconcile source/target counts and samples before release.",
+      "targetTickets": [
+        48
+      ]
+    },
+    {
+      "sourceTicket": 48,
+      "sourceCriterion": "48-AC-009",
+      "text": "- [ ] Record participant review/invitation handling only after notification options are agreed; preserve originals and document recovery.",
+      "targetTickets": [
+        48
+      ]
+    },
+    {
+      "sourceTicket": 47,
+      "sourceCriterion": "47-AC-001",
+      "text": "- [ ] Verify an approach supported by existing SharePoint/Power Automate entitlement and configuration; flag prerequisites first. No paid lock service or external backend.",
+      "targetTickets": [
+        47
+      ]
+    },
+    {
+      "sourceTicket": 47,
+      "sourceCriterion": "47-AC-002",
+      "text": "- [ ] Revalidate caller authority, participant availability, group Open state and capacity at acceptance time.",
+      "targetTickets": [
+        47
+      ]
+    },
+    {
+      "sourceTicket": 47,
+      "sourceCriterion": "47-AC-003",
+      "text": "- [ ] Repeated acceptance/retry creates one logical result, no duplicate group/membership or duplicate event notifications.",
+      "targetTickets": [
+        47
+      ]
+    },
+    {
+      "sourceTicket": 47,
+      "sourceCriterion": "47-AC-004",
+      "text": "- [ ] Two acceptances for the last slot cannot both succeed. Test person-to-person creation and joins, including concurrent runs from different flows.",
+      "targetTickets": [
+        47
+      ]
+    },
+    {
+      "sourceTicket": 47,
+      "sourceCriterion": "47-AC-005",
+      "text": "- [ ] Persist enough operation state to recover partial request/group/membership writes safely; no false Accepted result when required writes fail.",
+      "targetTickets": [
+        47
+      ]
+    },
+    {
+      "sourceTicket": 47,
+      "sourceCriterion": "47-AC-006",
+      "text": "- [ ] Reconcile free slots from authoritative memberships; a transient failure must not create hidden extra capacity or delete history.",
+      "targetTickets": [
+        47
+      ]
+    },
+    {
+      "sourceTicket": 47,
+      "sourceCriterion": "47-AC-007",
+      "text": "- [ ] Test two members responding to the same group join request, sender cancel versus accept races, and retries after partial failure. One terminal decision and one logical membership result.",
+      "targetTickets": [
+        47
+      ]
+    },
+    {
+      "sourceTicket": 47,
+      "sourceCriterion": "47-AC-008",
+      "text": "- [ ] Ordinary successful acceptance is automatic; exceptional recovery may be handled by admins with a clear record.",
+      "targetTickets": [
+        47
+      ]
+    },
+    {
+      "sourceTicket": 47,
+      "sourceCriterion": "47-AC-009",
+      "text": "- [ ] Record tenant evidence and integrate into #11/#12/#17 tests before those acceptance paths close.",
+      "targetTickets": [
+        47
+      ]
+    },
+    {
+      "sourceTicket": 45,
+      "sourceCriterion": "45-AC-001",
+      "text": "- [x] PR #59 merged and #46 closed; target contract accepted.",
+      "targetTickets": [
+        45
+      ]
+    },
+    {
+      "sourceTicket": 45,
+      "sourceCriterion": "45-AC-002",
+      "text": "- [ ] Identify organiser contact route before publishing private-contact guidance. This decision is tracked here rather than blocking the field contract; no email/address is guessed.",
+      "targetTickets": [
+        45
+      ]
+    },
+    {
+      "sourceTicket": 45,
+      "sourceCriterion": "45-AC-003",
+      "text": "- [x] PR #51 documents the reviewed contract and stable test catalogue; not deployment.",
+      "targetTickets": [
+        45
+      ]
+    },
+    {
+      "sourceTicket": 45,
+      "sourceCriterion": "45-AC-004",
+      "text": "- [x] #46 contract accepted; follow-ups belong to receiving implementation tickets.",
+      "targetTickets": [
+        45
+      ]
+    },
+    {
+      "sourceTicket": 45,
+      "sourceCriterion": "45-AC-005",
+      "text": "- [ ] Finish #5 culture/optional-time-zone registration and tenant tests (merged partial preparation PR #52), then #6 independent participation/openness.",
+      "targetTickets": [
+        45
+      ]
+    },
+    {
+      "sourceTicket": 45,
+      "sourceCriterion": "45-AC-006",
+      "text": "- [ ] Extend/integrate #7/#9 participant compatibility; prepare #12/#13 structures before #16 group discovery.",
+      "targetTickets": [
+        45
+      ]
+    },
+    {
+      "sourceTicket": 45,
+      "sourceCriterion": "45-AC-007",
+      "text": "- [ ] Deliver #10/#11/#17 and #12 accepted memberships with #47 retry/concurrency safeguards.",
+      "targetTickets": [
+        45
+      ]
+    },
+    {
+      "sourceTicket": 45,
+      "sourceCriterion": "45-AC-008",
+      "text": "- [ ] Complete #14 leaving and relevant access/authorization safeguards.",
+      "targetTickets": [
+        45
+      ]
+    },
+    {
+      "sourceTicket": 45,
+      "sourceCriterion": "45-AC-009",
+      "text": "- [ ] Decide #49 then implement/test selected #21 notifications.",
+      "targetTickets": [
+        45
+      ]
+    },
+    {
+      "sourceTicket": 45,
+      "sourceCriterion": "45-AC-010",
+      "text": "- [ ] Record relevant #25–#28 acceptance/scale/handover evidence; then #48 actual Excel mapping/import last.",
+      "targetTickets": [
+        45
+      ]
+    },
+    {
+      "sourceTicket": 45,
+      "sourceCriterion": "45-AC-011",
+      "text": "- [ ] Verify ordinary-user access and remaining release gates before wider rollout.",
+      "targetTickets": [
+        45
+      ]
+    },
+    {
+      "sourceTicket": 42,
+      "sourceCriterion": "42-AC-001",
+      "text": "- [ ] Flag all required permissions/settings/connections/licences to the owner and verify before building this data-access path.",
+      "targetTickets": [
+        42,
+        7
+      ]
+    },
+    {
+      "sourceTicket": 42,
+      "sourceCriterion": "42-AC-002",
+      "text": "- [ ] Implement approved #46 profile/group fields with #7/#16; exclude email/raw identity/admin/system fields; no directory or Comments notice.",
+      "targetTickets": [
+        42,
+        7
+      ]
+    },
+    {
+      "sourceTicket": 42,
+      "sourceCriterion": "42-AC-003",
+      "text": "- [ ] Blank optional Time zone does not exclude a compatible candidate.",
+      "targetTickets": [
+        42,
+        7
+      ]
+    },
+    {
+      "sourceTicket": 42,
+      "sourceCriterion": "42-AC-004",
+      "text": "- [ ] Retrieve candidates through the authenticated, authorized path without giving users general read access to Participants.",
+      "targetTickets": [
+        42,
+        7
+      ]
+    },
+    {
+      "sourceTicket": 42,
+      "sourceCriterion": "42-AC-005",
+      "text": "- [ ] Reuse compatible eligibility from #7/#9; ranking #8 remains Later and is not a dependency; this ticket covers secure access and integration, not a second matching implementation.",
+      "targetTickets": [
+        42,
+        7
+      ]
+    },
+    {
+      "sourceTicket": 42,
+      "sourceCriterion": "42-AC-006",
+      "text": "- [ ] Direct invocation or tampered identity/query/record inputs cannot bypass eligibility or reveal all profiles.",
+      "targetTickets": [
+        42,
+        7
+      ]
+    },
+    {
+      "sourceTicket": 42,
+      "sourceCriterion": "42-AC-007",
+      "text": "- [ ] Candidate presentation is read-only and requires no per-search approval, manual matching or per-candidate permission grant.",
+      "targetTickets": [
+        42,
+        7
+      ]
+    },
+    {
+      "sourceTicket": 42,
+      "sourceCriterion": "42-AC-008",
+      "text": "- [ ] Verify discovery with two normal accounts while own-profile access stays protected.",
+      "targetTickets": [
+        42,
+        7
+      ]
+    },
+    {
+      "sourceTicket": 42,
+      "sourceCriterion": "42-AC-009",
+      "text": "- [ ] Update discovery/setup documentation and record evidence before discovery rollout.",
+      "targetTickets": [
+        42,
+        7
+      ]
+    },
+    {
+      "sourceTicket": 41,
+      "sourceCriterion": "41-AC-001",
+      "text": "- [ ] POC-18B passed; flag and verify any new permission, licence, connection or configuration prerequisite before implementation.",
+      "targetTickets": [
+        41,
+        5,
+        61
+      ]
+    },
+    {
+      "sourceTicket": 41,
+      "sourceCriterion": "41-AC-002",
+      "text": "- [ ] Preserve existing records and unique Participant account. Registration opens/creates/updates only the authenticated user's profile.",
+      "targetTickets": [
+        41,
+        5,
+        61
+      ]
+    },
+    {
+      "sourceTicket": 41,
+      "sourceCriterion": "41-AC-003",
+      "text": "- [ ] Protect the underlying data as proven, including inherited and existing item access; hiding app controls alone is insufficient.",
+      "targetTickets": [
+        41,
+        5,
+        61
+      ]
+    },
+    {
+      "sourceTicket": 41,
+      "sourceCriterion": "41-AC-004",
+      "text": "- [ ] Retest the implemented current registration contract: save/reopen, multiple language/culture lookups, language-only/culture-only/share-only participation and optional blank/cleared Time zone. Preserve later participation/openness choices if #6 has been delivered.",
+      "targetTickets": [
+        41,
+        5,
+        61
+      ]
+    },
+    {
+      "sourceTicket": 41,
+      "sourceCriterion": "41-AC-005",
+      "text": "- [ ] Reject attempts to change another user's record, identity or managed fields; handle duplicate creates and update conflicts.",
+      "targetTickets": [
+        41,
+        5,
+        61
+      ]
+    },
+    {
+      "sourceTicket": 41,
+      "sourceCriterion": "41-AC-006",
+      "text": "- [ ] Verify two ordinary accounts plus admin, including direct SharePoint/API access and published-app access.",
+      "targetTickets": [
+        41,
+        5,
+        61
+      ]
+    },
+    {
+      "sourceTicket": 41,
+      "sourceCriterion": "41-AC-007",
+      "text": "- [ ] New users join and maintain profiles without routine admin approvals, individual sharing/grants or manual group maintenance.",
+      "targetTickets": [
+        41,
+        5,
+        61
+      ]
+    },
+    {
+      "sourceTicket": 41,
+      "sourceCriterion": "41-AC-008",
+      "text": "- [ ] Record one-time cutover steps and operational dependencies upfront; preserve data and document recovery without restoring broad exposure.",
+      "targetTickets": [
+        41,
+        5,
+        61
+      ]
+    },
+    {
+      "sourceTicket": 41,
+      "sourceCriterion": "41-AC-009",
+      "text": "- [ ] Update setup instructions, design, plan and acceptance evidence in the implementation PR.",
+      "targetTickets": [
+        41,
+        5,
+        61
+      ]
+    },
+    {
+      "sourceTicket": 40,
+      "sourceCriterion": "40-AC-001",
+      "text": "- [ ] POC-18A is complete; all required permissions, settings, licences and connections were flagged to the owner and verified before this proof starts.",
+      "targetTickets": [
+        40
+      ]
+    },
+    {
+      "sourceTicket": 40,
+      "sourceCriterion": "40-AC-002",
+      "text": "- [ ] Use an isolated test app/list or equivalent, with no changes to the working registration app.",
+      "targetTickets": [
+        40
+      ]
+    },
+    {
+      "sourceTicket": 40,
+      "sourceCriterion": "40-AC-003",
+      "text": "- [ ] Authenticate the caller through the selected supported method; do not trust an app-supplied email, identity or record ID as authorization.",
+      "targetTickets": [
+        40
+      ]
+    },
+    {
+      "sourceTicket": 40,
+      "sourceCriterion": "40-AC-004",
+      "text": "- [ ] A can create, reopen and update only A's record; B can do the same for B.",
+      "targetTickets": [
+        40
+      ]
+    },
+    {
+      "sourceTicket": 40,
+      "sourceCriterion": "40-AC-005",
+      "text": "- [ ] Direct list/item/API access and tampered requests cannot read or modify the other user's record.",
+      "targetTickets": [
+        40
+      ]
+    },
+    {
+      "sourceTicket": 40,
+      "sourceCriterion": "40-AC-006",
+      "text": "- [ ] Administrators retain access; normal users do not gain flow ownership or access to other users' execution data.",
+      "targetTickets": [
+        40
+      ]
+    },
+    {
+      "sourceTicket": 40,
+      "sourceCriterion": "40-AC-007",
+      "text": "- [ ] Both users self-onboard without individual admin approvals, grants or manual participant/group management.",
+      "targetTickets": [
+        40
+      ]
+    },
+    {
+      "sourceTicket": 40,
+      "sourceCriterion": "40-AC-008",
+      "text": "- [ ] Record evidence, outstanding limits and a proceed/stop decision. A failed prerequisite must not trigger a new configuration workaround without notifying the owner first.",
+      "targetTickets": [
+        40
+      ]
+    },
+    {
+      "sourceTicket": 39,
+      "sourceCriterion": "39-AC-001",
+      "text": "- [ ] Record current app/list/flow permissions and available connectors without changing the working app or accessing other participants' data.",
+      "targetTickets": [
+        39,
+        40
+      ]
+    },
+    {
+      "sourceTicket": 39,
+      "sourceCriterion": "39-AC-002",
+      "text": "- [ ] List every required permission, tenant setting, connection, licence, sharing configuration and one-time setup step. Mark each verified, unavailable or unknown, with evidence.",
+      "targetTickets": [
+        39,
+        40
+      ]
+    },
+    {
+      "sourceTicket": 39,
+      "sourceCriterion": "39-AC-003",
+      "text": "- [ ] Notify the owner of every prerequisite and verify it before relying on it. An unknown prerequisite blocks dependent implementation.",
+      "targetTickets": [
+        39,
+        40
+      ]
+    },
+    {
+      "sourceTicket": 39,
+      "sourceCriterion": "39-AC-004",
+      "text": "- [ ] Compare feasible approaches retaining unique Participant account. Flow-mediated access is only an option, not the selected solution.",
+      "targetTickets": [
+        39,
+        40
+      ]
+    },
+    {
+      "sourceTicket": 39,
+      "sourceCriterion": "39-AC-005",
+      "text": "- [ ] Demonstrate ordinary registration, updates, joining and future discovery without routine admin approvals, per-person grants or manual participant/group maintenance. Necessary critical-case admin support is allowed.",
+      "targetTickets": [
+        39,
+        40
+      ]
+    },
+    {
+      "sourceTicket": 39,
+      "sourceCriterion": "39-AC-006",
+      "text": "- [ ] Distinguish one-time setup from recurring operational maintenance; flag ownership/credential/permission dependencies explicitly.",
+      "targetTickets": [
+        39,
+        40
+      ]
+    },
+    {
+      "sourceTicket": 39,
+      "sourceCriterion": "39-AC-007",
+      "text": "- [ ] Record the chosen approach and its limits in docs/POC_18_PARTICIPANT_ACCESS.md. If none meets the requirements, report the constraint before building a workaround.",
+      "targetTickets": [
+        39,
+        40
+      ]
+    },
+    {
+      "sourceTicket": 31,
+      "sourceCriterion": "31-AC-001",
+      "text": "- [ ] Admin can identify participants available/waiting for connections.",
+      "targetTickets": [
+        31
+      ]
+    },
+    {
+      "sourceTicket": 31,
+      "sourceCriterion": "31-AC-002",
+      "text": "- [ ] Admin can identify active groups.",
+      "targetTickets": [
+        31
+      ]
+    },
+    {
+      "sourceTicket": 31,
+      "sourceCriterion": "31-AC-003",
+      "text": "- [ ] Admin can identify Closed groups under Open/Closed/Ended; participant Paused is a separate status.",
+      "targetTickets": [
+        31
+      ]
+    },
+    {
+      "sourceTicket": 31,
+      "sourceCriterion": "31-AC-004",
+      "text": "- [ ] Admin can identify groups needing members.",
+      "targetTickets": [
+        31
+      ]
+    },
+    {
+      "sourceTicket": 31,
+      "sourceCriterion": "31-AC-005",
+      "text": "- [ ] Admin can identify ended groups.",
+      "targetTickets": [
+        31
+      ]
+    },
+    {
+      "sourceTicket": 31,
+      "sourceCriterion": "31-AC-006",
+      "text": "- [ ] Admin can identify stale participants/groups.",
+      "targetTickets": [
+        31
+      ]
+    },
+    {
+      "sourceTicket": 31,
+      "sourceCriterion": "31-AC-007",
+      "text": "- [ ] Admin can identify records requiring intervention.",
+      "targetTickets": [
+        31
+      ]
+    },
+    {
+      "sourceTicket": 31,
+      "sourceCriterion": "31-AC-008",
+      "text": "- [ ] Admin can perform agreed status overrides or corrections.",
+      "targetTickets": [
+        31
+      ]
+    },
+    {
+      "sourceTicket": 30,
+      "sourceCriterion": "30-AC-001",
+      "text": "- [ ] Scheduled check identifies stale records.",
+      "targetTickets": [
+        30
+      ]
+    },
+    {
+      "sourceTicket": 30,
+      "sourceCriterion": "30-AC-002",
+      "text": "- [ ] Appropriate participant/group member receives reminder.",
+      "targetTickets": [
+        30
+      ]
+    },
+    {
+      "sourceTicket": 30,
+      "sourceCriterion": "30-AC-003",
+      "text": "- [ ] Failure to send reminder is observable.",
+      "targetTickets": [
+        30
+      ]
+    },
+    {
+      "sourceTicket": 30,
+      "sourceCriterion": "30-AC-004",
+      "text": "- [ ] Reminder does not automatically end a group.",
+      "targetTickets": [
+        30
+      ]
+    },
+    {
+      "sourceTicket": 29,
+      "sourceCriterion": "29-AC-001",
+      "text": "- [ ] LastConfirmedAt or equivalent freshness data exists.",
+      "targetTickets": [
+        29
+      ]
+    },
+    {
+      "sourceTicket": 29,
+      "sourceCriterion": "29-AC-002",
+      "text": "- [ ] Stale participants can be identified.",
+      "targetTickets": [
+        29
+      ]
+    },
+    {
+      "sourceTicket": 29,
+      "sourceCriterion": "29-AC-003",
+      "text": "- [ ] Stale groups can be identified.",
+      "targetTickets": [
+        29
+      ]
+    },
+    {
+      "sourceTicket": 29,
+      "sourceCriterion": "29-AC-004",
+      "text": "- [ ] Records are not automatically deleted because they become stale.",
+      "targetTickets": [
+        29
+      ]
+    },
+    {
+      "sourceTicket": 28,
+      "sourceCriterion": "28-AC-001",
+      "text": "- [ ] Another admin/developer can follow repository instructions.",
+      "targetTickets": [
+        28
+      ]
+    },
+    {
+      "sourceTicket": 28,
+      "sourceCriterion": "28-AC-002",
+      "text": "- [ ] Another permitted owner can reproduce documented one-time manual list/column/index setup, app/flow configuration and optional local validation. Automated tenant provisioning is not required or claimed.",
+      "targetTickets": [
+        28
+      ]
+    },
+    {
+      "sourceTicket": 28,
+      "sourceCriterion": "28-AC-003",
+      "text": "- [ ] No local-only secret/configuration is required.",
+      "targetTickets": [
+        28
+      ]
+    },
+    {
+      "sourceTicket": 28,
+      "sourceCriterion": "28-AC-004",
+      "text": "- [ ] Failures produce understandable diagnostic output.",
+      "targetTickets": [
+        28
+      ]
+    },
+    {
+      "sourceTicket": 28,
+      "sourceCriterion": "28-AC-005",
+      "text": "- [ ] Permissions, settings, connectors, existing entitlements, ownership and exceptional recovery are explicit and verified before relying on them. Ordinary use needs no routine admin actions.",
+      "targetTickets": [
+        28
+      ]
+    },
+    {
+      "sourceTicket": 28,
+      "sourceCriterion": "28-AC-006",
+      "text": "- [ ] Handover distinguishes desired schema from confirmed live settings and records test IDs, deployed versions and actual acceptance evidence.",
+      "targetTickets": [
+        28
+      ]
+    },
+    {
+      "sourceTicket": 27,
+      "sourceCriterion": "27-AC-001",
+      "text": "- [ ] Discovery tested at approximately 200 participants.",
+      "targetTickets": [
+        27
+      ]
+    },
+    {
+      "sourceTicket": 27,
+      "sourceCriterion": "27-AC-002",
+      "text": "- [ ] Discovery tested at approximately 1,000 participants.",
+      "targetTickets": [
+        27
+      ]
+    },
+    {
+      "sourceTicket": 27,
+      "sourceCriterion": "27-AC-003",
+      "text": "- [ ] Discovery tested at approximately 5,000 participants.",
+      "targetTickets": [
+        27
+      ]
+    },
+    {
+      "sourceTicket": 27,
+      "sourceCriterion": "27-AC-004",
+      "text": "- [ ] Query latency is recorded.",
+      "targetTickets": [
+        27
+      ]
+    },
+    {
+      "sourceTicket": 27,
+      "sourceCriterion": "27-AC-005",
+      "text": "- [ ] Power Apps delegation warnings/limitations are recorded.",
+      "targetTickets": [
+        27
+      ]
+    },
+    {
+      "sourceTicket": 27,
+      "sourceCriterion": "27-AC-006",
+      "text": "- [ ] Any client-side large-data processing is identified.",
+      "targetTickets": [
+        27
+      ]
+    },
+    {
+      "sourceTicket": 27,
+      "sourceCriterion": "27-AC-007",
+      "text": "- [ ] Document supported-platform query/pagination/bounds limits and feasible optimizations within existing entitlements. No hosted service, paid API, premium connector or new runtime is an approved fallback.",
+      "targetTickets": [
+        27
+      ]
+    },
+    {
+      "sourceTicket": 27,
+      "sourceCriterion": "27-AC-008",
+      "text": "- [ ] Verify test setup/limits first; use isolated synthetic data and record app/flow versions. Silent partial results are not a pass.",
+      "targetTickets": [
+        27
+      ]
+    },
+    {
+      "sourceTicket": 26,
+      "sourceCriterion": "26-AC-001",
+      "text": "- [ ] Can generate approximately 200 participants.",
+      "targetTickets": [
+        26
+      ]
+    },
+    {
+      "sourceTicket": 26,
+      "sourceCriterion": "26-AC-002",
+      "text": "- [ ] Can generate approximately 1,000 participants.",
+      "targetTickets": [
+        26
+      ]
+    },
+    {
+      "sourceTicket": 26,
+      "sourceCriterion": "26-AC-003",
+      "text": "- [ ] Can generate approximately 5,000 participants.",
+      "targetTickets": [
+        26
+      ]
+    },
+    {
+      "sourceTicket": 26,
+      "sourceCriterion": "26-AC-004",
+      "text": "- [ ] Data covers languages, separate culture offers/interests, optional time zone including blanks, separate participation/validation/openness, typed groups and membership episodes. No required Location or participant group-size field.",
+      "targetTickets": [
+        26
+      ]
+    },
+    {
+      "sourceTicket": 26,
+      "sourceCriterion": "26-AC-005",
+      "text": "- [ ] No real employee data is required. Use isolated fixtures; verify tenant limits/permissions and a supported test-data loading method before large imports.",
+      "targetTickets": [
+        26
+      ]
+    },
+    {
+      "sourceTicket": 26,
+      "sourceCriterion": "26-AC-006",
+      "text": "- [ ] Generators may be optional local repository tooling; deployed workflows stay in existing Microsoft services with no paid runtime.",
+      "targetTickets": [
+        26
+      ]
+    },
+    {
+      "sourceTicket": 25,
+      "sourceCriterion": "25-AC-001",
+      "text": "- [ ] Language one-way, reciprocal and teach-only regression.",
+      "targetTickets": [
+        25
+      ]
+    },
+    {
+      "sourceTicket": 25,
+      "sourceCriterion": "25-AC-002",
+      "text": "- [ ] Culture-only and combined compatibility; interest without sharer is insufficient.",
+      "targetTickets": [
+        25
+      ]
+    },
+    {
+      "sourceTicket": 25,
+      "sourceCriterion": "25-AC-003",
+      "text": "- [ ] Independent participation/validation/open filters and no reactivation by validation.",
+      "targetTickets": [
+        25
+      ]
+    },
+    {
+      "sourceTicket": 25,
+      "sourceCriterion": "25-AC-004",
+      "text": "- [ ] Exact response fields are agreed with #7/#42; admin/system-only data excluded. Comments are generally eligible but not predefined; no Comments notice.",
+      "targetTickets": [
+        25
+      ]
+    },
+    {
+      "sourceTicket": 25,
+      "sourceCriterion": "25-AC-005",
+      "text": "- [ ] Language 2/3 total; Culture/Combined 2–10. Each declared focus has a sharer and different learner; every member participates in at least one; combined supports both collectively.",
+      "targetTickets": [
+        25
+      ]
+    },
+    {
+      "sourceTicket": 25,
+      "sourceCriterion": "25-AC-006",
+      "text": "- [ ] Duplicate requests/acceptance, concurrent last-slot joins, conflicting group-member responses and partial-write retries.",
+      "targetTickets": [
+        25
+      ]
+    },
+    {
+      "sourceTicket": 25,
+      "sourceCriterion": "25-AC-007",
+      "text": "- [ ] Optional blank time zone, all-four-empty save blocking, invalid-focus group suppression and Closed-state preservation after leaving.",
+      "targetTickets": [
+        25
+      ]
+    },
+    {
+      "sourceTicket": 25,
+      "sourceCriterion": "25-AC-008",
+      "text": "- [ ] Empty/invalid/bounded data and required real-tenant integration/access checks.",
+      "targetTickets": [
+        25
+      ]
+    },
+    {
+      "sourceTicket": 25,
+      "sourceCriterion": "25-AC-009",
+      "text": "- [ ] Evidence distinguishes manual synthetic checks from deployed authorization/end-to-end tests.",
+      "targetTickets": [
+        25
+      ]
+    },
+    {
+      "sourceTicket": 24,
+      "sourceCriterion": "24-AC-001",
+      "text": "- [ ] Handles Accepted, Declined and Cancelled requests. Expired state/timers are Later, not MVP acceptance.",
+      "targetTickets": [
+        47,
+        23,
+        62,
+        63,
+        11,
+        65
+      ]
+    },
+    {
+      "sourceTicket": 24,
+      "sourceCriterion": "24-AC-002",
+      "text": "- [ ] Repeated execution is prevented or idempotent.",
+      "targetTickets": [
+        47,
+        23,
+        62,
+        63,
+        11,
+        65
+      ]
+    },
+    {
+      "sourceTicket": 24,
+      "sourceCriterion": "24-AC-003",
+      "text": "- [ ] Required read access is retained where agreed.",
+      "targetTickets": [
+        47,
+        23,
+        62,
+        63,
+        11,
+        65
+      ]
+    },
+    {
+      "sourceTicket": 24,
+      "sourceCriterion": "24-AC-004",
+      "text": "- [ ] Authorization/permission errors are reported under the selected verified approach; no routine admin cleanup or individual manual grants.",
+      "targetTickets": [
+        47,
+        23,
+        62,
+        63,
+        11,
+        65
+      ]
+    },
+    {
+      "sourceTicket": 24,
+      "sourceCriterion": "24-AC-005",
+      "text": "- [ ] Request business status is never rolled back due to permission failure.",
+      "targetTickets": [
+        47,
+        23,
+        62,
+        63,
+        11,
+        65
+      ]
+    },
+    {
+      "sourceTicket": 23,
+      "sourceCriterion": "23-AC-001",
+      "text": "- [ ] Verify actual permission/connection/licence prerequisites first. Item-specific ACL assignment is an option, not a preselected design.",
+      "targetTickets": [
+        23,
+        62,
+        67
+      ]
+    },
+    {
+      "sourceTicket": 23,
+      "sourceCriterion": "23-AC-002",
+      "text": "- [ ] Requester can see own request status and cancel Pending. The personal recipient or any current active target-group member can respond.",
+      "targetTickets": [
+        23,
+        62,
+        67
+      ]
+    },
+    {
+      "sourceTicket": 23,
+      "sourceCriterion": "23-AC-003",
+      "text": "- [ ] Unrelated participants cannot read raw requests or act on them by direct access or tampered input.",
+      "targetTickets": [
+        23,
+        62,
+        67
+      ]
+    },
+    {
+      "sourceTicket": 23,
+      "sourceCriterion": "23-AC-004",
+      "text": "- [ ] Normal request delivery/response is automatic, without per-person admin grants or routine organiser approval.",
+      "targetTickets": [
+        23,
+        62,
+        67
+      ]
+    },
+    {
+      "sourceTicket": 23,
+      "sourceCriterion": "23-AC-005",
+      "text": "- [ ] A failed access operation is visible and recoverable; preserve request history and do not falsely report a usable/successful request.",
+      "targetTickets": [
+        23,
+        62,
+        67
+      ]
+    },
+    {
+      "sourceTicket": 23,
+      "sourceCriterion": "23-AC-006",
+      "text": "- [ ] Test response after membership/availability changes and safe retries under the chosen approach.",
+      "targetTickets": [
+        23,
+        62,
+        67
+      ]
+    },
+    {
+      "sourceTicket": 22,
+      "sourceCriterion": "22-AC-001",
+      "text": "- [ ] Verify required permissions, settings, connections and existing entitlements before implementation. SharePoint item ACL synchronization is only an option if actually needed and feasible; do not require it by assumption.",
+      "targetTickets": [
+        19,
+        20
+      ]
+    },
+    {
+      "sourceTicket": 22,
+      "sourceCriterion": "22-AC-002",
+      "text": "- [ ] Through the verified approach, current active members can perform allowed member actions; Left members lose that authority and remaining active members keep it.",
+      "targetTickets": [
+        19,
+        20
+      ]
+    },
+    {
+      "sourceTicket": 22,
+      "sourceCriterion": "22-AC-003",
+      "text": "- [ ] Exceptional admin support remains available; ordinary joins/leaves require no individual admin grants or manual group maintenance.",
+      "targetTickets": [
+        19,
+        20
+      ]
+    },
+    {
+      "sourceTicket": 22,
+      "sourceCriterion": "22-AC-004",
+      "text": "- [ ] Retries and partial authorization failures are visible and safe; membership history/business state is not corrupted or falsely reported successful.",
+      "targetTickets": [
+        19,
+        20
+      ]
+    },
+    {
+      "sourceTicket": 22,
+      "sourceCriterion": "22-AC-005",
+      "text": "- [ ] Test multiple members, departures, stale authorization and direct/tampered invocation. Do not equate app filtering with authorization.",
+      "targetTickets": [
+        19,
+        20
+      ]
+    },
+    {
+      "sourceTicket": 21,
+      "sourceCriterion": "21-AC-001",
+      "text": "- [ ] Use the selected permitted existing connector/channel and recipient matrix; no preselected email-only or Teams-only decision.",
+      "targetTickets": [
+        21
+      ]
+    },
+    {
+      "sourceTicket": 21,
+      "sourceCriterion": "21-AC-002",
+      "text": "- [ ] Request-received/request-answered and any agreed cancellation/failure events follow that explicit scope.",
+      "targetTickets": [
+        21
+      ]
+    },
+    {
+      "sourceTicket": 21,
+      "sourceCriterion": "21-AC-003",
+      "text": "- [ ] Recipient sees an actionable link without revealing private request/profile information to unrelated users.",
+      "targetTickets": [
+        21
+      ]
+    },
+    {
+      "sourceTicket": 21,
+      "sourceCriterion": "21-AC-004",
+      "text": "- [ ] Routine dispatch requires no organiser emails, individual access grants or paid services.",
+      "targetTickets": [
+        21
+      ]
+    },
+    {
+      "sourceTicket": 21,
+      "sourceCriterion": "21-AC-005",
+      "text": "- [ ] Retry/deduplicate logical events; failed delivery does not roll back accepted requests/memberships.",
+      "targetTickets": [
+        21
+      ]
+    },
+    {
+      "sourceTicket": 21,
+      "sourceCriterion": "21-AC-006",
+      "text": "- [ ] Record agreed failure visibility and exceptional admin handling without creating routine manual work.",
+      "targetTickets": [
+        21
+      ]
+    },
+    {
+      "sourceTicket": 21,
+      "sourceCriterion": "21-AC-007",
+      "text": "- [ ] Tenant delivery tests pass before closure.",
+      "targetTickets": [
+        21
+      ]
+    },
+    {
+      "sourceTicket": 20,
+      "sourceCriterion": "20-AC-001",
+      "text": "- [ ] Only the intended personal recipient or any current active member of the target group may accept/decline; requester can cancel Pending. Reject identity/record tampering.",
+      "targetTickets": [
+        23
+      ]
+    },
+    {
+      "sourceTicket": 20,
+      "sourceCriterion": "20-AC-002",
+      "text": "- [ ] Participants cannot arbitrarily create active membership records.",
+      "targetTickets": [
+        20
+      ]
+    },
+    {
+      "sourceTicket": 20,
+      "sourceCriterion": "20-AC-003",
+      "text": "- [ ] Membership lifecycle changes use the controlled path.",
+      "targetTickets": [
+        20
+      ]
+    },
+    {
+      "sourceTicket": 20,
+      "sourceCriterion": "20-AC-004",
+      "text": "- [ ] Admin can repair records when necessary; no routine admin approval or manual membership maintenance.",
+      "targetTickets": [
+        20
+      ]
+    },
+    {
+      "sourceTicket": 20,
+      "sourceCriterion": "20-AC-005",
+      "text": "- [ ] Enforce controls through the verified supported access method, not UI visibility alone. Do not select a permission architecture before prerequisites are checked.",
+      "targetTickets": [
+        20
+      ]
+    },
+    {
+      "sourceTicket": 19,
+      "sourceCriterion": "19-AC-001",
+      "text": "- [ ] Non-member receives only the approved compatible Discovery projection through the verified path; no general underlying-list access is implied.",
+      "targetTickets": [
+        19
+      ]
+    },
+    {
+      "sourceTicket": 19,
+      "sourceCriterion": "19-AC-002",
+      "text": "- [ ] Any active member can manage Open/Closed/Ended and name/description, and capacity within bounds and never below active member count. Type/focus stay fixed; Ended is final.",
+      "targetTickets": [
+        19
+      ]
+    },
+    {
+      "sourceTicket": 19,
+      "sourceCriterion": "19-AC-003",
+      "text": "- [ ] Non-member cannot change group state.",
+      "targetTickets": [
+        19
+      ]
+    },
+    {
+      "sourceTicket": 19,
+      "sourceCriterion": "19-AC-004",
+      "text": "- [ ] Admin can make necessary exceptional corrections without a routine approval requirement.",
+      "targetTickets": [
+        19
+      ]
+    },
+    {
+      "sourceTicket": 19,
+      "sourceCriterion": "19-AC-005",
+      "text": "- [ ] Verify the access method and its prerequisites before implementation; do not preselect per-item permissions or grant general profile access.",
+      "targetTickets": [
+        19
+      ]
+    },
+    {
+      "sourceTicket": 18,
+      "sourceCriterion": "18-AC-001",
+      "text": "- [ ] #39 — POC-18A: check prerequisites and recommend the simplest supported approach. Access assessment stage; deferred by owner pending ordinary-colleague testing. No working-app changes.",
+      "targetTickets": [
+        18
+      ]
+    },
+    {
+      "sourceTicket": 18,
+      "sourceCriterion": "18-AC-002",
+      "text": "- [ ] #40 — POC-18B: after #39, prove two users automatically access only their own synthetic record in an isolated test.",
+      "targetTickets": [
+        18
+      ]
+    },
+    {
+      "sourceTicket": 18,
+      "sourceCriterion": "18-AC-003",
+      "text": "- [ ] #41 — POC-18C: after #40, integrate and verify private registration before wider colleague testing. Preserve existing data and POC-04 behavior.",
+      "targetTickets": [
+        18
+      ]
+    },
+    {
+      "sourceTicket": 17,
+      "sourceCriterion": "17-AC-001",
+      "text": "- [ ] Define personal-versus-group request type/target field mapping and optional plain-text introduction storage/payload. The suggested 1,000-character limit is not yet approved; review it here.",
+      "targetTickets": [
+        17,
+        65,
+        62,
+        63,
+        67,
+        47
+      ]
+    },
+    {
+      "sourceTicket": 17,
+      "sourceCriterion": "17-AC-002",
+      "text": "- [ ] Define group-join send/respond/history/cancel inputs and outputs before package generation. Derive current group/membership/capacity data server-side; caller binding remains with the verified access workstream.",
+      "targetTickets": [
+        17,
+        65,
+        62,
+        63,
+        67,
+        47
+      ]
+    },
+    {
+      "sourceTicket": 17,
+      "sourceCriterion": "17-AC-003",
+      "text": "- [ ] No leader/contact role: all current active members see incoming requests and may accept/decline. First valid saved response wins under #47.",
+      "targetTickets": [
+        17,
+        65,
+        62,
+        63,
+        67,
+        47
+      ]
+    },
+    {
+      "sourceTicket": 17,
+      "sourceCriterion": "17-AC-004",
+      "text": "- [ ] Define unavailable-target handling without introducing unapproved automatic cancellation.",
+      "targetTickets": [
+        17,
+        65,
+        62,
+        63,
+        67,
+        47
+      ]
+    },
+    {
+      "sourceTicket": 17,
+      "sourceCriterion": "17-AC-005",
+      "text": "- [ ] Persist Pending request with trusted participant/group identity; prevent duplicate pending membership requests.",
+      "targetTickets": [
+        17,
+        65,
+        62,
+        63,
+        67,
+        47
+      ]
+    },
+    {
+      "sourceTicket": 17,
+      "sourceCriterion": "17-AC-006",
+      "text": "- [ ] Any current active group member can accept/decline; non-members cannot respond; coordinate conflicting responses safely.",
+      "targetTickets": [
+        17,
+        65,
+        62,
+        63,
+        67,
+        47
+      ]
+    },
+    {
+      "sourceTicket": 17,
+      "sourceCriterion": "17-AC-007",
+      "text": "- [ ] Recheck group Open state, participant availability, valid focus/member compatibility and capacity at acceptance. Language 2/3 total; Culture/Combined 2–10.",
+      "targetTickets": [
+        17,
+        65,
+        62,
+        63,
+        67,
+        47
+      ]
+    },
+    {
+      "sourceTicket": 17,
+      "sourceCriterion": "17-AC-008",
+      "text": "- [ ] Accepted request creates one active membership; slots update automatically.",
+      "targetTickets": [
+        17,
+        65,
+        62,
+        63,
+        67,
+        47
+      ]
+    },
+    {
+      "sourceTicket": 17,
+      "sourceCriterion": "17-AC-009",
+      "text": "- [ ] Sender can cancel a Pending request. Declined/Cancelled request preserves history and creates no active membership.",
+      "targetTickets": [
+        17,
+        65,
+        62,
+        63,
+        67,
+        47
+      ]
+    },
+    {
+      "sourceTicket": 17,
+      "sourceCriterion": "17-AC-010",
+      "text": "- [ ] Retry and two-users-last-slot scenarios pass #47 tests.",
+      "targetTickets": [
+        17,
+        65,
+        62,
+        63,
+        67,
+        47
+      ]
+    },
+    {
+      "sourceTicket": 17,
+      "sourceCriterion": "17-AC-011",
+      "text": "- [ ] No routine admin approval or manual candidate grants; notifications follow #49/#21.",
+      "targetTickets": [
+        17,
+        65,
+        62,
+        63,
+        67,
+        47
+      ]
+    },
+    {
+      "sourceTicket": 16,
+      "sourceCriterion": "16-AC-001",
+      "text": "- [ ] Only compatible Open groups with space appear; exclude Ended/Closed/full opportunities.",
+      "targetTickets": [
+        16,
+        7
+      ]
+    },
+    {
+      "sourceTicket": 16,
+      "sourceCriterion": "16-AC-002",
+      "text": "- [ ] Support Language/Culture/Combined groups, valid distinct sharer/learner relationships for each stated focus and participation in at least one focus. Language capacity 2/3; Culture/Combined 2–10. No participant group-size preference.",
+      "targetTickets": [
+        16,
+        7
+      ]
+    },
+    {
+      "sourceTicket": 16,
+      "sourceCriterion": "16-AC-003",
+      "text": "- [ ] Show current count/free slots and implement approved #46 group/member display with #7/#42; exclude email/admin/system fields.",
+      "targetTickets": [
+        16,
+        7
+      ]
+    },
+    {
+      "sourceTicket": 16,
+      "sourceCriterion": "16-AC-004",
+      "text": "- [ ] Current participant and existing-membership treatment follows the approved group rules.",
+      "targetTickets": [
+        16,
+        7
+      ]
+    },
+    {
+      "sourceTicket": 16,
+      "sourceCriterion": "16-AC-005",
+      "text": "- [ ] Blank optional time zone must not exclude a compatible candidate. Keep supplied time zone catalogue-based; no automatic location derivation or public directory.",
+      "targetTickets": [
+        16,
+        7
+      ]
+    },
+    {
+      "sourceTicket": 16,
+      "sourceCriterion": "16-AC-006",
+      "text": "- [ ] Use approved authorized data path #42; test real tenant/app behavior before closure.",
+      "targetTickets": [
+        16,
+        7
+      ]
+    },
+    {
+      "sourceTicket": 15,
+      "sourceCriterion": "15-AC-001",
+      "text": "- [ ] Decide whether the two-group soft warning is wanted and define expectations.",
+      "targetTickets": [
+        15
+      ]
+    },
+    {
+      "sourceTicket": 15,
+      "sourceCriterion": "15-AC-002",
+      "text": "- [ ] Record own acceptance/decision and test evidence before closure.",
+      "targetTickets": [
+        15
+      ]
+    },
+    {
+      "sourceTicket": 14,
+      "sourceCriterion": "14-AC-001",
+      "text": "- [ ] Member can leave without organiser approval; mark membership Left rather than delete history.",
+      "targetTickets": [
+        14,
+        7,
+        68
+      ]
+    },
+    {
+      "sourceTicket": 14,
+      "sourceCriterion": "14-AC-002",
+      "text": "- [ ] Ordinary active counts/free slots reflect recorded memberships automatically.",
+      "targetTickets": [
+        14,
+        7,
+        68
+      ]
+    },
+    {
+      "sourceTicket": 14,
+      "sourceCriterion": "14-AC-003",
+      "text": "- [ ] Closed stays Closed after departure until an active member reopens it. If remaining members lack the required focus relationships, automatically suppress the group from joinable Discovery without changing stored state.",
+      "targetTickets": [
+        14,
+        7,
+        68
+      ]
+    },
+    {
+      "sourceTicket": 14,
+      "sourceCriterion": "14-AC-004",
+      "text": "- [ ] No automatic ending, reopening, replacement assignment, expulsion or rejoin. Remaining members or necessary exceptional admin support can address an invalid-purpose group; no routine recovery approval queue.",
+      "targetTickets": [
+        14,
+        7,
+        68
+      ]
+    },
+    {
+      "sourceTicket": 14,
+      "sourceCriterion": "14-AC-005",
+      "text": "- [ ] Setting a participant Inactive does not silently delete memberships; define/document any exceptional follow-up under #6/#13.",
+      "targetTickets": [
+        14,
+        7,
+        68
+      ]
+    },
+    {
+      "sourceTicket": 14,
+      "sourceCriterion": "14-AC-006",
+      "text": "- [ ] No automatic return-from-pause rejoin; group-history and waiting derivation remain consistent.",
+      "targetTickets": [
+        14,
+        7,
+        68
+      ]
+    },
+    {
+      "sourceTicket": 14,
+      "sourceCriterion": "14-AC-007",
+      "text": "- [ ] Verify repeated departures and actual permission boundaries.",
+      "targetTickets": [
+        14,
+        7,
+        68
+      ]
+    },
+    {
+      "sourceTicket": 13,
+      "sourceCriterion": "13-AC-001",
+      "text": "- [ ] Open and Closed can switch or become Ended. Ended is final in MVP; no ordinary reopen-Ended path.",
+      "targetTickets": [
+        13,
+        19,
+        65
+      ]
+    },
+    {
+      "sourceTicket": 13,
+      "sourceCriterion": "13-AC-002",
+      "text": "- [ ] Any active member may change allowed group controls and accept/decline join requests; non-members may not. Necessary exceptional admin corrections remain possible.",
+      "targetTickets": [
+        13,
+        19,
+        65
+      ]
+    },
+    {
+      "sourceTicket": 13,
+      "sourceCriterion": "13-AC-003",
+      "text": "- [ ] Name/description are editable. Exchange type and language/culture focus stay fixed after creation.",
+      "targetTickets": [
+        13,
+        19,
+        65
+      ]
+    },
+    {
+      "sourceTicket": 13,
+      "sourceCriterion": "13-AC-004",
+      "text": "- [ ] Capacity changes remain within Language 2/3 or Culture/Combined 2–10 and cannot fall below current active member count.",
+      "targetTickets": [
+        13,
+        19,
+        65
+      ]
+    },
+    {
+      "sourceTicket": 13,
+      "sourceCriterion": "13-AC-005",
+      "text": "- [ ] Only Open groups with space and valid focus relationships can appear as joinable. Open may be full; Closed may have space. Neither then accepts a join.",
+      "targetTickets": [
+        13,
+        19,
+        65
+      ]
+    },
+    {
+      "sourceTicket": 13,
+      "sourceCriterion": "13-AC-006",
+      "text": "- [ ] Normal counts/slots update automatically. Leaving does not reopen Closed or automatically end a group; #14 controls departure history and invalid-focus suppression.",
+      "targetTickets": [
+        13,
+        19,
+        65
+      ]
+    },
+    {
+      "sourceTicket": 13,
+      "sourceCriterion": "13-AC-007",
+      "text": "- [ ] Personal participation/openness does not silently change group state or remove memberships.",
+      "targetTickets": [
+        13,
+        19,
+        65
+      ]
+    },
+    {
+      "sourceTicket": 13,
+      "sourceCriterion": "13-AC-008",
+      "text": "- [ ] Verify caller authority, history and actual tenant behavior; no routine approval or manual count maintenance.",
+      "targetTickets": [
+        13,
+        19,
+        65
+      ]
+    },
+    {
+      "sourceTicket": 12,
+      "sourceCriterion": "12-AC-001",
+      "text": "- [ ] Groups stores name, Language/Culture/Combined type, structured language/culture focus, capacity, Open/Closed/Ended state and optional description.",
+      "targetTickets": [
+        12
+      ]
+    },
+    {
+      "sourceTicket": 12,
+      "sourceCriterion": "12-AC-002",
+      "text": "- [ ] Group Members stores group/participant links and Active/Left membership episodes with the agreed timestamps/history mapping. Profiles do not contain manually maintained group text.",
+      "targetTickets": [
+        12
+      ]
+    },
+    {
+      "sourceTicket": 12,
+      "sourceCriterion": "12-AC-003",
+      "text": "- [ ] Language capacity is 2 or 3 total; Culture and Combined capacity is 2–10 total. No participant group-size preference.",
+      "targetTickets": [
+        11,
+        47
+      ]
+    },
+    {
+      "sourceTicket": 12,
+      "sourceCriterion": "12-AC-004",
+      "text": "- [ ] Each stated language/culture focus has a relevant sharer and a different learner. Every member participates in at least one focus. Combined groups collectively support both focuses; an individual may participate in either or both. Reciprocity is optional.",
+      "targetTickets": [
+        11,
+        47
+      ]
+    },
+    {
+      "sourceTicket": 12,
+      "sourceCriterion": "12-AC-005",
+      "text": "- [ ] Accepted participants receive authoritative active memberships exactly once. Publish a group only after its required memberships are successfully saved.",
+      "targetTickets": [
+        11,
+        47
+      ]
+    },
+    {
+      "sourceTicket": 12,
+      "sourceCriterion": "12-AC-006",
+      "text": "- [ ] Initial state is Open if space remains, otherwise Closed. Counts/free slots derive automatically from Active membership rows; do not assume native cross-list calculated columns.",
+      "targetTickets": [
+        64,
+        68,
+        11
+      ]
+    },
+    {
+      "sourceTicket": 12,
+      "sourceCriterion": "12-AC-007",
+      "text": "- [ ] Apply #47 protection across all acceptance paths: no duplicate group/member result, over-capacity success or false Accepted state after partial failure.",
+      "targetTickets": [
+        11,
+        47
+      ]
+    },
+    {
+      "sourceTicket": 12,
+      "sourceCriterion": "12-AC-008",
+      "text": "- [ ] Verify actual list/field names, supported connections/permissions and setup before changing the tenant; no paid service or routine admin group creation.",
+      "targetTickets": [
+        12
+      ]
+    },
+    {
+      "sourceTicket": 11,
+      "sourceCriterion": "11-AC-001",
+      "text": "- [ ] Finalize response input/output contract and unavailable-target handling before the affected package/app wiring. Keep existing approved user-visible request states and eligibility rechecks.",
+      "targetTickets": [
+        11,
+        65,
+        67,
+        47,
+        21
+      ]
+    },
+    {
+      "sourceTicket": 11,
+      "sourceCriterion": "11-AC-002",
+      "text": "- [ ] Coordinate minimum capacity/retry/recovery safeguards with #47; no full transaction/lock platform or guaranteed automatic recovery of every failure is approved.",
+      "targetTickets": [
+        11,
+        65,
+        67,
+        47,
+        21
+      ]
+    },
+    {
+      "sourceTicket": 11,
+      "sourceCriterion": "11-AC-003",
+      "text": "- [ ] Only intended recipient/authorized actor can accept or decline; sender sees result.",
+      "targetTickets": [
+        11,
+        65,
+        67,
+        47,
+        21
+      ]
+    },
+    {
+      "sourceTicket": 11,
+      "sourceCriterion": "11-AC-004",
+      "text": "- [ ] Recheck caller authority, compatibility, availability and applicable capacity at acceptance, rather than trust stale discovery results. For a group join, any current active member may respond; non-members may not.",
+      "targetTickets": [
+        11,
+        65,
+        67,
+        47,
+        21
+      ]
+    },
+    {
+      "sourceTicket": 11,
+      "sourceCriterion": "11-AC-005",
+      "text": "- [ ] Acceptance creates/updates required group/memberships through one coordinated path.",
+      "targetTickets": [
+        11,
+        65,
+        67,
+        47,
+        21
+      ]
+    },
+    {
+      "sourceTicket": 11,
+      "sourceCriterion": "11-AC-006",
+      "text": "- [ ] Repeated/concurrent acceptance produces one logical result; failures cannot falsely report completed membership. Use #47 evidence.",
+      "targetTickets": [
+        11,
+        65,
+        67,
+        47,
+        21
+      ]
+    },
+    {
+      "sourceTicket": 11,
+      "sourceCriterion": "11-AC-007",
+      "text": "- [ ] Decline/cancellation preserves terminal history and creates no active memberships; an accept/cancel race has one consistent winning result under #47.",
+      "targetTickets": [
+        11,
+        65,
+        67,
+        47,
+        21
+      ]
+    },
+    {
+      "sourceTicket": 11,
+      "sourceCriterion": "11-AC-008",
+      "text": "- [ ] Ordinary path automatic; exceptional repair can use admins.",
+      "targetTickets": [
+        11,
+        65,
+        67,
+        47,
+        21
+      ]
+    },
+    {
+      "sourceTicket": 11,
+      "sourceCriterion": "11-AC-009",
+      "text": "- [ ] Selected notifications follow #49/#21 without undoing business state on delivery failure.",
+      "targetTickets": [
+        11,
+        65,
+        67,
+        47,
+        21
+      ]
+    },
+    {
+      "sourceTicket": 10,
+      "sourceCriterion": "10-AC-001",
+      "text": "- [ ] Specify send/history/cancel request fields and flow interfaces before the affected package; distinguish personal recipient from group target with #17. Inputs reference records, not proof of caller identity.",
+      "targetTickets": [
+        10,
+        62,
+        63,
+        67,
+        23,
+        17
+      ]
+    },
+    {
+      "sourceTicket": 10,
+      "sourceCriterion": "10-AC-002",
+      "text": "- [ ] Define readable unavailable-target behavior; no automatic cancellation policy approved. Keep acceptance eligibility checks.",
+      "targetTickets": [
+        63,
+        47
+      ]
+    },
+    {
+      "sourceTicket": 10,
+      "sourceCriterion": "10-AC-003",
+      "text": "- [ ] Review actual TandemMyRequests work: retain if complete/small adjustment, otherwise generate a fresh package. Basic truthful failure responses now; detailed wording/paging at the reader implementation gate.",
+      "targetTickets": [
+        62,
+        67
+      ]
+    },
+    {
+      "sourceTicket": 10,
+      "sourceCriterion": "10-AC-004",
+      "text": "- [ ] Request from compatible candidate is persisted Pending with trusted requester/recipient identity.",
+      "targetTickets": [
+        10,
+        62,
+        63,
+        67,
+        23,
+        17
+      ]
+    },
+    {
+      "sourceTicket": 10,
+      "sourceCriterion": "10-AC-005",
+      "text": "- [ ] Prevent duplicate Pending requests for the same person/group connection; preserve terminal history.",
+      "targetTickets": [
+        10,
+        62,
+        63,
+        67,
+        23,
+        17
+      ]
+    },
+    {
+      "sourceTicket": 10,
+      "sourceCriterion": "10-AC-006",
+      "text": "- [ ] Sender can see relevant Pending/Accepted/Declined/Cancelled state; meet-first/expiry/bulk are Later.",
+      "targetTickets": [
+        63,
+        47
+      ]
+    },
+    {
+      "sourceTicket": 10,
+      "sourceCriterion": "10-AC-007",
+      "text": "- [ ] Sender can cancel while Pending; a later accept cannot create a membership. Recheck availability at acceptance. Decide how pending requests display an unavailable recipient before enabling any automatic cancellation; no new timer/cancellation policy is implied. Notifications follow #49.",
+      "targetTickets": [
+        63,
+        47
+      ]
+    },
+    {
+      "sourceTicket": 10,
+      "sourceCriterion": "10-AC-008",
+      "text": "- [ ] No routine admin approvals or manual matching; necessary exceptional repair is allowed.",
+      "targetTickets": [
+        10,
+        62,
+        63,
+        67,
+        23,
+        17
+      ]
+    },
+    {
+      "sourceTicket": 10,
+      "sourceCriterion": "10-AC-009",
+      "text": "- [ ] Reject tampered identities/recipients and test permission boundaries.",
+      "targetTickets": [
+        10,
+        23
+      ]
+    },
+    {
+      "sourceTicket": 10,
+      "sourceCriterion": "10-AC-010",
+      "text": "- [ ] No group/membership created until acceptance succeeds.",
+      "targetTickets": [
+        10,
+        62,
+        63,
+        67,
+        23,
+        17
+      ]
+    },
+    {
+      "sourceTicket": 9,
+      "sourceCriterion": "9-AC-001",
+      "text": "- [ ] No unhosted Python runtime, external service, premium connector or new hosting/licence dependency.",
+      "targetTickets": [
+        9,
+        7
+      ]
+    },
+    {
+      "sourceTicket": 9,
+      "sourceCriterion": "9-AC-002",
+      "text": "- [ ] Separate trusted SharePoint normalization, compatibility/status rules and approved response projection.",
+      "targetTickets": [
+        9,
+        7
+      ]
+    },
+    {
+      "sourceTicket": 9,
+      "sourceCriterion": "9-AC-003",
+      "text": "- [ ] UI controls invoke the flow without duplicating eligibility logic.",
+      "targetTickets": [
+        9,
+        7
+      ]
+    },
+    {
+      "sourceTicket": 9,
+      "sourceCriterion": "9-AC-004",
+      "text": "- [ ] Reuse culture/language compatibility for #16 without a second matching engine.",
+      "targetTickets": [
+        9,
+        7
+      ]
+    },
+    {
+      "sourceTicket": 9,
+      "sourceCriterion": "9-AC-005",
+      "text": "- [ ] Run synthetic and tenant cases, including #25; record deployment/export evidence.",
+      "targetTickets": [
+        9,
+        7
+      ]
+    },
+    {
+      "sourceTicket": 9,
+      "sourceCriterion": "9-AC-006",
+      "text": "- [ ] Caller identity and candidate access satisfy the agreed boundary; do not equate app filtering with authorization.",
+      "targetTickets": [
+        9,
+        7
+      ]
+    },
+    {
+      "sourceTicket": 8,
+      "sourceCriterion": "8-AC-001",
+      "text": "- [ ] Ranking policy/weights and expectations are unapproved; MVP keeps predictable ordering.",
+      "targetTickets": [
+        8
+      ]
+    },
+    {
+      "sourceTicket": 8,
+      "sourceCriterion": "8-AC-002",
+      "text": "- [ ] Record own acceptance/decision and test evidence before closure.",
+      "targetTickets": [
+        8
+      ]
+    },
+    {
+      "sourceTicket": 7,
+      "sourceCriterion": "7-AC-001",
+      "text": "- [ ] Preserve self exclusion, one-way/reciprocal language fit and teach-only support.",
+      "targetTickets": [
+        7,
+        16,
+        42
+      ]
+    },
+    {
+      "sourceTicket": 7,
+      "sourceCriterion": "7-AC-002",
+      "text": "- [ ] Add culture-share/interest compatibility and culture-only/combined scenarios; interest-only cultures do not prove sharing expertise.",
+      "targetTickets": [
+        7,
+        16,
+        42
+      ]
+    },
+    {
+      "sourceTicket": 7,
+      "sourceCriterion": "7-AC-003",
+      "text": "- [ ] Gate on independent validation, participation and open-to-connections rules from #46/#6.",
+      "targetTickets": [
+        7,
+        16,
+        42
+      ]
+    },
+    {
+      "sourceTicket": 7,
+      "sourceCriterion": "7-AC-004",
+      "text": "- [ ] Optional filters narrow compatible results; do not expose all available profiles as a directory.",
+      "targetTickets": [
+        7,
+        16,
+        42
+      ]
+    },
+    {
+      "sourceTicket": 7,
+      "sourceCriterion": "7-AC-005",
+      "text": "- [ ] Implement approved #46 person/group display with #42; exclude email/raw identity/admin/system data and include approved Comments/optional profile fields.",
+      "targetTickets": [
+        7,
+        16,
+        42
+      ]
+    },
+    {
+      "sourceTicket": 7,
+      "sourceCriterion": "7-AC-006",
+      "text": "- [ ] Blank optional Time zone does not exclude or invalidate compatible participants; no inferred UTC/location requirement.",
+      "targetTickets": [
+        7,
+        16,
+        42
+      ]
+    },
+    {
+      "sourceTicket": 7,
+      "sourceCriterion": "7-AC-007",
+      "text": "- [ ] Implement in Power Automate with existing entitlements, trusted caller/data normalization, bounded queries and approved Power Apps response.",
+      "targetTickets": [
+        7,
+        16,
+        42
+      ]
+    },
+    {
+      "sourceTicket": 7,
+      "sourceCriterion": "7-AC-008",
+      "text": "- [ ] No automatic assignments/memberships or routine approvals/per-candidate grants.",
+      "targetTickets": [
+        7,
+        16,
+        42
+      ]
+    },
+    {
+      "sourceTicket": 7,
+      "sourceCriterion": "7-AC-009",
+      "text": "- [ ] Record real-data/app integration and tests before closure.",
+      "targetTickets": [
+        7,
+        16,
+        42
+      ]
+    },
+    {
+      "sourceTicket": 6,
+      "sourceCriterion": "6-AC-001",
+      "text": "- [ ] Participant can choose Active/Paused/Inactive and open-to-new-connections under the agreed field contract.",
+      "targetTickets": [
+        6,
+        61,
+        64,
+        68,
+        7,
+        48
+      ]
+    },
+    {
+      "sourceTicket": 6,
+      "sourceCriterion": "6-AC-002",
+      "text": "- [ ] New self-registration defaults to participation Active and open-to-new-connections Yes; edits/revalidation preserve chosen values.",
+      "targetTickets": [
+        6,
+        61,
+        64,
+        68,
+        7,
+        48
+      ]
+    },
+    {
+      "sourceTicket": 6,
+      "sourceCriterion": "6-AC-003",
+      "text": "- [ ] Validation success/failure never overwrites the user's paused/inactive choice.",
+      "targetTickets": [
+        6,
+        61,
+        64,
+        68,
+        7,
+        48
+      ]
+    },
+    {
+      "sourceTicket": 6,
+      "sourceCriterion": "6-AC-004",
+      "text": "- [ ] Keep migration confirmation independent; decide discoverability in #48 before exposing migrated data.",
+      "targetTickets": [
+        6,
+        61,
+        64,
+        68,
+        7,
+        48
+      ]
+    },
+    {
+      "sourceTicket": 6,
+      "sourceCriterion": "6-AC-005",
+      "text": "- [ ] Derive Waiting/In a group from authoritative memberships, not manual participant labels.",
+      "targetTickets": [
+        64,
+        68
+      ]
+    },
+    {
+      "sourceTicket": 6,
+      "sourceCriterion": "6-AC-006",
+      "text": "- [ ] Personal openness and group Open/Closed/Ended remain independent. Do not reset group state, delete memberships or rejoin people when personal participation changes. Coordinate eligibility and unavailable-recipient handling with #7/#10.",
+      "targetTickets": [
+        6,
+        61,
+        64,
+        68,
+        7,
+        48
+      ]
+    },
+    {
+      "sourceTicket": 6,
+      "sourceCriterion": "6-AC-007",
+      "text": "- [ ] Paused/inactive/closed-to-new-connections profiles do not appear in new discovery; existing history is preserved.",
+      "targetTickets": [
+        6,
+        61,
+        64,
+        68,
+        7,
+        48
+      ]
+    },
+    {
+      "sourceTicket": 6,
+      "sourceCriterion": "6-AC-008",
+      "text": "- [ ] Admin can make necessary exceptional corrections, such as departure from company.",
+      "targetTickets": [
+        6,
+        61,
+        64,
+        68,
+        7,
+        48
+      ]
+    },
+    {
+      "sourceTicket": 6,
+      "sourceCriterion": "6-AC-009",
+      "text": "- [ ] Retest culture-only and language-only create/edit; no routine admin approvals.",
+      "targetTickets": [
+        6,
+        61,
+        64,
+        68,
+        7,
+        48
+      ]
+    },
+    {
+      "sourceTicket": 5,
+      "sourceCriterion": "5-AC-001",
+      "text": "- [ ] Create Culture catalogue with agreed labels/keys and active values; add optional multi-value ShareCultures and LearnCultures lookups.",
+      "targetTickets": [
+        66
+      ]
+    },
+    {
+      "sourceTicket": 5,
+      "sourceCriterion": "5-AC-002",
+      "text": "- [ ] Support language-only, culture-only, share-only and combined profiles. At least one of the four offer/interest fields is needed; all empty blocks form save with useful feedback.",
+      "targetTickets": [
+        5,
+        61,
+        66
+      ]
+    },
+    {
+      "sourceTicket": 5,
+      "sourceCriterion": "5-AC-003",
+      "text": "- [ ] Preserve required unique signed-in Participant account. Time zone is OPTIONAL; blank must save and must not invalidate or exclude the profile. Keep existing catalogue lookup.",
+      "targetTickets": [
+        5,
+        61,
+        66
+      ]
+    },
+    {
+      "sourceTicket": 5,
+      "sourceCriterion": "5-AC-004",
+      "text": "- [ ] No participant group-size preference and no Comments notice. Exact Discovery projection belongs to #7/#42; do not preselect it here.",
+      "targetTickets": [
+        5,
+        61,
+        66
+      ]
+    },
+    {
+      "sourceTicket": 5,
+      "sourceCriterion": "5-AC-005",
+      "text": "- [ ] Validate selected catalogue IDs and active values, preserve lookup IDs/multiple values, and fail safely on malformed data or flow failure.",
+      "targetTickets": [
+        61,
+        66
+      ]
+    },
+    {
+      "sourceTicket": 5,
+      "sourceCriterion": "5-AC-006",
+      "text": "- [ ] Validate corrections on edit as well as creation, with a verified guard against loops from flow-managed updates. Preserve unrelated participant choices.",
+      "targetTickets": [
+        61,
+        66
+      ]
+    },
+    {
+      "sourceTicket": 5,
+      "sourceCriterion": "5-AC-007",
+      "text": "- [ ] Retest create/edit/save/reopen, cleared time zone, culture-only and existing language selections; culture interest never implies sharing expertise.",
+      "targetTickets": [
+        5,
+        61,
+        66
+      ]
+    },
+    {
+      "sourceTicket": 5,
+      "sourceCriterion": "5-AC-008",
+      "text": "- [ ] Verify required tenant permissions, existing connections/entitlements and setup before live changes. No premium connector, paid backend or new runtime.",
+      "targetTickets": [
+        5,
+        61,
+        66
+      ]
+    },
+    {
+      "sourceTicket": 5,
+      "sourceCriterion": "5-AC-009",
+      "text": "- [ ] Record local checks separately from actual app/flow acceptance evidence using docs/TEST_CATALOGUE.md and docs/TEST_RUNS.md.",
+      "targetTickets": [
+        5,
+        61,
+        66
+      ]
+    }
+  ]
+}
