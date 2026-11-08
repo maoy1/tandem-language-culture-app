@@ -3,7 +3,6 @@
   "reportedDate": "2026-11-08",
   "originalValidatorOff": true,
   "onlyV2Enabled": true,
-  "ownerSelectedItem": 3,
   "reportedRunItemIds": [
     38,
     38,
@@ -16,6 +15,8 @@
     "participation status",
     "openness"
   ],
-  "correlation": "UNRESOLVED: owner identifies item 3; all supplied reports identify item 38. Do not relabel reports or attribute them to item 3. Clarify built-in SharePoint ID versus row/profile selection.",
-  "scope": "Preservation statement retained for owner-selected profile; not yet linked to supplied run sequence."
+  "correlation": "RESOLVED_OWNER_CLARIFICATION: 3 meant third row, not SharePoint ID. Supplied reports retain itemId 38.",
+  "scope": "Owner preservation confirmation linked to selected profile and supplied item-38 run sequence. SharePoint ID column not independently inspected.",
+  "ownerSelectedRow": 3,
+  "reportedSharePointItemId": 38
 }

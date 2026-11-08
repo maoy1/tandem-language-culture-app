@@ -1186,3 +1186,20 @@ whole-schema audit evidence above remain separately scoped.
   validator, flow mapping fault or corruption inferred solely from the mismatch.
 - Evidence: results/owner-cutover-and-correlation.json under participant_submission.
   #61 remains In progress, PR #72 draft; no code/package changes or pytest rerun.
+
+### CORRELATE61-20261108-RESOLVED — 3 meant third row
+
+- Owner clarifies **the third row**, not built-in SharePoint ID 3. The apparent
+  item-3/item-38 discrepancy is resolved by this clarification. Raw run reports
+  retain itemId 38; no source report was changed or relabelled.
+- Accept the owner preservation confirmation for the selected/tested profile:
+  identity, selections, participation status and openness remained unchanged.
+  Original validator off / only v2 enabled is already explicitly confirmed.
+- Target Active correction/readback/follow-up and bounded preservation portions
+  now pass on owner evidence. The SharePoint ID column itself was not independently
+  inspected; no broader multi-account or privacy proof follows.
+- No rerun is needed for this passed sequence. Applied/published app feedback,
+  invalid/catalogue/creation/failure/conflict cases retain their pending scope;
+  #61 In progress, PR #72 draft. Earlier unresolved-correlation notes are history.
+- Evidence metadata/docs only; JSON parsed/diff checked; prior 101 local tests
+  retained. No package, flow, app or permission change.

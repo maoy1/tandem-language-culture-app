@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "sourceTicket": 61,
   "flow": "Participant submission",
-  "deliveryState": "REPORTED_RUN_PATHS_PASS_PROFILE_CORRELATION_PENDING",
+  "deliveryState": "ACTIVE_CORRECTION_FOLLOWUP_AND_OWNER_PRESERVATION_PASS_REMAINING_ACCEPTANCE_PENDING",
   "runtime": "Power Automate with existing SharePoint connection; no new service or runtime",
   "trigger": {
     "event": "SharePoint item created or modified",
@@ -58,13 +58,13 @@
     "measuredActions": 26,
     "measuredNesting": 3
   },
-  "tenantAcceptance": "Supplied item-38 run reports show no-change/correction/readback/follow-up paths passed. Owner confirms v2-only cutover and preservation on selected item 3; profile-to-run correlation unresolved. Other scoped acceptance pending.",
+  "tenantAcceptance": "Owner-reported item-38 no-change, Active correction/readback/follow-up and identity/selections/availability preservation PASS; only v2 enabled. Owner clarifies 3 meant third row, not ID. Invalid/catalogue/creation/failure/conflict and applied app-feedback acceptance remain pending.",
   "packageBuildId": "88637754-4c91-4833-9dcf-5116d8bfb77e",
   "artifact": "artifacts/participant_submission/TandemParticipantSubmission-v2.zip",
   "runtimeEvidence": {
     "validNoChange": "artifacts/participant_submission/results/valid-no-change.owner-report.json",
     "originalValidatorDisabled": "Owner confirmed original off and only v2 enabled",
-    "participantFieldPreservation": "Owner confirms selected profile unchanged but calls it item 3; supplied reports all item 38. Correlation unresolved.",
+    "participantFieldPreservation": "Owner confirmed identity, selections, participation/openness unchanged on selected third row; 3 was row position, not ID. Supplied runs identify item 38.",
     "activeCorrection": "artifacts/participant_submission/results/active-correction.owner-report.json",
     "activeCorrectionFollowup": "artifacts/participant_submission/results/active-correction-followup.owner-report.json",
     "profileCorrelation": "artifacts/participant_submission/results/owner-cutover-and-correlation.json"

@@ -1204,7 +1204,7 @@
         "The flow reads current saved values and validates catalogue selections.",
         "See validation feedback without admin approval or resetting personal choices."
       ],
-      "remainingWork": "Reconcile actual SharePoint item ID with supplied run reports before fixture-linked acceptance; apply/test/publish feedback and retain other scoped tenant gates.",
+      "remainingWork": "Apply/test/publish feedback; retain invalid/catalogue/creation/failure/conflict target acceptance gates. No repeat of passed Active sequence needed.",
       "testReferences": [
         "REG-001:004",
         "REG-006:009",
@@ -1213,7 +1213,7 @@
         "PAR-002",
         "PAR-003"
       ],
-      "testStatus": "Run-level paths PASS as reported for item 38; owner says selected item 3, so end-to-end fixture correlation unresolved. V2-only cutover confirmed; preservation statement retained without run attribution.",
+      "testStatus": "Owner target PASS: initial no-change, Active correction/readback/follow-up, v2-only cutover and field preservation. Row-versus-ID discrepancy resolved by owner; other scoped acceptance pending.",
       "testHandoff": "docs/FLOW_61_PARTICIPANT_SUBMISSION.md: exact package/build, one-validator cutover/recovery, owner smoke and detailed cases. Target tenant NOT RUN; source ZIP remains local.",
       "flows": [
         "Participant submission"

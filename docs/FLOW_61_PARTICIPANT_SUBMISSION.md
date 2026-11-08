@@ -238,3 +238,11 @@ actual built-in SharePoint ID versus UI row/profile selection before linking the
 run sequence to the preservation statement. Raw reports remain unchanged; no
 new test edit is requested yet. This supersedes earlier unconfirmed-cutover text
 and qualifies the fixture attribution in earlier run notes. See CORRELATE61.
+
+### Row clarification resolved
+
+Owner clarified that 3 means the third row, not SharePoint ID 3. The supplied
+run sequence still identifies item 38. Field-preservation and v2-only confirmations
+are accepted as bounded owner evidence for the tested profile; no repeat required.
+This resolves the earlier correlation question. Other scoped acceptance and
+applied/published app feedback remain pending; #61 is not complete.
