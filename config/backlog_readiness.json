@@ -1204,7 +1204,7 @@
         "The flow reads current saved values and validates catalogue selections.",
         "See validation feedback without admin approval or resetting personal choices."
       ],
-      "remainingWork": "Owner import/smoke; inspect/integrate app validation feedback; record scoped target tenant cases before completion.",
+      "remainingWork": "Owner import/smoke; apply/test/publish bounded feedback artifacts (existing OnSuccess inspected); scoped target tenant cases pending.",
       "testReferences": [
         "REG-001:004",
         "REG-006:009",

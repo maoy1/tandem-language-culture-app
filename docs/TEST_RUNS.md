@@ -1097,3 +1097,16 @@ whole-schema audit evidence above remain separately scoped.
 - Exact cutover/smoke/recovery and deferred detailed cases documented. Actual
   Form1.OnSuccess/validation label requested before feedback integration. #61
   stays In progress: import/smoke, feedback and target cases pending.
+
+### UI61-PREP-20261108 — actual save notification inspected
+
+- Owner supplied Form1.OnSuccess: Notify("Registration saved", NotificationType.Success).
+  No validation-label formula was supplied. Do not infer a missing label or edit
+  any unknown existing navigation/reset behavior.
+- Prepared informational OnSuccess, last-saved-ID latest Status label and manual
+  Refresh formulas. Studio application, formula/layout verification, new Live
+  version and owner feedback acceptance are **NOT RUN**. Last confirmed app is 19.
+- No per-edit completion marker exists, so latest stored Active does not prove
+  the newest edit finished validation. Feedback text preserves that distinction.
+- No runtime Python/extra connector or schema field added. Local suite remains
+  101 passed from BUILD61; static Power Fx handover is not Power Apps execution.

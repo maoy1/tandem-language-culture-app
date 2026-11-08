@@ -153,11 +153,51 @@ side-effect integration. Their tests are retained, not passed by this ticket.
   later profile event revalidates. No catalogue-wide freshness sweep is promised.
 - A concurrent participant edit causes HTTP 412 rather than retrying stale data.
   Inspect the later current-item run; no guarantee that a failed event healed itself.
-- Status is asynchronous. Existing Form1.OnSuccess and any Status label formula
-  were requested before integrating feedback. Do not present successful SubmitForm
-  as successful server validation. This keeps whole-ticket readiness pending.
+- Status is asynchronous. Owner supplied Form1.OnSuccess = Notify("Registration saved", NotificationType.Success).
+  No result binding was supplied. The bounded feedback changes below are prepared,
+  not yet applied/tested. Do not present SubmitForm success as server validation.
 - No target creation/invalid-branch/no-op-follow-up/access test is marked passed by
   local package generation. Ordinary-user access remains separately deferred.
 
 References: [SharePoint ETag/conditional update](https://learn.microsoft.com/en-us/sharepoint/dev/sp-add-ins/working-with-lists-and-list-items-with-rest),
 [SharePoint connector event and HTTP operations](https://learn.microsoft.com/en-us/connectors/sharepoint/).
+
+## App feedback — bounded Studio handover, implementation pending
+
+Owner supplied the complete OnSuccess formula as:
+`Notify("Registration saved", NotificationType.Success)`.
+It reports persistence, not the later validation result. No existing label formula
+or explicit confirmation that there is no label was supplied. Inspect the screen
+first; reuse an existing feedback label/button if present, otherwise add one pair.
+No new data source or .Run() call is needed. The existing Participants connection
+is already used by this app; these steps use only the last successfully saved ID.
+
+1. In Studio select Form1 at the verified registration-form path. Replace its
+   OnSuccess with artifacts/participant_submission/Form1.OnSuccess.powerfx. The
+   supplied existing formula contains no navigation/reset to preserve. If the
+   actual property now differs, preserve those additional behaviors before editing.
+2. Outside the editable data cards, add/reuse a text label in the registration
+   screen/container. Set Text to ValidationLabel.Text.powerfx. It reads the item
+   identified by the last successful Form1 submission and displays only validation
+   feedback; it neither changes identity nor exposes another profile.
+3. Add/reuse a button labelled **Refresh validation**. Its OnSelect is
+   RefreshValidation.OnSelect.powerfx. Set its Visible and the label's Visible to
+   `!IsBlank(varValidationParticipantId)` so they appear after successful Save.
+   Let Power Apps infer the variable type from the Set call; do not initialize it
+   to text or change the Form's existing Default/Item/Update bindings.
+4. Preview: save an ordinary valid edit. Expect the informational saved/background
+   message. After the matching flow succeeds, click Refresh validation; label
+   shows latest stored Active. With an isolated invalid direct-list fixture after
+   a prior app save, its successful validation run plus Refresh shows Needs review.
+   Restore originals. Refresh must not submit the form, write profile fields or
+   change participation/openness. A failed read shows the load error message.
+5. Save/publish the app after checking layout/formula errors; record its new Live
+   version and scoped feedback results. Version 19 remains the last confirmed app
+   version until the owner supplies this update. The package can be smoke-tested
+   before this UI step; whole #61 acceptance remains pending.
+
+The existing schema has no per-edit validation completion marker. Therefore the
+label deliberately says **latest stored** and warns that it may reflect an earlier
+edit. It never claims a particular save passed merely because an old Status is
+Active. No timer, automatic retry or extra tracking column is introduced. Detailed
+read-error/race and creation fixtures remain explicitly pending when unavailable.
