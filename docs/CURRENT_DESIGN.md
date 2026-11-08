@@ -340,6 +340,6 @@ for item 38; feedback accepted/published as owner-reported Live Version 26.
 Remaining scoped target acceptance variants stay pending; no whole-ticket completion.
 
 Owner chooses PR #72 merge and tester handover with remaining acceptance retained.
-See TEST_HANDOVER_61.md for Live-26/build context, role/setup, steps/expected
+See [the #61 issue description](https://github.com/maoy1/tandem-language-culture-app/issues/61) for Live-26/build context, role/setup, steps/expected
 results, cleanup and blocked cases. #61 stays open; no whole acceptance or
 ordinary-user access pass is implied.

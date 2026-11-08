@@ -322,7 +322,7 @@ matching-item follow-up from run history without making another profile edit.
 ## Owner decision — merge and delegate remaining testing
 
 Owner explicitly asks to merge #72 and set #61 Ready for testing rather than
-complete full acceptance personally. TEST_HANDOVER_61.md is the current handover
+complete full acceptance personally. [the #61 issue description](https://github.com/maoy1/tandem-language-culture-app/issues/61) is the current handover
 for authorized testers/operators: exact versions, role/setup, procedures, expected
 results, cleanup/report template and blocked access/fixture/harness cases.
 Issue remains open until its own acceptance passes; no tests waived or marked

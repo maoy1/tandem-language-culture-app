@@ -1312,7 +1312,7 @@ whole-schema audit evidence above remain separately scoped.
   personally completing #61 acceptance. Prepare #72 merge and testing handover.
 - Implementation is imported/owner-smoked, final feedback published Live 26;
   101 local tests and 26 actions/depth 3 remain recorded. No code/package change.
-- TEST_HANDOVER_61.md records passed owner cases, remaining target variants,
+- TEST_HANDOVER_61.md (historical filename; handover now in [#61](https://github.com/maoy1/tandem-language-culture-app/issues/61)) records passed owner cases, remaining target variants,
   operator versus authorized app-tester roles, exact steps/outcomes/cleanup,
   reporting and access/fixture/harness blockers. No send/invitation/grant action.
 - Lifecycle Ready for testing; issue remains open, not Done. Counts retain 38

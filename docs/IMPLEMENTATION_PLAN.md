@@ -432,6 +432,6 @@ starting the next implementation batch. Keep incomplete tickets open.
 ## Owner testing handover decision — 2026-11-08
 
 Owner asks to merge #72 and mark #61 Ready for testing so other authorized testers
-can cover the remaining cases. TEST_HANDOVER_61.md preserves passed/pending/blocked
+can cover the remaining cases. [the #61 issue description](https://github.com/maoy1/tandem-language-culture-app/issues/61) preserves passed/pending/blocked
 variants and access/fixture gates. #61 stays open, not Done; no full-test pass
 required from the owner before moving implementation forward. No active WIP.
