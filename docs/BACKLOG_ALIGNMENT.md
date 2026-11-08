@@ -31,8 +31,8 @@ implementation as activity or mixed several flows in one implementation ticket.
 **Activity is independent of partial implementation:** In progress means actively
 being worked now, at most one non-overview ticket. Queued partial work is Planned
 with evidence retained. PR #60 is merged. #66 delivery is ready for review after
-owner setup/readback and final schema audit passed. Only the five-write skip
-confirmation and delivery review remain for #66. Ready stages remain real handovers. Superseded is
+owner setup/readback and final schema audit passed. Owner confirmed all five writes skipped on a new repeat; own schema tests passed.
+Only PR #69 review/merge remains for #66. Ready stages remain real handovers. Superseded is
 closed as not planned, not Done. Closed historical #1-#4/#46 remain Done.
 
 **48 issues total:** 41 focused open tickets, 5 Done, 2 Superseded (#22/#24).

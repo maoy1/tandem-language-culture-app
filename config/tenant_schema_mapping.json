@@ -7,7 +7,7 @@
   "auditRunReference": "08584074638260638544180416987CU28",
   "setupBuildId": "1080ab9d-fec5-4c42-92ef-4988bb36390f",
   "setupApplyRunReference": "08584074626043544351187724959CU01",
-  "status": "Final full-schema audit verified; repeat returned SETUP_VERIFIED; individual five-write skip confirmation pending",
+  "status": "Final schema audit and safe-repeat acceptance passed; PR #69 review/merge pending",
   "lists": {
     "participants": {
       "listId": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
@@ -227,5 +227,6 @@
     "Culture/participant save, catalogue Active validation and ordinary-user privacy remain with their own tickets."
   ],
   "finalAuditRunReference": "08584074601682073516023990276cU14",
-  "repeatSetupRunReference": "08584074600200045376372808433CU02"
+  "repeatSetupRunReference": "08584074600200045376372808433CU02",
+  "idempotencyEvidence": "artifacts/schema_alignment/results/idempotency-confirmation.json"
 }

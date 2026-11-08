@@ -100,8 +100,8 @@ experimental, not officially certified ALM packages. See the current
 
 The [schema handover](docs/POC_SHAREPOINT_SETUP.md) includes the imported
 TandemSchemaAudit and TandemSchemaSetup-v2 packages, actual field mapping and
-remaining write-skip confirmation. Setup-v2 owner preview/apply/readback, repeat
-result and final whole-schema audit passed. PR #69 is ready for review. These are one-time helpers, not participant production flows.
+passed safe-repeat evidence. Setup-v2 owner preview/apply/readback, five-write
+skip confirmation and final whole-schema audit passed. PR #69 is ready for review. These are one-time helpers, not participant production flows.
 
 ## Local Python environment
 

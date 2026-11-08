@@ -7,8 +7,8 @@ design authority wins.
 
 The #46 contract is accepted. #66 has now inspected the actual participant and
 catalogue schema, applied the bounded changes below and verified the final full
-audit. Five-write skip confirmation in the successful repeat and PR #69 review
-remain pending. Discovery display is approved in MVP_FIELD_CONTRACT.md;
+audit. Owner confirmed five skipped writes on a new successful repeat.
+All own schema checks passed; PR #69 review/merge remains. Discovery display is approved in MVP_FIELD_CONTRACT.md;
 notifications remain undecided (#49). Catalogue time zone is optional for
 participants; migration is the final phase (#48).
 
@@ -19,8 +19,9 @@ The accepted contract is #46; actual internal names and list IDs are now in
 combines the owner-returned full metadata audit with the successful bounded setup
 readback. It is not an export of employee registrations. Final audit
 `08584074601682073516023990276cU14` analyzed **Verified**, zero findings. Repeat
-`08584074600200045376372808433CU02` returned **SETUP_VERIFIED**. Only the five
-individual write statuses and delivery review remain outstanding. Runtime app behavior stays
+`08584074600200045376372808433CU02` returned **SETUP_VERIFIED**. Owner subsequently confirmed all five writes Skipped on a new repeat with
+SETUP_VERIFIED; its screenshot/statement are retained, new run reference not
+supplied. All own schema checks passed; delivery review/merge remains. Runtime app behavior stays
 with #5/#6/#61; ordinary-user access remains a separate deferred proof.
 
 ### Packages and prerequisites
@@ -60,7 +61,7 @@ updates or deletes, internal-name changes, lookup-display changes, permission
 changes or working-flow replacement are included. New-field defaults do not
 establish how old profiles are initialized by the app.
 
-### Final acceptance and remaining confirmation (SCHEMA-001/002)
+### Passed acceptance and delivery review (SCHEMA-001/002)
 
 Final full-audit metadata and analysis are retained in
 `artifacts/schema_alignment/results/final-audit.metadata.json` and
@@ -70,18 +71,19 @@ report; system columnIndex/formatting are omitted. Existing mappings and new
 field IDs were checked against the supplied final report, not assumed from the
 desired schema. Analysis returned Verified with zero findings.
 
-1. **Remaining check, no rerun:** open the already successful setup repeat run
-   `08584074600200045376372808433CU02`. Expand **Apply only when ready > True >
-   Apply setup**, then each **Ensure...** condition. All five **Create_/Update_**
-   HTTP actions should be grey/**Skipped**; Verify/readback actions should be
-   green. Return that confirmation; Setup_report itself contains no action trace.
+1. **Passed:** owner performed a new repeat, explicitly confirmed all five
+   Create_/Update_ HTTP actions Skipped, and reported SETUP_VERIFIED/true.
+   Screenshot shows both Create actions skipped and Apply setup succeeded; the
+   owner confirms the other three writes. Evidence is idempotency-confirmation.json
+   and repeat-skipped.png. New run reference was not supplied; no further run is
+   required. The earlier green-create screenshot was the original first apply.
 2. **Already passed:** fresh full audit has collectionComplete true, errors [],
    no truncation, both required new fields/defaults, correct catalogue
    required/unique/index settings and preserved identity/optional lookups. No new
    audit/import is requested. Repeat summary reports SETUP_VERIFIED/true.
-3. Review/merge **PR #69**, record the skipped-write confirmation, then close #66
-   on its own acceptance. App/flow save behavior and privacy proof stay with their
-   owners. If review is complete while that test remains, use Ready for testing.
+3. Review/merge **PR #69**, then close #66 on its own passed acceptance.
+   No schema tests remain. App/flow save behavior and privacy proof stay with
+   their owners; do not leave #66 waiting for unrelated tests.
 4. For a future reproduction: run setup with ApplyChanges = No first; expect
    DRY_RUN_READY. After verified permissions/preview, run with Yes; expect
    SETUP_VERIFIED. Repeating Yes should skip all five writes. Run Audit_report

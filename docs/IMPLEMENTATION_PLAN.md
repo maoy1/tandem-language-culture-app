@@ -17,7 +17,8 @@ config/ticket_scope_map.json transfer of 246 former checklist items.
 - [x] PR #60 merged; focused-ticket implementation resumed.
 - [x] #66: metadata inspection, permission preview and five-setting apply/readback succeeded.
 - [x] #66: fresh whole-schema audit Verified with no findings; repeat setup returned SETUP_VERIFIED.
-- [ ] #66: review PR #69 and confirm five writes Skipped in the existing repeat run; then close on its own acceptance.
+- [x] #66: owner confirmed all five writes Skipped on a new repeat, SETUP_VERIFIED; own schema tests passed.
+- [ ] #66: review/merge PR #69, then close this completed scoped ticket.
 - [ ] Next selected implementation: #6 participation controls; #5 registration UI and #61 submission remain separately owned.
 
 See POC_SHAREPOINT_SETUP.md for exact #66 packages, mappings and remaining tests.
@@ -74,7 +75,7 @@ belong to Flow tickets; full layout belongs to App tickets. Disposable proof
 harnesses belong to their explicitly scoped Shared technical evidence, not an
 untracked production service. In progress is active work only, max one. Queued
 partial work stays Planned. Superseded is not Done. PR #60 is merged. #66 is
-ready for delivery review; only five-write skip confirmation and delivery review remain.
+ready for delivery review; own schema checks passed; only PR #69 review/merge remains.
 
 ## Ticket execution agreement - #45
 
@@ -114,8 +115,8 @@ steps and verify setup before relying on them. No additional paid platform,
 permission expansion or CLI/sign-in dependency is assumed.
 
 #66 packages are implemented/imported. Owner supplied metadata collection, dry
-preview and successful apply/readback evidence on 2026-11-08. Final full audit is Verified and repeat returned SETUP_VERIFIED; individual
-five-write skip confirmation is pending. See TEST_RUNS.md and PR #69.
+preview and successful apply/readback evidence on 2026-11-08. Final full audit is Verified; owner confirmed the five writes skipped on a new
+repeat with SETUP_VERIFIED. All own schema tests passed; only review/merge remains. See TEST_RUNS.md and PR #69.
 
 ## Completed package experiment checkpoint (#28)
 

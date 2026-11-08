@@ -844,7 +844,7 @@ field schema only, not participant rows/choices/permissions or working flows.
 Successful readback is not whole-feature acceptance or new-form/save behavior.
 
 No business records were created; required schema is intentionally retained.
-Turn off disposable helpers after final evidence. Delivery review and pending write-skip confirmation keep #66 open; #5/#6/#61 and privacy tests are separate owners.
+Turn off disposable helpers after final evidence. Own schema acceptance is now passed; only delivery review/merge keeps #66 open; #5/#6/#61 and privacy tests are separate owners.
 
 ## New run template
 
@@ -892,3 +892,20 @@ create this field. Correlate its Setup_report.runReference before attributing it
 to the repeat run or declaring a repeat failure/pass. No new run is requested.
 The five-write skip trace remains unconfirmed; final-state repeat summary and
 whole-schema audit evidence above remain separately scoped.
+
+### SCHEMA-20261108-03 - #66 safe-repeat confirmation PASS
+
+- Owner identified the earlier green-create screenshot as original apply run
+  `08584074626043544351187724959CU01`; first-apply creation was expected.
+- Owner ran the imported setup-v2 again and explicitly reported **all five writes
+  Skipped**, `setupVerified: true`, `result: SETUP_VERIFIED`.
+- Supplied screenshot shows Create ParticipationStatus and Create OpenToConnections
+  grey/skipped and Apply setup succeeded. Other three write skips are owner-reported.
+- Evidence: artifacts/schema_alignment/results/idempotency-confirmation.json and
+  repeat-skipped.png. The new run reference was not supplied; do not reuse the
+  earlier repeat reference for this screenshot. No further rerun is requested.
+- **SCHEMA-002 safe repeat: PASS**. This supersedes the earlier pending trace and
+  screenshot-correlation states while preserving their history. Initial metadata,
+  permission preview, apply/readback and final full audit had already passed.
+- All own #66 schema checks passed. Review/merge PR #69, then close #66. Ordinary
+  app/flow/privacy tests remain separately owned. No business-row cleanup required.
