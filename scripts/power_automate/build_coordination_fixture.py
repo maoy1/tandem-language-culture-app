@@ -29,7 +29,23 @@ def rid(n):return expr("coalesce("+data(n,'Id')+','+data(n,'ID')+')')
 def etag(n):return expr(data(n)+"?['__metadata']?['etag']")
 def status(n):return "int(coalesce(outputs('"+n+"')?['statusCode'],0))"
 def ok(n):return "contains(json('[200,201,204]'),"+status(n)+')'
-def duplicate(n):return "contains(json('[400,409]'),"+status(n)+')'
+def duplicate(n):
+    # Tenant evidence: HttpRequest wraps the native duplicate exception as 502.
+    # Status alone (including 400/409) never establishes a unique-key conflict.
+    error="outputs('"+n+"')?['body']?['error']"
+    codes="coalesce("+error+"?['innerError']?['errors'],json('[]'))"
+    native="equals("+error+"?['code'],'-2130575169, Microsoft.SharePoint.SPDuplicateValuesFoundException')"
+    wrapped="and(contains("+codes+",'-2130575169'),contains("+codes+",'Microsoft.SharePoint.SPDuplicateValuesFoundException'))"
+    return "and(contains(json('[400,409,502]'),"+status(n)+"),or("+native+","+wrapped+"))"
+
+
+def duplicate_details(n):
+    error="outputs('"+n+"')?['body']?['error']"
+    return {'httpStatus':expr(status(n)),
+        'errorCode':expr(error+"?['code']"),
+        'nativeErrorCodes':expr("coalesce("+error+"?['innerError']?['errors'],json('[]'))"),
+        'errorMessage':expr("coalesce("+error+"?['innerError']?['message'],"+error+"?['message'],'')")}
+
 def arr(n):return "coalesce("+data(n,'results')+",json('[]'))"
 def count(n):return 'length('+arr(n)+')'
 def complete(n):return 'and(equals('+status(n)+',200),not(equals('+data(n,'results')+',null)),empty('+data(n,'__next')+'))'
@@ -132,12 +148,12 @@ class Builder:
         a['Duplicate_primary']=self.create('unique:anchor','unique:other','Unique_anchor')
         a['Read_primary_anchor']=self.rows('Title',self.key('unique:anchor'),'Duplicate_primary',all_states=True)
         a['Unique_primary_report']=self.report('UNIQUE_PRIMARY',and_(duplicate('Duplicate_primary'),complete('Read_primary_anchor'),
-            'equals('+count('Read_primary_anchor')+',1)',"equals(first("+arr('Read_primary_anchor')+")?['Id'],"+raw(rid('Unique_anchor'))+')'),'Read_primary_anchor',{'httpStatus':expr(status('Duplicate_primary'))})
+            'equals('+count('Read_primary_anchor')+',1)',"equals(first("+arr('Read_primary_anchor')+")?['Id'],"+raw(rid('Unique_anchor'))+')'),'Read_primary_anchor',duplicate_details('Duplicate_primary'))
         a['Duplicate_secondary']=self.create('unique:otherTitle','unique:secondary','Unique_primary_report')
         a['Read_secondary_anchor']=self.rows('KeyB',self.key('unique:secondary'),'Duplicate_secondary',all_states=True)
         a['Read_rejected_title']=self.rows('Title',self.key('unique:otherTitle'),'Read_secondary_anchor')
         a['Unique_secondary_report']=self.report('UNIQUE_SECONDARY',and_(duplicate('Duplicate_secondary'),complete('Read_secondary_anchor'),complete('Read_rejected_title'),
-            'equals('+count('Read_secondary_anchor')+',1)','equals('+count('Read_rejected_title')+',0)'),'Read_rejected_title',{'httpStatus':expr(status('Duplicate_secondary'))})
+            'equals('+count('Read_secondary_anchor')+',1)','equals('+count('Read_rejected_title')+',0)'),'Read_rejected_title',duplicate_details('Duplicate_secondary'))
         return a
 
     def terminal_cases(self,previous):
@@ -289,7 +305,7 @@ class Builder:
             'equals('+data('Recovery_final_group','Complete')+',true)','equals('+data('Recovery_final_request','Complete')+',true)',
             'equals('+data('Recovery_final_receipt','Complete')+',true)',
             'equals('+data('Recovery_final_group','Counter')+',2)','empty('+data('Recovery_final_group','OwnerToken')+')'),'Recovery_final_receipt',
-            {'faultMode':'Intentional non-I/O action failure at known prefix; no network timeout or killed-run claim.'})
+            {**duplicate_details('Recovery_replay_first'),'faultMode':'Intentional non-I/O action failure at known prefix; no network timeout or killed-run claim.'})
         # Historical episode and Closed preservation are a separate fixture.
         a['History_group']=self.create('history:group',previous='Recovery_report',Status='Closed',Counter=1,Capacity=3,Complete=True)
         a['History_member']=self.create('history:member','history:members:episode1','History_group',Status='Active',Complete=True)
@@ -307,7 +323,7 @@ class Builder:
         a['History_report']=self.report('LEFT_EPISODE_HISTORY',and_(duplicate('History_replay_create'),
             'equals('+data('History_after_member','Status')+",'Left')",'equals('+data('History_after_group','Status')+",'Closed')", 
             'equals('+data('History_after_group','Counter')+',0)',
-            'equals('+data('History_after_member','Id')+','+raw(rid('History_member'))+')'),'History_after_group')
+            'equals('+data('History_after_member','Id')+','+raw(rid('History_member'))+')'),'History_after_group',duplicate_details('History_replay_create'))
         a['Event_before_commit_gate']=compose(expr(and_('equals('+data('Recovery_before_group','Complete')+',true)','equals('+data('Recovery_before_request','Complete')+',true)')),'History_report')
         a['Event_require_commit']=condition(and_('equals('+data('Recovery_final_receipt','Complete')+',true)',
             'equals('+data('Recovery_final_request','Complete')+',true)','equals('+data('Recovery_final_group','Complete')+',true)'),{},
@@ -317,7 +333,7 @@ class Builder:
         a['Event_rows']=self.rows('Title',self.key('event:accepted:recovery'),'Event_replay',all_states=True)
         a['Event_report']=self.report('COMMITTED_EVENT_UNIQUE',and_("equals(outputs('Event_before_commit_gate'),false)",duplicate('Event_replay'),
             complete('Event_rows'),'equals('+count('Event_rows')+',1)','equals('+data('Recovery_final_request','Complete')+',true)',
-            'equals('+data('Recovery_final_group','Complete')+',true)'),'Event_rows',{'delivery':'Not attempted; no channel/delivery guarantee.'})
+            'equals('+data('Recovery_final_group','Complete')+',true)'),'Event_rows',{**duplicate_details('Event_replay'),'delivery':'Not attempted; no channel/delivery guarantee.'})
         return a
 
     def actions(self):
@@ -354,7 +370,7 @@ def build_package(output,site=SITE):
     with TemporaryDirectory() as tmp:
         base=Path(tmp)/'base.zip';doc=envelope(base,sharepoint_site=site)
         with ZipFile(base) as z:entries={n:json.loads(z.read(n)) for n in z.namelist()}
-    builder=Builder(site,doc['name']);doc['properties']['displayName']=NAME
+    builder=Builder(site,doc['name']);doc['properties']['displayName']=NAME+' v2'
     doc['properties']['definition']['triggers']['manual']['inputs']['schema']['properties']={'boolean':{
         'title':'Run fixture writes','type':'boolean','default':False,'x-ms-content-hint':'BOOLEAN','x-ms-dynamically-added':True}}
     doc['properties']['definition']['actions']=builder.actions()
@@ -362,7 +378,7 @@ def build_package(output,site=SITE):
         if n.endswith('/definition.json'):entries[n]=doc
     entries['manifest.json']['details'].update(displayName=NAME+'-package',description='Issue 47 native synthetic fixture; boolean write gate defaults false. Creates/reuses tagged fixture only; no production mutations or deletion.')
     for item in entries['manifest.json']['resources'].values():
-        if item['type']=='Microsoft.Flow/flows':item['details']['displayName']=NAME
+        if item['type']=='Microsoft.Flow/flows':item['details']['displayName']=NAME+' v2'
     output.parent.mkdir(parents=True,exist_ok=True)
     with ZipFile(output,'x',ZIP_DEFLATED) as z:
         for n,value in entries.items():z.writestr(n,json.dumps(value,indent=2)+'\n')

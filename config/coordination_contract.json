@@ -37,7 +37,7 @@
     "65": "Same group guard + current rereads + terminal request CAS; one admitted slot, shared with #11/#13/#14."
   },
   "proof": {
-    "localSuite": 165,
+    "localSuite": 179,
     "referenceInterleavings": 70,
     "assumptions": [
       "Atomic per-row CAS",
@@ -46,16 +46,16 @@
       "Fresh authorized adapter facts",
       "Known sealed boundary has no outstanding I/O"
     ],
-    "nativeStatus": "Package built; NOT_IMPORTED_NOT_TESTED. No fixture confirmed created yet.",
+    "nativeStatus": "Original owner run 5/10 passed; wrapped native duplicate response confirmed. V2 corrected package built, NOT_IMPORTED_NOT_TESTED.",
     "preflightBuildId": "ffd55bdf-ce46-4327-96bc-9e0cddc09ecd",
     "preflight": "artifacts/coordination/TandemCoordinationPreflight.zip",
     "preflightTenantResult": "PASS_OWNER_REPORTED",
     "preflightEvidence": "artifacts/coordination/results/preflight.owner-report.json",
     "preflightRunReference": "08584074437966574454125674321CU01",
     "nativeFixture": {
-      "package": "artifacts/coordination/TandemCoordinationFixture.zip",
-      "packageBuildId": "8b82de6a-95e7-40fc-aaff-d066b168442b",
-      "fixtureTitle": "Tandem47Fixture_8b82de6a95e740fc",
+      "package": "artifacts/coordination/TandemCoordinationFixture-v2.zip",
+      "packageBuildId": "b54d7cee-971d-4af3-924f-e81d5fefaec9",
+      "fixtureTitle": "Tandem47Fixture_b54d7cee971d4af3",
       "actions": 321,
       "depth": 6,
       "caseCount": 10,
@@ -64,7 +64,8 @@
       "deletes": 0,
       "permissionChanges": 0,
       "tenantResult": "NOT_IMPORTED_NOT_TESTED",
-      "localSimulation": "Both race orders, no-write gate, fresh-run prefix/schema reuse, tag collision, schema tampering, revoked rights, failed read and receipt interruption verified locally; not native certification."
+      "localSimulation": "Both race orders, no-write gate, fresh-run prefix/schema reuse, tag collision, schema tampering, revoked rights, failed read and receipt interruption verified locally; not native certification.",
+      "duplicateClassification": "HTTP 400/409/502 plus exact native duplicate exception/code; generic gateway error is not a confirmed duplicate."
     }
   },
   "gates": [

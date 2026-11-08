@@ -11,7 +11,7 @@ from scripts.power_automate.schema_audit import measure
 
 
 class FakeSharePoint:
-    def __init__(self):self.fixture=None;self.rows={};self.fields=[];self.posts=0;self.calls=[];self.fail_receipt=False;self.fail_absence_read=False;self.low='2055'
+    def __init__(self):self.fixture=None;self.rows={};self.fields=[];self.posts=0;self.calls=[];self.fail_receipt=False;self.fail_absence_read=False;self.low='2055';self.duplicate_mode='direct'
     def response(self,code,data,parameters):
         body={'d':data} if 'verbose' in parameters['parameters/headers'].get('Accept','') else data
         return {'statusCode':code,'body':body}
@@ -54,7 +54,15 @@ class FakeSharePoint:
             assert body['__metadata']['type']==self.fixture['ListItemEntityTypeFullName']
             assert all(isinstance(body[k],str) and body[k] for k in ['Title','KeyB','Payload'])
             for f in ['Title','KeyB']:
-                if any(r[f]==body[f] for r in self.rows.values()):return result(400,{'error':{'message':'DUPLICATE_VALUE'}})
+                if any(r[f]==body[f] for r in self.rows.values()):
+                    message='The list item could not be added or updated because duplicate values were found in the following field(s) in the list: ['+f+'].'
+                    if self.duplicate_mode=='wrapped':
+                        return {'statusCode':502,'body':{'error':{'code':502,'message':'BadGateway','innerError':{
+                            'status':502,'message':message,'errors':['-2130575169','Microsoft.SharePoint.SPDuplicateValuesFoundException']}}}}
+                    if self.duplicate_mode=='generic502':
+                        return {'statusCode':502,'body':{'error':{'code':502,'message':'BadGateway'}}}
+                    return {'statusCode':400,'body':{'error':{
+                        'code':'-2130575169, Microsoft.SharePoint.SPDuplicateValuesFoundException','message':{'value':message}}}}
             i=len(self.rows)+1
             row={k:None for k in ['OwnerToken','Counter','Capacity','Status']}
             row['Complete']=False
@@ -219,3 +227,44 @@ def test_package_bounds_safe_default_and_no_overwrite(tmp_path):
         assert doc['properties']['definition']['triggers']['manual']['inputs']['schema']['properties']['boolean']['default'] is False
         assert measure(doc['properties']['definition']['actions'])['actions']==review['actions']
     with pytest.raises(FileExistsError):fixture.build_package(path)
+
+
+@pytest.mark.parametrize('prefer_b',[False,True])
+def test_wrapped_sharepoint_duplicate_all_ten_cases_pass(prefer_b):
+    server=FakeSharePoint();server.duplicate_mode='wrapped'
+    runner=NativeRunner(server,prefer_b=prefer_b)
+    runner.run(fixture.Builder(fixture.SITE,'synthetic-build').actions())
+    report=runner.outputs['Fixture_report']
+    assert report['allPassed'] and report['testCount']==10
+    duplicates=[r for r in report['results'] if 'nativeErrorCodes' in r['details']]
+    assert len(duplicates)==5
+    assert all(r['details']['httpStatus']==502 for r in duplicates)
+
+
+def test_generic_bad_gateway_cannot_pass_duplicate_proof():
+    server=FakeSharePoint();server.duplicate_mode='generic502';runner=NativeRunner(server)
+    with pytest.raises(AssertionError,match='NOT_COMPLETE'):
+        runner.run(fixture.Builder(fixture.SITE,'synthetic-build').actions())
+    report=runner.outputs['Fixture_report']
+    assert {r['case'] for r in report['failedCases']}=={
+        'UNIQUE_PRIMARY','UNIQUE_SECONDARY','KNOWN_PREFIX_REPLAY','LEFT_EPISODE_HISTORY','COMMITTED_EVENT_UNIQUE'}
+    assert not report['allPassed']
+
+
+@pytest.mark.parametrize('status,body,expected',[
+    (502,{'error':{'innerError':{'errors':['-2130575169','Microsoft.SharePoint.SPDuplicateValuesFoundException']}}},True),
+    (400,{'error':{'code':'-2130575169, Microsoft.SharePoint.SPDuplicateValuesFoundException'}},True),
+    (409,{'error':{'code':'-2130575169, Microsoft.SharePoint.SPDuplicateValuesFoundException'}},True),
+    (502,{'error':{'message':'BadGateway'}},False),
+    (502,{'error':{'innerError':{'errors':['-2130575169']}}},False),
+    (502,{'error':{'innerError':{'errors':['Microsoft.SharePoint.SPDuplicateValuesFoundException']}}},False),
+    (400,{'error':{'code':'INVALID_FIELD','message':'duplicate values'}},False),
+    (409,{'error':{'code':'CONFLICT'}},False),
+    (201,{'error':{'innerError':{'errors':['-2130575169','Microsoft.SharePoint.SPDuplicateValuesFoundException']}}},False),
+    (503,{'error':{'innerError':{'errors':['-2130575169','Microsoft.SharePoint.SPDuplicateValuesFoundException']}}},False),
+    (502,{},False),
+])
+def test_duplicate_requires_recognized_status_and_native_error(status,body,expected):
+    runner=NativeRunner(FakeSharePoint())
+    runner.outputs['Attempt']={'statusCode':status,'body':body}
+    assert runner.expr('@'+fixture.duplicate('Attempt'),{}) is expected

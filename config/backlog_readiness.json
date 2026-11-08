@@ -1067,9 +1067,9 @@
       "ticketType": "Shared technical",
       "status": "In progress",
       "flowScope": "Minimum cross-flow decision/duplicate/capacity protection and proof; not a second acceptance engine or elaborate locking platform.",
-      "implementationReadiness": "Read-only permission preflight owner-passed. Native tagged synthetic fixture package built (321 actions/depth 6, 10 checks); target import/run pending.",
-      "implementationEvidence": "165 local tests; generated flow simulations verify both writer orders/default-false/fresh rights/collision/schema reuse/read failures/receipt failure. Preflight run 08584074437966574454125674321CU01 passed.",
-      "evidence": "Native build 8b82de6a-95e7-40fc-aaff-d066b168442b; proposed production metadata untouched. Native fixture NOT_IMPORTED_NOT_TESTED; genuine network-unknown/killed-run and consumer proofs not inferred.",
+      "implementationReadiness": "Read-only permission preflight owner-passed. Original native fixture 5/10 passed; confirmed connector wraps native duplicate exception as 502. Corrected v2 built (321 actions/depth 6, 10 checks); v2 import/run pending.",
+      "implementationEvidence": "179 local tests; generated flow simulations verify both writer orders/default-false/fresh rights/collision/schema reuse/read failures/receipt failure. Preflight run 08584074437966574454125674321CU01 passed.",
+      "evidence": "Native v2 build b54d7cee-971d-4af3-924f-e81d5fefaec9; proposed production metadata untouched. V2 fixture NOT_IMPORTED_NOT_TESTED; genuine network-unknown/killed-run and consumer proofs not inferred.",
       "proposedExperience": [
         "Only one valid Pending decision wins.",
         "Retry interrupted work without duplicate logical results.",
