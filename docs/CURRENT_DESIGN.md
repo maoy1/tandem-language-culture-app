@@ -333,5 +333,7 @@ Location input, participant Role and required participant-entered identity email
 
 #61 is the sole In progress ticket. Target contract and tenant handover are in
 FLOW_61_PARTICIPANT_SUBMISSION.md and participant_submission_contract.json.
-Current export is required before preserving trigger/connection mapping and
-generating the updated package. No target flow has been imported or tested.
+Current owner export inspected; event/connection alias mapping preserved in a
+new import package (26 actions / depth 3), with active-catalogue checks and
+ETag-protected changed Status only. 101 local tests passed. Import/smoke and
+actual app feedback binding remain pending; no target tenant run claimed.

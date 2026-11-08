@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "sourceTicket": 61,
   "flow": "Participant submission",
-  "deliveryState": "PREPARATION_CURRENT_EXPORT_REQUIRED",
+  "deliveryState": "PACKAGE_BUILT_IMPORT_SMOKE_AND_APP_FEEDBACK_PENDING",
   "runtime": "Power Automate with existing SharePoint connection; no new service or runtime",
   "trigger": {
     "event": "SharePoint item created or modified",
     "listRole": "Participants",
-    "input": "Current item ID from existing trigger; source definition required to preserve exact binding",
+    "input": "Preserved When_an_item_is_created_or_modified / GetOnUpdatedItems, one-minute polling, splitOn body/value, triggerBody()['ID']; site/list match current source Get_item.",
     "authoritativeProfile": "Read current saved item, not stale trigger field values"
   },
   "schemaMapping": "config/tenant_schema_mapping.json",
@@ -46,17 +46,19 @@
   },
   "failureContract": {
     "failedRead": "Explicit failed run; do not treat unavailable/malformed/incomplete reads as empty catalogues or success",
-    "concurrentEdit": "Require current-item version protection on Status-only write; conflict is not success. Exact implementation finalized against export.",
+    "concurrentEdit": "Exact current-item ETag used in IF-MATCH on Status-only POST/MERGE; retries disabled. HTTP 412 fails run; later event reads current data. No stale overwrite or success report.",
     "postWrite": "Read back and verify Status without claiming unrelated fields were written",
     "selfTrigger": "Follow-up reads current item and skips unchanged Status; no sustained loop"
   },
-  "appFeedback": "Existing event-driven Save; validation remains asynchronous. Inspect actual Status/error feedback binding before promising immediate success. No Power Apps response/action invocation invented.",
-  "deploymentGate": "Inspect export, generate measured legacy import ZIP and readable definition; identify create-new/update and rollback-to-existing steps before owner imports. Never run duplicate validators concurrently.",
+  "appFeedback": "Asynchronous event flow; Form1.OnSuccess and existing Status label requested from owner before integration.",
+  "deploymentGate": "Generated Create-as-new package; stop existing validator before import, select existing SharePoint connection, ensure only v2 enabled, run owner smoke. Source export retained locally for recovery.",
   "limits": {
     "maxActionDefinitions": 500,
     "maxNesting": 8,
-    "measuredActions": null,
-    "measuredNesting": null
+    "measuredActions": 26,
+    "measuredNesting": 3
   },
-  "tenantAcceptance": "NOT RUN for target package; historical REG-014/015 partial passes retained"
+  "tenantAcceptance": "NOT RUN for target package; historical REG-014/015 partial passes retained",
+  "packageBuildId": "88637754-4c91-4833-9dcf-5116d8bfb77e",
+  "artifact": "artifacts/participant_submission/TandemParticipantSubmission-v2.zip"
 }

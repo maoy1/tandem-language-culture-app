@@ -1080,3 +1080,20 @@ whole-schema audit evidence above remain separately scoped.
 - Target catalogue/failure/concurrency/feedback cases remain NOT RUN. Historical
   REG-014/015 results remain scoped. Package action/nesting counts cannot yet be
   measured; delivery gate remains 500 actions / 8 nesting levels.
+
+### BUILD61-20261108 — current export inspected; package prepared
+
+- Owner supplied Tandem–Participantsubmission_20261108154030.zip. Its exact
+  trigger/current-item mapping and existing changed-only Status branches reviewed.
+  Missing catalogue validation and conditional update protection added to v2.
+- Build 88637754-4c91-4833-9dcf-5116d8bfb77e: **26 action definitions / depth 3**.
+  Trigger/recurrence/splitOn/site/list preserved; original connection instance IDs
+  replaced by existing-connection import mapping. Original export untracked/local.
+- Complete verbose reads parsed strictly; unknown/inactive IDs produce Needs
+  review, blank zone allowed, changed Status-only MERGE uses exact ETag/no retry;
+  failed/malformed/incomplete reads and failed readback cannot emit success.
+- **101 pytest passed** (17 new tests); JSON/artifact structure/diff checked. Pure
+  policy evaluation is local, not import/runtime evidence. No target tenant PASS.
+- Exact cutover/smoke/recovery and deferred detailed cases documented. Actual
+  Form1.OnSuccess/validation label requested before feedback integration. #61
+  stays In progress: import/smoke, feedback and target cases pending.

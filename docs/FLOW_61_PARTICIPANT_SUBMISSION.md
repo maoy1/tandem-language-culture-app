@@ -1,9 +1,18 @@
 # Participant submission validation — #61
 
-Status: **In progress, preparation**. No replacement package or live flow change yet.
-The existing flow has bounded REG-014/015 owner evidence; its current exported
-definition is required before preserving trigger, reference and connection mapping.
-No connected tool can read that tenant flow here; both local checkouts were searched.
+Status: **In progress; package prepared, tenant import/smoke and app feedback pending**.
+The owner supplied the current export. Inspection confirms GetOnUpdatedItems,
+one-minute recurrence, splitOn body/value, current Get_item using triggerBody ID,
+four-field nonempty OR and changed-only Status patches. Catalogue validity and
+conditional-write protection were absent. Prior REG-014/015 partial passes remain.
+No live flow has been changed by the packaging work.
+
+Package: artifacts/participant_submission/TandemParticipantSubmission-v2.zip;
+readable .definition.json and .review.json beside it. Build **88637754-4c91-4833-9dcf-5116d8bfb77e**.
+**26 action definitions / maximum nesting 3**; local suite **101 passed**.
+Source export SHA-256 is in the review; the original ZIP remains local/untracked.
+Generated package uses new flow IDs and an import-time existing-connection selector;
+original tenant connection instance identifiers are not copied.
 
 ## Inputs, validation and outputs
 
@@ -24,30 +33,78 @@ participant_submission_contract.json records the target machine-readable contrac
 - Failed/malformed/incomplete reads fail the run; do not convert them into a
   successful validation or silently mark a profile invalid. No new output column.
 - Protect the Status-only update against edits after the current-item read. Exact
-  version/conditional-write implementation must be inspected in the export; no
-  serialization or race-safety claim follows from the old no-op test.
+  current-item ETag is used with IF-MATCH and no retry on POST/MERGE. A conflict
+  fails the run; no unconditional wildcard write. No global cross-flow lock claim.
 - Read back a necessary write. Follow-up event must skip it when unchanged.
   No group/member/request changes, rejoin, reopening or catalogue writes.
 
-## Package and cutover gate
+## Exact mapping and controlled import / recovery
 
-1. Obtain existing flow Package (.zip), leaving the working flow unchanged.
-2. Inspect trigger operation, event/site/list/ID references, connection mapping,
-   current validation/update payloads, error behavior and app feedback binding.
-3. Generate legacy import ZIP, readable definition, mapping and local checks.
-   Measure all action definitions and maximum nesting; reject above 500 / 8.
-4. Provide exact import/cutover instructions after source inspection. Do not
-   import a second enabled validator or silently overwrite the working flow.
-   Retain original export for recovery; no atomic rollback promise.
+| Binding | Value |
+|---|---|
+| Display name | Tandem – Participant submission v2 |
+| Import setup for flow | Create as new; do not update/overwrite the working original |
+| SharePoint connection resource | Select the existing working SharePoint connection |
+| Site | https://reedelsevier.sharepoint.com/sites/OG-TandemOrg |
+| Event list | Participants / fd3adf46-f81d-4a7b-a80c-567fde0175dc |
+| Event | Existing trigger name, GetOnUpdatedItems, recurrence and splitOn preserved |
+| Current item | triggerBody()['ID']; REST reads Id, Person/lookup IDs and Status |
+| Catalogue lists | Language 3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63; Culture cf7ed5b4-2e11-4a0a-a417-6c63ed60f614; Timezone 7beddfff-1881-4a82-8003-29933b836350 |
+| Profile internal fields | Participantaccount, Teachlanguages, Learnlanguages, ShareCultures, LearnCultures, Timezone, Status |
+| Catalogue fields | Id, Active; complete bounded reads up to 5000, fail if next page exists |
+| Profile write | Status only plus REST entity metadata; no identity/availability mapping |
+| App call | None: event-driven; no new .Run() call or immediate validation response |
 
-Existing SharePoint connection/tenant metadata HTTP capability was exercised by
-#66. No new connector/licence/grant is proposed. Actual production binding and
-current flow permissions remain source/import verification gates.
+The existing SharePoint connector and metadata HTTP capability were exercised by
+#66. Conditional participant-row write and verbose response shapes require this
+package's smoke test; local tests do not certify them in the tenant. No new
+connection, permission, connector, licence or external runtime is proposed.
 
-## Target tenant acceptance handover — not yet executable
+1. Keep the original exported ZIP and note the original flow name/on-state. Before
+   importing the new event-driven flow, turn **off only the existing Participant
+   submission validator** in My flows. Registration saves during this short window
+   may await validation; avoid test/user edits until cutover smoke is ready.
+2. Import TandemParticipantSubmission-v2.zip using the legacy Import Package path.
+   Expand the Flow resource: **Create as new**. Map the SharePoint Connection
+   resource to the existing connection. The API resource remains Existing.
+3. Import. If any resource fails/skips unexpectedly, capture its exact expanded
+   error. Inspect whether v2 was partially created and turn it off before restoring
+   the original. Never leave both validators enabled. No new account/grant workaround.
+4. Open v2 and verify site/list plus the existing SharePoint connection. Turn v2
+   on if import left it off; confirm the original remains off. No manual action
+   rebuilding, added concurrency control or Response action is required.
+5. Run the minimal smoke below before resuming broader test edits. Keep the old
+   flow disabled and retained until target acceptance/review, not deleted.
+6. If smoke fails, capture failed action/error, turn off v2, then re-enable the
+   original. This restores the prior validator behavior; it does not undo any
+   completed Status write. Verify the test profile and re-edit it after recovery.
+
+## Minimal owner smoke — first import gate
+
+Use your existing permitted valid profile (at least one useful selection); note
+its item ID, Comments, Status, participation/openness and selections first.
+
+1. In the app, change only Comments to a temporary smoke note and Save. The
+   event is asynchronous. Wait for the matching v2 run in Run history (one-minute
+   polling can add delay); match the item ID, not merely the latest unrelated run.
+2. Open **Validation report → Outputs**. Expect valid=true, status=Active and
+   result=NO_CHANGE if Status was already Active; Update validation status Skipped.
+   If Status needed correction, expect STATUS_UPDATED and a successful patch /
+   readback, followed by a matching-item run with NO_CHANGE and update Skipped.
+3. Reopen the saved item: identity, selections, participation/openness unchanged;
+   only your Comment and any necessary Status change differ. Confirm no sustained
+   repeated writes without new profile edits. No membership/group changes.
+4. Restore the original Comment through the app; confirm normal validation. Return
+   Validation_report JSON plus write/follow-up status, or the first exact import/
+   action error. No need to run all negative cases before reporting first smoke.
+
+Source checks and 101 local tests passed; import/smoke is **NOT RUN**. The pure
+expression evaluator tests policy cases locally, not Power Automate execution.
+
+## Detailed target tenant acceptance — after import/smoke
 
 Account: existing permitted owner/synthetic fixtures; ordinary-user access remains
-deferred. Version: **no target package yet**, so these cases remain NOT RUN.
+deferred. Version: the build above, not yet imported; these cases remain NOT RUN.
 Capture original item ID, identity, selections, Comments, Status and availability.
 Use existing test profiles; never delete a real profile to force a new identity.
 
@@ -88,3 +145,19 @@ acceptance does not certify catalogue enforcement or asynchronous validation
 feedback. Inspect the existing feedback binding before changing UI. #41 protects
 registration access; #7/#10 consume availability; #25 owns operational group
 side-effect integration. Their tests are retained, not passed by this ticket.
+
+## Current limitations and feedback integration
+
+- Catalogue rows are validated against successful complete reads for that run. A
+  later catalogue activity change does not itself trigger every participant; a
+  later profile event revalidates. No catalogue-wide freshness sweep is promised.
+- A concurrent participant edit causes HTTP 412 rather than retrying stale data.
+  Inspect the later current-item run; no guarantee that a failed event healed itself.
+- Status is asynchronous. Existing Form1.OnSuccess and any Status label formula
+  were requested before integrating feedback. Do not present successful SubmitForm
+  as successful server validation. This keeps whole-ticket readiness pending.
+- No target creation/invalid-branch/no-op-follow-up/access test is marked passed by
+  local package generation. Ordinary-user access remains separately deferred.
+
+References: [SharePoint ETag/conditional update](https://learn.microsoft.com/en-us/sharepoint/dev/sp-add-ins/working-with-lists-and-list-items-with-rest),
+[SharePoint connector event and HTTP operations](https://learn.microsoft.com/en-us/connectors/sharepoint/).

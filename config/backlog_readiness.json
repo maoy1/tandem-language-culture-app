@@ -1196,15 +1196,15 @@
       "ticketType": "Flow",
       "status": "In progress",
       "flowScope": "One existing created/modified validation flow; App form is #5 and schema {{participant_schema}}.",
-      "implementationReadiness": "Contract/test handover prepared; current flow export required before package generation.",
-      "implementationEvidence": "Existing Participant submission current-item/four-field/change-only Status behavior has scoped owner REG-014/015 evidence. Catalogue and full create/edit/persistence acceptance remain. Split from #5.",
+      "implementationReadiness": "Importable package prepared from current owner export; 26 actions/depth 3; import/smoke and actual app feedback binding pending.",
+      "implementationEvidence": "Existing event mapping inspected/preserved; complete active-catalogue reads, typed ID validation, ETag-protected Status-only MERGE, failed-read gates/readback. 101 local tests passed, not tenant certification.",
       "evidence": "Existing Participant submission current-item/four-field/change-only Status behavior has scoped owner REG-014/015 evidence. Catalogue and full create/edit/persistence acceptance remain. Split from #5.",
       "proposedExperience": [
         "Save or correct your profile.",
         "The flow reads current saved values and validates catalogue selections.",
         "See validation feedback without admin approval or resetting personal choices."
       ],
-      "remainingWork": "Inspect current export; generate import package and readable definition with action/nesting limits and exact mapping; scoped target tenant acceptance remains.",
+      "remainingWork": "Owner import/smoke; inspect/integrate app validation feedback; record scoped target tenant cases before completion.",
       "testReferences": [
         "REG-001:004",
         "REG-006:009",
@@ -1214,7 +1214,7 @@
         "PAR-003"
       ],
       "testStatus": "NOT RUN / DEFERRED for full scoped acceptance; prior variants retain their recorded evidence.",
-      "testHandoff": "docs/FLOW_61_PARTICIPANT_SUBMISSION.md; target package not available yet; NOT RUN. Historical REG-014/015 partial results retained.",
+      "testHandoff": "docs/FLOW_61_PARTICIPANT_SUBMISSION.md: exact package/build, one-validator cutover/recovery, owner smoke and detailed cases. Target tenant NOT RUN; source ZIP remains local.",
       "flows": [
         "Participant submission"
       ],
