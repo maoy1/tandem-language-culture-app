@@ -13,6 +13,20 @@ prepared the desired POC-05 schema/policy and merged on 2026-11-07 as partial
 delivery, not completed tenant acceptance. #5 stays open.
 Owner-confirmed catalogue import does not establish participant form/flow acceptance.
 
+## Current authoring experiment - 2026-11-08
+
+Owner approved one disposable generated-package import probe under #28. #11 app
+controls stay paused; no developer/tester assignments or flow permissions changed.
+OPS-003 connector-free package import/run passed with owner-supplied output
+(success true, IMPORT_PROBE_OK). Owner chose legacy packages. OPS-004 read-only
+SharePoint connection package import and test also passed, owner-reported.
+Raw OPS-004 action/response output was not supplied.
+30 local tests pass. Existing owner SharePoint connection/action was previously
+exercised; no new permissions/licences proposed. See IMPLEMENTATION_PLAN.md.
+The first probe has no connectors; the second reads only site identity. Neither
+replaces #18 access proof, #47 recovery or full deployment reproducibility.
+#57 is merged partial backend delivery; #11/#12/#47 remain open.
+
 ## Tracking checkpoint — 2026-11-07
 
 Reviewed the live backlog: 40 tickets, #1–#4 closed and 36 open. The approved

@@ -717,6 +717,67 @@ the app/flow versions separately.
   tenant scenario PASS. Full #11 app wiring, #6/caller/access and #47 retry/
   interruption/recovery acceptance remain open. PR #57 owner review is next.
 
+### PREREQ-IMPORT-20261108-01 - generated disposable package prepared
+
+- Owner approved one package-import experiment; no working flow/app change.
+- Artifact: artifacts/import_probe/TandemImportProbe.zip, SHA256
+  3471027d66ad42d733374af5bdc21e769bf067567244ff8e727e46b613bc89f2.
+- One fresh flow resource suggests New, no API/connection dependencies. Power
+  Apps (V2) has no inputs; Compose returns IMPORT_PROBE_OK and Response returns
+  success/message. No SharePoint/read/write/notification/schedule actions.
+- Archive CRC, five JSON entries and manifest paths checked. Original working
+  export identifiers, site and account strings are absent. Readable definition
+  and review JSON accompany the ZIP. Builder refuses existing-file overwrite.
+- Initial restricted pytest: 22 existing passed, 4 new test setup errors caused
+  by temporary-directory access. Permitted rerun: 26 passed, including 4 probe
+  safety checks. This is local evidence, not a Power Automate run.
+- OPS-003 tenant import/run NOT RUN; maker permission, legacy-import availability
+  and policy unverified. User must select Create as new/TandemImportProbe.
+- Expected actual run: success true and message IMPORT_PROBE_OK. No result
+  inferred before owner reports the import/run. No #28 closure or blanket
+  authoring/connection/ordinary-user capability promise.
+
+### PREREQ-IMPORT-20261108-02 - OPS-003 tenant import/run PASS
+
+- Owner reports package import succeeded. First run attempt said flow was off;
+  owner subsequently ran it and supplied response action output: statusCode
+  "200", body success true, message IMPORT_PROBE_OK.
+- PASS (owner-reported execution evidence): generated connector-free package can
+  import/run in the current environment/account. Original ZIP unchanged.
+- Effective import availability proven here; exact assigned role/policy settings
+  not inspected. SharePoint binding, ordinary users and complex flows not proven.
+- Owner chose to retain legacy packages. No Dataverse/licence change.
+
+### PREREQ-IMPORT-20261108-03 - OPS-004 read-only package prepared
+
+- TandemSharePointImportProbe.zip plus readable definition/review JSON prepared.
+  Fresh flow/API/connection resource identifiers; New flow, Existing connection
+  mapping, no original account or connection identifiers copied.
+- Requires one-time selection of the existing SharePoint connection. SharePoint
+  HTTP action/owner connection was previously exercised; imported mapping is
+  NOT RUN. Embedded owner source only, no participant authorization inference.
+- One GET _api/web?$select=Id; response exposes only Boolean success and fixed
+  message SHAREPOINT_IMPORT_PROBE_OK when ID is present. No list reads, business
+  records, writes, notifications or automatic trigger.
+- PASS local checks: 30 pytest, ZIP CRC/JSON and dependency mapping. OPS-004 tenant
+  import/run NOT RUN. No #28 closure or business-feature acceptance implied.
+
+### PREREQ-IMPORT-20261108-04 - OPS-004 tenant import/test PASS
+
+- Owner supplied an import-screen image: new flow already green/Create as new;
+  the unresolved row was the related SharePoint connection. Guided selection of
+  the existing connection (Select during import), then Save and Import.
+- Owner subsequently reports: "import succeed, test succeed". PASS is owner-
+  reported import/manual execution, not independently inspected raw outputs.
+  No claim that the exact response body/status was supplied for OPS-004.
+- This demonstrates the generated package plus existing SharePoint connection
+  can import/run for the owner in this environment. Expected operation remains
+  the single read of site technical ID in the reviewed package.
+- No ordinary-participant access, Power Apps identity binding, business writes,
+  group workflow or full #28 reproducibility acceptance inferred.
+- Both disposable probes passed at their stated scope; 30 local tests passed.
+  Next is review/merge of the experiment batch, then the next feature batch.
+
 ## New run template
 
 Copy this section for an execution. Record one row per case (or split a case into
