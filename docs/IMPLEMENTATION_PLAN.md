@@ -4,7 +4,7 @@ The approved design is CURRENT_DESIGN.md. This plan reflects the owner's
 annotations to Combined Requirements v0.2. GitHub tickets hold implementation
 acceptance and status; planning completion does not imply deployment.
 
-## Current checkpoint - #6 Version 19 UI accepted, ready for review
+## Current checkpoint - #5 registration form review; #6 complete
 
 #46 is accepted/closed. Tracking now separates Flow, App, Shared technical and
 Overview tickets. One production flow has one owner; old partial work/evidence
@@ -23,8 +23,9 @@ config/ticket_scope_map.json transfer of 246 former checklist items.
 - [x] #6: real choices and basic Paused/No save/validation/reopen preservation passed; account/selections unchanged.
 - [x] #6: owner reported Version 16, saved 2026-11-08 15:34:26 Europe/Berlin; implementation context recorded.
 - [x] #6: working Combo box table-default binding; owner confirms New Active/open Yes, edit preservation and language/culture-only save/reopen; corrected Live Version 19 recorded.
-- [ ] Review/merge PR #70, then close #6 on its passed App scope. Backend integration checks retained under #61/#7/#10/#25, not waived or used to hold #6 indefinitely.
-- [ ] Next implementation after #6 review: #5 registration UI, then #61 submission validation per the ordered batch. Do not claim #7/#10 availability integration passed before those flows are implemented.
+- [x] PR #70 merged; #6 closed/Done on owner-confirmed Version 19 UI scope. Backend integration checks remain #61/#7/#10/#25.
+- [x] #5: owner confirmed Live Version 19 A/B PASS for blank-zone/multi-selection persistence and all-four-empty guard/input retention/no saved-item change. Ready for review; merge pending.
+- [ ] Next: #61 submission validation package after #5 handover; no manual rebuilding or backend PASS inferred from form checks.
 
 See POC_03_PARTICIPANT_SELF_REGISTRATION.md for #6 Studio steps and UI6 tests.
 POC_SHAREPOINT_SETUP.md retains the completed #66 package/mapping evidence.
@@ -47,7 +48,7 @@ Sole production-flow ownership:
 | TandemMyGroups | #64 | Core |
 | TandemRespondGroupJoinRequest | #65 | Core |
 
-Next focused batches (one selected non-overview ticket at a time; #6 review is the current checkpoint):
+Next focused batches (one selected non-overview ticket at a time; #5 review is the current checkpoint):
 
 1. **#66 Shared technical:** verify participant/catalogue field
    mappings and availability defaults once; flag any permitted setup first.
@@ -80,8 +81,7 @@ rather than require every parent/dependency closed. Minimal app-call smoke tests
 belong to Flow tickets; full layout belongs to App tickets. Disposable proof
 harnesses belong to their explicitly scoped Shared technical evidence, not an
 untracked production service. In progress is active work only, max one. Queued
-partial work stays Planned. Superseded is not Done. PR #60 is merged. #66 is
-ready for delivery review; own schema checks passed; PR #69 is merged and #66 closed. #6 is the sole active scope.
+partial work stays Planned. Superseded is not Done. PR #60 is merged. #66 and #6 are Done after merged PRs #69/#70. #5 own Version 19 UI acceptance passed and awaits review/merge. No non-overview ticket is In progress.
 
 ## Ticket execution agreement - #45
 
