@@ -1,14 +1,14 @@
 {
   "sourceTicket": 12,
-  "status": "MANUAL_SETTINGS_PARTIAL_INDEX_CONFIRMATION_PENDING",
+  "status": "VERIFIED_METADATA_AND_MANUAL_SETTINGS_READY_FOR_REVIEW",
   "mappingRecorded": true,
-  "mappingVerified": false,
+  "mappingVerified": true,
   "changesAppliedByAgent": false,
   "auditBuildId": "cb49aded-f121-410e-b7df-d9646be892dd",
   "initialRunReference": "08584074383115048211345636667CU09",
-  "latestRunReference": "08584074377818105096431306544CU07",
+  "latestRunReference": "08584074372941101122136369836CU17",
   "initialEvidence": "artifacts/group_schema/results/initial-audit.owner-report.json",
-  "latestEvidence": "artifacts/group_schema/results/manual-settings-readback.owner-report.json",
+  "latestEvidence": "artifacts/group_schema/results/final-audit.owner-report.json",
   "observedDate": "2026-11-08",
   "lists": {
     "groups": {
@@ -339,7 +339,7 @@
           "type": "Lookup",
           "required": true,
           "unique": false,
-          "indexed": false,
+          "indexed": true,
           "readOnly": false,
           "defaultValue": null,
           "xmlAttributes": {
@@ -356,7 +356,9 @@
             "StaticName": "Group",
             "Name": "Group",
             "ColName": "int1",
-            "RowOrdinal": "0"
+            "RowOrdinal": "0",
+            "Indexed": "TRUE",
+            "Version": "1"
           },
           "lookupListId": "4bf1b37f-edce-40c5-8fa0-36543a2d0cd6",
           "lookupDisplayField": "Title"
@@ -368,7 +370,7 @@
           "type": "Lookup",
           "required": true,
           "unique": false,
-          "indexed": false,
+          "indexed": true,
           "readOnly": false,
           "defaultValue": null,
           "xmlAttributes": {
@@ -385,7 +387,9 @@
             "StaticName": "Participant",
             "Name": "Participant",
             "ColName": "int2",
-            "RowOrdinal": "0"
+            "RowOrdinal": "0",
+            "Indexed": "TRUE",
+            "Version": "1"
           },
           "lookupListId": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
           "lookupDisplayField": "ID"
@@ -511,22 +515,7 @@
     "language": "3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63",
     "culture": "cf7ed5b4-2e11-4a0a-a417-6c63ed60f614"
   },
-  "findings": [
-    {
-      "role": "members",
-      "field": "Group",
-      "code": "QUERY_INDEX_NOT_CONFIRMED",
-      "observedIndexed": false,
-      "nextStep": "Inspect actual Indexed columns page; do not infer successful index creation."
-    },
-    {
-      "role": "members",
-      "field": "Participant",
-      "code": "QUERY_INDEX_NOT_CONFIRMED",
-      "observedIndexed": false,
-      "nextStep": "Inspect actual Indexed columns page; do not infer successful index creation."
-    }
-  ],
+  "findings": [],
   "confirmedManualChanges": [
     "Groups.Title Required=true",
     "Groups.WriteOwner optional nonunique Text, blank default",
@@ -535,10 +524,28 @@
   "notes": [
     "Owner chose direct list settings; no setup package created or needed.",
     "SharePoint normalizes optional column brackets in stored formulas; canonical comparison confirms equivalent rule.",
-    "Group and Participant query indexes still false in metadata; awaiting Indexed columns page.",
     "State default Closed and SetupComplete default No retained; consumers explicitly calculate publication state.",
     "Participant lookup ShowField ID retained; consumers resolve approved profile display.",
     "Zero list item counts observed before/after; no row integrity/ordinary-user or production-flow behavior inferred.",
-    "#47 native synthetic primitive proof is separate; #11/#13/#14/#17/#65 own dynamic guards and history behavior."
-  ]
+    "#47 native synthetic primitive proof is separate; #11/#13/#14/#17/#65 own dynamic guards and history behavior.",
+    "Final fresh audit confirms Group/Participant indexed=true, matching separate index-page entries; five manual changes complete. Earlier pending notes are historical."
+  ],
+  "manualSettingsReadbackVerified": true,
+  "verifiedManualChanges": [
+    "Groups.Title Required=true",
+    "Groups.WriteOwner optional blank nonunique Text MaxLength=255",
+    "Native integer/type-specific capacity formula/message saved",
+    "Group Members.Group single-column index true",
+    "Group Members.Participant single-column index true"
+  ],
+  "runtimeAcceptance": "No row write/rejection, ordinary-user privacy, group creation/update/Leave or cross-list runtime tests claimed by #12. Consuming Flow tickets retain them.",
+  "indexPageEvidence": {
+    "source": "Owner-pasted Indexed columns page in chat",
+    "indexes": [
+      "Group",
+      "MembershipKey",
+      "Participant"
+    ],
+    "separatePrimaryIndexes": true
+  }
 }

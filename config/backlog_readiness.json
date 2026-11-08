@@ -24,7 +24,7 @@
     "closedTickets": 12,
     "done": 10,
     "superseded": 2,
-    "inProgress": 1
+    "inProgress": 0
   },
   "flowCountNote": "12 singly-owned core production flows (notification provisional), plus 1 Deferred reminder flow. Access/migration helpers remain undecided; no duplicate owners for the same production flow.",
   "flowInventory": [
@@ -302,24 +302,24 @@
       "number": 12,
       "title": "[Shared technical] Groups and Group Members schema and field mapping",
       "ticketType": "Shared technical",
-      "status": "In progress",
+      "status": "Ready for review",
       "flowScope": "One-time group/membership data contract verification/setup only. #11 owns automatic new-group creation; {{mygroups}} owns reading/counts.",
-      "implementationReadiness": "Actual mapping recorded. Owner chose direct settings: required group name, WriteOwner and capacity validation read back. Group/Participant query indexes remain unconfirmed; keep In progress.",
-      "implementationEvidence": "Audit cb49aded-f121-410e-b7df-d9646be892dd; before 08584074383115048211345636667CU09, after 08584074377818105096431306544CU07. Complete metadata/errors empty, both list counts zero; 194 local tests previously passed.",
-      "evidence": "config/group_schema_mapping.json plus artifacts/group_schema/results owner reports. Core types/choices/lookups/history/unique keys confirmed; Group and Participant still indexed=false.",
+      "implementationReadiness": "Actual Groups/Group Members mapping verified; five manual settings read back, PR #76 source/data-contract review pending.",
+      "implementationEvidence": "194 local tests previously passed. Complete final audit 08584074372941101122136369836CU17; required Title, WriteOwner, capacity formula and separate Group/Participant indexes verified. Both lists itemCount=0.",
+      "evidence": "artifacts/group_schema/results/final-audit.owner-report.json; config/group_schema_mapping.json. SourceRequestId/MembershipKey uniqueness/indexes, lookups/defaults/history metadata verified; no production-flow or ordinary-user pass inferred.",
       "proposedExperience": [
         "Accept a valid connection to form a typed group.",
         "Publish only after required request/membership setup agrees.",
         "Open My groups for operational groups, members, counts and free slots.",
         "Hide unfinished setup."
       ],
-      "remainingWork": "Check Group Members Indexed columns page, resolve index metadata and final own-scope mapping/settings readback/review. No setup package needed after owner chose direct settings.",
+      "remainingWork": "Review/merge PR #76 for own data/schema scope. No owner rerun needed. #11/#13/#14/#17/#65/#64 own runtime integration; #48 migration exceptions stay separate.",
       "testReferences": [
         "SCHEMA-001",
         "SCHEMA-002"
       ],
-      "testStatus": "SCHEMA-001 metadata collected and mapping recorded; SCHEMA-002 partial manual-settings readback (3/5), indexes pending. No row/production/ordinary-user acceptance inferred.",
-      "testHandoff": "No new package/import. Inspect Group Members Indexed columns for Group and Participant, then use existing read-only audit for final readback. Exact cases/checks inline #12.",
+      "testStatus": "PASS SCHEMA-001 metadata mapping and SCHEMA-002 direct settings/readback; 194 local tests previously pass. Row rejection/flow/access behavior not executed here.",
+      "testHandoff": "Own schema settings handover complete; exact actual field/list IDs and checked cases/evidence inline #12. Manual setup chosen, no new setup package or repeat-apply claim.",
       "flows": [],
       "scopeBoundary": "One-time group/membership data contract verification/setup only. #11 owns automatic new-group creation; #64 owns reading/counts.",
       "prerequisites": [
