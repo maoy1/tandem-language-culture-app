@@ -1,0 +1,327 @@
+{
+  "schemaVersion": 1,
+  "sourceTicket": 62,
+  "flowName": "TandemMyRequests",
+  "scope": "Read-only authorized own sent, personal received and current operational group incoming requests/history.",
+  "state": "OWNER_EMPTY_HISTORY_SMOKE_PASSED_ACCEPTANCE_PENDING",
+  "runtime": "Power Automate and existing SharePoint connector only; Python is optional local tooling.",
+  "sourceExport": {
+    "name": "TandemMyRequests_20261108220317.zip",
+    "sha256": "34befb29df105e601ee32dfaf321c307938ed15a82884f1c2c1df794958e574f",
+    "rawExportCommitted": false,
+    "sourceTriggerPreservedExactly": true
+  },
+  "input": {
+    "number": "Existing PowerAppV2 number ParticipantId reference (title NumParticipantIdber preserved exactly); strict positive integer, must equal server-resolved unique own participant. Never actor authority."
+  },
+  "outputs": {
+    "requestsjson": "JSON string of complete authorized minimal rows, or [] on any failure.",
+    "errormessage": "Empty on OK; sanitized fixed error message otherwise.",
+    "resultcode": [
+      "OK",
+      "UNAUTHORIZED_PROFILE",
+      "REQUEST_SCHEMA_UNVERIFIED",
+      "READ_BOUND_OR_INCOMPLETE",
+      "REQUEST_DATA_INCOMPLETE",
+      "DATA_INTEGRITY",
+      "MEMBERSHIP_INTEGRITY",
+      "RESPONSE_BOUND",
+      "READ_OR_DATA_FAILED"
+    ],
+    "runreference": "Native run name for support.",
+    "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF",
+    "paging": "NO_PAGING_COMPLETE_BOUNDED_READ"
+  },
+  "publicRow": {
+    "requestId": "integer",
+    "senderParticipantId": "integer",
+    "recipientParticipantId": "integer|null",
+    "targetGroupId": "integer|null",
+    "requestType": "Personal|Group",
+    "status": "Pending|Accepted|Declined|Cancelled",
+    "direction": "Sent|Received",
+    "processing": "Accepted and not OperationComplete",
+    "completed": "Stored OperationComplete, never inferred from Accepted",
+    "availability": "Available|UnavailablePending|NotApplicable",
+    "actions": {
+      "cancel": "Own Pending only.",
+      "decline": "Pending personal recipient or current operational active group member; own sender cannot respond.",
+      "accept": "Same responder plus current profile/group availability; hints only, action flow rechecks compatibility, full validity, capacity and shared guard."
+    },
+    "created": "Original request Created timestamp string, preserved for existing history labels."
+  },
+  "projection": "Audience query runs before public projection. Every original Request_rows public field is retained, including created from Created, references/status/direction. No names are needed; no profile/account/email/raw request/technical operation fields are public.",
+  "caller": "Preserved Invoker Raw auth -> _api/web/currentuser Id -> required unique indexed Participantaccount lookup -> own positive integer reference equality. No supplied actor or owner fallback.",
+  "connections": {
+    "source": "Invoker",
+    "connector": "shared_sharepointonline",
+    "operation": "HttpRequest GET only",
+    "site": "Original export dataset preserved",
+    "authentication": "Exact original Raw token expression preserved; never Embedded.",
+    "import": "Create as new; select existing SharePoint connection. Envelope placeholder connectionName is intentional. No grants, permissions or new connector/licence."
+  },
+  "listIds": {
+    "requests": "3d17485d-1dac-41f0-a1af-24e45daa4567",
+    "profiles": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
+    "groups": "4bf1b37f-edce-40c5-8fa0-36543a2d0cd6",
+    "memberships": "db611ec3-7fa3-477a-878e-effbbb195cb8"
+  },
+  "runtimeMetadataGate": {
+    "listIdentity": "Expected list GUID and BaseTemplate 100 each run.",
+    "fields": "Complete bounded fields response; exact InternalName/type, required/unique flags and Hidden=false/ReadOnlyField=false on Requests; require Indexed=true for unique key fields, permit extra benign indexes on other request fields. SchemaXml XPath exact Lookup List target and exact Choice set/cardinality. Mismatch/missing/renamed/malformed = REQUEST_SCHEMA_UNVERIFIED; no guessed writes or automatic schema changes. SenderParticipantId and RecipientParticipantId are existing Number fields, not Lookup; exact SchemaXml /Field/@Decimals must equal 0. Existing names/column IDs are retained, with no duplicate columns or conversion.",
+    "expected": {
+      "requests": {
+        "SenderParticipantId": {
+          "TypeAsString": "Number",
+          "Required": true,
+          "EnforceUniqueValues": false,
+          "Decimals": "0",
+          "Hidden": false,
+          "ReadOnlyField": false
+        },
+        "RecipientParticipantId": {
+          "TypeAsString": "Number",
+          "Required": false,
+          "EnforceUniqueValues": false,
+          "Decimals": "0",
+          "Hidden": false,
+          "ReadOnlyField": false
+        },
+        "TargetGroup": {
+          "TypeAsString": "Lookup",
+          "Required": false,
+          "EnforceUniqueValues": false,
+          "LookupList": "4bf1b37f-edce-40c5-8fa0-36543a2d0cd6",
+          "Hidden": false,
+          "ReadOnlyField": false
+        },
+        "RequestType": {
+          "TypeAsString": "Choice",
+          "Required": true,
+          "EnforceUniqueValues": false,
+          "Choices": [
+            "Personal",
+            "Group"
+          ],
+          "Hidden": false,
+          "ReadOnlyField": false
+        },
+        "Status": {
+          "TypeAsString": "Choice",
+          "Required": true,
+          "EnforceUniqueValues": false,
+          "Choices": [
+            "Pending",
+            "Accepted",
+            "Declined",
+            "Cancelled"
+          ],
+          "Hidden": false,
+          "ReadOnlyField": false
+        },
+        "SendOperationKey": {
+          "TypeAsString": "Text",
+          "Required": true,
+          "EnforceUniqueValues": true,
+          "Indexed": true,
+          "Hidden": false,
+          "ReadOnlyField": false
+        },
+        "ConnectionKey": {
+          "TypeAsString": "Text",
+          "Required": true,
+          "EnforceUniqueValues": true,
+          "Indexed": true,
+          "Hidden": false,
+          "ReadOnlyField": false
+        },
+        "WinningOperationKey": {
+          "TypeAsString": "Text",
+          "Required": false,
+          "EnforceUniqueValues": false,
+          "Hidden": false,
+          "ReadOnlyField": false
+        },
+        "OperationComplete": {
+          "TypeAsString": "Boolean",
+          "Required": false,
+          "EnforceUniqueValues": false,
+          "Hidden": false,
+          "ReadOnlyField": false
+        }
+      },
+      "profiles": {
+        "Participantaccount": {
+          "TypeAsString": "User",
+          "Required": true,
+          "EnforceUniqueValues": true,
+          "Indexed": true
+        }
+      },
+      "groups": {
+        "Capacity": {
+          "TypeAsString": "Number",
+          "Required": true,
+          "EnforceUniqueValues": false,
+          "Indexed": false
+        },
+        "State": {
+          "TypeAsString": "Choice",
+          "Required": true,
+          "EnforceUniqueValues": false,
+          "Indexed": false,
+          "Choices": [
+            "Open",
+            "Closed",
+            "Ended"
+          ]
+        },
+        "SourceRequestId": {
+          "TypeAsString": "Number",
+          "Required": true,
+          "EnforceUniqueValues": true,
+          "Indexed": true
+        },
+        "SetupComplete": {
+          "TypeAsString": "Boolean",
+          "Required": false,
+          "EnforceUniqueValues": false,
+          "Indexed": false
+        },
+        "WriteOwner": {
+          "TypeAsString": "Text",
+          "Required": false,
+          "EnforceUniqueValues": false,
+          "Indexed": false
+        }
+      },
+      "memberships": {
+        "Group": {
+          "TypeAsString": "Lookup",
+          "Required": true,
+          "EnforceUniqueValues": false,
+          "Indexed": true,
+          "LookupList": "4bf1b37f-edce-40c5-8fa0-36543a2d0cd6"
+        },
+        "Participant": {
+          "TypeAsString": "Lookup",
+          "Required": true,
+          "EnforceUniqueValues": false,
+          "Indexed": true,
+          "LookupList": "fd3adf46-f81d-4a7b-a80c-567fde0175dc"
+        },
+        "MembershipStatus": {
+          "TypeAsString": "Choice",
+          "Required": true,
+          "EnforceUniqueValues": false,
+          "Indexed": false,
+          "Choices": [
+            "Active",
+            "Left"
+          ]
+        },
+        "LeftAt": {
+          "TypeAsString": "DateTime",
+          "Required": false,
+          "EnforceUniqueValues": false,
+          "Indexed": false
+        },
+        "MembershipKey": {
+          "TypeAsString": "Text",
+          "Required": true,
+          "EnforceUniqueValues": true,
+          "Indexed": true
+        }
+      }
+    },
+    "requestMappingStatus": "OBSERVED_NUMBER_REFERENCES; target setup NOT APPLIED/VERIFIED. Current report correctly fails: six fields missing and RecipientParticipantId still required.",
+    "observedPreflight": {
+      "packageBuildId": "f7fd078d-740a-4d68-a8fe-31ca2abc9e54",
+      "runReference": "08584074297422149453962972460CU27",
+      "collectionComplete": true,
+      "schemaVerified": false,
+      "writes": 0,
+      "sourceSha256": "19139f2f1d4d7c91d4330566cc00be078e6f5e397282c7dc5084b042e833d71d",
+      "existingNumberFields": [
+        {
+          "EnforceUniqueValues": false,
+          "Hidden": false,
+          "Indexed": false,
+          "InternalName": "SenderParticipantId",
+          "ReadOnlyField": false,
+          "Required": true,
+          "TypeAsString": "Number"
+        },
+        {
+          "EnforceUniqueValues": false,
+          "Hidden": false,
+          "Indexed": false,
+          "InternalName": "RecipientParticipantId",
+          "ReadOnlyField": false,
+          "Required": true,
+          "TypeAsString": "Number"
+        }
+      ],
+      "missingFields": [
+        "RequestType",
+        "TargetGroup",
+        "SendOperationKey",
+        "ConnectionKey",
+        "WinningOperationKey",
+        "OperationComplete"
+      ],
+      "ownerConfirmedEmpty": true,
+      "migrationBackfillRequired": false
+    }
+  },
+  "readPolicy": {
+    "bounds": {
+      "requests": 500,
+      "memberships": 2000,
+      "profiles": 500,
+      "groups": 100,
+      "fields": 500,
+      "responseChars": 250000
+    },
+    "order": "Original request Created desc, ID desc through native $orderby; no cursor or paging inputs.",
+    "complete": "Request bound+1; reject null collection, __next and either odata nextLink spelling or count overflow. All collections complete before projection. Metadata bound 500, own account lookup bound 1 with top 2.",
+    "wholeListGate": "Conservative full bounded list reads; any malformed/legacy incomplete request or invalid data can block the whole response. No silent skip, partial success, truncation, migration, deletions or schema writes.",
+    "errors": "Clear all partial public rows; never return raw connector text, account identities or backend errors. Generic 502 is a read failure; reader has no writes/duplicate recovery path."
+  },
+  "requestInvariants": {
+    "send": "SendOperationKey nonblank and unique; stored key is technical data, never caller authority. Reader neither generates nor mutates operation keys. Writer owns immutable typed intent/actor binding and replay checks under #47.",
+    "connection": "Pending or Accepted-incomplete uses exact open:person:minId:maxId or open:group:groupId:participant:senderId; terminal complete uses history:request:id. All ConnectionKeys unique.",
+    "pending": "OperationComplete false and no winner.",
+    "terminal": "Nonblank WinningOperationKey. Accepted may remain incomplete/live/processing; Declined and Cancelled must be complete/history. Accepted complete must be history.",
+    "legacy": "Historical rows remain unchanged; incomplete or malformed legacy data returns REQUEST_DATA_INCOMPLETE until separate accepted mapping/migration exists."
+  },
+  "membershipAuthority": "Only Active own episode with empty LeftAt, exactly one active own row per group, exact request:id:participant:actor episode, Accepted+OperationComplete request bound to actor and group, complete personal source, SetupComplete true, group not Ended. Personal episode must equal group SourceRequestId with actor among its parties; group episode must target exact group with actor as sender. Left/provisional/missing/mismatched episodes grant no authority. No leader.",
+  "availability": "Paused/inactive/not-open/invalid participant or Closed/Ended/full/busy/incomplete group yields UnavailablePending with no auto-cancel. Physical Active membership rows including provisional/paused count toward capacity. No freeing slots, membership/group/notification writes. Advisory accept is never proof of compatibility or a reserved slot.",
+  "actions": 228,
+  "maximumActionDepth": 4,
+  "writes": 0,
+  "globalActionNamesUnique": true,
+  "integration": [
+    "Parent integrates this isolated commit after review; no shared helper changes needed.",
+    "Use parent metadata-only RequestSchemaPreflight once for this batch; compare actual report before dependent smoke. Report mismatch as blocked mapping; do not silently repair.",
+    "Refresh/rebind #67 Power Apps flow connection/output schema; call TandemMyRequests.Run(ownParticipantId), parse requestsjson only when resultcode=OK. Existing requestsjson/errormessage preserved.",
+    "Action buttons call #63/#11/#65 with their own stable intent contracts and refresh this reader after outcome.",
+    "Owner import/smoke is still required. #39 audience/ordinary participant access/privacy remain postponed.",
+    "Full UI binding under #67 remains explicitly PENDING; preserved shape/order do not prove existing screen, labels, output refresh or action binding works.",
+    "Parent updates the existing inline issue handover with v6 and observed Number-column mapping; no new draft handover file or PR."
+  ],
+  "nativeStatus": "V6_OWNER_EMPTY_HISTORY_OK; POPULATED_HISTORY_AND_ACCESS_PENDING",
+  "packageVersion": "v6",
+  "packageBuildId": "b108407d-4714-4d58-9852-0ffc3099c1e9",
+  "packageSha256": "e44592098013a550ea6341dcf699d12722423e4d1d6434076a35379662ab2da8",
+  "referenceAdapter": "Read SenderParticipantId/RecipientParticipantId as positive number / nullable positive number. Explicit equals(x,int(x)) for sender and equals(coalesce(recipient,0),int(coalesce(recipient,0))) gate rejects fractions; normalize both to int BEFORE canonical connection-key validation, authority comparisons and public projection. Null group recipient retained. System Id/TargetGroupId remain integer. Decimals=0 alone is not integer authority.",
+  "ownerSetupPrerequisites": [
+    "Request schema verified by preflight dd0c91b6-13b4-41e0-affd-ebafeeb87404 run08584074285601068216673996565CU29; no list changes requested for this fix.",
+    "Import v5 Create as new, same existing Invoker connection, own ParticipantId; return Respond action Outputs.",
+    "Native reader/business/privacy acceptance remains pending."
+  ],
+  "importDisplayName": "TandemMyRequests v6",
+  "metadataAttributeAdapter": "XPath string(/Field/@Decimals) and string(/Field/@List) return scalar values, same as verified preflight; no bare attribute node-array comparison.",
+  "legacyAvailability": "Null Status/ParticipationStatus/OpenToConnections preserved; profile is unavailable for new acceptance. Authorized history/cancel/decline stay readable. No null-to-Active/Yes default, write, deletion, rejoin or membership-state change.",
+  "nativeSmokeRunReference": "08584074267842029485356386842CU16"
+}

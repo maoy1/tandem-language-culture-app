@@ -472,3 +472,22 @@ publication, source-flow replacement or additional import is requested now.
 After implementation review/merge, retain #7's remaining tests and blocked cases
 for later handover; the next build batch is #10 personal send, #62 inbox and #63
 cancellation, with one focused production-flow ticket active at a time.
+
+## #62 metadata comparison correction
+
+Owner's MyRequests v4 smoke stopped at requests_field_SenderParticipantId_gate; preceding query returned body []. The returned Read_requests_fields response was HTTP200 with the correct required Number/Decimals=0 SenderParticipantId, unique=false/hidden=false/readOnly=false. Schema remains verified by #10 preflight run08584074285601068216673996565CU29. No list setting changes are requested.
+
+Reader used bare XPath attribute-node results as an array/value. Replace Decimals and lookup List extraction with XPath string() values, matching the native-passed preflight; handle empty XML safely. Microsoft documents XPath returning nodes or values, with scalar string() extraction: https://learn.microsoft.com/en-us/azure/logic-apps/expression-functions-reference#xpath. Exact native XPath serialization was not returned; the local regression models node/array/scalar shapes and the exact returned Sender metadata. The prior test evaluator incorrectly always returned plain attribute-value arrays. It now exercises the representation difference.
+
+TandemMyRequests-v5.zip build **51130189-433c-4808-b605-031e92bd439c**, 228 actions/depth4 (limits500/8), zero writes. 365 local tests pass, 123 reader cases. Original trigger/Invoker/auth/response/public row shape retained. V4 runtime failure is recorded, not a schema failure or runtime success; v5 native retest NOT RUN. Evidence artifacts/my_requests/results/v4-sender-gate.owner-evidence.json and tests/fixtures/my_requests_sender_metadata.json. Import v5 Create as new (display name TandemMyRequests v5), existing SharePoint Provided by run-only user; run own ParticipantId previously38 and return Respond to a Power App or flow Outputs. Expect OK, requestsjson [], errormessage empty for the empty list. Keep old published app/working flows unchanged; no repeat schema preflight required for this reader fix. Issue #62 stays open.
+
+## #62 legacy null availability — 2026-11-09
+
+Owner v5 smoke reached Data_profiles and failed because rows [0]/[1] have null ParticipationStatus/OpenToConnections. Permit null Status/ParticipationStatus/OpenToConnections in read-only profile input parsing; keep null values and explicit Active/Active/true availability. Do not default them to available or alter profile/membership rows. Missing required properties, invalid non-null types, identity/commit/authority guards remain strict.
+
+Reader v6 build b108407d-4714-4d58-9852-0ffc3099c1e9: 228 actions/depth4, zero writes, 373 local tests /131 reader cases pass. Empty history with unrelated legacy nulls and Pending history cancel/decline preservation are exercised; malformed values still rejected. V5 metadata/caller stages progressed, but native completed history remains unverified; v6 retest NOT RUN. No list changes or preflight rerun needed. Owner confirms affected list rows are disposable test data and welcomes bounded reset/reseed when it simplifies future testing; this fix needs only the package replacement.
+
+
+### #62 v6 owner empty-history smoke passed - 2026-11-09
+
+Owner returned resultcode=OK, requestsjson=[], errormessage empty, mode OWNER_PREVIEW_PENDING_ACCESS_PROOF; run 08584074267842029485356386842CU16. This is the response to the v6 handover (expected build b108407d-4714-4d58-9852-0ffc3099c1e9); the response does not independently include a build ID. The earlier null-profile error no longer blocks this empty-history run. Supplied excerpt retained in artifacts/my_requests/results/v6-empty-history.owner-evidence.json. No code/package changes or repeat of this smoke needed. Populated personal/group/terminal history, native action integration, app binding and ordinary-user access remain pending; #62 stays open. 373 prior local tests unchanged; evidence-only update.

@@ -1,0 +1,45 @@
+{
+  "sourceTicket": 62,
+  "packageBuildId": "b108407d-4714-4d58-9852-0ffc3099c1e9",
+  "actions": 228,
+  "maximumActionDepth": 4,
+  "bounds": {
+    "requests": 500,
+    "memberships": 2000,
+    "profiles": 500,
+    "groups": 100,
+    "fields": 500,
+    "responseChars": 250000
+  },
+  "writes": 0,
+  "connectionSource": "Invoker",
+  "rawAuthenticationPreserved": true,
+  "sourceTriggerPreserved": true,
+  "ownerCredentialFallback": false,
+  "paging": "NO_PAGING_COMPLETE_BOUNDED_READ",
+  "sourceExportSha256": "34befb29df105e601ee32dfaf321c307938ed15a82884f1c2c1df794958e574f",
+  "sourceExportName": "TandemMyRequests_20261108220317.zip",
+  "sourcePublicShape": [
+    "requestId",
+    "senderParticipantId",
+    "recipientParticipantId",
+    "status",
+    "created",
+    "direction"
+  ],
+  "sourceShapeChange": "Retain every original Request_rows field including created and Created desc, ID desc ordering; add group/type/completion/availability/actions. Full UI binding pending.",
+  "packageSha256": "e44592098013a550ea6341dcf699d12722423e4d1d6434076a35379662ab2da8",
+  "generatorSha256": "23d13a85e3dbd303ba9896fd1556838098fb3c7d9f691532015541a3cfb8be6d",
+  "tenantResult": "NOT_IMPORTED_NOT_TESTED",
+  "ordinaryUserAccessVerified": false,
+  "requestSchema": "VERIFIED_REQUEST_SCHEMA_READER_V6_RUNTIME_RETEST_PENDING",
+  "referenceAdapter": "SenderParticipantId/RecipientParticipantId Number with XML Decimals=0; whole-valued numeric refs normalized to int before canonical keys/public IDs.",
+  "limits": {
+    "actions": 500,
+    "maximumActionDepth": 8
+  },
+  "globalActionNamesUnique": true,
+  "schemaPreflightRunReference": "08584074285601068216673996565CU29",
+  "fix": "Nullable legacy profile Status/ParticipationStatus/OpenToConnections; null stays unavailable, no defaults or row writes.",
+  "priorNativeResult": "Owner reported Data_profiles parse failures for two legacy null participation/openness rows. V5 progressed beyond metadata gates; full history success not yet verified."
+}
