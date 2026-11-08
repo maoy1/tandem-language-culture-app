@@ -176,7 +176,7 @@
     }
   },
   "integration": [
-    "Parent cherry-picks own #63 commit; no shared docs edited here. Parent publishes ISSUE_BODY.txt inline and integrates shared tracking.",
+    "Separate #63 branch/PR; handover inline in issue #63; shared batch tracking in PR #78.",
     "Compare #10 shared schema preflight with every expected Required/type/nullable/choice/lookup/unique/index setting; mapping disagreement blocks native cancellation. No schema changes from this package.",
     "Owner imports fresh package and checks Run-only Invoker configuration without permission/licence/connector changes.",
     "Minimal app call: TandemCancelRequestV2.Run(varOwnParticipantId, ThisItem.ID); refresh inbox/history after every outcome. Button enablement is convenience only; flow reauthorizes.",
