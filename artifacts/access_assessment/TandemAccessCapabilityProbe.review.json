@@ -21,14 +21,16 @@
     "shared_sharepointonline"
   ],
   "newConnectorTypes": 0,
-  "tenantResult": "NOT_IMPORTED_NOT_TESTED",
+  "tenantResult": "OWNER_METADATA_COLLECTED",
   "twoAccountProof": false,
   "audienceGroup": "UNKNOWN_OWNER_REPORTED",
   "privacyCutoverApproved": false,
   "gates": [
-    "Legacy import/editor must preserve distinct connection modes for the same SharePoint API.",
+    "Separate caller/backend modes observed in owner screenshot and both paths succeeded; different ordinary-user execution context remains unverified.",
     "Current owner metadata success cannot prove ordinary caller/backend separation.",
     "Audience/group onboarding, intended-user licences, actual policy and #40 two-user proof remain unknown/unverified.",
     "Backend metadata manage-permissions mask does not prove ACL write capability."
-  ]
+  ],
+  "ownerRunReference": "08584074326403190336298551812CU15",
+  "connectionModesObservedSeparately": true
 }

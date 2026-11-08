@@ -430,3 +430,5 @@ All five direct-setting changes read back: group Title required; WriteOwner opti
 ## Access assessment checkpoint — 2026-11-08 (#39)
 
 Own-profile privacy remains required. The tenant rejects creator-only list settings with unique columns; retain Participantaccount uniqueness. Audience group is owner-reported unknown. #39 is assessing a private-list/authenticated-flow candidate using a metadata-only two-connection helper; no method or cutover is approved. Caller identity must remain separate from privileged backend access. Existing app/flow/list permissions remain unchanged. Policy, intended-user entitlements and self-onboarding remain unverified; #40 ordinary-user proof is deferred. Future production access flows need focused Flow tickets before implementation; #41 owns app rebinding. See POC_18_PARTICIPANT_ACCESS.md and issue #39 for exact gates/operator steps.
+
+#39 owner metadata check passed (run 08584074326403190336298551812CU15); separate connection modes observed. Same owner on both paths does not prove ordinary-user separation. Audience/policy/entitlements and privacy cutover remain unverified; see POC_18_PARTICIPANT_ACCESS.md.

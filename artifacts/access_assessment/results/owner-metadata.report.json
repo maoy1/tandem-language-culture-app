@@ -1,0 +1,243 @@
+{
+  "kind": "TandemAccessCapabilityProbe",
+  "schemaVersion": 1,
+  "sourceTicket": 39,
+  "packageBuildId": "2983ab84-af52-46c4-b944-8b7613a4543e",
+  "runReference": "08584074326403190336298551812CU15",
+  "readOnly": true,
+  "itemRowsRead": 0,
+  "writes": 0,
+  "metadataComplete": true,
+  "result": "CAPABILITY_METADATA_COLLECTED",
+  "connectionPathStatus": {
+    "caller": "Succeeded",
+    "backend": "Succeeded"
+  },
+  "callerSharePointUserId": 16,
+  "backendSharePointUserId": 16,
+  "twoAccountContextSeparationVerified": false,
+  "backendPermissionFlags": {
+    "viewItems": true,
+    "manageLists": true,
+    "managePermissions": true
+  },
+  "participantList": {
+    "id": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
+    "title": "Participants",
+    "itemCount": 3,
+    "hasUniqueRoleAssignments": false,
+    "readSecurity": 1,
+    "writeSecurity": 1
+  },
+  "identityField": {
+    "internalName": "Participantaccount",
+    "unique": true,
+    "required": true
+  },
+  "roleDefinitions": [
+    {
+      "BasePermissions": {
+        "High": "2147483647",
+        "Low": "4294967295"
+      },
+      "Id": 1073741829,
+      "Name": "Full Control",
+      "RoleTypeKind": 5
+    },
+    {
+      "BasePermissions": {
+        "High": "432",
+        "Low": "1012866047"
+      },
+      "Id": 1073741828,
+      "Name": "Design",
+      "RoleTypeKind": 4
+    },
+    {
+      "BasePermissions": {
+        "High": "432",
+        "Low": "1011030767"
+      },
+      "Id": 1073741830,
+      "Name": "Edit",
+      "RoleTypeKind": 6
+    },
+    {
+      "BasePermissions": {
+        "High": "432",
+        "Low": "1011028719"
+      },
+      "Id": 1073741827,
+      "Name": "Contribute",
+      "RoleTypeKind": 3
+    },
+    {
+      "BasePermissions": {
+        "High": "176",
+        "Low": "138612833"
+      },
+      "Id": 1073741826,
+      "Name": "Read",
+      "RoleTypeKind": 2
+    },
+    {
+      "BasePermissions": {
+        "High": "65584",
+        "Low": "134418433"
+      },
+      "Id": 1073741832,
+      "Name": "Restricted View",
+      "RoleTypeKind": 8
+    },
+    {
+      "BasePermissions": {
+        "High": "48",
+        "Low": "134287360"
+      },
+      "Id": 1073741825,
+      "Name": "Limited Access",
+      "RoleTypeKind": 1
+    },
+    {
+      "BasePermissions": {
+        "High": "48",
+        "Low": "134418465"
+      },
+      "Id": 1073741924,
+      "Name": "System.LimitedView",
+      "RoleTypeKind": 255
+    },
+    {
+      "BasePermissions": {
+        "High": "48",
+        "Low": "134418471"
+      },
+      "Id": 1073741925,
+      "Name": "System.LimitedEdit",
+      "RoleTypeKind": 255
+    }
+  ],
+  "listRoleBindings": [
+    {
+      "Member": {
+        "Id": 3,
+        "PrincipalType": 8
+      },
+      "RoleDefinitionBindings": {
+        "results": [
+          {
+            "Id": 1073741829,
+            "RoleTypeKind": 5
+          }
+        ]
+      }
+    },
+    {
+      "Member": {
+        "Id": 4,
+        "PrincipalType": 8
+      },
+      "RoleDefinitionBindings": {
+        "results": [
+          {
+            "Id": 1073741826,
+            "RoleTypeKind": 2
+          }
+        ]
+      }
+    },
+    {
+      "Member": {
+        "Id": 5,
+        "PrincipalType": 8
+      },
+      "RoleDefinitionBindings": {
+        "results": [
+          {
+            "Id": 1073741830,
+            "RoleTypeKind": 6
+          },
+          {
+            "Id": 1073741825,
+            "RoleTypeKind": 1
+          }
+        ]
+      }
+    },
+    {
+      "Member": {
+        "Id": 7,
+        "PrincipalType": 4
+      },
+      "RoleDefinitionBindings": {
+        "results": [
+          {
+            "Id": 1073741825,
+            "RoleTypeKind": 1
+          }
+        ]
+      }
+    },
+    {
+      "Member": {
+        "Id": 9,
+        "PrincipalType": 1
+      },
+      "RoleDefinitionBindings": {
+        "results": [
+          {
+            "Id": 1073741825,
+            "RoleTypeKind": 1
+          }
+        ]
+      }
+    },
+    {
+      "Member": {
+        "Id": 12,
+        "PrincipalType": 1
+      },
+      "RoleDefinitionBindings": {
+        "results": [
+          {
+            "Id": 1073741825,
+            "RoleTypeKind": 1
+          }
+        ]
+      }
+    },
+    {
+      "Member": {
+        "Id": 13,
+        "PrincipalType": 1
+      },
+      "RoleDefinitionBindings": {
+        "results": [
+          {
+            "Id": 1073741825,
+            "RoleTypeKind": 1
+          }
+        ]
+      }
+    },
+    {
+      "Member": {
+        "Id": 16,
+        "PrincipalType": 1
+      },
+      "RoleDefinitionBindings": {
+        "results": [
+          {
+            "Id": 1073741825,
+            "RoleTypeKind": 1
+          }
+        ]
+      }
+    }
+  ],
+  "privacyVerified": false,
+  "permissionWritesVerified": false,
+  "audienceGroupVerified": false,
+  "proceedToPrivacyCutover": false,
+  "nextStep": "Assessment only: inspect imported Caller=Provided by run-only user and Backend=existing owner connection separately. One owner run cannot prove different-user separation, group onboarding, licences/policy or direct/API denial. #40 isolated proof remains gated; no production permission/schema/app changes."
+}

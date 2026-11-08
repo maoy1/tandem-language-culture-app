@@ -564,3 +564,26 @@ Decision: **no-go for privacy cutover / #40** until the capability, audience,
 policy/licensing and isolated proof prerequisites are resolved. The working app,
 Discovery flow credentials and production list permissions remain unchanged.
 The exact operator steps and test checkboxes are inline in issue #39.
+
+
+### #39 owner metadata result — 2026-11-08
+
+Build 2983ab84-af52-46c4-b944-8b7613a4543e, run
+08584074326403190336298551812CU15: CAPABILITY_METADATA_COLLECTED,
+metadataComplete=true, both paths Succeeded, zero item rows read/writes. Owner
+screenshot confirms separate caller-provided and owner-connection settings.
+Caller/backend technical IDs are both 16: owner execution only, not different-user
+separation. Power Apps invocation surface is not confirmed by the report alone.
+Participants still inherits permissions (hasUniqueRoleAssignments=false),
+readSecurity=1/writeSecurity=1, itemCount=3. Unique required Participantaccount
+preserved. Returned role metadata includes group Read/Edit/Full Control bindings;
+no audience membership was enumerated or established. Backend permission mask
+reports view/manageLists/managePermissions, not a successful permission write.
+Sanitized metadata/evidence saved in artifacts/access_assessment/results/;
+REST transport __metadata URLs removed, reported values retained.
+
+This supersedes earlier NOT RUN statements for this owner metadata check only.
+Audience group, applicable policy, intended-user entitlements, ordinary-user
+separation/direct denial, ownership support and cleanup remain unverified.
+No production permissions or working app/flow connections changed. No rerun is
+needed; #39 remains partial/In progress and #40/cutover remain gated.

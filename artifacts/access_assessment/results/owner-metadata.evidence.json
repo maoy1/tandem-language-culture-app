@@ -1,0 +1,12 @@
+{
+  "sourceTicket": 39,
+  "sourceSha256": "1505d2bc9b1e63de9881cb7d45c1c3d5171eeb2c8f68836e090c99c4e4b43529",
+  "runReference": "08584074326403190336298551812CU15",
+  "report": "owner-metadata.report.json",
+  "normalization": "Removed REST __metadata transport URLs only; retained reported values.",
+  "connectionModeEvidence": "Owner screenshot shows separate Provided by run-only user and Use this connection settings.",
+  "invocationSurface": "NOT_CONFIRMED: no claim of Power Apps invocation based on report alone.",
+  "ordinaryUserContextSeparationVerified": false,
+  "audienceGroup": "UNKNOWN",
+  "productionPermissionChanges": 0
+}
