@@ -1,0 +1,34 @@
+{
+  "sourceTicket": 39,
+  "packageBuildId": "2983ab84-af52-46c4-b944-8b7613a4543e",
+  "flowName": "TandemAccessCapabilityProbe",
+  "actions": 15,
+  "maximumActionDepth": 2,
+  "limits": {
+    "actions": 500,
+    "nesting": 8
+  },
+  "sha256": "784427a8ddbff1f65016a4cf0f05340621f12d8dd7964f9958e4e6cea4b24da3",
+  "sourceExportSha256": "7b4dc1e5df96769615088d897cf86030a2622a47dc7db56a414dbe75f41085a9",
+  "readOnly": true,
+  "itemRowsRead": 0,
+  "writes": 0,
+  "connectionPaths": {
+    "shared_sharepointonline": "Invoker; exported Raw auth expression",
+    "shared_sharepointonline_backend": "Embedded; explicitly selected existing owner connection for metadata only"
+  },
+  "connectorApis": [
+    "shared_sharepointonline"
+  ],
+  "newConnectorTypes": 0,
+  "tenantResult": "NOT_IMPORTED_NOT_TESTED",
+  "twoAccountProof": false,
+  "audienceGroup": "UNKNOWN_OWNER_REPORTED",
+  "privacyCutoverApproved": false,
+  "gates": [
+    "Legacy import/editor must preserve distinct connection modes for the same SharePoint API.",
+    "Current owner metadata success cannot prove ordinary caller/backend separation.",
+    "Audience/group onboarding, intended-user licences, actual policy and #40 two-user proof remain unknown/unverified.",
+    "Backend metadata manage-permissions mask does not prove ACL write capability."
+  ]
+}
