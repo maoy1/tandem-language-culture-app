@@ -228,3 +228,23 @@ stored Active, then Save/Publish and report the new Live version. No new import,
 connection or schema change is required. Failed-read and Needs review feedback
 variants retain their unexecuted status until actually exercised. Detailed negative
 cases follow the owner's build-first priority; none are marked passed by deferral.
+
+## Feedback layout handover — current owner progress
+
+Owner accepted footer appearance after grouping existing ValidationLabel and
+RefreshButton beneath Form1. This is a layout confirmation, not a functional
+validation-feedback or publication result. Latest confirmed Live release stays 19.
+
+Next align the white registration-panel header (not the top blue site banner).
+Select its title, identify its actual parent in Tree view and use that existing
+horizontal auto-layout container. Direction Horizontal; justify Start; vertical
+alignment Center; height 56; gap 12; left/right padding 16. Give the title flexible
+width / fill portion 1 / minimum width 0. My requests and Discovery use fixed
+width 140 and height 36; Save/Cancel icons fixed 40 by 40. Order the title first,
+then navigation buttons, then actions. Preserve other existing conditional action
+controls and their bindings. If that parent has no Direction/layout properties,
+inspect it before applying auto-layout settings; do not insert a guessed wrapper.
+
+Preview narrower/wider: title readable, My requests single-line, navigation/actions
+grouped right without overlap; footer text readable and Refresh accessible. Then
+run the documented save/Refresh functional smoke and publish/report Live version.

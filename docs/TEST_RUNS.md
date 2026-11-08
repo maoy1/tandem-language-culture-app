@@ -1218,3 +1218,18 @@ whole-schema audit evidence above remain separately scoped.
   Remaining detailed negative cases remain unexecuted, respecting build-first
   priority; no full acceptance or Ready/Done claim. Metadata/docs-only change;
   JSON/diff checked, prior 101 code tests retained without rerun.
+
+### UI61-LAYOUT-20261108 — feedback footer appearance accepted
+
+- Owner supplied tree showing Form1, ValidationLabel and RefreshButton as siblings
+  under MainContainer1. Guided moving label/button into a horizontal footer below
+  Form1, with flexible label width/wrapping and fixed button width.
+- Owner replies “looks good, continue”: **PASS for owner-accepted footer appearance
+  only**. Exact resulting properties were not independently inspected. No applied
+  Status-text/Refresh functional test or new published version supplied.
+- Next guided step: align white registration header using its actual title's
+  parent container; fixed-width navigation/actions, flexible-width title. Preserve
+  existing action and visibility bindings. No live change performed by agent.
+- Evidence: results/feedback-layout.owner-report.json. #61 In progress; PR #72
+  draft; runtime feedback and remaining scoped negative cases remain pending.
+  Evidence/docs only; JSON/diff checked; 101 local code tests retained, not rerun.

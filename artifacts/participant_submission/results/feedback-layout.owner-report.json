@@ -1,0 +1,26 @@
+{
+  "sourceTicket": 61,
+  "reportedDate": "2026-11-08",
+  "ownerReply": "looks good, continue",
+  "scope": "Owner accepts guided feedback footer appearance; no automatic inference of Status text correctness, button behavior or published version.",
+  "observedTreeBeforeChange": {
+    "MainContainer1": [
+      "Form1",
+      "ValidationLabel",
+      "RefreshButton"
+    ]
+  },
+  "guidedArrangement": {
+    "MainContainer1": [
+      "Form1",
+      "ValidationFooter"
+    ],
+    "ValidationFooter": [
+      "ValidationLabel",
+      "RefreshButton"
+    ]
+  },
+  "headerLayout": "Next guided step; actual header parent name/auto-layout properties not yet inspected.",
+  "runtimeFeedbackTest": "Not explicitly reported",
+  "latestConfirmedLiveVersion": 19
+}
