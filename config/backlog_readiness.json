@@ -42,7 +42,7 @@
       "ownerTicket": 10,
       "ticketType": "Flow",
       "phase": "Core",
-      "state": "Queued; existing partial evidence retained",
+      "state": "Implemented owner-preview package; native schema/test/cutover pending",
       "inputOutputContract": "Defined and reviewed in this sole flow-owner ticket before package generation",
       "openTechnicalWork": "Personal connection-request creation only. History is #62, cancellation #63, group-join sending #17."
     },
@@ -114,7 +114,7 @@
       "ownerTicket": 62,
       "ticketType": "Flow",
       "phase": "Core",
-      "state": "Queued; existing partial evidence retained",
+      "state": "Implemented owner-preview package; native schema/test/cutover pending",
       "inputOutputContract": "Defined and reviewed in this sole flow-owner ticket before package generation",
       "openTechnicalWork": "One authorized request-history reader; screen layout is #67."
     },
@@ -123,7 +123,7 @@
       "ownerTicket": 63,
       "ticketType": "Flow",
       "phase": "Core",
-      "state": "Queued; existing partial evidence retained",
+      "state": "Implemented owner-preview package; native schema/test/cutover pending",
       "inputOutputContract": "Defined and reviewed in this sole flow-owner ticket before package generation",
       "openTechnicalWork": "One sender-cancellation flow for personal and group requests; no history screen ownership."
     },
@@ -225,8 +225,8 @@
       "ticketType": "Flow",
       "status": "In progress",
       "flowScope": "Personal connection-request creation only. History is {{history}}, cancellation {{cancel}}, group-join sending #17.",
-      "implementationReadiness": "Owner-preview package generated; schema metadata/native cases pending; no cutover.",
-      "implementationEvidence": "29 send/preflight cases; 125 actions/depth 5; build 50e14992-a69a-4001-93f4-1ac8ed57dfe2.",
+      "implementationReadiness": "Package implemented and ready for code review; tenant schema and flow acceptance pending.",
+      "implementationEvidence": "Send package 125/depth5; 29 added local cases; PR #78. Shared metadata preflight 18/depth3; native schema/import/send NOT RUN.",
       "evidence": "#56 merged guided history/cancel configuration; latest owner instruction requires verifying actual completion; no full request business-run pass.",
       "proposedExperience": [
         "Choose a compatible person and send a request.",
@@ -1205,8 +1205,8 @@
       "ticketType": "Flow",
       "status": "In progress",
       "flowScope": "One authorized request-history reader; screen layout is {{requests_app}}.",
-      "implementationReadiness": "Prepare this bounded contract/package after required field mapping and verified prerequisites.",
-      "implementationEvidence": "Guided MyRequests configuration and app references were recorded under #10/#56, but latest owner clarification requires inspecting completion before retaining versus rebuilding. No actual history/privacy pass.",
+      "implementationReadiness": "Package implemented and ready for code review; tenant schema and flow acceptance pending.",
+      "implementationEvidence": "Reader package 223/depth4; 104 added local cases; PR #80. Original trigger/row timestamp preserved; native schema/history/privacy NOT RUN.",
       "evidence": "Guided MyRequests configuration and app references were recorded under #10/#56, but latest owner clarification requires inspecting completion before retaining versus rebuilding. No actual history/privacy pass.",
       "proposedExperience": [
         "Open My requests.",
@@ -1243,8 +1243,8 @@
       "ticketType": "Flow",
       "status": "In progress",
       "flowScope": "One sender-cancellation flow for personal and group requests; no history screen ownership.",
-      "implementationReadiness": "Prepare this bounded contract/package after required field mapping and verified prerequisites.",
-      "implementationEvidence": "Guided Cancel configuration and conditional-write references exist under #10/#56/#57. No whole personal/group cancellation or race test pass.",
+      "implementationReadiness": "Package implemented and ready for code review; tenant schema and flow acceptance pending.",
+      "implementationEvidence": "Cancel package 138/depth5; 80 added local cases; PR #79. Original two inputs preserved; native schema/cancel/race/privacy NOT RUN.",
       "evidence": "Guided Cancel configuration and conditional-write references exist under #10/#56/#57. No whole personal/group cancellation or race test pass.",
       "proposedExperience": [
         "Choose Cancel on your Pending sent request.",

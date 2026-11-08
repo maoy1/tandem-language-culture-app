@@ -1487,3 +1487,11 @@ Owner restated self-service access: avoid individual participant approvals/grant
 ## #10 generated personal-send batch — 2026-11-08
 
 LOCAL PASS only: 271 tests, including 29 send/preflight graph cases. Build 50e14992-a69a-4001-93f4-1ac8ed57dfe2 (125 actions/depth 5), schema preflight f7fd078d-740a-4d68-a8fe-31ca2abc9e54 (18/depth 3). REQ-001/002/006, AUTH-002 and duplicate/unknown/race simulations exercised locally, not tenant passes. Native import/schema/actual send/replay/availability/race/privacy cases NOT RUN. Artifacts and exact unexecuted test checkboxes are inline in issue #10; no production schema/data/permissions changed.
+
+### Parallel batch delivery — 2026-11-08
+
+All three isolated implementations are built: Send #10 / PR #78 (125 actions/depth 5), My requests #62 / PR #80 (223/depth 4), Cancel #63 / PR #79 (138/depth 5). Shared read-only request schema preflight is 18/depth 3. All source Invoker bindings preserved, no embedded fallback; send alone adds a required retained intent UUID. Reader preserves original created timestamp/order and response row fields; cancel preserves its two input arguments. No writer cutover, schema setup or app publication performed.
+
+Combined disposable-checkout suite: 455 tests passed plus one additional cross-generator send -> cancel -> history -> same-send replay check passed. Per-flow added cases: send/preflight 29, reader 104, cancel 80. Version/hash/source commit evidence is in artifacts/send_request/request_batch.validation.json. This is local generated-graph proof, not native acceptance.
+
+Packages delivered together locally in artifacts/request_batch/TandemRequestFlows-20261108.zip (outer delivery archive, not directly importable); extract and import the inner schema preflight first. Each individual flow ZIP also remains under its own artifact folder. Three separate implementation PRs are ready for code review; tickets stay open. Checkbox handovers are inline in #10/#62/#63. Real request mapping/constraints/legacy rows and coordinated old-writer compatibility remain native integration blockers; inspect schema metadata before running replacement writers. Participant rollout is still access-gated.

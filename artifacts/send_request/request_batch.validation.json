@@ -1,0 +1,59 @@
+{
+  "validationKind": "LOCAL_COMBINED_GENERATED_GRAPH",
+  "combinedSuite": {
+    "passed": 455,
+    "failed": 0
+  },
+  "additionalContractCheck": {
+    "passed": 1,
+    "case": "Generated send Pending -> authorized Cancelled CAS -> reader preserves created/history/actions -> same send intent replay does not create another row"
+  },
+  "native": "NOT_RUN",
+  "packages": [
+    {
+      "name": "TandemRequestSchemaPreflight",
+      "ticket": 10,
+      "pr": "https://github.com/maoy1/tandem-language-culture-app/pull/78",
+      "buildId": "f7fd078d-740a-4d68-a8fe-31ca2abc9e54",
+      "sha256": "8ab3fa1966468525a169c3c608a3b00cd065f6db02292971460bc3dca615eb10",
+      "actions": 18,
+      "maximumActionDepth": 3,
+      "sourceCommit": "22fb50fa4fb431d1f1885d1421c2276c5f42d8cd",
+      "nativeResult": "NOT_IMPORTED_NOT_TESTED"
+    },
+    {
+      "name": "TandemSendRequest-v2",
+      "ticket": 10,
+      "pr": "https://github.com/maoy1/tandem-language-culture-app/pull/78",
+      "buildId": "50e14992-a69a-4001-93f4-1ac8ed57dfe2",
+      "sha256": "e31669dd774aca845effe6bfa867093b1938ae0cb5087b6604c17b843e664359",
+      "actions": 125,
+      "maximumActionDepth": 5,
+      "sourceCommit": "22fb50fa4fb431d1f1885d1421c2276c5f42d8cd",
+      "nativeResult": "NOT_IMPORTED_NOT_TESTED"
+    },
+    {
+      "name": "TandemMyRequests-v3",
+      "ticket": 62,
+      "pr": "https://github.com/maoy1/tandem-language-culture-app/pull/80",
+      "buildId": "502f62a4-9373-4c4a-aa4e-dfae5c1334d0",
+      "sha256": "b11443edf732dcecbdb6d5085d3bd10ff4ecbbf4f1ef33ba7954da37dda8015f",
+      "actions": 223,
+      "maximumActionDepth": 4,
+      "sourceCommit": "92c20a5f81f14b29fc628cbef83465a5a08e4ecc",
+      "nativeResult": "NOT_IMPORTED_NOT_TESTED"
+    },
+    {
+      "name": "TandemCancelRequest-v2",
+      "ticket": 63,
+      "pr": "https://github.com/maoy1/tandem-language-culture-app/pull/79",
+      "buildId": "9533894a-20d7-46e8-a640-5af8473c3b33",
+      "sha256": "b9d6d1341f76af3b2d0b9e710612ff7216ab3e109c394a47531d072503cbbd61",
+      "actions": 138,
+      "maximumActionDepth": 5,
+      "sourceCommit": "396a40a6f5c90bf39746ca347f5096576d99e60d",
+      "nativeResult": "NOT_IMPORTED_NOT_TESTED"
+    }
+  ],
+  "sourceScope": "Combined disposable checkout of each referenced source commit. Native schema/API/caller/race/latency proof remains separate."
+}
