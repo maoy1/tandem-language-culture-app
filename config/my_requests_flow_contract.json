@@ -68,22 +68,22 @@
   },
   "runtimeMetadataGate": {
     "listIdentity": "Expected list GUID and BaseTemplate 100 each run.",
-    "fields": "Complete bounded fields response; exact InternalName/type, required/unique flags and Hidden=false/ReadOnlyField=false on Requests; require Indexed=true for unique key fields, permit extra benign indexes on other request fields. SchemaXml XPath exact Lookup List target and exact Choice set/cardinality. Mismatch/missing/renamed/malformed = REQUEST_SCHEMA_UNVERIFIED; no guessed writes or automatic schema changes.",
+    "fields": "Complete bounded fields response; exact InternalName/type, required/unique flags and Hidden=false/ReadOnlyField=false on Requests; require Indexed=true for unique key fields, permit extra benign indexes on other request fields. SchemaXml XPath exact Lookup List target and exact Choice set/cardinality. Mismatch/missing/renamed/malformed = REQUEST_SCHEMA_UNVERIFIED; no guessed writes or automatic schema changes. SenderParticipantId and RecipientParticipantId are existing Number fields, not Lookup; exact SchemaXml /Field/@Decimals must equal 0. Existing names/column IDs are retained, with no duplicate columns or conversion.",
     "expected": {
       "requests": {
-        "SenderParticipant": {
-          "TypeAsString": "Lookup",
+        "SenderParticipantId": {
+          "TypeAsString": "Number",
           "Required": true,
           "EnforceUniqueValues": false,
-          "LookupList": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
+          "Decimals": "0",
           "Hidden": false,
           "ReadOnlyField": false
         },
-        "RecipientParticipant": {
-          "TypeAsString": "Lookup",
+        "RecipientParticipantId": {
+          "TypeAsString": "Number",
           "Required": false,
           "EnforceUniqueValues": false,
-          "LookupList": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
+          "Decimals": "0",
           "Hidden": false,
           "ReadOnlyField": false
         },
@@ -234,7 +234,45 @@
         }
       }
     },
-    "requestMappingStatus": "PROPOSED_NOT_TENANT_VERIFIED; actual export confirms request GUID only, not field metadata."
+    "requestMappingStatus": "OBSERVED_NUMBER_REFERENCES; target setup NOT APPLIED/VERIFIED. Current report correctly fails: six fields missing and RecipientParticipantId still required.",
+    "observedPreflight": {
+      "packageBuildId": "f7fd078d-740a-4d68-a8fe-31ca2abc9e54",
+      "runReference": "08584074297422149453962972460CU27",
+      "collectionComplete": true,
+      "schemaVerified": false,
+      "writes": 0,
+      "sourceSha256": "19139f2f1d4d7c91d4330566cc00be078e6f5e397282c7dc5084b042e833d71d",
+      "existingNumberFields": [
+        {
+          "EnforceUniqueValues": false,
+          "Hidden": false,
+          "Indexed": false,
+          "InternalName": "SenderParticipantId",
+          "ReadOnlyField": false,
+          "Required": true,
+          "TypeAsString": "Number"
+        },
+        {
+          "EnforceUniqueValues": false,
+          "Hidden": false,
+          "Indexed": false,
+          "InternalName": "RecipientParticipantId",
+          "ReadOnlyField": false,
+          "Required": true,
+          "TypeAsString": "Number"
+        }
+      ],
+      "missingFields": [
+        "RequestType",
+        "TargetGroup",
+        "SendOperationKey",
+        "ConnectionKey",
+        "WinningOperationKey",
+        "OperationComplete"
+      ],
+      "ownerConfirmedEmpty": true,
+      "migrationBackfillRequired": false
+    }
   },
   "readPolicy": {
     "bounds": {
@@ -259,21 +297,27 @@
   },
   "membershipAuthority": "Only Active own episode with empty LeftAt, exactly one active own row per group, exact request:id:participant:actor episode, Accepted+OperationComplete request bound to actor and group, complete personal source, SetupComplete true, group not Ended. Personal episode must equal group SourceRequestId with actor among its parties; group episode must target exact group with actor as sender. Left/provisional/missing/mismatched episodes grant no authority. No leader.",
   "availability": "Paused/inactive/not-open/invalid participant or Closed/Ended/full/busy/incomplete group yields UnavailablePending with no auto-cancel. Physical Active membership rows including provisional/paused count toward capacity. No freeing slots, membership/group/notification writes. Advisory accept is never proof of compatibility or a reserved slot.",
-  "actions": 223,
+  "actions": 228,
   "maximumActionDepth": 4,
   "writes": 0,
   "globalActionNamesUnique": true,
   "integration": [
     "Parent integrates this isolated commit after review; no shared helper changes needed.",
-    "Parent publishes issue-body.txt inline and updates shared design/plan/evidence.",
     "Use parent metadata-only RequestSchemaPreflight once for this batch; compare actual report before dependent smoke. Report mismatch as blocked mapping; do not silently repair.",
     "Refresh/rebind #67 Power Apps flow connection/output schema; call TandemMyRequests.Run(ownParticipantId), parse requestsjson only when resultcode=OK. Existing requestsjson/errormessage preserved.",
     "Action buttons call #63/#11/#65 with their own stable intent contracts and refresh this reader after outcome.",
     "Owner import/smoke is still required. #39 audience/ordinary participant access/privacy remain postponed.",
-    "Full UI binding under #67 remains explicitly PENDING; preserved shape/order do not prove existing screen, labels, output refresh or action binding works."
+    "Full UI binding under #67 remains explicitly PENDING; preserved shape/order do not prove existing screen, labels, output refresh or action binding works.",
+    "Parent updates the existing inline issue handover with v4 and observed Number-column mapping; no new draft handover file or PR."
   ],
   "nativeStatus": "NOT_IMPORTED_NOT_TESTED; neither native runtime nor privacy certified.",
-  "packageVersion": "v3",
-  "packageBuildId": "502f62a4-9373-4c4a-aa4e-dfae5c1334d0",
-  "packageSha256": "b11443edf732dcecbdb6d5085d3bd10ff4ecbbf4f1ef33ba7954da37dda8015f"
+  "packageVersion": "v4",
+  "packageBuildId": "36bebc35-e946-411a-ac3f-dd244bf3dd9a",
+  "packageSha256": "f84ea923fca0813fbb775eaed4d493ba17c1f66ea5b00dd4d83899c41369ef9a",
+  "referenceAdapter": "Read SenderParticipantId/RecipientParticipantId as positive number / nullable positive number. Explicit equals(x,int(x)) for sender and equals(coalesce(recipient,0),int(coalesce(recipient,0))) gate rejects fractions; normalize both to int BEFORE canonical connection-key validation, authority comparisons and public projection. Null group recipient retained. System Id/TargetGroupId remain integer. Decimals=0 alone is not integer authority.",
+  "ownerSetupPrerequisites": [
+    "Owner adds six missing fields using the accepted target mapping; OperationComplete optional Boolean defaults No.",
+    "Owner makes existing RecipientParticipantId optional; preserve existing SenderParticipantId/RecipientParticipantId names, Number type, Decimals=0 and column IDs. Do not create SenderParticipant/RecipientParticipant lookup duplicates.",
+    "Fresh corrected preflight must verify the complete target before dependent import/smoke. No tenant settings are changed by this reader or patch."
+  ]
 }

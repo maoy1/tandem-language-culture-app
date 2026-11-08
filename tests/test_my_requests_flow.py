@@ -23,7 +23,8 @@ class ReaderRunner(FlowRunner):
             try: root = ET.fromstring(context['item'].get('SchemaXml') or '<Field/>')
             except ET.ParseError as error: raise ValueError('Invalid metadata XML') from error
             path = match.group(1)
-            if path == '/Field/@List': value = [root.attrib['List']] if 'List' in root.attrib else []
+            if path in ['/Field/@List', '/Field/@Decimals']:
+                attribute = path.split('@')[1]; value = [root.attrib[attribute]] if attribute in root.attrib else []
             elif path == '/Field/CHOICES/CHOICE/text()': value = [e.text or '' for e in root.findall('./CHOICES/CHOICE')]
             else: raise AssertionError('Unsupported XPath ' + path)
             return "json('" + json.dumps(value).replace("'", "''") + "')"
@@ -33,6 +34,7 @@ class ReaderRunner(FlowRunner):
 def metadata(name, expected):
     root = ET.Element('Field', {'Name': name, 'Type': expected['TypeAsString']})
     if 'LookupList' in expected: root.set('List', '{' + expected['LookupList'] + '}')
+    if 'Decimals' in expected: root.set('Decimals', expected['Decimals'])
     if 'Choices' in expected:
         choices = ET.SubElement(root, 'CHOICES')
         for value in expected['Choices']: ET.SubElement(choices, 'CHOICE').text = value
@@ -205,7 +207,9 @@ def test_schema_gate_before_row_reads(mutation):
     if mutation == 'unique': next(x for x in fields if x['InternalName'] == 'SendOperationKey')['EnforceUniqueValues'] = False
     if mutation == 'indexed': next(x for x in fields if x['InternalName'] == 'ConnectionKey')['Indexed'] = False
     if mutation == 'required': fields[0]['Required'] = False
-    if mutation == 'lookup': fields[0]['SchemaXml'] = fields[0]['SchemaXml'].replace(PEOPLE['lists']['participants']['listId'], 'wrong-list')
+    if mutation == 'lookup':
+        target = next(x for x in fields if x['InternalName'] == 'TargetGroup')
+        target['SchemaXml'] = target['SchemaXml'].replace(GROUPS['lists']['groups']['listId'], 'wrong-list')
     if mutation == 'vocabulary': next(x for x in fields if x['InternalName'] == 'RequestType')['SchemaXml'] = '<Field><CHOICES><CHOICE>Personal</CHOICE><CHOICE>Team</CHOICE></CHOICES></Field>'
     if mutation == 'duplicateField': fields.append(deepcopy(fields[0]))
     failure(execute(f), 'REQUEST_SCHEMA_UNVERIFIED')
@@ -326,7 +330,7 @@ def test_no_setvariable_self_reference():
     walk(flow.build_actions(source(), PEOPLE, GROUPS, 'fixture'))
 
 
-@pytest.mark.parametrize('field', ['SenderParticipant', 'RecipientParticipant', 'TargetGroup', 'RequestType', 'Status', 'WinningOperationKey', 'OperationComplete'])
+@pytest.mark.parametrize('field', ['SenderParticipantId', 'RecipientParticipantId', 'TargetGroup', 'RequestType', 'Status', 'WinningOperationKey', 'OperationComplete'])
 def test_benign_request_indexes_are_allowed(field):
     f = Fake(); next(x for x in f.fields['requests'] if x['InternalName'] == field)['Indexed'] = True
     r = execute(f)
@@ -368,3 +372,60 @@ def test_missing_or_nonstring_created_rejects_incomplete_history(missing):
     if missing: del f.data['requests'][0]['Created']
     else: f.data['requests'][0]['Created'] = 123
     failure(execute(f), 'REQUEST_DATA_INCOMPLETE')
+
+
+# Minimal metadata from owner preflight f7fd078d; no raw report/account data.
+ACTUAL_REFERENCE_METADATA = [{'EnforceUniqueValues': False, 'Hidden': False, 'Indexed': False, 'InternalName': 'SenderParticipantId', 'ReadOnlyField': False, 'Required': True, 'SchemaXml': '<Field Type="Number" DisplayName="SenderParticipantId" Required="TRUE" EnforceUniqueValues="FALSE" Indexed="FALSE" Decimals="0" ID="{7909dcd2-f0b9-4158-9b9a-2017cb156fcd}" SourceID="{3d17485d-1dac-41f0-a1af-24e45daa4567}" StaticName="SenderParticipantId" Name="SenderParticipantId" ColName="float1" RowOrdinal="0"/>', 'TypeAsString': 'Number'}, {'EnforceUniqueValues': False, 'Hidden': False, 'Indexed': False, 'InternalName': 'RecipientParticipantId', 'ReadOnlyField': False, 'Required': True, 'SchemaXml': '<Field Type="Number" DisplayName="RecipientParticipantId" Required="TRUE" EnforceUniqueValues="FALSE" Indexed="FALSE" Decimals="0" ID="{e23db904-ddb4-451d-aa37-9b59b375b1ca}" SourceID="{3d17485d-1dac-41f0-a1af-24e45daa4567}" StaticName="RecipientParticipantId" Name="RecipientParticipantId" ColName="float2" RowOrdinal="0"/>', 'TypeAsString': 'Number'}, {'EnforceUniqueValues': False, 'Hidden': False, 'Indexed': False, 'InternalName': 'Status', 'ReadOnlyField': False, 'Required': True, 'SchemaXml': '<Field Type="Choice" DisplayName="Status" Required="TRUE" EnforceUniqueValues="FALSE" Indexed="FALSE" Format="Dropdown" FillInChoice="FALSE" ID="{9a1d79d6-44d3-4c17-8d85-c3c75e68c0df}" SourceID="{3d17485d-1dac-41f0-a1af-24e45daa4567}" StaticName="Status" Name="Status" ColName="nvarchar7" RowOrdinal="0"><Default>Pending</Default><CHOICES><CHOICE>Pending</CHOICE><CHOICE>Accepted</CHOICE><CHOICE>Declined</CHOICE><CHOICE>Cancelled</CHOICE></CHOICES></Field>', 'TypeAsString': 'Choice'}]
+
+
+def corrected_actual_metadata():
+    fields = deepcopy(ACTUAL_REFERENCE_METADATA)
+    recipient = next(x for x in fields if x['InternalName'] == 'RecipientParticipantId')
+    recipient['Required'] = False
+    recipient['SchemaXml'] = recipient['SchemaXml'].replace('Required="TRUE"', 'Required="FALSE"')
+    return fields
+
+
+def test_actual_number_metadata_with_owner_setup_target_passes():
+    f = Fake(); actual = corrected_actual_metadata(); names = {x['InternalName'] for x in actual}
+    f.fields['requests'] = actual + [x for x in f.fields['requests'] if x['InternalName'] not in names]
+    assert execute(f).response['resultcode'] == 'OK'
+
+
+def test_actual_unconfigured_report_still_fails_closed():
+    f = Fake(); f.fields['requests'] = deepcopy(ACTUAL_REFERENCE_METADATA)
+    failure(execute(f), 'REQUEST_SCHEMA_UNVERIFIED')
+    assert not any('/items?' in q for q in f.queries)
+
+
+@pytest.mark.parametrize('field', ['SenderParticipantId', 'RecipientParticipantId'])
+def test_former_participant_lookup_mapping_rejected(field):
+    f = Fake(); target = next(x for x in f.fields['requests'] if x['InternalName'] == field)
+    target.update(metadata(field[:-2], {'TypeAsString': 'Lookup', 'Required': field == 'SenderParticipantId', 'EnforceUniqueValues': False, 'Hidden': False, 'ReadOnlyField': False, 'LookupList': PEOPLE['lists']['participants']['listId']}))
+    failure(execute(f), 'REQUEST_SCHEMA_UNVERIFIED')
+
+
+@pytest.mark.parametrize('field', ['SenderParticipantId', 'RecipientParticipantId'])
+@pytest.mark.parametrize('decimals', [None, '2', 'Auto'])
+def test_wrong_or_missing_number_decimals_rejected(field, decimals):
+    f = Fake(); target = next(x for x in f.fields['requests'] if x['InternalName'] == field)
+    root = ET.fromstring(target['SchemaXml'])
+    if decimals is None: del root.attrib['Decimals']
+    else: root.set('Decimals', decimals)
+    target['SchemaXml'] = ET.tostring(root, encoding='unicode')
+    failure(execute(f), 'REQUEST_SCHEMA_UNVERIFIED')
+
+
+@pytest.mark.parametrize('field', ['SenderParticipantId', 'RecipientParticipantId'])
+def test_whole_float_number_references_normalize_before_keys_and_projection(field):
+    f = Fake(); f.data['requests'][0][field] = float(f.data['requests'][0][field])
+    r = execute(f); assert r.response['resultcode'] == 'OK'
+    assert type(row(r, 1)['senderParticipantId']) is int and type(row(r, 1)['recipientParticipantId']) is int
+    assert type(r.body('Data_requests')[0][field]) is int
+
+
+@pytest.mark.parametrize('field', ['SenderParticipantId', 'RecipientParticipantId'])
+def test_fractional_number_reference_rejected_before_keys_and_projection(field):
+    f = Fake(); f.data['requests'][0][field] += 0.5
+    r = execute(f); failure(r, 'REQUEST_DATA_INCOMPLETE')
+    assert r.action_states['Data_requests'] == 'Skipped'

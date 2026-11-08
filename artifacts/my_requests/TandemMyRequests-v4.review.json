@@ -1,7 +1,7 @@
 {
   "sourceTicket": 62,
-  "packageBuildId": "502f62a4-9373-4c4a-aa4e-dfae5c1334d0",
-  "actions": 223,
+  "packageBuildId": "36bebc35-e946-411a-ac3f-dd244bf3dd9a",
+  "actions": 228,
   "maximumActionDepth": 4,
   "bounds": {
     "requests": 500,
@@ -28,11 +28,12 @@
     "direction"
   ],
   "sourceShapeChange": "Retain every original Request_rows field including created and Created desc, ID desc ordering; add group/type/completion/availability/actions. Full UI binding pending.",
-  "packageSha256": "b11443edf732dcecbdb6d5085d3bd10ff4ecbbf4f1ef33ba7954da37dda8015f",
-  "generatorSha256": "d480c6c2c301c3f7e514dbc676ab621542b4f0f866067d541bdf61e192b51bb6",
+  "packageSha256": "f84ea923fca0813fbb775eaed4d493ba17c1f66ea5b00dd4d83899c41369ef9a",
+  "generatorSha256": "559cb68af8e1033d42aa62bf7e2b0a147bc87780687ee3ec6c09f25e7413c3f7",
   "tenantResult": "NOT_IMPORTED_NOT_TESTED",
   "ordinaryUserAccessVerified": false,
-  "requestSchema": "PROPOSED_RUNTIME_FAIL_CLOSED",
+  "requestSchema": "OBSERVED_NUMBER_REFERENCES_TARGET_SETUP_PENDING",
+  "referenceAdapter": "SenderParticipantId/RecipientParticipantId Number with XML Decimals=0; whole-valued numeric refs normalized to int before canonical keys/public IDs.",
   "limits": {
     "actions": 500,
     "maximumActionDepth": 8

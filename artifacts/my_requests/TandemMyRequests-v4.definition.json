@@ -1,6 +1,6 @@
 {
-  "name": "34dfe5d8-19d7-4687-a378-51e4dfd1f6e9",
-  "id": "/providers/Microsoft.Flow/flows/34dfe5d8-19d7-4687-a378-51e4dfd1f6e9",
+  "name": "08435fcf-4c8e-4fb6-a282-65221f330151",
+  "id": "/providers/Microsoft.Flow/flows/08435fcf-4c8e-4fb6-a282-65221f330151",
   "type": "Microsoft.Flow/flows",
   "properties": {
     "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
@@ -281,11 +281,11 @@
                 ]
               }
             },
-            "requests_field_SenderParticipant": {
+            "requests_field_SenderParticipantId": {
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_requests_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'SenderParticipant'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(toLower(replace(replace(first(union(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/@List'),createArray(''))),'{',''),'}','')),'fd3adf46-f81d-4a7b-a80c-567fde0175dc'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
+                "where": "@and(equals(item()?['InternalName'],'SenderParticipantId'),equals(item()?['TypeAsString'],'Number'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(first(union(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/@Decimals'),createArray(''))),'0'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
               },
               "runAfter": {
                 "requests_metadata_complete": [
@@ -293,13 +293,13 @@
                 ]
               }
             },
-            "requests_field_SenderParticipant_gate": {
+            "requests_field_SenderParticipantId_gate": {
               "type": "If",
-              "expression": "@equals(length(body('requests_field_SenderParticipant')),1)",
+              "expression": "@equals(length(body('requests_field_SenderParticipantId')),1)",
               "actions": {},
               "else": {
                 "actions": {
-                  "requests_field_SenderParticipant_gate_error": {
+                  "requests_field_SenderParticipantId_gate_error": {
                     "type": "SetVariable",
                     "inputs": {
                       "name": "ErrorCode",
@@ -307,11 +307,11 @@
                     },
                     "runAfter": {}
                   },
-                  "requests_field_SenderParticipant_gate_stop": {
+                  "requests_field_SenderParticipantId_gate_stop": {
                     "type": "Compose",
                     "inputs": "@div(1,0)",
                     "runAfter": {
-                      "requests_field_SenderParticipant_gate_error": [
+                      "requests_field_SenderParticipantId_gate_error": [
                         "Succeeded"
                       ]
                     }
@@ -319,30 +319,30 @@
                 }
               },
               "runAfter": {
-                "requests_field_SenderParticipant": [
+                "requests_field_SenderParticipantId": [
                   "Succeeded"
                 ]
               }
             },
-            "requests_field_RecipientParticipant": {
+            "requests_field_RecipientParticipantId": {
               "type": "Query",
               "inputs": {
                 "from": "@body('Read_requests_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'RecipientParticipant'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(toLower(replace(replace(first(union(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/@List'),createArray(''))),'{',''),'}','')),'fd3adf46-f81d-4a7b-a80c-567fde0175dc'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
+                "where": "@and(equals(item()?['InternalName'],'RecipientParticipantId'),equals(item()?['TypeAsString'],'Number'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(first(union(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/@Decimals'),createArray(''))),'0'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
               },
               "runAfter": {
-                "requests_field_SenderParticipant_gate": [
+                "requests_field_SenderParticipantId_gate": [
                   "Succeeded"
                 ]
               }
             },
-            "requests_field_RecipientParticipant_gate": {
+            "requests_field_RecipientParticipantId_gate": {
               "type": "If",
-              "expression": "@equals(length(body('requests_field_RecipientParticipant')),1)",
+              "expression": "@equals(length(body('requests_field_RecipientParticipantId')),1)",
               "actions": {},
               "else": {
                 "actions": {
-                  "requests_field_RecipientParticipant_gate_error": {
+                  "requests_field_RecipientParticipantId_gate_error": {
                     "type": "SetVariable",
                     "inputs": {
                       "name": "ErrorCode",
@@ -350,11 +350,11 @@
                     },
                     "runAfter": {}
                   },
-                  "requests_field_RecipientParticipant_gate_stop": {
+                  "requests_field_RecipientParticipantId_gate_stop": {
                     "type": "Compose",
                     "inputs": "@div(1,0)",
                     "runAfter": {
-                      "requests_field_RecipientParticipant_gate_error": [
+                      "requests_field_RecipientParticipantId_gate_error": [
                         "Succeeded"
                       ]
                     }
@@ -362,7 +362,7 @@
                 }
               },
               "runAfter": {
-                "requests_field_RecipientParticipant": [
+                "requests_field_RecipientParticipantId": [
                   "Succeeded"
                 ]
               }
@@ -374,7 +374,7 @@
                 "where": "@and(equals(item()?['InternalName'],'TargetGroup'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(toLower(replace(replace(first(union(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/@List'),createArray(''))),'{',''),'}','')),'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
               },
               "runAfter": {
-                "requests_field_RecipientParticipant_gate": [
+                "requests_field_RecipientParticipantId_gate": [
                   "Succeeded"
                 ]
               }
@@ -1669,7 +1669,7 @@
                 ]
               }
             },
-            "Data_requests": {
+            "Raw_requests": {
               "type": "ParseJson",
               "inputs": {
                 "content": "@body('Read_requests')?['d']?['results']",
@@ -1700,12 +1700,12 @@
                         "minLength": 1
                       },
                       "SenderParticipantId": {
-                        "type": "integer",
+                        "type": "number",
                         "minimum": 1
                       },
                       "RecipientParticipantId": {
                         "type": [
-                          "integer",
+                          "number",
                           "null"
                         ],
                         "minimum": 1
@@ -1760,6 +1760,73 @@
                 ]
               }
             },
+            "Validate_number_references": {
+              "type": "Foreach",
+              "foreach": "@body('Raw_requests')",
+              "actions": {
+                "Whole_number_references": {
+                  "type": "If",
+                  "expression": "@and(equals(items('Validate_number_references')?['SenderParticipantId'],int(items('Validate_number_references')?['SenderParticipantId'])),equals(coalesce(items('Validate_number_references')?['RecipientParticipantId'],0),int(coalesce(items('Validate_number_references')?['RecipientParticipantId'],0))))",
+                  "actions": {},
+                  "else": {
+                    "actions": {
+                      "Whole_number_references_error": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ErrorCode",
+                          "value": "REQUEST_DATA_INCOMPLETE"
+                        },
+                        "runAfter": {}
+                      },
+                      "Whole_number_references_stop": {
+                        "type": "Compose",
+                        "inputs": "@div(1,0)",
+                        "runAfter": {
+                          "Whole_number_references_error": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {}
+                }
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 1
+                }
+              },
+              "runAfter": {
+                "Raw_requests": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Data_requests": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Raw_requests')",
+                "select": {
+                  "Id": "@item()?['Id']",
+                  "Created": "@item()?['Created']",
+                  "SenderParticipantId": "@int(item()?['SenderParticipantId'])",
+                  "RecipientParticipantId": "@if(equals(item()?['RecipientParticipantId'],null),null,int(coalesce(item()?['RecipientParticipantId'],0)))",
+                  "TargetGroupId": "@item()?['TargetGroupId']",
+                  "RequestType": "@item()?['RequestType']",
+                  "Status": "@item()?['Status']",
+                  "SendOperationKey": "@item()?['SendOperationKey']",
+                  "ConnectionKey": "@item()?['ConnectionKey']",
+                  "WinningOperationKey": "@item()?['WinningOperationKey']",
+                  "OperationComplete": "@item()?['OperationComplete']"
+                }
+              },
+              "runAfter": {
+                "Validate_number_references": [
+                  "Succeeded"
+                ]
+              }
+            },
             "requests_parsed": {
               "type": "SetVariable",
               "inputs": {
@@ -1775,7 +1842,7 @@
             "requests_ids": {
               "type": "Select",
               "inputs": {
-                "from": "@body('Data_requests')",
+                "from": "@body('Raw_requests')",
                 "select": "@item()?['Id']"
               },
               "runAfter": {

@@ -44,8 +44,8 @@ def field_contracts(people, groups):
         return {'TypeAsString': t, 'Required': required, 'EnforceUniqueValues': unique, 'Indexed': indexed, **extra}
     contracts = {
         'requests': {
-            'SenderParticipant': field('Lookup', True, LookupList=p),
-            'RecipientParticipant': field('Lookup', False, LookupList=p),
+            'SenderParticipantId': field('Number', True, Decimals='0'),
+            'RecipientParticipantId': field('Number', False, Decimals='0'),
             'TargetGroup': field('Lookup', False, LookupList=g),
             'RequestType': field('Choice', True, Choices=['Personal', 'Group']),
             'Status': field('Choice', True, Choices=['Pending', 'Accepted', 'Declined', 'Cancelled']),
@@ -137,6 +137,8 @@ def build_actions(original, people, groups, build_id):
             choices = "xpath(" + schema_xml + ",'/Field/CHOICES/CHOICE/text()')"
             for key, value in expected.items():
                 if key == 'LookupList': tests.append("equals(toLower(replace(replace(" + lookup + ",'{',''),'}','')),'" + value + "')")
+                elif key == 'Decimals':
+                    tests.append("equals(first(union(xpath(" + schema_xml + ",'/Field/@Decimals'),createArray(''))),'" + value + "')")
                 elif key == 'Choices':
                     tests.append('equals(length(' + choices + '),' + str(len(value)) + ')')
                     tests += ["contains(" + choices + ",'" + v + "')" for v in value]
@@ -157,7 +159,7 @@ def build_actions(original, people, groups, build_id):
         'memberships': 'Id,GroupId,ParticipantId,MembershipStatus,MembershipKey,LeftAt',
     }
     schemas = {
-        'requests': obj({'Id': integer(), 'Created': text(), 'SenderParticipantId': integer(), 'RecipientParticipantId': integer(True), 'TargetGroupId': integer(True),
+        'requests': obj({'Id': integer(), 'Created': text(), 'SenderParticipantId': {'type': 'number', 'minimum': 1}, 'RecipientParticipantId': {'type': ['number', 'null'], 'minimum': 1}, 'TargetGroupId': integer(True),
                          'RequestType': choice('Personal', 'Group'), 'Status': choice('Pending', 'Accepted', 'Declined', 'Cancelled'),
                          'SendOperationKey': text(), 'ConnectionKey': text(), 'WinningOperationKey': {'type': ['string', 'null']}, 'OperationComplete': {'type': 'boolean'}}),
         'profiles': obj({'Id': integer(), 'Status': {'type': 'string'}, 'ParticipationStatus': choice('Active', 'Paused', 'Inactive'), 'OpenToConnections': {'type': 'boolean'}}),
@@ -165,14 +167,26 @@ def build_actions(original, people, groups, build_id):
         'memberships': obj({'Id': integer(), 'GroupId': integer(), 'ParticipantId': integer(), 'MembershipStatus': choice('Active', 'Left'), 'MembershipKey': text(), 'LeftAt': {'type': ['string', 'null']}}),
     }
     for role in selects:
-        read = 'Read_' + role; bound = role + '_complete'; parsed = 'Data_' + role
+        read = 'Read_' + role; bound = role + '_complete'; parsed = 'Raw_requests' if role == 'requests' else 'Data_' + role
         order = 'Created desc,ID desc' if role == 'requests' else 'Id asc'
         s[read] = http(base(role) + '/items?$select=' + selects[role] + '&$orderby=' + order + '&$top=' + str(BOUNDS[role] + 1), prev)
         s[bound] = gate(bound, complete(read, BOUNDS[role]), 'READ_BOUND_OR_INCOMPLETE', read)
         code = 'REQUEST_DATA_INCOMPLETE' if role == 'requests' else 'DATA_INTEGRITY'
         s[role + '_parse_code'] = setvar('ErrorCode', code, bound)
         s[parsed] = parse('@' + rows(read), {'type': 'array', 'items': schemas[role]}, role + '_parse_code')
-        s[role + '_parsed'] = setvar('ErrorCode', '', parsed); prev = role + '_parsed'
+        parsed_end = parsed
+        if role == 'requests':
+            reference = "items('Validate_number_references')"
+            sender = reference + "?['SenderParticipantId']"
+            recipient = "coalesce(" + reference + "?['RecipientParticipantId'],0)"
+            s['Validate_number_references'] = loop("@body('Raw_requests')", {
+                'Whole_number_references': gate('Whole_number_references', 'and(equals(' + sender + ',int(' + sender + ')),equals(' + recipient + ',int(' + recipient + ')))', 'REQUEST_DATA_INCOMPLETE')}, parsed)
+            projection = {key: "@item()?['" + key + "']" for key in schemas[role]['properties']}
+            projection['SenderParticipantId'] = "@int(item()?['SenderParticipantId'])"
+            projection['RecipientParticipantId'] = "@if(equals(item()?['RecipientParticipantId'],null),null,int(coalesce(item()?['RecipientParticipantId'],0)))"
+            s['Data_requests'] = {'type': 'Select', 'inputs': {'from': "@body('Raw_requests')", 'select': projection}, 'runAfter': after('Validate_number_references')}
+            parsed_end = 'Data_requests'
+        s[role + '_parsed'] = setvar('ErrorCode', '', parsed_end); prev = role + '_parsed'
         s[role + '_ids'] = {'type': 'Select', 'inputs': {'from': "@body('" + parsed + "')", 'select': "@item()?['Id']"}, 'runAfter': after(prev)}
         s[role + '_unique'] = gate(role + '_unique', "equals(length(body('" + role + "_ids')),length(union(body('" + role + "_ids'),body('" + role + "_ids'))))", 'DATA_INTEGRITY', role + '_ids'); prev = role + '_unique'
     for role, field in [('requests', 'SendOperationKey'), ('requests', 'ConnectionKey'), ('groups', 'SourceRequestId')]:
@@ -280,7 +294,8 @@ def build_package(source, output):
               'sourcePublicShape': list(original['properties']['definition']['actions']['Request_rows']['inputs']['select']),
               'sourceShapeChange': 'Retain every original Request_rows field including created and Created desc, ID desc ordering; add group/type/completion/availability/actions. Full UI binding pending.',
               'packageSha256': hashlib.sha256(output.read_bytes()).hexdigest(), 'generatorSha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-              'tenantResult': 'NOT_IMPORTED_NOT_TESTED', 'ordinaryUserAccessVerified': False, 'requestSchema': 'PROPOSED_RUNTIME_FAIL_CLOSED',
+              'tenantResult': 'NOT_IMPORTED_NOT_TESTED', 'ordinaryUserAccessVerified': False, 'requestSchema': 'OBSERVED_NUMBER_REFERENCES_TARGET_SETUP_PENDING',
+              'referenceAdapter': 'SenderParticipantId/RecipientParticipantId Number with XML Decimals=0; whole-valued numeric refs normalized to int before canonical keys/public IDs.',
               'limits': {'actions': 500, 'maximumActionDepth': 8}, 'globalActionNamesUnique': True}
     output.with_suffix('.definition.json').write_bytes((json.dumps(document, indent=2) + '\n').encode('utf-8'))
     output.with_suffix('.review.json').write_bytes((json.dumps(review, indent=2) + '\n').encode('utf-8'))

@@ -1,14 +1,14 @@
 {
   "sourceTicket": 62,
-  "packageBuildId": "502f62a4-9373-4c4a-aa4e-dfae5c1334d0",
-  "packageSha256": "b11443edf732dcecbdb6d5085d3bd10ff4ecbbf4f1ef33ba7954da37dda8015f",
-  "localNewTests": 104,
-  "fullWorktreeSuite": 346,
+  "packageBuildId": "36bebc35-e946-411a-ac3f-dd244bf3dd9a",
+  "packageSha256": "f84ea923fca0813fbb775eaed4d493ba17c1f66ea5b00dd4d83899c41369ef9a",
+  "localNewTests": 118,
+  "fullWorktreeSuite": 360,
   "testsResult": "PASS",
   "command": "C:/projects/small_projects/tandem-language-culture-app/.venv/Scripts/python.exe -X utf8 -m pytest -q",
   "testsCwd": "Dedicated #62 managed worktree",
   "structure": {
-    "actions": 223,
+    "actions": 228,
     "maximumActionDepth": 4,
     "globalActionNamesUnique": true,
     "connectorReadDefinitions": 14,
@@ -21,15 +21,18 @@
   "rawSourceCommitted": false,
   "nativeImportSmoke": "NOT RUN",
   "ordinaryUserPrivacy": "NOT RUN; postponed #39",
-  "actualRequestMetadata": "UNVERIFIED; batch preflight comparison required",
+  "actualRequestMetadata": "Observed Number reference fields; current full target gate BLOCKED: six fields missing and Recipient required. Owner setup and fresh corrected preflight required.",
   "limitations": [
     "Local WDL-subset graph execution with synthetic connector, not native certification.",
     "Full-list bounds and conservative malformed/legacy gates can block all rows.",
-    "Request required/nullable flags and exact vocabulary are proposed until report.",
+    "Observed Number references and owner-approved target adapter tested locally; six new fields/recipient optional setting and fresh corrected preflight still pending.",
     "Compatibility/guard/CAS/action runtime belongs to action flows; availability/actions are hints."
   ],
-  "packageVersion": "v3",
+  "packageVersion": "v4",
   "reviewFix": "Permit extra benign Requests indexes while retaining required true key indexes/uniqueness, exact required flags, and Hidden=false/ReadOnlyField=false.",
   "fullUIBinding": "PENDING #67; local shape compatibility does not prove UI binding",
-  "compatibilityFix": "Original request created timestamp and Created desc, ID desc order retained; no additional profile fields."
+  "compatibilityFix": "Original request created timestamp and Created desc, ID desc order retained; no additional profile fields.",
+  "referenceAdapter": "Read SenderParticipantId/RecipientParticipantId as positive number / nullable positive number. Explicit equals(x,int(x)) for sender and equals(coalesce(recipient,0),int(coalesce(recipient,0))) gate rejects fractions; normalize both to int BEFORE canonical connection-key validation, authority comparisons and public projection. Null group recipient retained. System Id/TargetGroupId remain integer. Decimals=0 alone is not integer authority.",
+  "preflightBuildId": "f7fd078d-740a-4d68-a8fe-31ca2abc9e54",
+  "preflightRunReference": "08584074297422149453962972460CU27"
 }
