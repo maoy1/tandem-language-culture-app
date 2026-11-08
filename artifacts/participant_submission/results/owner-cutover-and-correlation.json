@@ -1,0 +1,21 @@
+{
+  "sourceTicket": 61,
+  "reportedDate": "2026-11-08",
+  "originalValidatorOff": true,
+  "onlyV2Enabled": true,
+  "ownerSelectedItem": 3,
+  "reportedRunItemIds": [
+    38,
+    38,
+    38
+  ],
+  "fieldPreservationOwnerConfirmed": true,
+  "preservedFields": [
+    "identity",
+    "selections",
+    "participation status",
+    "openness"
+  ],
+  "correlation": "UNRESOLVED: owner identifies item 3; all supplied reports identify item 38. Do not relabel reports or attribute them to item 3. Clarify built-in SharePoint ID versus row/profile selection.",
+  "scope": "Preservation statement retained for owner-selected profile; not yet linked to supplied run sequence."
+}

@@ -1169,3 +1169,20 @@ whole-schema audit evidence above remain separately scoped.
 - No package/code change; JSON parsed and diff checked. Prior 101 local tests
   retained, not rerun. #61 In progress; PR #72 draft. No repeat edit needed for
   this now-passed Active correction/follow-up sequence.
+
+### CORRELATE61-20261108 — v2-only confirmed; selected-profile ID mismatch
+
+- Owner confirms original validator off and only v2 enabled: cutover confirmation
+  accepted. Owner also confirms identity/selections/participation/openness unchanged,
+  but corrects the selected profile to item 3 and says they do not have item 38.
+- All three supplied raw Validation_reports explicitly contain itemId 38. Preserve
+  them unchanged. Their run-level outcomes remain as reported; do not silently
+  rename them to 3 or treat them as correlated to the selected profile.
+- Earlier item-38 attribution to the intended edited fixture was provisional and
+  is now unresolved. Field-preservation statement is retained for the owner-selected
+  profile, without claiming correlation to the reported runs. Clarify built-in
+  SharePoint ID versus third row/profile before end-to-end fixture acceptance.
+- No new edit/rerun requested until identity correlation is clear. No duplicate
+  validator, flow mapping fault or corruption inferred solely from the mismatch.
+- Evidence: results/owner-cutover-and-correlation.json under participant_submission.
+  #61 remains In progress, PR #72 draft; no code/package changes or pytest rerun.

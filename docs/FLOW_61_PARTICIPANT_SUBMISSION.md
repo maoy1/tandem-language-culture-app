@@ -229,3 +229,12 @@ observed necessary Active correction/readback and follow-up now pass. No repeat
 edit is needed for this sequence. The invalid branch, catalogue negatives,
 field-preservation confirmation, cutover confirmation and applied/published app
 feedback remain pending. This is bounded owner evidence, not global loop proof.
+
+### Owner clarification — selected item versus run ID
+
+Owner confirms only v2 enabled and fields preserved on the selected profile, but
+identifies that profile as item 3. All supplied report JSONs say itemId 38. Resolve
+actual built-in SharePoint ID versus UI row/profile selection before linking the
+run sequence to the preservation statement. Raw reports remain unchanged; no
+new test edit is requested yet. This supersedes earlier unconfirmed-cutover text
+and qualifies the fixture attribution in earlier run notes. See CORRELATE61.

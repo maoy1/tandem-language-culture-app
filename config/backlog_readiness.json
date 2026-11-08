@@ -1204,7 +1204,7 @@
         "The flow reads current saved values and validates catalogue selections.",
         "See validation feedback without admin approval or resetting personal choices."
       ],
-      "remainingWork": "Confirm original validator disabled and profile fields preserved; apply/test/publish feedback; invalid/catalogue/creation/failure/conflict target case gates retained.",
+      "remainingWork": "Reconcile actual SharePoint item ID with supplied run reports before fixture-linked acceptance; apply/test/publish feedback and retain other scoped tenant gates.",
       "testReferences": [
         "REG-001:004",
         "REG-006:009",
@@ -1213,7 +1213,7 @@
         "PAR-002",
         "PAR-003"
       ],
-      "testStatus": "Partial target tenant PASS: valid/no-change and necessary Active correction/readback/follow-up (REG-015 Active portion). Other scoped cases pending.",
+      "testStatus": "Run-level paths PASS as reported for item 38; owner says selected item 3, so end-to-end fixture correlation unresolved. V2-only cutover confirmed; preservation statement retained without run attribution.",
       "testHandoff": "docs/FLOW_61_PARTICIPANT_SUBMISSION.md: exact package/build, one-validator cutover/recovery, owner smoke and detailed cases. Target tenant NOT RUN; source ZIP remains local.",
       "flows": [
         "Participant submission"
