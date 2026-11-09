@@ -5,8 +5,17 @@ expected fixtures, rather than only evaluating the source expression tree.
 """
 import json
 import re
+from xml.etree import ElementTree as ET
 from copy import deepcopy
 from scripts.power_automate import build_compatibility_proof as proof
+
+
+def xml_xpath(root,path):
+    if path.startswith('string('):
+        attr=path[len('string(/Field/@'):-1]
+        return root.attrib.get(attr,'')
+    if path=='/Field/CHOICES/CHOICE/text()':return [x.text or '' for x in root.findall('./CHOICES/CHOICE')]
+    raise AssertionError('Unsupported test XPath '+path)
 
 
 class Runner:
@@ -44,7 +53,9 @@ class Runner:
                     'coalesce':lambda *v:next((x for x in v if x is not None),None),
                     'replace':lambda s,old,new:s.replace(old,new),'trim':lambda s:s.strip(),'toLower':lambda s:s.lower(),'json':json.loads,
                     'first':lambda a:a[0],'workflow':lambda:{'run':{'name':'local-subset-not-a-tenant-run'}},
+                    'xml':ET.fromstring,'xpath':xml_xpath,
                     'concat':lambda *a:''.join(str(x) for x in a),'int':int,
+                    'substring':lambda s,start,count:s[start:start+count],
                     'string':lambda v:json.dumps(v,separators=(',',':')) if isinstance(v,(dict,list,bool)) else str(v),
                     'sub':lambda a,b:a-b,'createArray':lambda *v:list(v),'add':lambda a,b:a+b,'div':lambda a,b:a//b,'mod':lambda a,b:a%b,
                     'actions':lambda n:{'status':getattr(self,'action_states',{}).get(n,'Skipped')},

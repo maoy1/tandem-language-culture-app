@@ -1482,3 +1482,35 @@ Build `7c8589d0-fdea-4db8-9d44-46b7d8548acf`. Owner run `08584074350262917105745
 This proves owner-context invocation/own-reference path, Paused rejection and Active empty-result completion, not populated compatibility/projection, another candidate's availability, native tampered-ID/two-account proof, imported Run-only selector, group commitment schema or worst-case native bounds/latency. No published app/cutover claimed. #7 remains In progress / PR #77 draft. 242 local tests previously passed; only evidence/config/docs changed.
 
 Owner restated self-service access: avoid individual participant approvals/grants; use verified existing group-based app/flow access. The shown SharePoint connection consent is separate from run/data authorization. Invoker is preserved; no switch to an owner connection and no new permission changes. #42 owns the final protected-data/caller boundary; owner smoke does not resolve it. Remaining versioned tests stay unchecked in issue #7.
+
+
+## #10 generated personal-send batch — 2026-11-08
+
+LOCAL PASS only: 271 tests, including 29 send/preflight graph cases. Build 50e14992-a69a-4001-93f4-1ac8ed57dfe2 (125 actions/depth 5), schema preflight f7fd078d-740a-4d68-a8fe-31ca2abc9e54 (18/depth 3). REQ-001/002/006, AUTH-002 and duplicate/unknown/race simulations exercised locally, not tenant passes. Native import/schema/actual send/replay/availability/race/privacy cases NOT RUN. Artifacts and exact unexecuted test checkboxes are inline in issue #10; no production schema/data/permissions changed.
+
+### Parallel batch delivery — 2026-11-08
+
+All three isolated implementations are built: Send #10 / PR #78 (125 actions/depth 5), My requests #62 / PR #80 (223/depth 4), Cancel #63 / PR #79 (138/depth 5). Shared read-only request schema preflight is 18/depth 3. All source Invoker bindings preserved, no embedded fallback; send alone adds a required retained intent UUID. Reader preserves original created timestamp/order and response row fields; cancel preserves its two input arguments. No writer cutover, schema setup or app publication performed.
+
+Combined disposable-checkout suite: 455 tests passed plus one additional cross-generator send -> cancel -> history -> same-send replay check passed. Per-flow added cases: send/preflight 29, reader 104, cancel 80. Version/hash/source commit evidence is in artifacts/send_request/request_batch.validation.json. This is local generated-graph proof, not native acceptance.
+
+Packages delivered together locally in artifacts/request_batch/TandemRequestFlows-20261108.zip (outer delivery archive, not directly importable); extract and import the inner schema preflight first. Each individual flow ZIP also remains under its own artifact folder. Three separate implementation PRs are ready for code review; tickets stay open. Checkbox handovers are inline in #10/#62/#63. Real request mapping/constraints/legacy rows and coordinated old-writer compatibility remain native integration blockers; inspect schema metadata before running replacement writers. Participant rollout is still access-gated.
+
+## Request schema native observation and adapter correction — 2026-11-08
+
+Run 08584074297422149453962972460CU27 (initial preflight f7fd078d-740a-4d68-a8fe-31ca2abc9e54) collected metadata, schemaVerified=false, zero item reads/writes. SenderParticipantId/RecipientParticipantId are existing required Number/Decimals=0, not Lookup fields. Status already matches. Owner reports list empty. Preserve existing field IDs/names/types; no migration needed for this observed empty list. New fields RequestType/TargetGroup/SendOperationKey/ConnectionKey/WinningOperationKey/OperationComplete remain absent, and RecipientParticipantId optionality is needed for Group requests. Source report and reviewed mapping under artifacts/send_request/results and config/request_schema_mapping.json.
+
+Corrected Send v3 a9251019-b7a5-4170-8877-682bb71b8693 (125/depth5), preflight v2 dd0c91b6-13b4-41e0-affd-ebafeeb87404 (18/depth3), preserve numeric references and report ItemCount in metadata. 34 added send/preflight cases / 276 branch tests pass locally. Reader/cancel adapters follow in separate PRs. No tenant settings or rows changed. Owner setup and test-window/cutover impact are explicit in #10; required keys make the old Send incompatible until new binding. Updated whole schema/native actions/privacy remain unverified. Prior local batch evidence is historical, not new-build/native certification.
+
+Corrected Number-adapter batch: 493 combined local tests passed (includes cross-flow contract check); Send v3/preflight v2, reader v4, cancel v3. Latest manifest artifacts/send_request/request_batch.validation.json. New bundle artifacts/request_batch/TandemRequestFlows-20261108-v2.zip. Owner empty-list setup remains pending; no native pass inferred.
+
+## Request schema verification passed — 2026-11-08
+
+Corrected preflight dd0c91b6-13b4-41e0-affd-ebafeeb87404 run **08584074285601068216673996565CU29**: collectionComplete=true/schemaVerified=true, ItemCount=0, itemRowsRead=0/writes=0. Numeric SenderParticipantId/RecipientParticipantId field IDs retained; recipient optional, six new field types/required/unique/index/default/lookup/choice metadata all match. Status unchanged. Verified mapping in config/request_schema_mapping.json; curated report/evidence in artifacts/send_request/results/schema-verified.*. No migration necessary.
+
+Actual returned metadata also passes all three generated graphs with synthetic rows locally (send SAVED, cancel CANCELLED, reader OK). This verifies metadata compatibility only; native writer/history, edit permission, races, app binding and ordinary-user privacy remain untested. Schema gate is cleared for owner smoke; no new package or setup needed. First smoke: MyRequests-v4, Create as new, existing Invoker connection, own ParticipantId (previously 38), expect resultcode OK / requestsjson [] / errormessage empty. Return Respond to a Power App or flow Outputs. Do not use old Send with required keys; new writer/app/all-writer cutover remains pending.
+
+
+### #10 owner send smoke results - 2026-11-09
+
+Owner reports matched send SAVED/Pending and unmatched send passed rejection after new-intent guidance. Expected Send v3 build a9251019-b7a5-4170-8877-682bb71b8693; successful run references/full outputs not supplied. Prior provided INTENT_CONFLICT run 08584074252930158987892330133CU13 is retained as separate evidence and is not the unmatched-case pass. Source in artifacts/send_request/results/v3-send-smokes.owner-evidence.json. Recipient30 previously lacked participation/openness, was excluded before matching; owner changed test fixture. This is bounded owner smoke, not full REQ-001/AUTH-002 acceptance: exact stored parties/keys, same-intent replay/no duplicate, cancellation/history, races, UI and ordinary-user access remain pending. No executable/package change; #10 remains open. Next: retry successful sender/recipient/IntentId unchanged, expect REPLAY/same request ID and one row.

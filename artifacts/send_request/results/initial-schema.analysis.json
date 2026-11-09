@@ -1,0 +1,27 @@
+{
+  "sourceTicket": 10,
+  "sourceSha256": "19139f2f1d4d7c91d4330566cc00be078e6f5e397282c7dc5084b042e833d71d",
+  "runReference": "08584074297422149453962972460CU27",
+  "ownerReportedExistingRows": "EMPTY",
+  "observed": {
+    "SenderParticipantId": {
+      "id": "{7909dcd2-f0b9-4158-9b9a-2017cb156fcd}",
+      "type": "Number",
+      "required": true,
+      "decimals": 0
+    },
+    "RecipientParticipantId": {
+      "id": "{e23db904-ddb4-451d-aa37-9b59b375b1ca}",
+      "type": "Number",
+      "required": true,
+      "decimals": 0
+    },
+    "Status": "Verified required Choice Pending/Accepted/Declined/Cancelled; default Pending, no fill-in"
+  },
+  "findings": [
+    "Package schema expectation incorrectly assumed SenderParticipant/RecipientParticipant Lookup columns; adapt packages to observed Number columns, preserve IDs/names/types.",
+    "RecipientParticipantId must become optional for group-target request shape; no type conversion.",
+    "Missing fields: RequestType, TargetGroup, SendOperationKey, ConnectionKey, WinningOperationKey, OperationComplete."
+  ],
+  "disposition": "Code adaptation under #10/#62/#63; owner manual empty-list setup, then fresh preflight. No schema/data/permissions changed by this assessment."
+}

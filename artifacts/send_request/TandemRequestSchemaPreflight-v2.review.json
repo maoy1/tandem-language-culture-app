@@ -1,0 +1,30 @@
+{
+  "sourceTicket": 10,
+  "packageBuildId": "dd0c91b6-13b4-41e0-affd-ebafeeb87404",
+  "flowName": "TandemRequestSchemaPreflight v2",
+  "actions": 18,
+  "maximumActionDepth": 3,
+  "limits": {
+    "actions": 500,
+    "nesting": 8
+  },
+  "sha256": "a5ee3a2590acad54c23979f373c93d2f54a8c8b9fcab30a52c18c00f6e24440a",
+  "rulesSourceSha256": "dfe0dcd587a5a348080dde288183ed3dff2d02d1f652f0ae23010b2e6e649c72",
+  "connectionSource": "Invoker",
+  "ownerCredentialFallback": false,
+  "tenantResult": "SCHEMA_METADATA_VERIFIED_OWNER_REPORT",
+  "ordinaryUserAccessVerified": false,
+  "requestSchemaVerifiedInTenant": true,
+  "schemaWrites": 0,
+  "membershipWrites": 0,
+  "groupWrites": 0,
+  "requestWrites": 0,
+  "sourceExportSha256": "823383a1b2941a38ebf80c3e2f0a288f72a9956d24db793767e2dda5eeff0ab8",
+  "existingActorTargetInputsPreserved": false,
+  "existingSuccessMessageOutputsPreserved": false,
+  "addedRequiredInput": null,
+  "existingSendAppBindingsPreserved": false,
+  "metadataOnly": true,
+  "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF",
+  "runReference": "08584074285601068216673996565CU29"
+}
