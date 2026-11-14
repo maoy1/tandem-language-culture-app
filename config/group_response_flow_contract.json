@@ -1,0 +1,161 @@
+{
+  "sourceTicket": 65,
+  "flowName": "TandemRespondGroupJoinRequest",
+  "state": "LOCAL_PARENT_BUILT_NATIVE_NOT_RUN",
+  "packageBuildId": "040a6af8-ab91-4e09-b891-b638d96178ba",
+  "parentComponent": "artifacts/group_response/TandemRespondGroupJoinRequest.definition.json",
+  "review": "artifacts/group_response/TandemRespondGroupJoinRequest.definition.review.json",
+  "builders": {
+    "module": "scripts.power_automate/group_response_flow.py",
+    "build_actions": "build_actions(original=None, mapping=None, groups=None, build_id=\"local-review\") -> WDL actions",
+    "build_parent": "build_parent(original=None, mapping=None, groups=None, build_id=\"local-review\") -> complete {properties:{displayName,definition,connectionReferences}}",
+    "source": "main historical Discovery v2 nested Get_item; native observed Invoker Raw authentication; no #7 shared-consumer dependency"
+  },
+  "input": {
+    "number": "required positive integer RequestId reference; not authority",
+    "text": "required exact Accept or Decline",
+    "text_1": "required stable UUID (canonical lowercase), reused unchanged for transport retry; no actor/group/availability/profile facts from app"
+  },
+  "output": {
+    "success": "Boolean: verified completed ACCEPTED/DECLINED and matching token released",
+    "retryable": "Boolean: only explicit definite sealed prefix with fewer than three sealed attempts, immutable intent bound, no uncertain I/O",
+    "resultcode": "Text: ACCEPTED/DECLINED, saved conflict/full/unavailable rejection, INTENT_MISMATCH, COMMITTED_RELEASE_PENDING, RECOVERY_REQUIRED or sanitized stage failure",
+    "resultjson": "Text: completed allowlisted {success,code,requestId,groupId,membershipIds}; {} for unresolved outcomes. Complete rejection has success=false and zero membershipIds. Historical completed replay does not reactivate Left.",
+    "runreference": "Text native run name",
+    "errormessage": "Text sanitized feedback, empty on successful completed decision"
+  },
+  "authority": "SharePoint currentuser through same Invoker -> exactly one ParticipantaccountId -> exactly one current Active membership in this target operational group, committed source and matching Accepted/complete episode/party/group. No leader, actor ParticipationStatus or actor OpenToConnections gate. Decline checks only the actor episode, not unrelated provisional episodes, and has no requester availability/Open/capacity/compatibility gate.",
+  "immutableIntent": {
+    "OperationKey": "respond-group-join:<trusted actor Id>:<lowercase intent UUID>",
+    "IntentJson": "native json equality against typed {version:1,kind:respond-group-join,actorId,requestId,decision,groupId,requesterId}; no hash connector",
+    "AttemptToken": "workflow().run.name",
+    "WriteOwner": "OperationKey + | + AttemptToken, max255, blank-only claim and exact read ETag",
+    "MembershipKey": "request:<RequestId>:participant:<RequesterId>; never overwrite/reactivate Left or mismatched episode",
+    "ConnectionKey": "original open key retained during Accepted-incomplete; history:request:<RequestId> only on complete/decline"
+  },
+  "shared": {
+    "workflowReferenceName": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+    "contractVersion": 1,
+    "rulesVersion": 1,
+    "maxCallsPerAccept": 2,
+    "calls": {
+      "NORMALIZE": "body.text serialized {contractVersion:1,rulesVersion:1,mode:NORMALIZE,profiles:current relevant raw member+requester profiles,catalogues:{languageIds,cultureIds,timezoneIds,anyLanguageId}}",
+      "GROUP": "same catalogues and normalized profiles; candidateId=Requester; group={groupId,exchangeType,state,capacity,setupComplete,languageFocusIds,cultureFocusIds,memberProfileIds:existing committed members excluding own reserved candidate,focusSharersAvailable:fresh evidence}"
+    },
+    "response": "body.success=true/resultcode=OK and parsed resultjson success=true/code=OK/contractVersion=1/rulesVersion=1/authorizesAction=false; require result.compatible explicitly true. Normalized account keys never public.",
+    "testedChildBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
+    "testedChildSha256": "0b45537750865f843114f86116d56c4d58dd9199fc8ca24d5b56e6400fdc6088"
+  },
+  "receiptSchema": {
+    "title": "TandemOperationReceipts",
+    "listId": null,
+    "access": "_api/web/lists/getbytitle('TandemOperationReceipts')",
+    "fields": [
+      {
+        "name": "OperationKey",
+        "type": "Text",
+        "required": true,
+        "unique": true,
+        "indexed": true,
+        "maxLength": 255
+      },
+      {
+        "name": "IntentJson",
+        "type": "Note",
+        "required": true
+      },
+      {
+        "name": "ResultJson",
+        "type": "Note",
+        "required": false
+      },
+      {
+        "name": "Complete",
+        "type": "Boolean",
+        "required": false,
+        "default": "0"
+      },
+      {
+        "name": "Uncertain",
+        "type": "Boolean",
+        "required": false,
+        "default": "0"
+      },
+      {
+        "name": "Retryable",
+        "type": "Boolean",
+        "required": false,
+        "default": "0"
+      },
+      {
+        "name": "DomainEffects",
+        "type": "Boolean",
+        "required": false,
+        "default": "0"
+      },
+      {
+        "name": "AttemptToken",
+        "type": "Text",
+        "required": false,
+        "maxLength": 255
+      },
+      {
+        "name": "SealedAttempts",
+        "type": "Note",
+        "required": false
+      },
+      {
+        "name": "Stage",
+        "type": "Text",
+        "required": false,
+        "maxLength": 255
+      }
+    ],
+    "schemaTargetSha256": "f189c44795dd448faaf7c8a0087b3aeed6357b264f21f8cb4e8860955b308495",
+    "state": "Target read from parent foundation; NOT applied/tenant verified by #65; existing field types/settings must be audited before dependent live tests"
+  },
+  "connection": {
+    "connector": "shared_sharepointonline standard SharePoint only",
+    "source": "Invoker",
+    "site": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+    "reference": "shared_sharepointonline",
+    "selectedConnection": "IMPORT_SELECT_EXISTING_SHAREPOINT_CONNECTION",
+    "authentication": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+    "solutionAssembly": "Use verified #81 native manual Invoker seed; map to native connection component/runtimeSource=invoker and fresh parent ID; remap shared workflow ID only with final batch receipt. Power Apps Solution consumer parity remains NOT_RUN."
+  },
+  "bounds": {
+    "receiptMatches": 1,
+    "episodeMatches": 1,
+    "ownProfiles": 1,
+    "activePhysicalGroupMembers": 11,
+    "activeMembersFetchTop": 12,
+    "contextProfiles": 12,
+    "eachCatalogue": 5000,
+    "totalFocuses": 100,
+    "childRequestChars": 250000,
+    "childResultChars": 200000,
+    "maxSealedAttempts": 3,
+    "automaticWriteRetries": 0
+  },
+  "protocol": "All capacity/state/membership writers obey same group guard. Pending-only exact request ETag decides first terminal including cancellation. Count all Active physical/provisional rows; no availability filter creates capacity. Fresh typed group/count check before request commit; no group State/Capacity edits. Persist receipt result and Complete before matching-token release. Positive exact readback can reconcile unknown writes. Definite stopped prefix seals old token, persists Retryable then releases; next bounded same-intent attempt reuses keys and confirmed prefix. Unknown absence/partial readback never proves no outstanding write and cannot authorize lease steal. Fully committed positive readback may finish only receipt/release, never repeat domain mutations.",
+  "writes": [
+    "receipts: create / exact-ETag stage, sealed retry, result completion",
+    "groups: exact-ETag WriteOwner claim and matching release only",
+    "requests: Pending exact-ETag first terminal; our winning Accepted commit/rekey only",
+    "members: create one Active episode for requester only; no update/delete/Left reactivation"
+  ],
+  "nativeEvidence": "NOT_RUN",
+  "ordinaryUserAccessVerified": false,
+  "legacyZip": "Not applicable to linked Workflow parent; final Solution assembler supplies importable ZIP. No standalone legacy import or working-flow replacement claim.",
+  "driftAssessment": "#81 NORMALIZE/GROUP shared implementation, IO contract1/rules1 and semantics unchanged; consume existing parent batch schema target exactly. No changes to #7/#11, shared helpers, #9/#12/#66 or other consumer packages. Native evidence stays version-scoped; parent additive PAIRS update independent.",
+  "validation": {
+    "fullSuitePassed": 415,
+    "flowCases": 58,
+    "fullSuiteSeconds": 58.9,
+    "actions": 449,
+    "maximumActionDepth": 5,
+    "actionHeadroom": 51,
+    "native": "NOT_RUN",
+    "ordinaryUserAccessVerified": false
+  }
+}

@@ -560,3 +560,21 @@ Owner chose **2,000 characters** for the optional plain-text group-join introduc
 Technical field proposal: optional plain-text Note column Introduction on Connection Requests, rich text/append disabled; actual column/settings are NOT verified or applied. SharePoint field mapping/setup and the flow/API/app mapping remain #17 work. All schema changes must update #81 baseline/audit/contract and affected consumers (#62/#65/#67), with existing native evidence retained by version. #81 has no Introduction persistence/parser today, so this planning decision does not change its current five-mode rule engine/package. Add actual schema coverage when the field is introduced.
 
 Contract evidence only: acceptance cases empty/omitted, 2,000 accepted and 2,001 rejected in both app/server are NOT RUN. #17 remains Planned, not implemented/Ready. No flow, list, data, permission or existing app changed. This clears the remaining explicit product choice for core group-join implementation; receipt-schema and Solution SharePoint/caller prerequisites still need technical verification.
+
+
+## #65 group-join response parent — 2026-11-14
+
+[#65 TandemRespondGroupJoinRequest](https://github.com/maoy1/tandem-language-culture-app/issues/65)
+has an isolated local parent on origin/main, build 040a6af8-ab91-4e09-b891-b638d96178ba,
+449 definitions/depth5. Current operational Active membership is authority;
+actor Paused/openness does not revoke it. Accept separately uses NORMALIZE/GROUP,
+fresh requester/focus/profile context and all physical Active counts under the
+same #47 group guard; Pending exact-ETag first terminal competes with cancellation.
+One immutable episode, no Left reactivation or group state changes. Receipt result/
+Complete precedes matching-token release; definite sealed retry is bounded and
+unknown/partial outcomes cannot report success or use timed takeover. The exact
+parent/schema/connection/IO and #81 justified no-impact ledger, prerequisites and
+versioned NOT RUN handover are in [ISSUE_65_GROUP_RESPONSE.md](ISSUE_65_GROUP_RESPONSE.md).
+One-time receipt/schema setup, final Solution assembly/import and native caller/
+business/load proof remain pending; ordinary-user access is deferred/#42-blocked.
+No #7/#11/shared helper/evidence/issue/working-flow edits or readiness upgrade.
