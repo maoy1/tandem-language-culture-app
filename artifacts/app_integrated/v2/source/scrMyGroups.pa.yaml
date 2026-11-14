@@ -1,0 +1,454 @@
+Screens:
+  scrMyGroups:
+    Properties:
+      Fill: "=RGBA(250,250,250,1)"
+    Children:
+      -
+        scrMyGroups_Nav_scrDiscovery:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Text: "=\"Discovery\""
+            X: "=Parent.Width - 610"
+            Y: "=20"
+            Width: "=140"
+            Height: "=40"
+            Size: "=12"
+            DisplayMode: "=If(varDiscoveryBusy || varDiscoverySending || (varReqBusy || varReqSending) || (varGrpBusy || varGrpSending) || (!IsBlank(varReqDialog)) || (!IsBlank(varGrpDialog)), DisplayMode.Disabled, DisplayMode.Edit)"
+            OnSelect: "=Set(varDiscoveryActorId, varAppActorId); Navigate(scrDiscovery, ScreenTransition.None); Set(varDiscoveryBusy, true);\nSet(varDiscoveryError, \"\");\nClear(colDiscoveryPeople); Clear(colDiscoveryGroups);\nIfError(\n    Set(varDiscoveryResponse, TandemDiscovery.Run(varDiscoveryActorId));\n    If(varDiscoveryResponse.resultcode = \"OK\",\n        ClearCollect(colDiscoveryPeople,\n            ForAll(Table(ParseJSON(varDiscoveryResponse.candidatesjson)) As r,\n                {kind: \"Person\", targetId: Value(r.Value.profileId),\n                 title: Text(r.Value.displayName), summary: Text(r.Value.fitType),\n                 detail: \"Teaches: \" & Concat(Table(r.Value.profile.teachLanguages) As x, Text(x.Value.label), \", \") & Char(10) & \"Learning: \" & Concat(Table(r.Value.profile.learnLanguages) As x, Text(x.Value.label), \", \") & Char(10) & \"Cultures to share: \" & Concat(Table(r.Value.profile.shareCultures) As x, Text(x.Value.label), \", \") & Char(10) & \"Cultures of interest: \" & Concat(Table(r.Value.profile.learnCultures) As x, Text(x.Value.label), \", \") & Char(10) & \"Time zone: \" & Coalesce(Text(r.Value.profile.timeZone.label), \"Not specified\") & Char(10) & \"Learning focus: \" & Text(r.Value.profile.learningFocus) & Char(10) & \"Comments: \" & Text(r.Value.profile.comments) & Char(10) & Char(10) & If(!IsEmpty(Table(r.Value.match.canLearnLanguageIds)), \"You can learn: \" & Concat(Filter(Table(r.Value.profile.teachLanguages) As x, Value(x.Value.id) in ForAll(Table(r.Value.match.canLearnLanguageIds) As mid, Value(mid.Value))) As matched, Text(matched.Value.label), \", \") & Char(10), \"\") & If(!IsEmpty(Table(r.Value.match.canShareLanguageIds)), \"You can teach: \" & Concat(Filter(Table(r.Value.profile.learnLanguages) As x, Value(x.Value.id) in ForAll(Table(r.Value.match.canShareLanguageIds) As mid, Value(mid.Value))) As matched, Text(matched.Value.label), \", \") & Char(10), \"\") & If(!IsEmpty(Table(r.Value.match.canLearnCultureIds)), \"You can learn about: \" & Concat(Filter(Table(r.Value.profile.shareCultures) As x, Value(x.Value.id) in ForAll(Table(r.Value.match.canLearnCultureIds) As mid, Value(mid.Value))) As matched, Text(matched.Value.label), \", \") & Char(10), \"\") & If(!IsEmpty(Table(r.Value.match.canShareCultureIds)), \"You can share about: \" & Concat(Filter(Table(r.Value.profile.learnCultures) As x, Value(x.Value.id) in ForAll(Table(r.Value.match.canShareCultureIds) As mid, Value(mid.Value))) As matched, Text(matched.Value.label), \", \") & Char(10), \"\")}));\n        ClearCollect(colDiscoveryGroups,\n            ForAll(Table(ParseJSON(varDiscoveryResponse.groupsjson)) As r,\n                {kind: \"Group\", targetId: Value(r.Value.groupId),\n                 title: Text(r.Value.name),\n                 summary: Text(r.Value.memberCount) & \"/\" & Text(r.Value.capacity) & \" members · \" & Text(r.Value.freeSlots) & \" places available\",\n                 detail: Text(r.Value.exchangeType) & \" exchange · Open\" & Char(10) & \"Languages: \" & Concat(Table(r.Value.languageFocus) As x, Text(x.Value.label), \", \") & Char(10) & \"Cultures: \" & Concat(Table(r.Value.cultureFocus) As x, Text(x.Value.label), \", \") & Char(10) & Text(r.Value.description) & Char(10) & Char(10) & \"Members\" & Char(10) & Concat(Table(r.Value.members) As m, Text(m.Value.displayName) & Char(10) & \"Teaches: \" & Concat(Table(m.Value.teachLanguages) As x, Text(x.Value.label), \", \") & Char(10) & \"Learning: \" & Concat(Table(m.Value.learnLanguages) As x, Text(x.Value.label), \", \") & Char(10) & \"Cultures to share: \" & Concat(Table(m.Value.shareCultures) As x, Text(x.Value.label), \", \") & Char(10) & \"Cultures of interest: \" & Concat(Table(m.Value.learnCultures) As x, Text(x.Value.label), \", \") & Char(10) & \"Time zone: \" & Coalesce(Text(m.Value.timeZone.label), \"Not specified\") & Char(10) & \"Learning focus: \" & Text(m.Value.learningFocus) & Char(10) & \"Comments: \" & Text(m.Value.comments), Char(10) & Char(10))})),\n        Set(varDiscoveryError, Switch(varDiscoveryResponse.resultcode,\n            \"PROFILE_UNAVAILABLE\", \"Your saved profile is not currently available for discovery. Review your registration and availability.\",\n            \"Discovery could not load. Reference: \" & varDiscoveryResponse.runreference))\n    ),\n    Clear(colDiscoveryPeople); Clear(colDiscoveryGroups);\n    Set(varDiscoveryError, \"Discovery could not load. Select Refresh to try again.\")\n);\nSet(varDiscoveryBusy, false)"
+      -
+        scrMyGroups_Nav_scrRequests:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Text: "=\"My requests\""
+            X: "=Parent.Width - 460"
+            Y: "=20"
+            Width: "=140"
+            Height: "=40"
+            Size: "=12"
+            DisplayMode: "=If(varDiscoveryBusy || varDiscoverySending || (varReqBusy || varReqSending) || (varGrpBusy || varGrpSending) || (!IsBlank(varReqDialog)) || (!IsBlank(varGrpDialog)), DisplayMode.Disabled, DisplayMode.Edit)"
+            OnSelect: "=Navigate(scrRequests, ScreenTransition.None); Set(varReqBusy, true);\nSet(varReqError, \"\");\nSet(varReqDiagnostic, \"\");\nSet(varReqLoaded, false);\nSet(varReqInspectRequestId, If(!IsBlank(varRequestsIntent), varReqIntentRequest, varReqSelected.requestId));\nSet(varReqSelected, Blank());\nClear(reqRows);\nIf(IsBlank(varReqTab), Set(varReqTab, \"Received\"));\nIf(IsBlank(varAppActorId) || varAppActorId <= 0,\n    Set(varReqError, \"Open My registration and select your saved profile first\"),\n    If(!IsBlank(varRequestsIntent) && varReqIntentActor <> varAppActorId,\n        Set(varReqError, \"Return to the saved profile used for the unresolved action before refreshing.\"),\n        IfError(\n            Set(varReqReadResponse, TandemMyRequests.Run(varAppActorId));\n            If(varReqReadResponse.resultcode = \"OK\",\n                ClearCollect(reqRows,\n                    ForAll(Table(ParseJSON(varReqReadResponse.requestsjson)) As reqRow,\n                        {requestId: Value(reqRow.Value.requestId),\n                         requestType: Text(reqRow.Value.requestType),\n                         direction: Text(reqRow.Value.direction),\n                         status: Text(reqRow.Value.status),\n                         created: Text(reqRow.Value.created),\n                         availability: Text(reqRow.Value.availability),\n                         processing: Boolean(reqRow.Value.processing),\n                         completed: Boolean(reqRow.Value.completed),\n                         introduction: Text(reqRow.Value.introduction),\n                         canAccept: Boolean(reqRow.Value.actions.accept),\n                         canDecline: Boolean(reqRow.Value.actions.decline),\n                         canCancel: Boolean(reqRow.Value.actions.cancel)}));\n                Set(varReqSelected, LookUp(reqRows, requestId = varReqInspectRequestId));\n                Set(varReqLoaded, true),\n                Set(varReqError, \"Requests could not load. Code: \" & varReqReadResponse.resultcode & \". Reference: \" & varReqReadResponse.runreference)\n            ),\n            Clear(reqRows);\n            Set(varReqDiagnostic, FirstError.Message);\n            Set(varReqError, \"Requests could not load. Check the app connection or try Refresh. No action result is implied.\")\n        )\n    )\n);\nSet(varReqBusy, false)"
+      -
+        grpHeading:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=24"
+            Text: "=\"My groups\""
+            X: "=24"
+            Y: "=16"
+            Width: "=Parent.Width - 640"
+            Height: "=44"
+            FontWeight: "=FontWeight.Semibold"
+      -
+        grpBack:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"My registration\""
+            X: "=Parent.Width - 300"
+            Y: "=20"
+            Width: "=160"
+            DisplayMode: "=If(!varGrpBusy && !varGrpSending && IsBlank(varGrpDialog), DisplayMode.Edit, DisplayMode.Disabled)"
+            OnSelect: "=Navigate(MainScreen1, ScreenTransition.None)"
+      -
+        grpRefresh:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"Refresh\""
+            X: "=Parent.Width - 128"
+            Y: "=20"
+            Width: "=104"
+            DisplayMode: "=If(!varGrpBusy && !varGrpSending && IsBlank(varGrpDialog), DisplayMode.Edit, DisplayMode.Disabled)"
+            OnSelect: "=Set(varGrpBusy, true);\nSet(varGrpLoaded, false);\nSet(varGrpError, \"\");\nSet(varGrpStatus, \"\");\nSet(varGrpDiagnostic, \"\");\nClear(grpRows);\nIf(IsBlank(varAppActorId) || varAppActorId <= 0,\n    Set(varGrpError, \"Open your own saved registration, then open My groups.\"),\n    IfError(\n    Set(varGrpRead, TandemMyGroups.Run(varAppActorId));\n    If(varGrpRead.resultcode = \"OK\",\n        ClearCollect(grpRows,\n            ForAll(Table(ParseJSON(varGrpRead.groupsjson)) As grpRow,\n                {groupId: Value(grpRow.Value.groupId),\n                 membershipId: Value(grpRow.Value.membershipId),\n                 name: Text(grpRow.Value.name), purpose: Text(grpRow.Value.purpose),\n                 exchangeType: Text(grpRow.Value.exchangeType),\n                 capacity: Value(grpRow.Value.capacity), state: Text(grpRow.Value.state),\n                 memberCount: Value(grpRow.Value.memberCount), freeSlots: Value(grpRow.Value.freeSlots),\n                 expectedETag: Text(grpRow.Value.expectedETag),\n                 detail: Text(grpRow.Value.exchangeType) & \" exchange\" & Char(10) & \"Languages: \" & Concat(Table(grpRow.Value.languageFocus) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Cultures: \" & Concat(Table(grpRow.Value.cultureFocus) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & Text(grpRow.Value.purpose) & Char(10) & Char(10) & \"Current members\" & Char(10) & Concat(Table(grpRow.Value.members) As grpMember, Text(grpMember.Value.displayName) & Char(10) & \"Teaches: \" & Concat(Table(grpMember.Value.teachLanguages) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Learning: \" & Concat(Table(grpMember.Value.learnLanguages) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Cultures to share: \" & Concat(Table(grpMember.Value.shareCultures) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Cultures of interest: \" & Concat(Table(grpMember.Value.learnCultures) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Time zone: \" & Coalesce(Text(grpMember.Value.timeZone.label), \"Not specified\") & Char(10) & \"Learning focus: \" & Text(grpMember.Value.learningFocus) & Char(10) & \"Comments: \" & Text(grpMember.Value.comments), Char(10) & Char(10))}));\n        Reset(grpList);\n        Set(varGrpStatus, varGrpRead.groupstatus);\n        Set(varGrpLoaded, true),\n        Set(varGrpError, \"Groups could not load (\" & varGrpRead.resultcode & \"). Reference: \" & varGrpRead.runreference)\n    ),\n    Set(varGrpDiagnostic, FirstError.Message);\n    Clear(grpRows); Set(varGrpStatus, \"\");\n    Set(varGrpError, \"Groups could not load completely. Select Refresh to try again.\")\n    )\n);\nSet(varGrpBusy, false)"
+      -
+        grpStatus:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=12"
+            Text: "=If(varGrpBusy, \"Loading groups…\", If(!IsBlank(varGrpError), varGrpError, varGrpStatus))"
+            X: "=24"
+            Y: "=84"
+            Width: "=Parent.Width - 48"
+            Height: "=54"
+      -
+        grpList:
+          Control: "Gallery@2.15.0"
+          Properties:
+            Items: "=grpRows"
+            X: "=24"
+            Y: "=144"
+            Width: "=360"
+            Height: "=Parent.Height - 168"
+            TemplateSize: "=116"
+            AccessibleLabel: "=\"Your current groups\""
+            DisplayMode: "=If(varGrpLoaded && IsBlank(varGrpError) && !varGrpBusy && !varGrpSending && IsBlank(varGroupsIntent) && IsBlank(varGrpDialog), DisplayMode.Edit, DisplayMode.Disabled)"
+            TemplateFill: "=If(ThisItem.IsSelected, RGBA(225,239,250,1), RGBA(255,255,255,1))"
+            OnSelect: "=Set(varGrpOutcome, \"\")"
+          Variant: "BrowseLayout_Vertical_TwoTextVariant_ver5.0"
+          Children:
+            -
+              grpRowName:
+                Control: "Label@2.5.1"
+                Properties:
+                  Font: "=Font.'Segoe UI'"
+                  Size: "=12"
+                  Text: "=ThisItem.name"
+                  X: "=12"
+                  Y: "=8"
+                  Width: "=Parent.TemplateWidth - 24"
+                  Height: "=44"
+                  FontWeight: "=FontWeight.Semibold"
+                  OnSelect: "=Select(Parent)"
+            -
+              grpRowState:
+                Control: "Label@2.5.1"
+                Properties:
+                  Font: "=Font.'Segoe UI'"
+                  Size: "=12"
+                  Text: "=ThisItem.state & \" · \" & ThisItem.memberCount & \"/\" & ThisItem.capacity & \" members\" & Char(10) & ThisItem.freeSlots & \" free slots\""
+                  X: "=12"
+                  Y: "=54"
+                  Width: "=Parent.TemplateWidth - 24"
+                  Height: "=54"
+                  OnSelect: "=Select(Parent)"
+      -
+        grpEmpty:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=12"
+            Text: "=\"No current groups.\""
+            X: "=36"
+            Y: "=156"
+            Width: "=330"
+            Height: "=64"
+            Visible: "=varGrpLoaded && !varGrpBusy && IsBlank(varGrpError) && IsEmpty(grpRows)"
+      -
+        grpSelectedName:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=20"
+            Text: "=If(varGrpLoaded && IsBlank(varGrpError), grpList.Selected.name, \"\")"
+            X: "=408"
+            Y: "=144"
+            Width: "=Parent.Width - 432"
+            Height: "=48"
+            FontWeight: "=FontWeight.Semibold"
+      -
+        grpSelectedState:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=12"
+            Text: "=If(varGrpLoaded && IsBlank(varGrpError) && !IsBlank(grpList.Selected.groupId), grpList.Selected.state & \" · \" & grpList.Selected.memberCount & \"/\" & grpList.Selected.capacity & \" members · \" & grpList.Selected.freeSlots & \" free slots\", \"Select a group to view its members.\")"
+            X: "=408"
+            Y: "=196"
+            Width: "=Parent.Width - 432"
+            Height: "=40"
+      -
+        grpDetails:
+          Control: "Classic/TextInput@2.3.2"
+          Properties:
+            Size: "=12"
+            Default: "=If(varGrpLoaded && IsBlank(varGrpError), grpList.Selected.detail, \"\")"
+            DisplayMode: "=DisplayMode.View"
+            Mode: "=TextMode.MultiLine"
+            X: "=408"
+            Y: "=244"
+            Width: "=Parent.Width - 432"
+            Height: "=Parent.Height - 448"
+            AccessibleLabel: "=\"Group focus, purpose and current member profiles\""
+      -
+        grpEdit:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"Edit group\""
+            X: "=408"
+            Y: "=Parent.Height - 192"
+            Width: "=160"
+            DisplayMode: "=If(varGrpLoaded && IsBlank(varGrpError) && !varGrpBusy && !varGrpSending && IsBlank(varGroupsIntent) && IsBlank(varGrpDialog) && !IsBlank(grpList.Selected.groupId) && grpList.Selected.state <> \"Ended\", DisplayMode.Edit, DisplayMode.Disabled)"
+            OnSelect: "=Set(varGrpEditing, grpList.Selected); Set(varGrpDialog, \"Edit\");\nSet(varGrpOutcome, \"\"); Reset(grpTitle); Reset(grpPurpose); Reset(grpCapacity); Reset(grpState)"
+      -
+        grpLeave:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"Leave group…\""
+            X: "=580"
+            Y: "=Parent.Height - 192"
+            Width: "=160"
+            DisplayMode: "=If(varGrpLoaded && IsBlank(varGrpError) && !varGrpBusy && !varGrpSending && IsBlank(varGroupsIntent) && IsBlank(varGrpDialog) && !IsBlank(grpList.Selected.groupId), DisplayMode.Edit, DisplayMode.Disabled)"
+            OnSelect: "=Set(varGrpEditing, grpList.Selected); Set(varGrpDialog, \"Leave\"); Set(varGrpOutcome, \"\")"
+      -
+        grpEnded:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=12"
+            Text: "=\"Ended is final. Leaving does not reopen a group or rejoin it later.\""
+            X: "=408"
+            Y: "=Parent.Height - 146"
+            Width: "=Parent.Width - 432"
+            Height: "=36"
+      -
+        grpRetry:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"Retry same operation\""
+            X: "=408"
+            Y: "=Parent.Height - 104"
+            Width: "=210"
+            Visible: "=!IsBlank(varGroupsIntent)"
+            DisplayMode: "=If(!varGrpBusy && !varGrpSending, DisplayMode.Edit, DisplayMode.Disabled)"
+            OnSelect: "=Set(varGrpSending, true);\nSet(varGrpSuccess, false);\nSet(varGrpCode, \"\");\nSet(varGrpReference, \"\");\nSet(varGrpCanRevise, false);\nSet(varGrpOutcome, \"\");\nSet(varGrpDiagnostic, \"\");\nIfError(\n    If(varGrpFrozen.kind = \"Edit\",\n        Set(varGrpUpdateResponse, TandemUpdateGroup.Run(varGrpFrozen.requestJson));\n        Set(varGrpSuccess, varGrpUpdateResponse.success);\n        Set(varGrpCode, varGrpUpdateResponse.resultcode);\n        Set(varGrpReference, varGrpUpdateResponse.runreference);\n        Set(varGrpCanRevise, !IsBlank(varGrpUpdateResponse.success) && varGrpUpdateResponse.success = false &&\n    !IsBlank(varGrpUpdateResponse.resultcode) &&\n    varGrpUpdateResponse.resultcode in [\"REVISION_CONFLICT\", \"GROUP_BUSY\", \"GROUP_ENDED_FINAL\", \"CAPACITY_INVALID\", \"CAPACITY_CHANGED_OR_INVALID\"]),\n        Set(varGrpLeaveResponse, TandemLeaveGroup.Run(varGrpFrozen.actorId, varGrpFrozen.groupId, varGrpFrozen.membershipId, varGroupsIntent));\n        Set(varGrpSuccess, varGrpLeaveResponse.success);\n        Set(varGrpCode, varGrpLeaveResponse.resultcode);\n        Set(varGrpReference, varGrpLeaveResponse.runreference);\n        Set(varGrpCanRevise, !IsBlank(varGrpLeaveResponse.success) && varGrpLeaveResponse.success = false &&\n    !IsBlank(varGrpLeaveResponse.writeattempted) && varGrpLeaveResponse.writeattempted = false &&\n    !IsBlank(varGrpLeaveResponse.outcomeunknown) && varGrpLeaveResponse.outcomeunknown = false)\n    );\n    If(varGrpSuccess = true,\n        Set(varGrpOutcome, If(varGrpFrozen.kind = \"Edit\", \"Changes saved for \" & varGrpFrozen.name & \".\", \"Left \" & varGrpFrozen.name & \".\"));\n        Set(varGroupsIntent, Blank());\n        Set(varGrpDialog, \"\");\n        Set(varGrpBusy, true);\nSet(varGrpLoaded, false);\nSet(varGrpError, \"\");\nSet(varGrpStatus, \"\");\nSet(varGrpDiagnostic, \"\");\nClear(grpRows);\nIf(IsBlank(varAppActorId) || varAppActorId <= 0,\n    Set(varGrpError, \"Open your own saved registration, then open My groups.\"),\n    IfError(\n    Set(varGrpRead, TandemMyGroups.Run(varAppActorId));\n    If(varGrpRead.resultcode = \"OK\",\n        ClearCollect(grpRows,\n            ForAll(Table(ParseJSON(varGrpRead.groupsjson)) As grpRow,\n                {groupId: Value(grpRow.Value.groupId),\n                 membershipId: Value(grpRow.Value.membershipId),\n                 name: Text(grpRow.Value.name), purpose: Text(grpRow.Value.purpose),\n                 exchangeType: Text(grpRow.Value.exchangeType),\n                 capacity: Value(grpRow.Value.capacity), state: Text(grpRow.Value.state),\n                 memberCount: Value(grpRow.Value.memberCount), freeSlots: Value(grpRow.Value.freeSlots),\n                 expectedETag: Text(grpRow.Value.expectedETag),\n                 detail: Text(grpRow.Value.exchangeType) & \" exchange\" & Char(10) & \"Languages: \" & Concat(Table(grpRow.Value.languageFocus) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Cultures: \" & Concat(Table(grpRow.Value.cultureFocus) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & Text(grpRow.Value.purpose) & Char(10) & Char(10) & \"Current members\" & Char(10) & Concat(Table(grpRow.Value.members) As grpMember, Text(grpMember.Value.displayName) & Char(10) & \"Teaches: \" & Concat(Table(grpMember.Value.teachLanguages) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Learning: \" & Concat(Table(grpMember.Value.learnLanguages) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Cultures to share: \" & Concat(Table(grpMember.Value.shareCultures) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Cultures of interest: \" & Concat(Table(grpMember.Value.learnCultures) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Time zone: \" & Coalesce(Text(grpMember.Value.timeZone.label), \"Not specified\") & Char(10) & \"Learning focus: \" & Text(grpMember.Value.learningFocus) & Char(10) & \"Comments: \" & Text(grpMember.Value.comments), Char(10) & Char(10))}));\n        Reset(grpList);\n        Set(varGrpStatus, varGrpRead.groupstatus);\n        Set(varGrpLoaded, true),\n        Set(varGrpError, \"Groups could not load (\" & varGrpRead.resultcode & \"). Reference: \" & varGrpRead.runreference)\n    ),\n    Set(varGrpDiagnostic, FirstError.Message);\n    Clear(grpRows); Set(varGrpStatus, \"\");\n    Set(varGrpError, \"Groups could not load completely. Select Refresh to try again.\")\n    )\n);\nSet(varGrpBusy, false),\n        Set(varGrpOutcome, \"Operation not confirmed (\" & varGrpCode & \"). Reference: \" & varGrpReference & If(varGrpCanRevise, \". No group change was made. Retry the same operation or select Refresh and revise.\", \". Retry keeps the same operation. If unresolved, retain this reference for support.\"))\n    ),\n    Set(varGrpCanRevise, false);\n    Set(varGrpDiagnostic, FirstError.Message);\n    Set(varGrpOutcome, \"No confirmation received. Retry the same operation; its saved group and inputs are retained. If unresolved, ask for support before starting another operation.\")\n);\nSet(varGrpSending, false)"
+      -
+        grpRevise:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"Refresh and revise\""
+            X: "=630"
+            Y: "=Parent.Height - 104"
+            Width: "=210"
+            Visible: "=!IsBlank(varGroupsIntent) && varGrpCanRevise = true"
+            DisplayMode: "=If(varGrpCanRevise = true && !varGrpBusy && !varGrpSending, DisplayMode.Edit, DisplayMode.Disabled)"
+            OnSelect: "=If(varGrpCanRevise = true && !IsBlank(varGroupsIntent) && !varGrpBusy && !varGrpSending,\n    Set(varGroupsIntent, Blank());\n    Set(varGrpCanRevise, false);\n    Set(varGrpDialog, \"\");\n    Set(varGrpOutcome, \"Earlier operation made no group change. Review the refreshed group before starting a new operation.\");\n    Set(varGrpBusy, true);\nSet(varGrpLoaded, false);\nSet(varGrpError, \"\");\nSet(varGrpStatus, \"\");\nSet(varGrpDiagnostic, \"\");\nClear(grpRows);\nIf(IsBlank(varAppActorId) || varAppActorId <= 0,\n    Set(varGrpError, \"Open your own saved registration, then open My groups.\"),\n    IfError(\n    Set(varGrpRead, TandemMyGroups.Run(varAppActorId));\n    If(varGrpRead.resultcode = \"OK\",\n        ClearCollect(grpRows,\n            ForAll(Table(ParseJSON(varGrpRead.groupsjson)) As grpRow,\n                {groupId: Value(grpRow.Value.groupId),\n                 membershipId: Value(grpRow.Value.membershipId),\n                 name: Text(grpRow.Value.name), purpose: Text(grpRow.Value.purpose),\n                 exchangeType: Text(grpRow.Value.exchangeType),\n                 capacity: Value(grpRow.Value.capacity), state: Text(grpRow.Value.state),\n                 memberCount: Value(grpRow.Value.memberCount), freeSlots: Value(grpRow.Value.freeSlots),\n                 expectedETag: Text(grpRow.Value.expectedETag),\n                 detail: Text(grpRow.Value.exchangeType) & \" exchange\" & Char(10) & \"Languages: \" & Concat(Table(grpRow.Value.languageFocus) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Cultures: \" & Concat(Table(grpRow.Value.cultureFocus) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & Text(grpRow.Value.purpose) & Char(10) & Char(10) & \"Current members\" & Char(10) & Concat(Table(grpRow.Value.members) As grpMember, Text(grpMember.Value.displayName) & Char(10) & \"Teaches: \" & Concat(Table(grpMember.Value.teachLanguages) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Learning: \" & Concat(Table(grpMember.Value.learnLanguages) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Cultures to share: \" & Concat(Table(grpMember.Value.shareCultures) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Cultures of interest: \" & Concat(Table(grpMember.Value.learnCultures) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Time zone: \" & Coalesce(Text(grpMember.Value.timeZone.label), \"Not specified\") & Char(10) & \"Learning focus: \" & Text(grpMember.Value.learningFocus) & Char(10) & \"Comments: \" & Text(grpMember.Value.comments), Char(10) & Char(10))}));\n        Reset(grpList);\n        Set(varGrpStatus, varGrpRead.groupstatus);\n        Set(varGrpLoaded, true),\n        Set(varGrpError, \"Groups could not load (\" & varGrpRead.resultcode & \"). Reference: \" & varGrpRead.runreference)\n    ),\n    Set(varGrpDiagnostic, FirstError.Message);\n    Clear(grpRows); Set(varGrpStatus, \"\");\n    Set(varGrpError, \"Groups could not load completely. Select Refresh to try again.\")\n    )\n);\nSet(varGrpBusy, false)\n)"
+      -
+        grpPending:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=12"
+            Text: "=If(!IsBlank(varGroupsIntent), varGrpFrozen.kind & \": \" & varGrpFrozen.name & \" — inputs retained\", \"\")"
+            X: "=852"
+            Y: "=Parent.Height - 104"
+            Width: "=Parent.Width - 876"
+            Height: "=40"
+      -
+        grpOutcome:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=12"
+            Text: "=If(varGrpSending, \"Waiting for confirmation…\", varGrpOutcome)"
+            X: "=408"
+            Y: "=Parent.Height - 60"
+            Width: "=Parent.Width - 432"
+            Height: "=56"
+      -
+        grpModal:
+          Control: "GroupContainer@1.3.0"
+          Properties:
+            X: "=0"
+            Y: "=0"
+            Width: "=Parent.Width"
+            Height: "=Parent.Height"
+            Fill: "=RGBA(0,0,0,0.35)"
+            Visible: "=!IsBlank(varGrpDialog)"
+          Variant: "ManualLayout"
+          Children:
+            -
+              grpDialogPanel:
+                Control: "GroupContainer@1.3.0"
+                Properties:
+                  X: "=(Parent.Width - 720) / 2"
+                  Y: "=92"
+                  Width: "=720"
+                  Height: "=584"
+                  Fill: "=RGBA(255,255,255,1)"
+                Variant: "ManualLayout"
+                Children:
+                  -
+                    grpDialogTitle:
+                      Control: "Label@2.5.1"
+                      Properties:
+                        Font: "=Font.'Segoe UI'"
+                        Size: "=22"
+                        Text: "=If(varGrpDialog = \"Edit\", \"Edit group\", \"Confirm Leave\")"
+                        X: "=24"
+                        Y: "=16"
+                        Width: "=672"
+                        Height: "=40"
+                  -
+                    grpDialogName:
+                      Control: "Label@2.5.1"
+                      Properties:
+                        Font: "=Font.'Segoe UI'"
+                        Size: "=12"
+                        Text: "=varGrpEditing.name"
+                        X: "=24"
+                        Y: "=60"
+                        Width: "=672"
+                        Height: "=44"
+                  -
+                    grpTitleLabel:
+                      Control: "Label@2.5.1"
+                      Properties:
+                        Font: "=Font.'Segoe UI'"
+                        Size: "=12"
+                        Text: "=\"Group name (required, up to 255 characters)\""
+                        X: "=24"
+                        Y: "=108"
+                        Width: "=672"
+                        Height: "=28"
+                        Visible: "=varGrpDialog = \"Edit\""
+                  -
+                    grpTitle:
+                      Control: "Classic/TextInput@2.3.2"
+                      Properties:
+                        Size: "=12"
+                        Default: "=varGrpEditing.name"
+                        MaxLength: "=255"
+                        X: "=24"
+                        Y: "=140"
+                        Width: "=672"
+                        Height: "=40"
+                        Visible: "=varGrpDialog = \"Edit\""
+                        AccessibleLabel: "=\"Group name\""
+                  -
+                    grpPurposeLabel:
+                      Control: "Label@2.5.1"
+                      Properties:
+                        Font: "=Font.'Segoe UI'"
+                        Size: "=12"
+                        Text: "=\"Purpose (optional, up to 2,000 plain-text characters)\""
+                        X: "=24"
+                        Y: "=188"
+                        Width: "=672"
+                        Height: "=28"
+                        Visible: "=varGrpDialog = \"Edit\""
+                  -
+                    grpPurpose:
+                      Control: "Classic/TextInput@2.3.2"
+                      Properties:
+                        Size: "=12"
+                        Default: "=varGrpEditing.purpose"
+                        MaxLength: "=2000"
+                        Mode: "=TextMode.MultiLine"
+                        X: "=24"
+                        Y: "=220"
+                        Width: "=672"
+                        Height: "=100"
+                        Visible: "=varGrpDialog = \"Edit\""
+                        AccessibleLabel: "=\"Group purpose\""
+                  -
+                    grpCapacityLabel:
+                      Control: "Label@2.5.1"
+                      Properties:
+                        Font: "=Font.'Segoe UI'"
+                        Size: "=12"
+                        Text: "=\"Total capacity (whole number, 2–10; language groups 2 or 3)\""
+                        X: "=24"
+                        Y: "=332"
+                        Width: "=672"
+                        Height: "=28"
+                        Visible: "=varGrpDialog = \"Edit\""
+                  -
+                    grpCapacity:
+                      Control: "Classic/TextInput@2.3.2"
+                      Properties:
+                        Size: "=12"
+                        Default: "=Text(varGrpEditing.capacity)"
+                        Format: "=TextFormat.Number"
+                        X: "=24"
+                        Y: "=364"
+                        Width: "=200"
+                        Height: "=40"
+                        Visible: "=varGrpDialog = \"Edit\""
+                        AccessibleLabel: "=\"Total capacity\""
+                  -
+                    grpStateLabel:
+                      Control: "Label@2.5.1"
+                      Properties:
+                        Font: "=Font.'Segoe UI'"
+                        Size: "=12"
+                        Text: "=\"State — Ended is final\""
+                        X: "=248"
+                        Y: "=332"
+                        Width: "=448"
+                        Height: "=28"
+                        Visible: "=varGrpDialog = \"Edit\""
+                  -
+                    grpState:
+                      Control: "Classic/DropDown@2.3.1"
+                      Properties:
+                        Items: "=[\"Open\", \"Closed\", \"Ended\"]"
+                        Default: "=varGrpEditing.state"
+                        X: "=248"
+                        Y: "=364"
+                        Width: "=448"
+                        Height: "=40"
+                        Visible: "=varGrpDialog = \"Edit\""
+                        AccessibleLabel: "=\"Group state; Ended is final\""
+                  -
+                    grpEditGuidance:
+                      Control: "Label@2.5.1"
+                      Properties:
+                        Font: "=Font.'Segoe UI'"
+                        Size: "=12"
+                        Text: "=\"Capacity cannot be below current membership. Refresh if someone else changes the group. Ending is final.\""
+                        X: "=24"
+                        Y: "=416"
+                        Width: "=672"
+                        Height: "=72"
+                        Visible: "=varGrpDialog = \"Edit\""
+                  -
+                    grpLeaveWarning:
+                      Control: "Label@2.5.1"
+                      Properties:
+                        Font: "=Font.'Segoe UI'"
+                        Size: "=12"
+                        Text: "=\"Leave this group? Your current membership will end. The group state stays as it is. This action does not automatically rejoin you later.\""
+                        X: "=24"
+                        Y: "=120"
+                        Width: "=672"
+                        Height: "=180"
+                        Visible: "=varGrpDialog = \"Leave\""
+                  -
+                    grpCancel:
+                      Control: "Classic/Button@2.2.0"
+                      Properties:
+                        Height: "=40"
+                        Size: "=12"
+                        Text: "=\"Cancel\""
+                        X: "=24"
+                        Y: "=516"
+                        Width: "=160"
+                        OnSelect: "=Set(varGrpDialog, \"\")"
+                  -
+                    grpSave:
+                      Control: "Classic/Button@2.2.0"
+                      Properties:
+                        Height: "=40"
+                        Size: "=12"
+                        Text: "=\"Save changes\""
+                        X: "=472"
+                        Y: "=516"
+                        Width: "=224"
+                        Visible: "=varGrpDialog = \"Edit\""
+                        DisplayMode: "=If(IsBlank(varGroupsIntent) && !varGrpSending && (!IsBlank(Trim(grpTitle.Text)) && Len(grpTitle.Text) <= 255 && Len(grpPurpose.Text) <= 2000 && IfError(Value(grpCapacity.Text) >= 2 && Value(grpCapacity.Text) <= 10 && Value(grpCapacity.Text) >= varGrpEditing.memberCount && If(varGrpEditing.exchangeType = \"Language\", Value(grpCapacity.Text) <= 3, true) && Mod(Value(grpCapacity.Text), 1) = 0, false)), DisplayMode.Edit, DisplayMode.Disabled)"
+                        OnSelect: "=If(IsBlank(varGroupsIntent) && !varGrpSending && (!IsBlank(Trim(grpTitle.Text)) && Len(grpTitle.Text) <= 255 && Len(grpPurpose.Text) <= 2000 && IfError(Value(grpCapacity.Text) >= 2 && Value(grpCapacity.Text) <= 10 && Value(grpCapacity.Text) >= varGrpEditing.memberCount && If(varGrpEditing.exchangeType = \"Language\", Value(grpCapacity.Text) <= 3, true) && Mod(Value(grpCapacity.Text), 1) = 0, false)),\n    Set(varGroupsIntent, Text(GUID()));\n    Set(varGrpFrozen, {kind: \"Edit\", actorId: varAppActorId,\n        groupId: varGrpEditing.groupId, membershipId: varGrpEditing.membershipId,\n        name: varGrpEditing.name,\n        requestJson: JSON({actorId: varAppActorId, groupId: varGrpEditing.groupId,\n            expectedETag: varGrpEditing.expectedETag, intentId: varGroupsIntent,\n            edits: {Title: grpTitle.Text, Purpose: grpPurpose.Text,\n                Capacity: Value(grpCapacity.Text), State: grpState.Selected.Value}}, JSONFormat.Compact)});\n    Set(varGrpDialog, \"\");\n    Set(varGrpSending, true);\nSet(varGrpSuccess, false);\nSet(varGrpCode, \"\");\nSet(varGrpReference, \"\");\nSet(varGrpCanRevise, false);\nSet(varGrpOutcome, \"\");\nSet(varGrpDiagnostic, \"\");\nIfError(\n    If(varGrpFrozen.kind = \"Edit\",\n        Set(varGrpUpdateResponse, TandemUpdateGroup.Run(varGrpFrozen.requestJson));\n        Set(varGrpSuccess, varGrpUpdateResponse.success);\n        Set(varGrpCode, varGrpUpdateResponse.resultcode);\n        Set(varGrpReference, varGrpUpdateResponse.runreference);\n        Set(varGrpCanRevise, !IsBlank(varGrpUpdateResponse.success) && varGrpUpdateResponse.success = false &&\n    !IsBlank(varGrpUpdateResponse.resultcode) &&\n    varGrpUpdateResponse.resultcode in [\"REVISION_CONFLICT\", \"GROUP_BUSY\", \"GROUP_ENDED_FINAL\", \"CAPACITY_INVALID\", \"CAPACITY_CHANGED_OR_INVALID\"]),\n        Set(varGrpLeaveResponse, TandemLeaveGroup.Run(varGrpFrozen.actorId, varGrpFrozen.groupId, varGrpFrozen.membershipId, varGroupsIntent));\n        Set(varGrpSuccess, varGrpLeaveResponse.success);\n        Set(varGrpCode, varGrpLeaveResponse.resultcode);\n        Set(varGrpReference, varGrpLeaveResponse.runreference);\n        Set(varGrpCanRevise, !IsBlank(varGrpLeaveResponse.success) && varGrpLeaveResponse.success = false &&\n    !IsBlank(varGrpLeaveResponse.writeattempted) && varGrpLeaveResponse.writeattempted = false &&\n    !IsBlank(varGrpLeaveResponse.outcomeunknown) && varGrpLeaveResponse.outcomeunknown = false)\n    );\n    If(varGrpSuccess = true,\n        Set(varGrpOutcome, If(varGrpFrozen.kind = \"Edit\", \"Changes saved for \" & varGrpFrozen.name & \".\", \"Left \" & varGrpFrozen.name & \".\"));\n        Set(varGroupsIntent, Blank());\n        Set(varGrpDialog, \"\");\n        Set(varGrpBusy, true);\nSet(varGrpLoaded, false);\nSet(varGrpError, \"\");\nSet(varGrpStatus, \"\");\nSet(varGrpDiagnostic, \"\");\nClear(grpRows);\nIf(IsBlank(varAppActorId) || varAppActorId <= 0,\n    Set(varGrpError, \"Open your own saved registration, then open My groups.\"),\n    IfError(\n    Set(varGrpRead, TandemMyGroups.Run(varAppActorId));\n    If(varGrpRead.resultcode = \"OK\",\n        ClearCollect(grpRows,\n            ForAll(Table(ParseJSON(varGrpRead.groupsjson)) As grpRow,\n                {groupId: Value(grpRow.Value.groupId),\n                 membershipId: Value(grpRow.Value.membershipId),\n                 name: Text(grpRow.Value.name), purpose: Text(grpRow.Value.purpose),\n                 exchangeType: Text(grpRow.Value.exchangeType),\n                 capacity: Value(grpRow.Value.capacity), state: Text(grpRow.Value.state),\n                 memberCount: Value(grpRow.Value.memberCount), freeSlots: Value(grpRow.Value.freeSlots),\n                 expectedETag: Text(grpRow.Value.expectedETag),\n                 detail: Text(grpRow.Value.exchangeType) & \" exchange\" & Char(10) & \"Languages: \" & Concat(Table(grpRow.Value.languageFocus) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Cultures: \" & Concat(Table(grpRow.Value.cultureFocus) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & Text(grpRow.Value.purpose) & Char(10) & Char(10) & \"Current members\" & Char(10) & Concat(Table(grpRow.Value.members) As grpMember, Text(grpMember.Value.displayName) & Char(10) & \"Teaches: \" & Concat(Table(grpMember.Value.teachLanguages) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Learning: \" & Concat(Table(grpMember.Value.learnLanguages) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Cultures to share: \" & Concat(Table(grpMember.Value.shareCultures) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Cultures of interest: \" & Concat(Table(grpMember.Value.learnCultures) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Time zone: \" & Coalesce(Text(grpMember.Value.timeZone.label), \"Not specified\") & Char(10) & \"Learning focus: \" & Text(grpMember.Value.learningFocus) & Char(10) & \"Comments: \" & Text(grpMember.Value.comments), Char(10) & Char(10))}));\n        Reset(grpList);\n        Set(varGrpStatus, varGrpRead.groupstatus);\n        Set(varGrpLoaded, true),\n        Set(varGrpError, \"Groups could not load (\" & varGrpRead.resultcode & \"). Reference: \" & varGrpRead.runreference)\n    ),\n    Set(varGrpDiagnostic, FirstError.Message);\n    Clear(grpRows); Set(varGrpStatus, \"\");\n    Set(varGrpError, \"Groups could not load completely. Select Refresh to try again.\")\n    )\n);\nSet(varGrpBusy, false),\n        Set(varGrpOutcome, \"Operation not confirmed (\" & varGrpCode & \"). Reference: \" & varGrpReference & If(varGrpCanRevise, \". No group change was made. Retry the same operation or select Refresh and revise.\", \". Retry keeps the same operation. If unresolved, retain this reference for support.\"))\n    ),\n    Set(varGrpCanRevise, false);\n    Set(varGrpDiagnostic, FirstError.Message);\n    Set(varGrpOutcome, \"No confirmation received. Retry the same operation; its saved group and inputs are retained. If unresolved, ask for support before starting another operation.\")\n);\nSet(varGrpSending, false)\n)"
+                  -
+                    grpConfirmLeave:
+                      Control: "Classic/Button@2.2.0"
+                      Properties:
+                        Height: "=40"
+                        Size: "=12"
+                        Text: "=\"Confirm Leave\""
+                        X: "=472"
+                        Y: "=516"
+                        Width: "=224"
+                        Visible: "=varGrpDialog = \"Leave\""
+                        DisplayMode: "=If(IsBlank(varGroupsIntent) && !varGrpSending, DisplayMode.Edit, DisplayMode.Disabled)"
+                        OnSelect: "=If(IsBlank(varGroupsIntent) && !varGrpSending,\n    Set(varGroupsIntent, Text(GUID()));\n    Set(varGrpFrozen, {kind: \"Leave\", actorId: varAppActorId,\n        groupId: varGrpEditing.groupId, membershipId: varGrpEditing.membershipId,\n        name: varGrpEditing.name, requestJson: \"\"});\n    Set(varGrpDialog, \"\");\n    Set(varGrpSending, true);\nSet(varGrpSuccess, false);\nSet(varGrpCode, \"\");\nSet(varGrpReference, \"\");\nSet(varGrpCanRevise, false);\nSet(varGrpOutcome, \"\");\nSet(varGrpDiagnostic, \"\");\nIfError(\n    If(varGrpFrozen.kind = \"Edit\",\n        Set(varGrpUpdateResponse, TandemUpdateGroup.Run(varGrpFrozen.requestJson));\n        Set(varGrpSuccess, varGrpUpdateResponse.success);\n        Set(varGrpCode, varGrpUpdateResponse.resultcode);\n        Set(varGrpReference, varGrpUpdateResponse.runreference);\n        Set(varGrpCanRevise, !IsBlank(varGrpUpdateResponse.success) && varGrpUpdateResponse.success = false &&\n    !IsBlank(varGrpUpdateResponse.resultcode) &&\n    varGrpUpdateResponse.resultcode in [\"REVISION_CONFLICT\", \"GROUP_BUSY\", \"GROUP_ENDED_FINAL\", \"CAPACITY_INVALID\", \"CAPACITY_CHANGED_OR_INVALID\"]),\n        Set(varGrpLeaveResponse, TandemLeaveGroup.Run(varGrpFrozen.actorId, varGrpFrozen.groupId, varGrpFrozen.membershipId, varGroupsIntent));\n        Set(varGrpSuccess, varGrpLeaveResponse.success);\n        Set(varGrpCode, varGrpLeaveResponse.resultcode);\n        Set(varGrpReference, varGrpLeaveResponse.runreference);\n        Set(varGrpCanRevise, !IsBlank(varGrpLeaveResponse.success) && varGrpLeaveResponse.success = false &&\n    !IsBlank(varGrpLeaveResponse.writeattempted) && varGrpLeaveResponse.writeattempted = false &&\n    !IsBlank(varGrpLeaveResponse.outcomeunknown) && varGrpLeaveResponse.outcomeunknown = false)\n    );\n    If(varGrpSuccess = true,\n        Set(varGrpOutcome, If(varGrpFrozen.kind = \"Edit\", \"Changes saved for \" & varGrpFrozen.name & \".\", \"Left \" & varGrpFrozen.name & \".\"));\n        Set(varGroupsIntent, Blank());\n        Set(varGrpDialog, \"\");\n        Set(varGrpBusy, true);\nSet(varGrpLoaded, false);\nSet(varGrpError, \"\");\nSet(varGrpStatus, \"\");\nSet(varGrpDiagnostic, \"\");\nClear(grpRows);\nIf(IsBlank(varAppActorId) || varAppActorId <= 0,\n    Set(varGrpError, \"Open your own saved registration, then open My groups.\"),\n    IfError(\n    Set(varGrpRead, TandemMyGroups.Run(varAppActorId));\n    If(varGrpRead.resultcode = \"OK\",\n        ClearCollect(grpRows,\n            ForAll(Table(ParseJSON(varGrpRead.groupsjson)) As grpRow,\n                {groupId: Value(grpRow.Value.groupId),\n                 membershipId: Value(grpRow.Value.membershipId),\n                 name: Text(grpRow.Value.name), purpose: Text(grpRow.Value.purpose),\n                 exchangeType: Text(grpRow.Value.exchangeType),\n                 capacity: Value(grpRow.Value.capacity), state: Text(grpRow.Value.state),\n                 memberCount: Value(grpRow.Value.memberCount), freeSlots: Value(grpRow.Value.freeSlots),\n                 expectedETag: Text(grpRow.Value.expectedETag),\n                 detail: Text(grpRow.Value.exchangeType) & \" exchange\" & Char(10) & \"Languages: \" & Concat(Table(grpRow.Value.languageFocus) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Cultures: \" & Concat(Table(grpRow.Value.cultureFocus) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & Text(grpRow.Value.purpose) & Char(10) & Char(10) & \"Current members\" & Char(10) & Concat(Table(grpRow.Value.members) As grpMember, Text(grpMember.Value.displayName) & Char(10) & \"Teaches: \" & Concat(Table(grpMember.Value.teachLanguages) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Learning: \" & Concat(Table(grpMember.Value.learnLanguages) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Cultures to share: \" & Concat(Table(grpMember.Value.shareCultures) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Cultures of interest: \" & Concat(Table(grpMember.Value.learnCultures) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Time zone: \" & Coalesce(Text(grpMember.Value.timeZone.label), \"Not specified\") & Char(10) & \"Learning focus: \" & Text(grpMember.Value.learningFocus) & Char(10) & \"Comments: \" & Text(grpMember.Value.comments), Char(10) & Char(10))}));\n        Reset(grpList);\n        Set(varGrpStatus, varGrpRead.groupstatus);\n        Set(varGrpLoaded, true),\n        Set(varGrpError, \"Groups could not load (\" & varGrpRead.resultcode & \"). Reference: \" & varGrpRead.runreference)\n    ),\n    Set(varGrpDiagnostic, FirstError.Message);\n    Clear(grpRows); Set(varGrpStatus, \"\");\n    Set(varGrpError, \"Groups could not load completely. Select Refresh to try again.\")\n    )\n);\nSet(varGrpBusy, false),\n        Set(varGrpOutcome, \"Operation not confirmed (\" & varGrpCode & \"). Reference: \" & varGrpReference & If(varGrpCanRevise, \". No group change was made. Retry the same operation or select Refresh and revise.\", \". Retry keeps the same operation. If unresolved, retain this reference for support.\"))\n    ),\n    Set(varGrpCanRevise, false);\n    Set(varGrpDiagnostic, FirstError.Message);\n    Set(varGrpOutcome, \"No confirmation received. Retry the same operation; its saved group and inputs are retained. If unresolved, ask for support before starting another operation.\")\n);\nSet(varGrpSending, false)\n)"
