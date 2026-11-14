@@ -225,6 +225,12 @@ class ParentRunner(ChildRunner):
             if action['type'] == 'Workflow':
                 action['type'] = 'OpenApiConnection'
                 action['inputs'] = {'parameters': {'_workflow': action['inputs']}}
+            elif action['type'] in ['IncrementVariable', 'DecrementVariable']:
+                inputs = action['inputs']; amount = inputs.get('value', 1)
+                operand = amount[1:] if isinstance(amount, str) and amount.startswith('@') else json.dumps(amount)
+                op = 'add' if action['type'] == 'IncrementVariable' else 'sub'
+                action['type'] = 'SetVariable'
+                action['inputs'] = {'name': inputs['name'], 'value': '@' + op + "(variables('" + inputs['name'] + "')," + operand + ')'}
         return super().run(actions, ctx)
 
 
