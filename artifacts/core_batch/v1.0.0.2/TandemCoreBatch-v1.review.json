@@ -1,0 +1,623 @@
+{
+  "automatedConnectionEvidence": "Legacy Embedded source inspected; automatic Solution binding/import/execution NOT RUN",
+  "buildProvenance": {
+    "baselineFieldCount": 59,
+    "baselineRoleCount": 8,
+    "baselineSha256": "f45503c366819fbcfb0b87df3a3e19c19da576edde9c1625e90a2318df50b6b0",
+    "baselineVersion": 2,
+    "compatibilitySha256": "dfe0dcd587a5a348080dde288183ed3dff2d02d1f652f0ae23010b2e6e649c72",
+    "consumerWorkingTree": [],
+    "consumers": {
+      "TandemCancelRequest": {
+        "artifact": "artifacts/cancel_request/TandemCancelRequest-v4.definition.json",
+        "contentVersion": "1.0.0.0",
+        "indexBlob": "86a352f4d9c4361d85b9fa379ad46ce92e676437",
+        "sha256": "34184ea4f9a361bf29df941d0bb3448c0810953790c2c7bb0ce023086c9b4922",
+        "sourceBuildIds": []
+      },
+      "TandemDiscovery": {
+        "artifact": "artifacts/tandem_discovery/TandemDiscovery-shared.definition.json",
+        "contentVersion": "1.0.0.0",
+        "indexBlob": "7ad3bd5c6776c6b6f3c59bb2013251777d5356fa",
+        "sha256": "f5b21ea0464ca80149b912811bad1330ea0431473c8f285b8a38ee42e99cceb7",
+        "sourceBuildIds": [
+          "2558a81d-8736-435a-94dd-a6b0ced4aaac"
+        ]
+      },
+      "TandemLeaveGroup": {
+        "artifact": "artifacts/leave_group/TandemLeaveGroup-v1-activation.definition.json",
+        "contentVersion": "1.0.0.0",
+        "indexBlob": "92ee3795f5e54e2a67cb20b6297a059c0821fb92",
+        "sha256": "a3e9e6441a376ded05074d1f54bac4f427234a523a62490b6f9c01d1f77fcf90",
+        "sourceBuildIds": []
+      },
+      "TandemMyGroups": {
+        "artifact": "artifacts/my_groups/TandemMyGroups-v2.definition.json",
+        "contentVersion": "1.0.0.0",
+        "indexBlob": "e2643714df22754f8242037350624a6bebf6ecaf",
+        "sha256": "440df39b310047dde6118e0c30fae9e78192bd9f52b6c9fdf5bc5c7c3031a101",
+        "sourceBuildIds": []
+      },
+      "TandemMyRequests": {
+        "artifact": "artifacts/my_requests/TandemMyRequests-v7-introduction-target.definition.json",
+        "contentVersion": "1.0.0.0",
+        "indexBlob": "732f43d1e52dd0488e62ce843c872f941b330a5d",
+        "sha256": "96c0f5c25e81c140f2b0e0c0965bcbf5880a5c9445bb1935e7b78dc75f5086a8",
+        "sourceBuildIds": []
+      },
+      "TandemParticipantSubmission": {
+        "artifact": "artifacts/participant_submission/TandemParticipantSubmission-shared-v1.solution-source.json",
+        "contentVersion": "1.0.0.0",
+        "indexBlob": "999158b41cbf080515674527de57720100cc43f0",
+        "sha256": "03c21abfbaec9a5c731c78fd69924581861df2cbb25e4e0db9700532fecff9e2",
+        "sourceBuildIds": [
+          "issue-61-shared-consumer-v1"
+        ]
+      },
+      "TandemRespondGroupJoinRequest": {
+        "artifact": "artifacts/group_response/TandemRespondGroupJoinRequest-activation.definition.json",
+        "contentVersion": "1.0.0.0",
+        "indexBlob": "9da95fc21532195c9d36ba7aa72940b1016bf1f3",
+        "sha256": "40b971b1e7fa7ec683505617c4c6aa9270e2affd1bf166b3397654f85c95bee4",
+        "sourceBuildIds": [
+          "ea732b74-947a-4478-a7df-92d2ff5696a1"
+        ]
+      },
+      "TandemRespondRequest": {
+        "artifact": "artifacts/respond_request/TandemRespondRequest-11.2.0.definition.json",
+        "contentVersion": "11.2.0.0",
+        "indexBlob": "8e2740337ec464ac94f0832fffbecb2fa455dab2",
+        "sha256": "479a4ae57beacb9fd5e174151565d25127246dd0d4ff40b8d46454516420d07e",
+        "sourceBuildIds": []
+      },
+      "TandemSendGroupJoinRequest": {
+        "artifact": "artifacts/group_send/TandemSendGroupJoinRequest-v1.solution-parent.json",
+        "contentVersion": "1.0.0.0",
+        "indexBlob": "c961868cff81e7b6c8175d581f132925ac779e13",
+        "sha256": "22ddfdbfb4057b71e449eb41861fedfd56ab10a4fc4e1113214de7c0d39ff95e",
+        "sourceBuildIds": [
+          "issue-17-group-send-v1"
+        ]
+      },
+      "TandemSendRequest": {
+        "artifact": "artifacts/send_request/TandemSendRequest-v4-shared.solution-parent.json",
+        "contentVersion": "1.0.0.0",
+        "indexBlob": "9804db3af911e01ed88586d32467ad86c351a578",
+        "sha256": "ae3178e974e34d54117703bdd388f1716c6a27136273aea6954963a31c6ab825",
+        "sourceBuildIds": [
+          "5a207485-1a32-4e74-9b26-8baa26fad322"
+        ]
+      },
+      "TandemUpdateGroup": {
+        "artifact": "artifacts/update_group/TandemUpdateGroup-v1.parent.json",
+        "contentVersion": "1.0.0.0",
+        "indexBlob": "f602138287943c54a5a7bf906099bce7f5f12633",
+        "sha256": "3a1798ac11460a3d6d0348ba4f6e5752cf0fd055ed0316345c6e0169d71934a2",
+        "sourceBuildIds": [
+          "55d4d4c3-958d-48a1-ac0e-a20fdea8ad1f"
+        ]
+      }
+    },
+    "contractVersion": 1,
+    "generatorCommit": "749bf549ec671b474917f186c9f2f961848d47c2",
+    "generatorInputs": {
+      "artifacts/shared_validation/results/request-mapping.baseline.json": "a37604570ab25bffbc6771ddcfab7cddf7476c5c91320e57eb530ed7e25a7f47",
+      "config/batch_schema_contract.json": "f189c44795dd448faaf7c8a0087b3aeed6357b264f21f8cb4e8860955b308495",
+      "config/core_batch_contract.json": "fa183260383948deafbdaa4ae5c125548c4ff23a3fd59b0809f8a7b55735f004",
+      "config/group_schema_mapping.json": "f6c24ee135caf7cd1c02b7684c669e0a434716ba3ec91930500d8fb564b1d9e1",
+      "config/shared_validation_schema.json": "1e2535a753884951d00c455cdb77c16a77495759207023689c72c5bbff70eb9b",
+      "config/tenant_schema_mapping.json": "245b11c22a28709866e01190280bb13e8a028a40a5d84c4c71ce5bdf65e6e218",
+      "scripts/power_automate/activation_graph.py": "14f6dd59571e8bd115e17d758992b8097eddd26c727f8c1eac2215ff2cfbbba3",
+      "scripts/power_automate/activation_schema.py": "34f8d4b1fa8610652a830648bfa6633035ecca3e0d6e313a6394f3295b7241c1",
+      "scripts/power_automate/batch_schema.py": "5f2563d12d5878ba58e5e142472a3864fd0fba0f1008b7bec475955862f6e3a7",
+      "scripts/power_automate/build_core_batch.py": "f0922110aef0f1ffa98dd48b14694074772b30862fe30563d63fded1ab4058d0",
+      "scripts/power_automate/compatibility.py": "dfe0dcd587a5a348080dde288183ed3dff2d02d1f652f0ae23010b2e6e649c72",
+      "scripts/power_automate/core_solution.py": "83d356e02b6e75fff40a81459cf574387e9d56fba9dfc957db64adcf0a373528",
+      "scripts/power_automate/discovery_flow.py": "08be55e8a7f5a8e32c2d9ef74c84f4730c0e8051ca63194fa27f9c55d6369012",
+      "scripts/power_automate/group_response_flow.py": "433e4ee7a52a2033071322360c7acc8031e3e3a977f69276903bd30d7f795c73",
+      "scripts/power_automate/leave_group_flow.py": "03bcaac2400784f5a132ada4fb4846b4581b0670f7b9e3493dc6a5a40b3e3da8",
+      "scripts/power_automate/schema_audit.py": "58aa44de086261e3156e6f1c224607c02eb3bea587f4e788342599838f1d21a7",
+      "scripts/power_automate/shared_validation.py": "73658fe4ca36bbfb228f25d91789ebf3befe98e3cb85e042da5abc48f08c595c",
+      "scripts/power_automate/solution_source.py": "11b656099168b3f3574c58c18244ca812d6f35922b98d7f1760537241da260b3",
+      "tests/fixtures/compatibility_v1.json": "66d234a6fdd501c4550835eaa9ae7ecabcd2584834927d9bc99d26a0367445f8"
+    },
+    "rulesVersion": 1,
+    "sharedBuildId": "aaeaf9aa-c1c8-4605-a6a8-53012d536ee9",
+    "sourceCommit": "749bf549ec671b474917f186c9f2f961848d47c2"
+  },
+  "flows": {
+    "TandemBatchSchemaSetup": {
+      "actions": 117,
+      "definitionSha256": "ca4f95d96573137fe6e635d94181335fe9e5c83bd4bf89a324c397a75f75d28d",
+      "id": "382134c3-8b6d-535d-a7b4-50cfd0c48fa7",
+      "maximumActionDepth": 6,
+      "nativePatternGuards": [],
+      "sourceTicket": 81
+    },
+    "TandemCancelRequest": {
+      "actions": 75,
+      "definitionSha256": "e8664343c8cac52fee671fe8344812a712d05ef33eb3471e015b0e9533bdd09b",
+      "id": "8bee0275-1c6a-54b3-9225-cf637d3047f0",
+      "maximumActionDepth": 5,
+      "nativePatternGuards": [
+        {
+          "action": "Before_row",
+          "patterns": [
+            {
+              "path": [
+                "__metadata",
+                "etag"
+              ],
+              "pattern": "^\"[0-9]+\"$"
+            }
+          ],
+          "projection": "Before_row_NativePatternValues",
+          "shape": "Before_row_NativeShape"
+        },
+        {
+          "action": "After_row",
+          "patterns": [
+            {
+              "path": [
+                "__metadata",
+                "etag"
+              ],
+              "pattern": "^\"[0-9]+\"$"
+            }
+          ],
+          "projection": "After_row_NativePatternValues",
+          "shape": "After_row_NativeShape"
+        }
+      ],
+      "sourceTicket": 63
+    },
+    "TandemCoreValidationSmoke": {
+      "actions": 8,
+      "definitionSha256": "7258d240d6f0f82ac1439a242b936b889f10d1ab3967445b6be49e10ce361e0f",
+      "id": "23d87bda-f7aa-5011-935d-053cf1a67f17",
+      "maximumActionDepth": 2,
+      "nativePatternGuards": [],
+      "sourceTicket": 81
+    },
+    "TandemDiscovery": {
+      "actions": 167,
+      "definitionSha256": "6a6f892a4dc464b00b08ff526851e0b2fafb1a94d15c68b01fa09b3d22bdd4c0",
+      "id": "fd8d85eb-5af0-54a3-b05b-c8183830d4b2",
+      "maximumActionDepth": 6,
+      "nativePatternGuards": [],
+      "sourceTicket": 7
+    },
+    "TandemLeaveGroup": {
+      "actions": 262,
+      "definitionSha256": "544ca505ab302914f4e81190932033c58861faa2a91e226a90d326787d837ca6",
+      "id": "879a36cc-5bfe-5085-8f0e-805faad13f48",
+      "maximumActionDepth": 4,
+      "nativePatternGuards": [
+        {
+          "action": "Input",
+          "patterns": [
+            {
+              "path": [
+                "text"
+              ],
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+            }
+          ],
+          "projection": "Input_NativePatternValues",
+          "shape": "Input_NativeShape"
+        },
+        {
+          "action": "Member_initial",
+          "patterns": [
+            {
+              "path": [
+                "__metadata",
+                "etag"
+              ],
+              "pattern": "^\"[0-9]+\"$"
+            }
+          ],
+          "projection": "Member_initial_NativePatternValues",
+          "shape": "Member_initial_NativeShape"
+        },
+        {
+          "action": "Group_initial",
+          "patterns": [
+            {
+              "path": [
+                "__metadata",
+                "etag"
+              ],
+              "pattern": "^\"[0-9]+\"$"
+            }
+          ],
+          "projection": "Group_initial_NativePatternValues",
+          "shape": "Group_initial_NativeShape"
+        },
+        {
+          "action": "Receipt_metadata",
+          "patterns": [
+            {
+              "path": [
+                "Id"
+              ],
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+            }
+          ],
+          "projection": "Receipt_metadata_NativePatternValues",
+          "shape": "Receipt_metadata_NativeShape"
+        },
+        {
+          "action": "Existing_receipt",
+          "patterns": [
+            {
+              "path": [
+                "AttemptToken"
+              ],
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+            },
+            {
+              "path": [
+                "__metadata",
+                "etag"
+              ],
+              "pattern": "^\"[0-9]+\"$"
+            }
+          ],
+          "projection": "Existing_receipt_NativePatternValues",
+          "shape": "Existing_receipt_NativeShape"
+        },
+        {
+          "action": "Owned_receipt",
+          "patterns": [
+            {
+              "path": [
+                "AttemptToken"
+              ],
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+            },
+            {
+              "path": [
+                "__metadata",
+                "etag"
+              ],
+              "pattern": "^\"[0-9]+\"$"
+            }
+          ],
+          "projection": "Owned_receipt_NativePatternValues",
+          "shape": "Owned_receipt_NativeShape"
+        },
+        {
+          "action": "Group_claim",
+          "patterns": [
+            {
+              "path": [
+                "__metadata",
+                "etag"
+              ],
+              "pattern": "^\"[0-9]+\"$"
+            }
+          ],
+          "projection": "Group_claim_NativePatternValues",
+          "shape": "Group_claim_NativeShape"
+        },
+        {
+          "action": "Group_live",
+          "patterns": [
+            {
+              "path": [
+                "__metadata",
+                "etag"
+              ],
+              "pattern": "^\"[0-9]+\"$"
+            }
+          ],
+          "projection": "Group_live_NativePatternValues",
+          "shape": "Group_live_NativeShape"
+        },
+        {
+          "action": "Member_live",
+          "patterns": [
+            {
+              "path": [
+                "__metadata",
+                "etag"
+              ],
+              "pattern": "^\"[0-9]+\"$"
+            }
+          ],
+          "projection": "Member_live_NativePatternValues",
+          "shape": "Member_live_NativeShape"
+        },
+        {
+          "action": "Before_members_rows",
+          "patterns": [
+            {
+              "path": [
+                "__metadata",
+                "etag"
+              ],
+              "pattern": "^\"[0-9]+\"$"
+            }
+          ],
+          "projection": "Before_members_rows_NativePatternValues",
+          "shape": "Before_members_rows_NativeShape"
+        },
+        {
+          "action": "Member_after",
+          "patterns": [
+            {
+              "path": [
+                "__metadata",
+                "etag"
+              ],
+              "pattern": "^\"[0-9]+\"$"
+            }
+          ],
+          "projection": "Member_after_NativePatternValues",
+          "shape": "Member_after_NativeShape"
+        },
+        {
+          "action": "Group_after",
+          "patterns": [
+            {
+              "path": [
+                "__metadata",
+                "etag"
+              ],
+              "pattern": "^\"[0-9]+\"$"
+            }
+          ],
+          "projection": "Group_after_NativePatternValues",
+          "shape": "Group_after_NativeShape"
+        },
+        {
+          "action": "After_members_rows",
+          "patterns": [
+            {
+              "path": [
+                "__metadata",
+                "etag"
+              ],
+              "pattern": "^\"[0-9]+\"$"
+            }
+          ],
+          "projection": "After_members_rows_NativePatternValues",
+          "shape": "After_members_rows_NativeShape"
+        },
+        {
+          "action": "Completed_receipt",
+          "patterns": [
+            {
+              "path": [
+                "AttemptToken"
+              ],
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+            },
+            {
+              "path": [
+                "__metadata",
+                "etag"
+              ],
+              "pattern": "^\"[0-9]+\"$"
+            }
+          ],
+          "projection": "Completed_receipt_NativePatternValues",
+          "shape": "Completed_receipt_NativeShape"
+        },
+        {
+          "action": "Group_release",
+          "patterns": [
+            {
+              "path": [
+                "__metadata",
+                "etag"
+              ],
+              "pattern": "^\"[0-9]+\"$"
+            }
+          ],
+          "projection": "Group_release_NativePatternValues",
+          "shape": "Group_release_NativeShape"
+        },
+        {
+          "action": "Group_released",
+          "patterns": [
+            {
+              "path": [
+                "__metadata",
+                "etag"
+              ],
+              "pattern": "^\"[0-9]+\"$"
+            }
+          ],
+          "projection": "Group_released_NativePatternValues",
+          "shape": "Group_released_NativeShape"
+        }
+      ],
+      "sourceTicket": 14
+    },
+    "TandemMyGroups": {
+      "actions": 189,
+      "definitionSha256": "076a12101a37caabd60e85c84173bd5c6fdf69f4a30a2c539f9fdc83131e5eb6",
+      "id": "fcf94de0-e60d-5484-8565-a436b87c0e0b",
+      "maximumActionDepth": 5,
+      "nativePatternGuards": [
+        {
+          "action": "Raw_groups",
+          "patterns": [
+            {
+              "path": [
+                "__metadata",
+                "etag"
+              ],
+              "pattern": "^(W/)?\"[0-9]+\"$"
+            }
+          ],
+          "projection": "Raw_groups_NativePatternValues",
+          "shape": "Raw_groups_NativeShape"
+        },
+        {
+          "action": "Group_public",
+          "patterns": [
+            {
+              "path": [
+                "expectedETag"
+              ],
+              "pattern": "^(W/)?\"[0-9]+\"$"
+            }
+          ],
+          "projection": "Group_public_NativePatternValues",
+          "shape": "Group_public_NativeShape"
+        }
+      ],
+      "sourceTicket": 64
+    },
+    "TandemMyRequests": {
+      "actions": 128,
+      "definitionSha256": "af33af14faf3af2fdcb01c1bac859cfa56fb019c2f289c8394874707b2edfe63",
+      "id": "85b7ac12-e1f5-56ce-b882-10b47218e9ad",
+      "maximumActionDepth": 4,
+      "nativePatternGuards": [],
+      "sourceTicket": 62
+    },
+    "TandemParticipantSubmission": {
+      "actions": 29,
+      "definitionSha256": "7eb35adbcada959bb2c2ff67b5fea41cb68c6b40f1037e0f295b6424296f18e2",
+      "id": "28d287b9-5d1c-56a7-930c-e699d4d6dd4a",
+      "maximumActionDepth": 3,
+      "nativePatternGuards": [],
+      "sourceTicket": 61
+    },
+    "TandemRespondGroupJoinRequest": {
+      "actions": 399,
+      "definitionSha256": "360af21e885dcd0d51623fb1b93833ebf9f1023932d26fe7d95c6ff1043090bd",
+      "id": "d53f1797-9647-5910-9bda-8a48e0fced31",
+      "maximumActionDepth": 5,
+      "nativePatternGuards": [
+        {
+          "action": "Input",
+          "patterns": [
+            {
+              "path": [
+                "text_1"
+              ],
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+            }
+          ],
+          "projection": "Input_NativePatternValues",
+          "shape": "Input_NativeShape"
+        },
+        {
+          "action": "Initial_Member_shape",
+          "patterns": [
+            {
+              "path": [
+                "MembershipKey"
+              ],
+              "pattern": "^request:[1-9][0-9]*:participant:[1-9][0-9]*$"
+            }
+          ],
+          "projection": "Initial_Member_shape_NativePatternValues",
+          "shape": "Initial_Member_shape_NativeShape"
+        },
+        {
+          "action": "Locked_Member_shape",
+          "patterns": [
+            {
+              "path": [
+                "MembershipKey"
+              ],
+              "pattern": "^request:[1-9][0-9]*:participant:[1-9][0-9]*$"
+            }
+          ],
+          "projection": "Locked_Member_shape_NativePatternValues",
+          "shape": "Locked_Member_shape_NativeShape"
+        }
+      ],
+      "sourceTicket": 65
+    },
+    "TandemRespondRequest": {
+      "actions": 300,
+      "definitionSha256": "1183c8fce47d38a6c7c20f69eec7879543942643820381fe1aad8a55f0e0b7dd",
+      "id": "b983e199-0544-53c2-af4d-c8bee5d3de8d",
+      "maximumActionDepth": 7,
+      "nativePatternGuards": [
+        {
+          "action": "Input",
+          "patterns": [
+            {
+              "path": [
+                "text_5"
+              ],
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+            }
+          ],
+          "projection": "Input_NativePatternValues",
+          "shape": "Input_NativeShape"
+        },
+        {
+          "action": "Request_shape",
+          "patterns": [
+            {
+              "path": [
+                "SendOperationKey"
+              ],
+              "pattern": "^personal:[1-9][0-9]*:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            }
+          ],
+          "projection": "Request_shape_NativePatternValues",
+          "shape": "Request_shape_NativeShape"
+        }
+      ],
+      "sourceTicket": 11
+    },
+    "TandemSendGroupJoinRequest": {
+      "actions": 147,
+      "definitionSha256": "e65a910c149de4243507b90d03b4637c20b088b4cd19166aac3f188e169aafc6",
+      "id": "1c00da26-d2c0-583b-9fac-17cff45a35f2",
+      "maximumActionDepth": 5,
+      "nativePatternGuards": [],
+      "sourceTicket": 17
+    },
+    "TandemSendRequest": {
+      "actions": 99,
+      "definitionSha256": "94b9494d5b67ec753e86970a75413ae65f2500b84f874798737c21bc8ded27e3",
+      "id": "bd284001-372a-512f-9bda-e5d2709a091d",
+      "maximumActionDepth": 4,
+      "nativePatternGuards": [],
+      "sourceTicket": 10
+    },
+    "TandemUpdateGroup": {
+      "actions": 250,
+      "definitionSha256": "f47887d9655adcea1d4b93cadbcb8a017a04e8940c8ffa8ab861a473c4bfe693",
+      "id": "3cbdb281-0aac-562c-9183-616cf431c9c3",
+      "maximumActionDepth": 5,
+      "nativePatternGuards": [],
+      "sourceTicket": 13
+    },
+    "TandemValidateContext": {
+      "actions": 93,
+      "definitionSha256": "33887ffd1fc1d00d185c288da377d5c0009c5519f5168aa3d5b82bf6c590b1a9",
+      "id": "f1f91974-4124-557e-b7fe-d51e9972681d",
+      "maximumActionDepth": 7,
+      "nativePatternGuards": [],
+      "sourceTicket": 81
+    }
+  },
+  "importState": "disabled",
+  "maintenanceFlowCount": 2,
+  "nativeResult": "NOT_IMPORTED_NOT_TESTED",
+  "ordinaryUserAccess": "Deferred by owner; not verified by owner-context tests",
+  "ordinaryUserAccessVerified": false,
+  "productionFlowCount": 12,
+  "sha256": "0d1b97508db5c5995199bac0853d45ee73ba147a48008c0fb1c369740b4868bd",
+  "sharedBuildId": "aaeaf9aa-c1c8-4605-a6a8-53012d536ee9",
+  "sharedDependencyRebinding": {
+    "fromBuild": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
+    "toBuild": "aaeaf9aa-c1c8-4605-a6a8-53012d536ee9"
+  },
+  "solutionName": "TandemCoreBatch",
+  "solutionVersion": "1.0.0.2",
+  "sourceExportSha256": "ce19af2e37e7de4a9317ec4c63e8d5777beaf23a57120c99b4e38d38ce4946d4",
+  "sourceTicket": 81
+}

@@ -1,0 +1,92 @@
+{
+  "sourceTicket": 81,
+  "solutionVersion": "1.0.0.2",
+  "sharedBuildId": "aaeaf9aa-c1c8-4605-a6a8-53012d536ee9",
+  "sha256": "0d1b97508db5c5995199bac0853d45ee73ba147a48008c0fb1c369740b4868bd",
+  "fullSuite": {
+    "tests": 1428,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 94.152,
+    "execution": "LOCAL_INTERPRETER_AGAINST_EXACT_ZIP"
+  },
+  "packagedSmoke": {
+    "testCount": 45,
+    "completedCount": 45,
+    "allPassed": true,
+    "execution": "LOCAL_INTERPRETER_NOT_TENANT",
+    "report": "local-smoke-report.json"
+  },
+  "structure": {
+    "maximumActions": 399,
+    "maximumNesting": 7,
+    "flows": {
+      "TandemBatchSchemaSetup": {
+        "actions": 117,
+        "maximumActionDepth": 6
+      },
+      "TandemCancelRequest": {
+        "actions": 75,
+        "maximumActionDepth": 5
+      },
+      "TandemCoreValidationSmoke": {
+        "actions": 8,
+        "maximumActionDepth": 2
+      },
+      "TandemDiscovery": {
+        "actions": 167,
+        "maximumActionDepth": 6
+      },
+      "TandemLeaveGroup": {
+        "actions": 262,
+        "maximumActionDepth": 4
+      },
+      "TandemMyGroups": {
+        "actions": 189,
+        "maximumActionDepth": 5
+      },
+      "TandemMyRequests": {
+        "actions": 128,
+        "maximumActionDepth": 4
+      },
+      "TandemParticipantSubmission": {
+        "actions": 29,
+        "maximumActionDepth": 3
+      },
+      "TandemRespondGroupJoinRequest": {
+        "actions": 399,
+        "maximumActionDepth": 5
+      },
+      "TandemRespondRequest": {
+        "actions": 300,
+        "maximumActionDepth": 7
+      },
+      "TandemSendGroupJoinRequest": {
+        "actions": 147,
+        "maximumActionDepth": 5
+      },
+      "TandemSendRequest": {
+        "actions": 99,
+        "maximumActionDepth": 4
+      },
+      "TandemUpdateGroup": {
+        "actions": 250,
+        "maximumActionDepth": 5
+      },
+      "TandemValidateContext": {
+        "actions": 93,
+        "maximumActionDepth": 7
+      }
+    }
+  },
+  "patternParsersLowered": 25,
+  "patternConstraintsPreserved": 28,
+  "componentIdsPreserved": true,
+  "interfacesEqualPreviousVersion": true,
+  "nativeImport": "NOT RUN",
+  "nativeActivation": "NOT RUN",
+  "nativeSmoke": "NOT RUN",
+  "ordinaryParticipantAccess": "DEFERRED",
+  "schemaChanges": 0
+}
