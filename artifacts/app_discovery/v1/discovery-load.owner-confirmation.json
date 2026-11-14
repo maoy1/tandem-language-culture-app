@@ -1,0 +1,30 @@
+{
+  "sourceTicket": 16,
+  "artifact": "TandemParticipantRegistration-Discovery-v1.msapp",
+  "artifactSha256": "ee00b86d7810d2e6c1ccd52777b7a1ef9003e60aa8638fa270817503289ffdee",
+  "stableHandoffPath": "C:\\projects\\small_projects\\tandem-language-culture-app\\artifacts\\app_discovery\\v1\\TandemParticipantRegistration-Discovery-v1.msapp",
+  "evidenceType": "OWNER_CONFIRMATION",
+  "ownerStatement": "ok discovery from the imported app works",
+  "result": "PASS_DISCOVERY_LOAD_OWNER_CONFIRMED",
+  "coreDeploymentContext": {
+    "solutionVersion": "1.0.0.2",
+    "sharedBuildId": "aaeaf9aa-c1c8-4605-a6a8-53012d536ee9",
+    "sharedNativeSmokeRun": "08584069116914099944267310876cU14"
+  },
+  "confirmed": [
+    "Imported candidate opens; Discovery loads successfully through the app"
+  ],
+  "notClaimed": [
+    "Non-empty person/group results",
+    "Complete approved-field review",
+    "Personal request invocation/persistence",
+    "Group join invocation/introduction/persistence",
+    "Complete App checker result",
+    "Published app version",
+    "Ordinary-participant access/privacy"
+  ],
+  "appId": null,
+  "publishedVersion": null,
+  "discoveryRunReference": null,
+  "nextTesting": "Remaining #16 UI/action cases may be delegated under the inline issue checklist; no full owner functional retest is requested."
+}

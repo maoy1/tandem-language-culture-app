@@ -156,12 +156,17 @@
     "result": "PASS: delimiters, quoting and alias separators only; not compilation"
   },
   "packager": "Microsoft.PowerApps.CLI.Tool 2.15.1 / canvas SourceCode",
-  "powerFxCompilation": "NOT RUN: requires Power Apps Studio",
-  "tenantFlowBinding": "NOT RUN",
-  "nativeImport": "NOT RUN",
+  "powerFxCompilation": "Screen and Discovery path load successfully; complete App checker report NOT SUPPLIED",
+  "tenantFlowBinding": {
+    "TandemDiscovery": "PASS_OWNER_CONFIRMED_APP_DATA_LOAD",
+    "TandemSendRequest": "NOT RUN",
+    "TandemSendGroupJoinRequest": "NOT RUN"
+  },
+  "nativeImport": "PASS_OWNER_CONFIRMED_LOAD",
   "publishedVersion": null,
   "ordinaryParticipantAccess": "DEFERRED",
   "runtimeFlowsChanged": 0,
   "note": "PAC source overlay loads on Studio edit; Controls JSON and AppCheckerResult are the original cached files, not a new compilation result.",
-  "candidateUnpackSourceRoundtrip": "PASS: both source overlays recovered unchanged by Microsoft PAC"
+  "candidateUnpackSourceRoundtrip": "PASS: both source overlays recovered unchanged by Microsoft PAC",
+  "nativeEvidence": "discovery-load.owner-confirmation.json"
 }
