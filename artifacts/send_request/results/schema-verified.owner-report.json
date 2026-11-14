@@ -1,0 +1,500 @@
+{
+  "kind": "TandemRequestSchemaPreflight",
+  "schemaVersion": 1,
+  "sourceTicket": 10,
+  "packageBuildId": "dd0c91b6-13b4-41e0-affd-ebafeeb87404",
+  "runReference": "08584074285601068216673996565CU29",
+  "readOnly": true,
+  "itemRowsRead": 0,
+  "writes": 0,
+  "schemaVerified": true,
+  "collectionComplete": true,
+  "expectedFields": {
+    "SenderParticipantId": "Number",
+    "RecipientParticipantId": "Number",
+    "TargetGroup": "Lookup",
+    "RequestType": "Choice",
+    "Status": "Choice",
+    "SendOperationKey": "Text",
+    "ConnectionKey": "Text",
+    "WinningOperationKey": "Text",
+    "OperationComplete": "Boolean"
+  },
+  "nextStep": "Metadata only. Do not change permissions or enable replacement writers until request mapping/keys and existing-row handling are reviewed. No old writer is proven compatible by this check.",
+  "requestList": {
+    "BaseTemplate": 100,
+    "Id": "3d17485d-1dac-41f0-a1af-24e45daa4567",
+    "ItemCount": 0
+  },
+  "fields": [
+    {
+      "EnforceUniqueValues": false,
+      "Hidden": false,
+      "Indexed": false,
+      "InternalName": "SenderParticipantId",
+      "ReadOnlyField": false,
+      "Required": true,
+      "SchemaXml": "<Field Type=\"Number\" DisplayName=\"SenderParticipantId\" Required=\"TRUE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" Decimals=\"0\" ID=\"{7909dcd2-f0b9-4158-9b9a-2017cb156fcd}\" SourceID=\"{3d17485d-1dac-41f0-a1af-24e45daa4567}\" StaticName=\"SenderParticipantId\" Name=\"SenderParticipantId\" ColName=\"float1\" RowOrdinal=\"0\"/>",
+      "TypeAsString": "Number"
+    },
+    {
+      "EnforceUniqueValues": false,
+      "Hidden": false,
+      "Indexed": false,
+      "InternalName": "RecipientParticipantId",
+      "ReadOnlyField": false,
+      "Required": false,
+      "SchemaXml": "<Field Type=\"Number\" DisplayName=\"RecipientParticipantId\" Required=\"FALSE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" Decimals=\"0\" ID=\"{e23db904-ddb4-451d-aa37-9b59b375b1ca}\" SourceID=\"{3d17485d-1dac-41f0-a1af-24e45daa4567}\" StaticName=\"RecipientParticipantId\" Name=\"RecipientParticipantId\" ColName=\"float2\" RowOrdinal=\"0\" CustomFormatter=\"\" Percentage=\"FALSE\" Version=\"1\"/>",
+      "TypeAsString": "Number"
+    },
+    {
+      "EnforceUniqueValues": false,
+      "Hidden": false,
+      "Indexed": false,
+      "InternalName": "Status",
+      "ReadOnlyField": false,
+      "Required": true,
+      "SchemaXml": "<Field Type=\"Choice\" DisplayName=\"Status\" Required=\"TRUE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" Format=\"Dropdown\" FillInChoice=\"FALSE\" ID=\"{9a1d79d6-44d3-4c17-8d85-c3c75e68c0df}\" SourceID=\"{3d17485d-1dac-41f0-a1af-24e45daa4567}\" StaticName=\"Status\" Name=\"Status\" ColName=\"nvarchar7\" RowOrdinal=\"0\"><Default>Pending</Default><CHOICES><CHOICE>Pending</CHOICE><CHOICE>Accepted</CHOICE><CHOICE>Declined</CHOICE><CHOICE>Cancelled</CHOICE></CHOICES></Field>",
+      "TypeAsString": "Choice"
+    },
+    {
+      "EnforceUniqueValues": false,
+      "Hidden": false,
+      "Indexed": false,
+      "InternalName": "RequestType",
+      "ReadOnlyField": false,
+      "Required": true,
+      "SchemaXml": "<Field Type=\"Choice\" DisplayName=\"RequestType\" Required=\"TRUE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" Format=\"Dropdown\" FillInChoice=\"FALSE\" ID=\"{3394885a-91ad-4708-a6da-786b13c3fb7f}\" SourceID=\"{3d17485d-1dac-41f0-a1af-24e45daa4567}\" StaticName=\"RequestType\" Name=\"RequestType\" ColName=\"nvarchar8\" RowOrdinal=\"0\"><Default>Personal</Default><CHOICES><CHOICE>Personal</CHOICE><CHOICE>Group</CHOICE></CHOICES></Field>",
+      "TypeAsString": "Choice"
+    },
+    {
+      "EnforceUniqueValues": false,
+      "Hidden": false,
+      "Indexed": false,
+      "InternalName": "TargetGroup",
+      "ReadOnlyField": false,
+      "Required": false,
+      "SchemaXml": "<Field Type=\"Lookup\" DisplayName=\"TargetGroup\" Required=\"FALSE\" EnforceUniqueValues=\"FALSE\" List=\"{4bf1b37f-edce-40c5-8fa0-36543a2d0cd6}\" ShowField=\"Title\" UnlimitedLengthInDocumentLibrary=\"FALSE\" RelationshipDeleteBehavior=\"None\" ID=\"{72e41179-831a-42d1-b713-04d3ff07b1fb}\" SourceID=\"{3d17485d-1dac-41f0-a1af-24e45daa4567}\" StaticName=\"TargetGroup\" Name=\"TargetGroup\" ColName=\"int1\" RowOrdinal=\"0\"/>",
+      "TypeAsString": "Lookup"
+    },
+    {
+      "EnforceUniqueValues": true,
+      "Hidden": false,
+      "Indexed": true,
+      "InternalName": "SendOperationKey",
+      "ReadOnlyField": false,
+      "Required": true,
+      "SchemaXml": "<Field Type=\"Text\" DisplayName=\"SendOperationKey\" Required=\"TRUE\" EnforceUniqueValues=\"TRUE\" Indexed=\"TRUE\" MaxLength=\"255\" ID=\"{177b42fe-c488-4e97-98a4-934db317629f}\" SourceID=\"{3d17485d-1dac-41f0-a1af-24e45daa4567}\" StaticName=\"SendOperationKey\" Name=\"SendOperationKey\" ColName=\"nvarchar9\" RowOrdinal=\"0\"/>",
+      "TypeAsString": "Text"
+    },
+    {
+      "EnforceUniqueValues": true,
+      "Hidden": false,
+      "Indexed": true,
+      "InternalName": "ConnectionKey",
+      "ReadOnlyField": false,
+      "Required": true,
+      "SchemaXml": "<Field Type=\"Text\" DisplayName=\"ConnectionKey\" Required=\"TRUE\" EnforceUniqueValues=\"TRUE\" Indexed=\"TRUE\" MaxLength=\"255\" ID=\"{a8c484b6-fc38-44f1-b34f-289c8f8c5545}\" SourceID=\"{3d17485d-1dac-41f0-a1af-24e45daa4567}\" StaticName=\"ConnectionKey\" Name=\"ConnectionKey\" ColName=\"nvarchar10\" RowOrdinal=\"0\"/>",
+      "TypeAsString": "Text"
+    },
+    {
+      "EnforceUniqueValues": false,
+      "Hidden": false,
+      "Indexed": false,
+      "InternalName": "WinningOperationKey",
+      "ReadOnlyField": false,
+      "Required": false,
+      "SchemaXml": "<Field Type=\"Text\" DisplayName=\"WinningOperationKey\" Required=\"FALSE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" MaxLength=\"255\" ID=\"{a7b536b3-0330-4067-bf11-6c66a2b1fd86}\" SourceID=\"{3d17485d-1dac-41f0-a1af-24e45daa4567}\" StaticName=\"WinningOperationKey\" Name=\"WinningOperationKey\" ColName=\"nvarchar11\" RowOrdinal=\"0\"/>",
+      "TypeAsString": "Text"
+    },
+    {
+      "EnforceUniqueValues": false,
+      "Hidden": false,
+      "Indexed": false,
+      "InternalName": "OperationComplete",
+      "ReadOnlyField": false,
+      "Required": false,
+      "SchemaXml": "<Field Type=\"Boolean\" DisplayName=\"OperationComplete\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" ID=\"{7bc493d6-0d99-4ac3-97d0-972acec765eb}\" SourceID=\"{3d17485d-1dac-41f0-a1af-24e45daa4567}\" StaticName=\"OperationComplete\" Name=\"OperationComplete\" ColName=\"bit1\" RowOrdinal=\"0\"><Default>0</Default></Field>",
+      "TypeAsString": "Boolean"
+    }
+  ],
+  "columnIndex": [
+    {
+      "internalName": "ContentTypeId",
+      "type": "ContentTypeId"
+    },
+    {
+      "internalName": "Title",
+      "type": "Text"
+    },
+    {
+      "internalName": "_ModerationComments",
+      "type": "Note"
+    },
+    {
+      "internalName": "File_x0020_Type",
+      "type": "Text"
+    },
+    {
+      "internalName": "_ColorHex",
+      "type": "Text"
+    },
+    {
+      "internalName": "_ColorTag",
+      "type": "Text"
+    },
+    {
+      "internalName": "_Emoji",
+      "type": "Text"
+    },
+    {
+      "internalName": "ComplianceAssetId",
+      "type": "Text"
+    },
+    {
+      "internalName": "SenderParticipantId",
+      "type": "Number"
+    },
+    {
+      "internalName": "RecipientParticipantId",
+      "type": "Number"
+    },
+    {
+      "internalName": "Status",
+      "type": "Choice"
+    },
+    {
+      "internalName": "RequestType",
+      "type": "Choice"
+    },
+    {
+      "internalName": "TargetGroup",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "SendOperationKey",
+      "type": "Text"
+    },
+    {
+      "internalName": "ConnectionKey",
+      "type": "Text"
+    },
+    {
+      "internalName": "WinningOperationKey",
+      "type": "Text"
+    },
+    {
+      "internalName": "OperationComplete",
+      "type": "Boolean"
+    },
+    {
+      "internalName": "ID",
+      "type": "Counter"
+    },
+    {
+      "internalName": "ContentType",
+      "type": "Computed"
+    },
+    {
+      "internalName": "Modified",
+      "type": "DateTime"
+    },
+    {
+      "internalName": "Created",
+      "type": "DateTime"
+    },
+    {
+      "internalName": "Author",
+      "type": "User"
+    },
+    {
+      "internalName": "Editor",
+      "type": "User"
+    },
+    {
+      "internalName": "_HasCopyDestinations",
+      "type": "Boolean"
+    },
+    {
+      "internalName": "_CopySource",
+      "type": "Text"
+    },
+    {
+      "internalName": "owshiddenversion",
+      "type": "Integer"
+    },
+    {
+      "internalName": "WorkflowVersion",
+      "type": "Integer"
+    },
+    {
+      "internalName": "_UIVersion",
+      "type": "Integer"
+    },
+    {
+      "internalName": "_UIVersionString",
+      "type": "Text"
+    },
+    {
+      "internalName": "Attachments",
+      "type": "Attachments"
+    },
+    {
+      "internalName": "_ModerationStatus",
+      "type": "ModStat"
+    },
+    {
+      "internalName": "Edit",
+      "type": "Computed"
+    },
+    {
+      "internalName": "LinkTitleNoMenu",
+      "type": "Computed"
+    },
+    {
+      "internalName": "LinkTitle",
+      "type": "Computed"
+    },
+    {
+      "internalName": "LinkTitle2",
+      "type": "Computed"
+    },
+    {
+      "internalName": "SelectTitle",
+      "type": "Computed"
+    },
+    {
+      "internalName": "InstanceID",
+      "type": "Integer"
+    },
+    {
+      "internalName": "Order",
+      "type": "Number"
+    },
+    {
+      "internalName": "GUID",
+      "type": "Guid"
+    },
+    {
+      "internalName": "WorkflowInstanceID",
+      "type": "Guid"
+    },
+    {
+      "internalName": "FileRef",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "FileDirRef",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "Last_x0020_Modified",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "Created_x0020_Date",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "FSObjType",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "SortBehavior",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "PermMask",
+      "type": "Computed"
+    },
+    {
+      "internalName": "PrincipalCount",
+      "type": "Computed"
+    },
+    {
+      "internalName": "FileLeafRef",
+      "type": "File"
+    },
+    {
+      "internalName": "UniqueId",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "ParentUniqueId",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "SyncClientId",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "ProgId",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "ScopeId",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "HTML_x0020_File_x0020_Type",
+      "type": "Computed"
+    },
+    {
+      "internalName": "_EditMenuTableStart",
+      "type": "Computed"
+    },
+    {
+      "internalName": "_EditMenuTableStart2",
+      "type": "Computed"
+    },
+    {
+      "internalName": "_EditMenuTableEnd",
+      "type": "Computed"
+    },
+    {
+      "internalName": "LinkFilenameNoMenu",
+      "type": "Computed"
+    },
+    {
+      "internalName": "LinkFilename",
+      "type": "Computed"
+    },
+    {
+      "internalName": "LinkFilename2",
+      "type": "Computed"
+    },
+    {
+      "internalName": "DocIcon",
+      "type": "Computed"
+    },
+    {
+      "internalName": "ServerUrl",
+      "type": "Computed"
+    },
+    {
+      "internalName": "EncodedAbsUrl",
+      "type": "Computed"
+    },
+    {
+      "internalName": "BaseName",
+      "type": "Computed"
+    },
+    {
+      "internalName": "MetaInfo",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "_Level",
+      "type": "Integer"
+    },
+    {
+      "internalName": "_IsCurrentVersion",
+      "type": "Boolean"
+    },
+    {
+      "internalName": "ItemChildCount",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "FolderChildCount",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "Restricted",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "OriginatorId",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "NoExecute",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "ContentVersion",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "_ComplianceFlags",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "_ComplianceTag",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "_ComplianceTagWrittenTime",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "_ComplianceTagUserId",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "_IsRecord",
+      "type": "Computed"
+    },
+    {
+      "internalName": "AccessPolicy",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "_VirusStatus",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "_VirusVendorID",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "_VirusInfo",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "_RansomwareAnomalyMetaInfo",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "_DraftOwnerId",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "MainLinkSettings",
+      "type": "Computed"
+    },
+    {
+      "internalName": "AppAuthor",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "AppEditor",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "SMTotalSize",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "SMLastModifiedDate",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "SMTotalFileStreamSize",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "SMTotalFileCount",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "_CommentFlags",
+      "type": "Lookup"
+    },
+    {
+      "internalName": "_CommentCount",
+      "type": "Lookup"
+    }
+  ],
+  "normalization": "Retained all nine request-contract fields and complete name/type index, removed REST transport metadata/system-field XML. Original source hash in companion evidence."
+}
