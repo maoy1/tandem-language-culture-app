@@ -1,0 +1,117 @@
+{
+  "sourceTicket": 11,
+  "version": "11.2.0",
+  "packageBuildId": "28a0e136-7f75-4d65-b217-258ef163b112",
+  "branch": "codex/issue-11-business-response",
+  "previousCommit": "1278947215b6ba0808fbb344bb9eb304652cca1d",
+  "local": {
+    "status": "PASS",
+    "command": "python -B -m pytest tests/test_respond_request.py tests/test_solution_source.py tests/test_coordination.py -q -x -p no:cacheprovider",
+    "testsPassed": 141,
+    "issue11Tests": 92,
+    "nativeEnvelopeAndCoordinationRegressionTests": 49,
+    "durationSeconds": 55.36,
+    "fullSuite": "NOT RERUN for11.2.0; prior420/11.1.0 evidence preserved separately, not a current full-suite claim.",
+    "engine": "Real emitted parent WDL, sequential Foreach/typed native assertions/failure propagation, fake SharePoint CAS/unique/readback, actual shared child graph."
+  },
+  "priorEvidence": {
+    "path": "artifacts/respond_request/validation-11.1.0.json",
+    "version": "11.1.0",
+    "testsPassed": 420,
+    "status": "HISTORICAL_PASS"
+  },
+  "structure": {
+    "status": "PASS",
+    "actions": 296,
+    "maximumActionDepth": 7,
+    "previousActions": 418,
+    "actionsRemoved": 122,
+    "percentRemoved": 29.19,
+    "actionHeadroom": 204,
+    "limits": {
+      "actions": 500,
+      "maximumActionDepth": 8
+    },
+    "sequentialForeachDefinitions": 1,
+    "expectedMemberIterations": 2,
+    "loopStopProof": "MembersContinue false before I/O, true only after exact readback and VerifiedMembers increment; require count2. Next iteration has no I/O after failure.",
+    "reconciledFailureProof": "Explicit post-container guards require both verified iterations and a verified business result, even when handled I/O leaves a container Failed.",
+    "types": {
+      "InitializeVariable": 10,
+      "Scope": 2,
+      "ParseJson": 77,
+      "OpenApiConnection": 67,
+      "SetVariable": 82,
+      "Compose": 11,
+      "If": 22,
+      "Query": 10,
+      "Select": 8,
+      "Workflow": 4,
+      "Foreach": 1,
+      "IncrementVariable": 1,
+      "Response": 1
+    },
+    "disjointBlocks": {
+      "frame": 13,
+      "authorizationAndReceiptPreparation": 49,
+      "completedRouter": 1,
+      "historicalReplay": 14,
+      "newOrRetryOperation": 203,
+      "stoppedOutcome": 16
+    },
+    "etagWildcardWrites": 0,
+    "automaticWriteRetries": 0,
+    "rollbackDeletes": 0
+  },
+  "hashes": {
+    "legacyZipSha256": "d74d061dd0ce822d8375b5b8f9e7289c6610d12cf59f44a7387525b5f25065ab",
+    "definitionSha256": "479a4ae57beacb9fd5e174151565d25127246dd0d4ff40b8d46454516420d07e",
+    "solutionZipSha256": "14f8f86a6f54a364cfe72c3953af71ce7a79bad0574d593a161d2764b0f13b06",
+    "generatorSha256": "88e887dc669ec709dc39385f11b3c6225568af637cfe758bf880eb451b3a8048"
+  },
+  "producerContract": {
+    "ticket": 10,
+    "source": "C:\\projects\\small_projects\\tandem-language-culture-app\\scripts\\power_automate\\send_request_flow.py",
+    "sourceSha256": "b45536889747352adff4f695b9d192d98fc57ee17f622b0e31eca534d09b4646",
+    "seed": "Personal request; personal:32:aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee; open:person:32:38; numeric parties; Personal/null; Pending/false/null.",
+    "alignment": "Typed immutable parties/SendOperationKey, sorted live key and history:request:id are checked at operation reads. Intent representation version2 freezes SendOperationKey.",
+    "testProof": "Correct actual producer-shape seed, preservation/history, reverse direction, malformed/changed keys. No execution of the producer or native E2E claim."
+  },
+  "regressionCoverage": [
+    "One group/two distinct stable episodes; Open if space/Closed full",
+    "Decline bypasses Accept inputs and group writes; common exact Pending CAS terminal decision",
+    "Shared eligibility/purpose/capacity, optional timezone/culture-only and synthetic38/32 negative",
+    "Exact authority, immutable keys/parties, stale revisions/current profiles and competing decisions",
+    "First/second iteration definite/unknown writes; no second I/O after first failure; current-iteration outputs",
+    "Lost create response reconciled by exact row without false incomplete success; Left/wrong keys stay rejected",
+    "Three sealed attempts, uncertain ownership retention, failed sealed/completed release and historical replay",
+    "Failed/paged committed readbacks; wrong version; strict assertion rejects false/null/numbers/stringtrue",
+    "Legacy/parent-only Solution source adapter and unchanged #47 reference contracts"
+  ],
+  "drift": {
+    "sharedRuntimeDelta": "NONE",
+    "sharedContractVersion": 1,
+    "sharedRulesVersion": 1,
+    "inputOutputDelta": "NONE to app/shared; internal typed intent v2 includes SendOperationKey.",
+    "requestHistoryCorrection": "history:request:id now matches actual #10; old11.1 history:id was incompatible.",
+    "schemaDelta": "NONE; existing fields only; no extra group/receipt field or metadata audit.",
+    "newRuntimeHelpersOrFlows": 0,
+    "issue81Handoff": "docs/ISSUE_11_RESPOND_REQUEST.md; issue edits not authorized."
+  },
+  "native": {
+    "legacyImport": "NOT RUN",
+    "parentOnlySolutionImport": "NOT RUN",
+    "powerAppsBinding": "NOT RUN",
+    "trustedCallerAndPrivateAuthority": "NOT RUN",
+    "productionReceiptSetupReadback": "NOT RUN",
+    "businessAcceptDeclineParity": "NOT RUN",
+    "raceAndFaultAcceptance": "NOT RUN",
+    "crossFlowWriters": "NOT RUN",
+    "ordinaryParticipantAccess": "DEFERRED_BY_OWNER"
+  },
+  "limitations": [
+    "Local tests do not certify native Foreach/status/connector semantics or caller authority.",
+    "Profile/catalogue reads are not an atomic cross-item eligibility reservation.",
+    "No tenant/working flow/app/permission/notification change. No ticket closure or wider-release claim."
+  ]
+}

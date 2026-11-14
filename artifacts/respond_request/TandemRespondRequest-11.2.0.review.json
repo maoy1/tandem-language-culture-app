@@ -1,0 +1,66 @@
+{
+  "sourceTicket": 11,
+  "version": "11.2.0",
+  "packageBuildId": "28a0e136-7f75-4d65-b217-258ef163b112",
+  "flowId": "fd170a11-2aec-4bab-a3f1-38ed38f23211",
+  "actions": 296,
+  "maximumActionDepth": 7,
+  "limits": {
+    "actions": 500,
+    "maximumActionDepth": 8
+  },
+  "packageSha256": "d74d061dd0ce822d8375b5b8f9e7289c6610d12cf59f44a7387525b5f25065ab",
+  "definitionSha256": "479a4ae57beacb9fd5e174151565d25127246dd0d4ff40b8d46454516420d07e",
+  "generatorSha256": "88e887dc669ec709dc39385f11b3c6225568af637cfe758bf880eb451b3a8048",
+  "solutionSha256": "14f8f86a6f54a364cfe72c3953af71ce7a79bad0574d593a161d2764b0f13b06",
+  "solutionScope": "Parent only; shared child not bundled or changed; existing connection-reference component retained.",
+  "previousVersion": "11.1.0",
+  "previousActions": 418,
+  "actionsRemoved": 122,
+  "actionHeadroom": 204,
+  "refinement": [
+    "One sequential two-party member loop with fail-stop flag and verified-iteration count",
+    "One common decision/effect-marker/completion path",
+    "Native Boolean ParseJson assertions replace If/Set/divide-by-zero branches",
+    "Batched read-only catalogue/profile/metadata assertions retain every predicate"
+  ],
+  "requestContract": "Aligned to #10 Personal saved row: SendOperationKey, open:person:min:max, history:request:id",
+  "intentRepresentationVersion": 2,
+  "triggerSource": "config/participant_response_flow.snapshot.json; NOT certified export",
+  "nativeEnvelope": {
+    "sourceTicket": 81,
+    "sourceExportSha256": "ce19af2e37e7de4a9317ec4c63e8d5777beaf23a57120c99b4e38d38ce4946d4",
+    "sourceFile": "TandemSharedValidation81_1_0_0_2.zip",
+    "solutionName": "TandemSharedValidation81",
+    "solutionVersion": "1.0.0.2",
+    "unmanaged": true,
+    "flowCount": 4,
+    "probeActions": {
+      "actions": 2,
+      "maximumActionDepth": 1
+    },
+    "sharedActions": {
+      "actions": 84,
+      "maximumActionDepth": 7
+    },
+    "sharePointConnectionKey": "shared_sharepointonline",
+    "connectionReferenceLogicalName": "cre46_sharepointonline_a22363a216",
+    "runtimeSource": "invoker",
+    "connector": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+    "sharedChildId": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+    "sharedBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
+    "probeFlowId": "85a3ff27-24e0-f111-84e8-7c1e52012c38",
+    "site": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+    "nativeConfigurationVerified": true,
+    "ownerExecutionEvidence": "sharepoint-caller-probe.owner-evidence.json",
+    "ordinaryUserAccessVerified": false,
+    "powerAppsSolutionConsumerParity": "NOT_RUN",
+    "automatedEventConnectionMode": "Not supplied by this manual Invoker probe",
+    "businessWritesVerified": false
+  },
+  "sharedContractVersion": 1,
+  "sharedRulesVersion": 1,
+  "nativeIntegration": "NOT RUN",
+  "authorityProof": "NOT RUN",
+  "legacyChildReferenceImport": "NOT RUN; stop if existing child cannot be resolved; no connector/runtime workaround"
+}

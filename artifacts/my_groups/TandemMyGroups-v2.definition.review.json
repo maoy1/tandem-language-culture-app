@@ -1,0 +1,55 @@
+{
+  "sourceTicket": 64,
+  "version": "v2",
+  "packageBuildId": "31fbef9c-81bc-4409-bf9f-2f25b4c0e6a1",
+  "actions": 185,
+  "maximumActionDepth": 5,
+  "bounds": {
+    "requests": 500,
+    "groups": 100,
+    "memberships": 2000,
+    "profiles": 500,
+    "language": 5000,
+    "culture": 5000,
+    "timezone": 5000,
+    "responseChars": 250000
+  },
+  "writes": 0,
+  "connectorReadDefinitions": 9,
+  "workflowCalls": 0,
+  "sharedChildRequired": false,
+  "schemaAuditPerClick": false,
+  "nativeStatus": "NOT_IMPORTED_NOT_TESTED",
+  "ordinaryUserAccessVerified": false,
+  "runtimeSource": "invoker",
+  "trigger": {
+    "manual": {
+      "type": "Request",
+      "kind": "PowerAppV2",
+      "inputs": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "number": {
+              "type": "number",
+              "title": "ParticipantId",
+              "x-ms-content-hint": "NUMBER",
+              "x-ms-dynamically-added": true
+            }
+          },
+          "required": [
+            "number"
+          ]
+        }
+      }
+    }
+  },
+  "definitionSha256": "440df39b310047dde6118e0c30fae9e78192bd9f52b6c9fdf5bc5c7c3031a101",
+  "generatorSha256": "df318acd8ef938c4697f4ff807cb2c64c8eb5dd6f2785e0b46e8ca3f906b8d6d",
+  "nativeSeedSha256": "ce19af2e37e7de4a9317ec4c63e8d5777beaf23a57120c99b4e38d38ce4946d4",
+  "packaging": "READABLE_NATIVE_SOLUTION_PARENT; integrator assigns new workflow identity/root and packages existing SharePoint reference; no legacy ZIP or native certification",
+  "limits": {
+    "actions": 500,
+    "maximumActionDepth": 8
+  }
+}

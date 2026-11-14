@@ -1,0 +1,16 @@
+{
+  "sourceTicket": 62,
+  "expectedPackageVersion": "v6",
+  "expectedPackageBuildId": "b108407d-4714-4d58-9852-0ffc3099c1e9",
+  "versionAttribution": "Owner response to v6 handover; response does not independently report build ID",
+  "reportedBody": {
+    "requestsjson": "[]",
+    "errormessage": "",
+    "resultcode": "OK",
+    "runreference": "08584074267842029485356386842CU16",
+    "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF"
+  },
+  "suppliedExcerptOnly": true,
+  "result": "PASS_OWNER_EMPTY_HISTORY_SMOKE",
+  "remaining": "Populated personal/group/terminal history, native action integration, app binding and ordinary-user access remain pending."
+}
