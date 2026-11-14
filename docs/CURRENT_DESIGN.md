@@ -577,3 +577,19 @@ assembly prerequisites and NOT RUN handover are in
 Final batch Solution assembly/import/native consumer proof remains pending;
 legacy evidence/closed tickets are preserved, ordinary access is not verified.
 The owner explicitly authorized the parallel 12-flow batch for this implementation.
+
+
+## #81 coordinated core batch foundation — 2026-11-14
+
+Owner explicitly authorized parallel implementation of one shared validator and eleven singly owned business flows, one coordinated Solution import, separate ticket branches/PRs and inline per-flow checklists. The old single-active-ticket sequence is superseded for this authorized batch. Core flow inventory and stable fresh component IDs are owned by config/core_batch_contract.json / scripts/power_automate/core_solution.py. No silent working-flow replacement; all generated components import disabled and the old/new event validators must never both be enabled during cutover. Full app screen implementation and ordinary-user access tests remain separate, not implied by backend import.
+
+Production target schema is config/batch_schema_contract.json. Optional Introduction is a plain-text Note, 2,000 characters enforced by app/flow. New TandemOperationReceipts has unique required OperationKey, required plain-text IntentJson, optional ResultJson/SealedAttempts, completion/uncertain/retry/domain-effect flags, AttemptToken and Stage. No extra lock service, timer, lease takeover or background repair runtime. Setup is one bounded owner maintenance flow, dry by default; it checks ManageLists before additive writes, refuses an unrelated same-title receipt list, does not convert mismatches or add missing required receipt fields to a nonempty table, then rereads metadata. No business row writes, deletes or permission changes. Native setup/production mapping remains NOT RUN; returned receipt GUID must be retained in tenant evidence.
+
+The shared schema evaluator now accepts a baseline-defined role count and plain-text Note checks, allowing the prospective eight-role/59-field batch baseline (seven native-passed roles plus receipts and request Introduction). Existing production list identities remain GUID-pinned; the new unique receipt list title is used until native GUID evidence exists. The native-passed old baseline and v2 ZIP remain unchanged historical evidence. Shared rule/availability/normalization semantics are unchanged. The new generator and its prospective schema require a fresh batch build/hash and native regression; prior QUICK3/FULL44 are not relabelled as new runtime PASS. Every consuming ticket/package carries this impact/remaining test gate.
+
+#49 owner selected in-app plus email, sender Tandemteam@elsevier.com, and approved new personal requests to recipient, group-join requests to all active target-group members, accepted/declined to sender, cancellations to recipient or active target-group members. New Outlook connection was created, but the native shared-mailbox test failed REST capability; exact mailbox/connection compatibility remains unverified. No email connector, new licence, mailbox grant or delivery workaround is added to this twelve-flow batch. #21 email remains blocked; in-app request/group views remain within core work.
+
+
+### #81 Discovery invocation bound
+
+Added backward-compatible PAIRS mode: one actor plus the supplied profile set returns eligible pair projections using the existing PAIR expression source. It avoids a separate native child invocation per candidate (up to 500 profiles). No matching/availability/identity rule changed; result remains internal and never grants authority. Discovery consumes this additive mode; other consumers retain their existing modes. New batch engine/native evidence remains NOT RUN; old v2 evidence is not reused. Three bulk/single parity, missing actor/null availability and structure-limit tests pass. Shared foundation before this addition passed 378 full local tests.
