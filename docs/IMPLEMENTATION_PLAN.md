@@ -267,7 +267,7 @@ their own implementation and regression checks.
 
 ## Deferred access test
 
-#18 and #39–#42 stay open. The owner will arrange ordinary-colleague testing later.
+#18 and #39â€“#42 stay open. The owner will arrange ordinary-colleague testing later.
 Trusted admin Members access is expected; ordinary access is unverified.
 Continue owner/synthetic-data work without selecting/configuring a new access
 architecture. Ordinary-user verification is still needed before broader rollout.
@@ -289,9 +289,9 @@ The owner/admins handle explicitly flagged one-time setup, product decisions,
 test acceptance and necessary exceptional corrections. Migration mapping review
 is one-off, at the end; no routine manual matching or per-user grant queue.
 
-## Tracking checkpoint — 2026-11-07
+## Tracking checkpoint â€” 2026-11-07
 
-Reviewed the live backlog: 40 tickets, #1–#4 closed and 36 open. The approved
+Reviewed the live backlog: 40 tickets, #1â€“#4 closed and 36 open. The approved
 scope remains valid; build-first scheduling does not waive acceptance or close
 partial features. This checkpoint records owner-reported configuration and
 observations, not a tenant export or inferred successful test.
@@ -429,14 +429,14 @@ evidence in TEST_RUNS.md.
 One ticket/branch/PR per delivery batch; finish/review the current PR before
 starting the next implementation batch. Keep incomplete tickets open.
 
-## Owner testing handover decision — 2026-11-08
+## Owner testing handover decision â€” 2026-11-08
 
 Owner asks to merge #72 and mark #61 Ready for testing so other authorized testers
 can cover the remaining cases. [the #61 issue description](https://github.com/maoy1/tandem-language-culture-app/issues/61) preserves passed/pending/blocked
 variants and access/fixture gates. #61 stays open, not Done; no full-test pass
 required from the owner before moving implementation forward. #9 own proof is passed and awaits review.
 
-## #9 implementation — 2026-11-08
+## #9 implementation â€” 2026-11-08
 
 Reusable typed normalization/person/group source, 39 synthetic expected cases and
 connector-free import proof built; 121 local tests pass, proof 45 actions/depth 4.
@@ -445,14 +445,14 @@ source review pending. Detailed current test handover/check boxes live in issue 
 Next #47 shared conditional-write/recovery proof, then #12 group schema, followed
 by #7 Discovery per ordered batch. #61 remains open Ready for testing.
 
-## #9 proof acceptance — 2026-11-08
+## #9 proof acceptance â€” 2026-11-08
 
 Matching-build/source-hash tenant proof run 08584074461495133197897516907CU19
 reports 39 cases, allPassed true, no failures. Own bounded proof passed; #9 Ready
 for review in #73, no owner rerun needed. Consumer integrations remain separate.
 #61 remains Ready for testing. Next implementation after this review is #47.
 
-## #47 implementation — 2026-11-08
+## #47 implementation â€” 2026-11-08
 
 PR #73 merged (6879bd90b1321a695143bd327e3aa3a52e9eece2); #9 closed/Done.
 #47 now owns bounded shared coordination contract/reference proof and read-only
@@ -460,7 +460,7 @@ fixture-permission preflight. 152 local tests, 70 reference schedules; native
 cross-item proof and new metadata/fixture prerequisites still pending. Preflight
 5 actions/depth 1, no writes. #61 remains Ready for testing; #74 cleanup still open.
 
-## #47 native fixture preparation — 2026-11-08
+## #47 native fixture preparation â€” 2026-11-08
 
 Read-only preflight owner-passed (run 08584074437966574454125674321CU01).
 Native synthetic tagged fixture package built: 10 checks, 321 actions/depth 6;
@@ -469,7 +469,7 @@ no production/permission changes or deletes. Import/run pending; model/native/
 unknown-outcome/consumer evidence remain distinguished. Inline handover in #47.
 
 
-### #47 connector duplicate-error correction — v2
+### #47 connector duplicate-error correction â€” v2
 
 The owner supplied the first native report: 5/10 checks passed, allPassed=false. All five failed cases invoke the duplicate-response predicate. The Duplicate primary raw body confirms SharePoint error -2130575169 / Microsoft.SharePoint.SPDuplicateValuesFoundException wrapped by the existing SharePoint connector as HTTP 502. The original proof's 400/409-only classifier was too narrow. The five-case common cause is supported by local replay; a native v2 pass remains unverified.
 
@@ -480,7 +480,7 @@ Supported package: artifacts/coordination/TandemCoordinationFixture-v2.zip, buil
 Validation: 179 local tests passed, including wrapped native duplicate simulation in both writer orders and generic/error-negative cases; 321 actions / depth 6 (limits 500/8). V2 NOT_IMPORTED_NOT_TESTED. #47 remains In progress / PR #75 draft pending native results. No genuine timeout/killed-run, production consumer or notification-delivery proof inferred.
 
 
-### #47 native bounded proof passed — 2026-11-08
+### #47 native bounded proof passed â€” 2026-11-08
 
 Matching v2 build `b54d7cee-971d-4af3-924f-e81d5fefaec9`, owner run `08584074402025984197329193901CU08`: testCount=10, allPassed=true, failedCases=[]. Permission gate passed; existing tagged fixture `Tandem47Fixture_b54d7cee971d4af3` / `abade32d-8b24-4b30-b2e0-668d10238acb` reused (fixtureCreated=false). Summary exactly as supplied: `artifacts/coordination/results/fixture-v2.pass.owner-summary.json`; successful per-case details were not supplied and are not reconstructed. The package gates allPassed on exactly 10 results and no failed cases.
 
@@ -489,7 +489,7 @@ History retained: original classifier build 5/10 pass; first v2 run `08584074408
 179 local tests / 70 reference schedules previously passed; final artifact remains 321 actions / depth 6, no runtime changes after owner proof. #47 **Ready for review**, PR #75 ready; no owner rerun required. Earlier pending-run entries above are historical. Own contract review/merge remains; no production schema applied, all 70 schedules are not native-proven, genuine timeout/killed-run, production consumer/access and external notification delivery remain separate. #12 group/member schema is next after merge; #61 stays Ready for testing.
 
 
-## #12 active schema inspection — 2026-11-08
+## #12 active schema inspection â€” 2026-11-08
 
 PR #75 merged `be278a1cc7a72b862154ae8ffe201acdf998f019`; #47 closed/Done after accepted bounded contract/native proof. #12 is the sole active ticket. Existing #57 group/member snapshot is historical source evidence; current actual list IDs/field definitions/settings remain unverified.
 
@@ -498,7 +498,7 @@ Prepared `artifacts/group_schema/TandemGroupSchemaAudit.zip`, build `cb49aded-f1
 194 local tests pass, including 15 generated-inspector cases (normal collection, ambiguous/missing/unsafe targets, paging, missing arrays/identities/permissions, failed reads and package safeguards). Tenant import/run **NOT RUN**. collectionComplete means bounded metadata collected, not schema acceptance; schemaVerified remains false. No setup until actual report reviewed, any changes flagged and actual per-list capability verified. Existing rows preserved; exceptions route #48. Full operator handover/checkboxes inline in issue #12; draft PR is partial preparation, not whole-ticket Ready. #61 remains Ready for testing.
 
 
-### #12 actual mapping and direct settings — 2026-11-08
+### #12 actual mapping and direct settings â€” 2026-11-08
 
 Owner opted for direct list settings rather than another setup package. Initial audit `08584074383115048211345636667CU09` and manual-settings readback `08584074377818105096431306544CU07` match build `cb49aded-f121-410e-b7df-d9646be892dd`: collectionComplete=true/errors empty; Groups and Group Members each itemCount=0. Actual field/list IDs, types, choices, defaults, XML constraints and lookup targets recorded in `config/group_schema_mapping.json`; source reports in `artifacts/group_schema/results/`.
 
@@ -507,7 +507,7 @@ Confirmed group Title now required; WriteOwner optional nonunique Text/blank def
 Group Members Group and Participant still report indexed=false. Indexed columns page requested; no index completion or full schema acceptance claimed. #12 remains In progress / PR #76 draft. No setup package generated, row writes, renames/deletion or runtime/privacy certification. 194 existing local tests previously passed; this is metadata/evidence only, not new executable changes.
 
 
-### #12 schema mapping and five manual settings verified — 2026-11-08
+### #12 schema mapping and five manual settings verified â€” 2026-11-08
 
 Final audit build `cb49aded-f121-410e-b7df-d9646be892dd`, run `08584074372941101122136369836CU17`: collectionComplete=true, errors=[], both lists itemCount=0. Groups `4bf1b37f-edce-40c5-8fa0-36543a2d0cd6`; Group Members `db611ec3-7fa3-477a-878e-effbbb195cb8`. Group and Participant now each indexed=true; owner Indexed columns page lists separate Group / MembershipKey / Participant. Prior combined Group, Participant index was replaced with separate indexes.
 
@@ -516,7 +516,7 @@ All five direct-setting changes read back: group Title required; WriteOwner opti
 #12 Ready for review / PR #76 ready. No owner rerun or settings package needed; owner chose manual UI changes. 194 local tests previously passed; no executable change in final evidence recording. No row rejection/creation/migration, ordinary-user privacy or consuming-flow/history behavior claimed. No migration exceptions in these observed empty lists. Dynamic count/focus/identity/Ended/history guards remain respective Flow scope; #48 migration remains separate. Source/contract review and merge remain; next focused implementation is #7 Discovery after merge, #61 still Ready for testing. Earlier pending-index entries are historical.
 
 
-## #7 Discovery owner-preview build — 2026-11-08
+## #7 Discovery owner-preview build â€” 2026-11-08
 
 PR #76 merged `39ebc0cd48c428602a0434a12db0c99ac77a9de5`; #12 closed/Done. #7 is sole active ticket. Actual TandemDiscovery export inspected (source hash `7b4dc1e5df96769615088d897cf86030a2622a47dc7db56a414dbe75f41085a9`): Power Apps V2 number reference, SharePoint Invoker source with Raw authentication, Get item/Get items and candidatesjson/errormessage response. No ordinary-user access proof or owner-credential fallback inferred.
 
@@ -525,7 +525,7 @@ Built `artifacts/tandem_discovery/TandemDiscovery-v2.zip`, build `7c8589d0-fdea-
 242 local tests pass, including 48 generated Discovery graph/packaging cases (own/tampered references, availability, blank zone/culture/Any, source/member commitment, group state/count/focus/history, structured-field rejection, read/page/count/work/response limits and Invoker preservation). Native import/run NOT RUN; mode OWNER_PREVIEW_PENDING_ACCESS_PROOF. #42 privacy/ordinary-user two-account proof deferred; do not publish a participant endpoint or change permissions. Candidate groups additionally require live Connection Requests.OperationComplete Boolean plus accepted/complete source/episodes; missing schema fails explicitly, no field creation in #7. Current empty group lists allow an owner people/empty-group smoke without claiming populated group proof. Exact contract and remaining gates in config/discovery_flow_contract.json and inline #7 handover. Existing raw export remains user-owned/untracked, no source replacement or production cutover.
 
 
-### #7 owner smoke — Paused rejected, Active empty success (2026-11-08)
+### #7 owner smoke â€” Paused rejected, Active empty success (2026-11-08)
 
 Build `7c8589d0-fdea-4db8-9d44-46b7d8548acf`. Owner run `08584074350262917105745395996CU25` returned PROFILE_UNAVAILABLE/success=false while own Participation status was Paused. Owner manually changed it to Active; fresh run `08584074348343616902680114159CU10` returned OK/success=true, peopleCount=0/groupCount=0, writes=0, ordinaryUserAccessVerified=false. Exact reports and scoped evidence saved under `artifacts/tandem_discovery/results/`. No flow/package change needed for this expected availability result.
 
@@ -534,7 +534,7 @@ This proves owner-context invocation/own-reference path, Paused rejection and Ac
 Owner restated self-service access: avoid individual participant approvals/grants; use verified existing group-based app/flow access. The shown SharePoint connection consent is separate from run/data authorization. Invoker is preserved; no switch to an owner connection and no new permission changes. #42 owns the final protected-data/caller boundary; owner smoke does not resolve it. Remaining versioned tests stay unchecked in issue #7.
 
 
-## #7 resumed implementation review — 2026-11-08
+## #7 resumed implementation review â€” 2026-11-08
 
 Owner deferred the audience-group/IT question and requested continued #7 work.
 #39 assessment is queued Planned with draft #43 and successful owner metadata
@@ -563,7 +563,7 @@ for later handover; the next build batch is #10 personal send, #62 inbox and #63
 cancellation, with one focused production-flow ticket active at a time.
 
 
-## Parallel development batch — 2026-11-08
+## Parallel development batch â€” 2026-11-08
 
 Owner explicitly requested parallel flow development after PR #77 merged
 `a19176b5e273de56cd09f395153f1fd78f593b6b`. #10/#62/#63 are active in
@@ -604,7 +604,7 @@ claiming the new flows are already integrated. Request Type/TargetGroup/custom
 keys are proposed names until metadata is collected. #11/#17/#65 own their writers.
 Exact operator/test checkboxes are inline in #10; #62/#63 own their handovers.
 
-### Parallel batch delivery — 2026-11-08
+### Parallel batch delivery â€” 2026-11-08
 
 All three isolated implementations are built: Send #10 / PR #78 (125 actions/depth 5), My requests #62 / PR #80 (223/depth 4), Cancel #63 / PR #79 (138/depth 5). Shared read-only request schema preflight is 18/depth 3. All source Invoker bindings preserved, no embedded fallback; send alone adds a required retained intent UUID. Reader preserves original created timestamp/order and response row fields; cancel preserves its two input arguments. No writer cutover, schema setup or app publication performed.
 
@@ -612,7 +612,7 @@ Combined disposable-checkout suite: 455 tests passed plus one additional cross-g
 
 Packages delivered together locally in artifacts/request_batch/TandemRequestFlows-20261108.zip (outer delivery archive, not directly importable); extract and import the inner schema preflight first. Each individual flow ZIP also remains under its own artifact folder. Three separate implementation PRs are ready for code review; tickets stay open. Checkbox handovers are inline in #10/#62/#63. Real request mapping/constraints/legacy rows and coordinated old-writer compatibility remain native integration blockers; inspect schema metadata before running replacement writers. Participant rollout is still access-gated.
 
-## Request schema native observation and adapter correction — 2026-11-08
+## Request schema native observation and adapter correction â€” 2026-11-08
 
 Run 08584074297422149453962972460CU27 (initial preflight f7fd078d-740a-4d68-a8fe-31ca2abc9e54) collected metadata, schemaVerified=false, zero item reads/writes. SenderParticipantId/RecipientParticipantId are existing required Number/Decimals=0, not Lookup fields. Status already matches. Owner reports list empty. Preserve existing field IDs/names/types; no migration needed for this observed empty list. New fields RequestType/TargetGroup/SendOperationKey/ConnectionKey/WinningOperationKey/OperationComplete remain absent, and RecipientParticipantId optionality is needed for Group requests. Source report and reviewed mapping under artifacts/send_request/results and config/request_schema_mapping.json.
 
@@ -620,7 +620,7 @@ Corrected Send v3 a9251019-b7a5-4170-8877-682bb71b8693 (125/depth5), preflight v
 
 Corrected Number-adapter batch: 493 combined local tests passed (includes cross-flow contract check); Send v3/preflight v2, reader v4, cancel v3. Latest manifest artifacts/send_request/request_batch.validation.json. New bundle artifacts/request_batch/TandemRequestFlows-20261108-v2.zip. Owner empty-list setup remains pending; no native pass inferred.
 
-## Request schema verification passed — 2026-11-08
+## Request schema verification passed â€” 2026-11-08
 
 Corrected preflight dd0c91b6-13b4-41e0-affd-ebafeeb87404 run **08584074285601068216673996565CU29**: collectionComplete=true/schemaVerified=true, ItemCount=0, itemRowsRead=0/writes=0. Numeric SenderParticipantId/RecipientParticipantId field IDs retained; recipient optional, six new field types/required/unique/index/default/lookup/choice metadata all match. Status unchanged. Verified mapping in config/request_schema_mapping.json; curated report/evidence in artifacts/send_request/results/schema-verified.*. No migration necessary.
 
@@ -630,3 +630,89 @@ Actual returned metadata also passes all three generated graphs with synthetic r
 ### #10 owner send smoke results - 2026-11-09
 
 Owner reports matched send SAVED/Pending and unmatched send passed rejection after new-intent guidance. Expected Send v3 build a9251019-b7a5-4170-8877-682bb71b8693; successful run references/full outputs not supplied. Prior provided INTENT_CONFLICT run 08584074252930158987892330133CU13 is retained as separate evidence and is not the unmatched-case pass. Source in artifacts/send_request/results/v3-send-smokes.owner-evidence.json. Recipient30 previously lacked participation/openness, was excluded before matching; owner changed test fixture. This is bounded owner smoke, not full REQ-001/AUTH-002 acceptance: exact stored parties/keys, same-intent replay/no duplicate, cancellation/history, races, UI and ordinary-user access remain pending. No executable/package change; #10 remains open. Next: retry successful sender/recipient/IntentId unchanged, expect REPLAY/same request ID and one row.
+## Planned single shared validation workflow â€” #81
+
+Owner direction is tracked by [#81 TandemValidateContext](https://github.com/maoy1/tandem-language-culture-app/issues/81). Existing #9 shares generator source, not a single deployed validation workflow. #81 owns one read-only shared workflow for schema checks, normalization and person/group compatibility, with versioned operation-specific inputs/results. Business flows should retain their operation logic and the minimal identity/authority and atomic live-state/ETag/unique-key guards needed for correct writes. Full schema audit and fresh live eligibility have different timing; a setup audit cannot replace operation-time data checks.
+
+Implementation has not started. Allowed invocation, deployment/import mechanism, tenant entitlements, caller propagation and latency must be verified before depending on child flows/Solutions or removing repeated checks. No paid/external fallback is approved. Existing working packages are unchanged. #81 contains unchecked capability, schema, rule-parity, version-drift and consumer-proof acceptance; consumer cutovers remain in their own Flow branches/PRs. Ordinary-user proof remains deferred, not waived.
+
+Mandatory change rule: every schema/mapping/catalogue/rule/normalization/availability/capacity/commit/public-contract change updates #81 ledger, shared implementation/contract, design/plan, affected consumer issues/packages and relevant regressions/evidence, or records a concrete no-impact assessment. Old native evidence is retained with its version and affected new behavior stays NOT RUN until retested. AGENTS.md makes this a required review item until automated drift validation exists. Preserve completed #9/#12/#66 history and unresolved #10 replay/Pending-row tests.
+
+
+## #81 invocation proof preparation and ordered consumer plan
+
+Owner authorized this order: **#81 invocation proof -> #10 Send -> #62 My requests -> #63 Cancel -> #7 Discovery -> #61 submission**, applying the shared design while finishing #11 Respond. #81 is the sole active ticket; #10/#62/#63 are queued Planned with their implementations and evidence retained. See [#81](https://github.com/maoy1/tandem-language-culture-app/issues/81) and config/shared_validation_invocation_proof.json for the reviewed source hashes, measured consumer action/depth inventory and proof contract.
+
+Microsoft's documented child-flow route requires Solution-aware parent/child flows. Parent connections cannot be passed to children; a child using SharePoint needs its own embedded connection. Sources: https://learn.microsoft.com/en-us/power-automate/create-child-flows and https://learn.microsoft.com/en-us/power-automate/create-flow-solution. These are documented platform requirements, not tenant entitlement/caller proof. The current account proved legacy import only; no Solution/database/maker entitlement or child invocation is inferred. There is no connected tenant browser session.
+
+First owner check: inspect More -> Solutions in the existing Tandem environment and return whether the list opens or the exact prerequisite prompt. No trial, database/environment creation, paid dependency or working-flow change is part of that check. The first native proof is planned as disposable connector-free parent/child token+correlation echo in one allowed Solution, followed by repeat/error cases and export of that native envelope. No new generated package or measured proof-flow definition exists yet; do not label a legacy import as child-invocation proof. Exact test/setup/expected evidence and cleanup are inline in #81.
+
+Pure child invocation does not prove SharePoint caller propagation. Parent business flows retain authenticated caller binding and atomic live write guards. The future shared child data-read/connection boundary is not selected; no embedded owner fallback or production Run-only change is approved. Full-schema audit belongs to maintenance/deployment mode, fresh relevant data remains operation-specific. No schema/rule/business package changes or transferred test PASS. #10 failed replay/unexplained old Pending row remain unresolved. All #81 native tests NOT RUN while first capability evidence is pending.
+
+
+### #81 first tenant prerequisite result
+
+Owner confirms the Solutions list opens normally in the existing Tandem environment. This proves page availability only; Solution creation/editing rights, current entitlements, linked parent/child execution and packaging remain NOT RUN. The next bounded owner test uses only two disposable connector-free flows in one unmanaged test Solution: manual child echoes ProofToken and returns native ChildRunReference; manual parent calls it and displays both outputs. Run V1/V2 tokens, retain distinct native parent/child runs, then export the unmanaged test Solution as the real packaging reference. No production credential mode, data, app or list changes. Full exact steps and stop conditions are inline in #81.
+
+
+## #81 native echo passed; shared pure validator built
+
+Owner supplied V1 echo `TANDEM81_INVOCATION_V1`, child run `08584069538865401663915371009CU10`. Native unmanaged `Tandem81InvocationProof` version 1.0.0.1 export SHA256 `5560d8d80f78de67966160fe0276711494b76c0f176e19356d6cf32d2c4c191c` was inspected: one child response, one parent Workflow call, matching native workflowReferenceName, no connector references. Publisher Tandem/prefix tandem was owner-created. This establishes bounded connector-free invocation, not general SharePoint caller/credential propagation or ordinary-user rights. Parent run reference/second-token run not supplied. Curated evidence: artifacts/shared_validation/results/invocation.owner-evidence.json; original raw export remains local/untracked.
+
+Built **TandemSharedValidation81-v1.zip**, new unmanaged Solution `TandemSharedValidation81`, build `31382f7e-a0df-44a2-9fde-223a11774e67`, SHA256 `cb0102c74fc669541cb30895dea065f45ce6e410204df742bd949f190bae02c0`. Fresh workflow IDs preserve the original proof and all business flows. **TandemValidateContext: 84 definitions/depth 7; TandemValidationSmoke: 8/depth 2**, limits 500/8, import disabled. This package is Solution import, not legacy My flows package import: native linked-flow packaging is now the tested reference, generated imports still NOT RUN. Readable child/smoke definitions and review accompany the ZIP.
+
+Implementation decision: the shared child is a **pure connector-free evaluator**. SCHEMA compares operator/parent-supplied complete native metadata against 7-role/48-field versioned baseline; it does not collect or authenticate snapshots. Full/schemaRoles audit is explicit, not repeated wholesale on participant actions. NORMALIZE, PAIR, GROUP and PROFILE centralize reusable rules, permit null availability as ineligible, keep optional time zone/culture-only/one-way fit and Any-deferred matching. PROFILE still accepts a known Any selection as valid registration content; it never makes Any a matching wildcard. New wrapper adapts #9 rather than changing the closed proof/source.
+
+Parents keep trusted SharePoint reads and caller resolution; an embedded owner child connection is not introduced. Input data/returned `success` never authorize actions: PAIR consumers must check `result.eligible`, GROUP consumers `result.compatible` plus operation conditions, PROFILE `result.valid`; schema results certify supplied metadata equality only. Keep parent authority/commit/replay/ETag/unique-key writes and approved app projection. Raw internal normalized account keys must not be passed to the app. Group member/focus-availability freshness and metadata completeness come from trusted adapters, not client declarations. Current business packages unchanged; #10 replay failure/earlier Pending origin remain unresolved.
+
+**330 local tests pass, 88 new cases**, including execution of the packaged parent across all 44 child cases (39 prior compatibility fixtures, exact synthetic 38/32 no-overlap, null participation, version mismatch, schema baseline/mutated-required). Schema regression cases cover type/required/unique/index/default/lookup/choice/decimals/formula, missing/duplicate/incomplete metadata, and extra benign indexes. Expected rejection uses normal result branches, no intentional divide-by-zero. Fingerprints reject stale participant/group/request mapping baselines; hashes/builds remain explicit. Native generated Solution import/smoke and real consumer parity NOT RUN.
+
+Next owner step: **Solutions -> Import solution** for this ZIP, enable only new child then smoke parent, manually run TandemValidationSmoke (no inputs/connections), return Smoke_report Outputs. Expect matching build, testCount=44, completedCount=44, allPassed=true and failedCases=[]. Exact prerequisites, checkbox cases, failure handling and cleanup are inline in #81. Keep #81 active/open; #10/#62/#63 queued Planned. No list/app/data/permission/working-flow changes. Once shared smoke passes, #10 migration starts with native caller/consumer parity before duplicated guards are removed; then #62/#63/#7/#61 and shared design in #11.
+
+
+## #81 v1 native input defect and v2 quick-first correction
+
+Owner v1 report build 31382f7e-a0df-44a2-9fde-223a11774e67, run 08584069519927027175534029560CU24: 44 completed/44 cases, allPassed=false, all 44 results empty. Generated Solution import and linked invocation worked; validation failed. Owner then supplied Request_text ValidationFailed and its input: serialized JSON document with string/maxLength schema. Parse JSON deserializes that document before schema validation, so the object fails a string schema. The earlier local interpreter validated the raw string instead and missed this native boundary. V1 regression now reproduces the actual failed Request_text and INVALID_INPUT. Reports retained in artifacts/shared_validation/results/v1-*; no rule or tenant/list-setting fault inferred.
+
+V2 validates an object containing bounded string value, then deserializes that value once. Child response adds sanitized stage statuses; parent failedCases adds actualCode/expectedCode/diagnostics. This changes no matching/schema baseline semantics, public input, eligibility/authority contract or consumer flow. **TandemSharedValidation81-v2.zip**, Solution version 1.0.0.1, build c79b7b64-b3ce-4de3-aa74-0ed62bca1524, SHA256 608052804073ccd2874a1f9d83fbfeb62fd331fcbe86e7be5ed375139576717e. The update preserves ONLY existing generated #81 child/full-smoke IDs and adds TandemValidationQuickSmoke; original proof and all business flows are untouched. Never delete/recreate or change list data to address this parser defect.
+
+Measured: shared child84/depth7, full parent8/depth2, quick parent8/depth2 (limits500/8). 335 local tests/93 new cases pass with native-style Parse JSON and update-ID regressions; full packaged 44-case graph and 3-case quick gate pass locally. Prior native v1 is FAIL; v2 native NOT RUN. Input handling guidance: https://learn.microsoft.com/en-us/azure/logic-apps/logic-apps-perform-data-operations.
+
+Owner next: Solutions -> Import v2 as UPDATE of TandemSharedValidation81, verify/enable child and new QuickSmoke, then run QuickSmoke only (no inputs). Expect suite QUICK, current build, testCount=3/completedCount=3/allPassed=true/failedCases=[]. Cases: compatible pair, exact 38/32 no-overlap and version rejection. Return Smoke_report Outputs; on failure actualCode and diagnostics are retained. Do not rerun the long 44-case full smoke until this short gate passes. No new connections/read/write fixtures. #81 remains active/open, real consumer/SharePoint boundary and batch business-flow delivery pending; no consumer readiness/acceptance upgraded.
+
+
+### #81 v2 native quick gate PASS
+
+Owner report matches v2 build c79b7b64-b3ce-4de3-aa74-0ed62bca1524, suite QUICK, run 08584069506351729738499173108cU14: 3 expected/3 completed, allPassed=true, failedCases=[], syntheticOnly=true, connectors/reads/writes=0. Curated body artifacts/shared_validation/results/v2-quick.owner-report.json. Confirms imported update/quick helper and corrected input path for compatible pair, exact no-overlap 38/32 and version rejection. Prior v1 44/44 failure is retained, not rewritten as passed.
+
+The full v2 44-case corpus (including GROUP/schema) and production-parent SharePoint/caller/consumer parity remain NOT RUN. No elapsed-time measurement, live-schema audit, privacy proof or business-flow readiness inferred. Next: run the already imported TandemValidationSmoke full parent once, no new import/inputs/data edits, expect same build/suite FULL/testCount44/completedCount44/allPassed true/no failed cases. Record exact report/error; keep #81 open/In progress. 335 previous local tests unchanged; this is evidence-only.
+
+
+### #81 v2 native FULL suite PASS
+
+Owner report matches v2 build c79b7b64-b3ce-4de3-aa74-0ed62bca1524, suite FULL, run 08584069504668815720383921608CU09: testCount=44/completedCount=44, allPassed=true, failedCases=[], syntheticOnly=true, connectors/reads/writes=0. Exact curated report artifacts/shared_validation/results/v2-full.owner-report.json. Together with prior quick3 PASS, the imported shared evaluator now passes the complete packaged synthetic corpus, including GROUP/schema snapshots and expected rejection cases. V1 failure history is retained. No repeat full run requested.
+
+This is supplied-fixture/runtime validation, not live SharePoint schema provenance, ordinary-user access, business parent Invoker mapping, current domain reads or atomic writer integration. No latency measurement supplied. #81 remains open/In progress pending relevant native parent/consumer proof; 335 prior local tests unchanged, evidence-only update. The next packaging prerequisite is a disposable Solution parent using the existing SharePoint connection with Run-only Provided by run-only user, GET currentuser Id, followed by the real shared child. No schema/data/permissions/working flows changed. Backend core batch remains 11 business flows plus validator; 2,000-character introduction planning is #17 and actual new schema/receipt setup must update #81 when mapped.
+
+
+### #81 owner Solution SharePoint + shared-child probe passed; export pending
+
+Owner supplied SharePoint GET body d.Id=16 and shared-child resultcode OK/success true, matching v2 build c79b7b64-b3ce-4de3-aa74-0ed62bca1524, child run 08584069483776257593504328231CU07. Empty normalization result and authorizesAction=false match the requested probe. Curated supplied values in artifacts/shared_validation/results/sharepoint-caller-probe.owner-evidence.json; parent run ID/name are not independently included in the supplied bodies.
+
+This is an owner-context execution result for the requested Tandem81CallerProbe, not proof of Run-only Invoker source, connection-reference export shape, ordinary-user context separation, business authorization or caller-bound write parity. Parent performed a metadata GET; child's zero-I/O counters describe only the pure child. No business rows/schema/permissions changed. Next: export TandemSharedValidation81 UNMANAGED with the new probe/SharePoint reference and return ZIP path for native packaging inspection; no repeat probe/full smoke requested. #81 remains open, 335 prior local tests unchanged (evidence-only).
+
+
+### #81 native Invoker envelope inspected and guarded builder adapter added
+
+Inspected owner export TandemSharedValidation81_1_0_0_2.zip, SHA256 ce19af2e37e7de4a9317ec4c63e8d5777beaf23a57120c99b4e38d38ce4946d4, unmanaged Solution version 1.0.0.2. Four workflow roots match components. The shared child still matches the delivered native-passed c79b7b64-b3ce-4de3-aa74-0ed62bca1524 v2 action graph after ignoring designer metadata; its 84/depth7 structure is unchanged. CallerProbe has 2 actions/depth1: one GET of currentuser Id and one call to that child. Its SharePoint runtimeSource is explicitly invoker, logical reference cre46_sharepointonline_a22363a216 resolves to the standard SharePoint API component, and Raw authentication is the native per-trigger X-MS-APIM-Tokens/$ConnectionKey expression. No new connector, embedded fallback or owner token substituted.
+
+Curated native configuration receipt: artifacts/shared_validation/results/native-sharepoint-solution.analysis.json. Original native export stays local/untracked. scripts/power_automate/solution_source.py now validates this source, linkage, site/read scope and interactive connection shape, then prepares caller-preserving parent documents. It rejects a changed connector/auth/site, wrong child/build, unresolved components, automatic-event trigger or unverified runtime. This adapter is local packaging code only; it does not itself create/deploy a business flow or certify it. Automated/event #61 owner binding must be preserved/reviewed in its own adapter, not converted through this manual Invoker seed.
+
+**357 local tests pass (115 #81 cases, including 22 new native-source guard tests)**. No runtime definition/ZIP or matching/schema semantics changed; native QUICK3/FULL44 and owner Id16 execution evidence remain intact. This clears inspection of the manual Solution Invoker template. Power Apps Solution consumer invocation, actual data/authority/write parity, new schema/receipt/Introduction setup and ordinary-user access remain pending. No more owner connection-probe run or raw source export requested for this inspected seed. Batch implementation will use this observed envelope with receiving-ticket tests/guards; no all-business-flow delivery or release-readiness claim.
+## #17 optional group-join introduction length accepted
+
+Owner chose **2,000 characters** for the optional plain-text group-join introduction, enforced in both app and flow. Empty/omitted remains allowed; 2,001 characters must be rejected before a request write, preserving user edits in the app. This does not add a personal-request introduction requirement or select a notification channel.
+
+Technical field proposal: optional plain-text Note column Introduction on Connection Requests, rich text/append disabled; actual column/settings are NOT verified or applied. SharePoint field mapping/setup and the flow/API/app mapping remain #17 work. All schema changes must update #81 baseline/audit/contract and affected consumers (#62/#65/#67), with existing native evidence retained by version. #81 has no Introduction persistence/parser today, so this planning decision does not change its current five-mode rule engine/package. Add actual schema coverage when the field is introduced.
+
+Contract evidence only: acceptance cases empty/omitted, 2,000 accepted and 2,001 rejected in both app/server are NOT RUN. #17 remains Planned, not implemented/Ready. No flow, list, data, permission or existing app changed. This clears the remaining explicit product choice for core group-join implementation; receipt-schema and Solution SharePoint/caller prerequisites still need technical verification.

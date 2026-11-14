@@ -1,0 +1,15 @@
+{
+  "kind": "TandemValidationSmoke",
+  "suite": "QUICK",
+  "sourceTicket": 81,
+  "packageBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
+  "syntheticOnly": true,
+  "runReference": "08584069506351729738499173108cU14",
+  "testCount": 3,
+  "completedCount": 3,
+  "allPassed": true,
+  "failedCases": [],
+  "connectors": 0,
+  "reads": 0,
+  "writes": 0
+}
