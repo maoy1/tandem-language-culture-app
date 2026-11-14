@@ -1,0 +1,2210 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "cre46_sharepointonline_a22363a216"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Button",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "boolean": {
+                  "type": "boolean",
+                  "title": "ApplyChanges",
+                  "default": false
+                }
+              },
+              "required": [
+                "boolean"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Initialize_differences": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Differences",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "Initialize_schema_snapshots": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "SchemaSnapshots",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_differences": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Setup_or_audit": {
+          "type": "Scope",
+          "actions": {
+            "Read_web_permissions": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                },
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/EffectiveBasePermissions",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                }
+              },
+              "runAfter": {}
+            },
+            "Require_setup_permission": {
+              "type": "If",
+              "expression": "@or(not(equals(triggerBody()?['boolean'],true)),equals(mod(div(int(coalesce(body('Read_web_permissions')?['d']?['EffectiveBasePermissions']?['Low'],body('Read_web_permissions')?['d']?['Low'],'0')),2048),2),1))",
+              "actions": {
+                "Find_receipts": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "authentication": {
+                      "type": "Raw",
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                    },
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "_api/web/lists?$filter=Title eq 'TandemOperationReceipts'&$select=Id,Title,Description,BaseTemplate,ItemCount&$top=2",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=verbose"
+                      }
+                    }
+                  },
+                  "runAfter": {}
+                },
+                "Create_receipts_when_requested": {
+                  "type": "If",
+                  "expression": "@and(and(equals(actions('Find_receipts')?['status'],'Succeeded'),not(equals(body('Find_receipts')?['d']?['results'],null)),empty(coalesce(body('Find_receipts')?['d']?['__next'],body('Find_receipts')?['@odata.nextLink'],''))),empty(body('Find_receipts')?['d']?['results']),equals(triggerBody()?['boolean'],true))",
+                  "actions": {
+                    "Create_receipts": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "HttpRequest",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                        },
+                        "authentication": {
+                          "type": "Raw",
+                          "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                        },
+                        "parameters": {
+                          "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                          "parameters/method": "POST",
+                          "parameters/uri": "_api/web/lists",
+                          "parameters/headers": {
+                            "Accept": "application/json;odata=verbose",
+                            "Content-Type": "application/json;odata=verbose"
+                          },
+                          "parameters/body": {
+                            "__metadata": {
+                              "type": "SP.List"
+                            },
+                            "Title": "TandemOperationReceipts",
+                            "Description": "Tandem bounded operation receipts; schema contract 81/1. No participant direct writes.",
+                            "BaseTemplate": 100
+                          }
+                        },
+                        "retryPolicy": {
+                          "type": "none"
+                        }
+                      },
+                      "runAfter": {}
+                    }
+                  },
+                  "else": {
+                    "actions": {}
+                  },
+                  "runAfter": {
+                    "Find_receipts": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Read_receipts_after_setup": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "authentication": {
+                      "type": "Raw",
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                    },
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "_api/web/lists?$filter=Title eq 'TandemOperationReceipts'&$select=Id,Title,Description,BaseTemplate,ItemCount&$top=2",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=verbose"
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Create_receipts_when_requested": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Receipt_list_exists": {
+                  "type": "If",
+                  "expression": "@and(and(equals(actions('Read_receipts_after_setup')?['status'],'Succeeded'),not(equals(body('Read_receipts_after_setup')?['d']?['results'],null)),empty(coalesce(body('Read_receipts_after_setup')?['d']?['__next'],body('Read_receipts_after_setup')?['@odata.nextLink'],''))),equals(length(body('Read_receipts_after_setup')?['d']?['results']),1))",
+                  "actions": {
+                    "Receipt_list": {
+                      "type": "Compose",
+                      "inputs": "@first(body('Read_receipts_after_setup')?['d']?['results'])",
+                      "runAfter": {}
+                    },
+                    "Receipt_list_scope": {
+                      "type": "If",
+                      "expression": "@and(equals(outputs('Receipt_list')?['BaseTemplate'],100),equals(outputs('Receipt_list')?['Description'],'Tandem bounded operation receipts; schema contract 81/1. No participant direct writes.'))",
+                      "actions": {
+                        "Read_receipts_OperationKey": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {}
+                        },
+                        "Find_receipts_OperationKey": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Read_receipts_OperationKey')?['d']?['results']",
+                            "where": "@equals(item()?['InternalName'],'OperationKey')"
+                          },
+                          "runAfter": {
+                            "Read_receipts_OperationKey": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Add_receipts_OperationKey_if_missing": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Read_receipts_OperationKey')?['status'],'Succeeded'),not(equals(body('Read_receipts_OperationKey')?['d']?['results'],null)),empty(coalesce(body('Read_receipts_OperationKey')?['d']?['__next'],body('Read_receipts_OperationKey')?['@odata.nextLink'],''))),empty(body('Find_receipts_OperationKey')),equals(triggerBody()?['boolean'],true),equals(outputs('Receipt_list')?['ItemCount'],0))",
+                          "actions": {
+                            "Create_receipts_OperationKey": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_sharepointonline",
+                                  "operationId": "HttpRequest",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                                },
+                                "authentication": {
+                                  "type": "Raw",
+                                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                                },
+                                "parameters": {
+                                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                                  "parameters/method": "POST",
+                                  "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields/createfieldasxml",
+                                  "parameters/headers": {
+                                    "Accept": "application/json;odata=verbose",
+                                    "Content-Type": "application/json;odata=verbose"
+                                  },
+                                  "parameters/body": {
+                                    "parameters": {
+                                      "__metadata": {
+                                        "type": "SP.XmlSchemaFieldCreationInformation"
+                                      },
+                                      "SchemaXml": "<Field Name=\"OperationKey\" StaticName=\"OperationKey\" DisplayName=\"OperationKey\" Type=\"Text\" Required=\"TRUE\" EnforceUniqueValues=\"TRUE\" Indexed=\"TRUE\" MaxLength=\"255\" />",
+                                      "Options": 0
+                                    }
+                                  }
+                                },
+                                "retryPolicy": {
+                                  "type": "none"
+                                }
+                              },
+                              "runAfter": {}
+                            }
+                          },
+                          "else": {
+                            "actions": {}
+                          },
+                          "runAfter": {
+                            "Find_receipts_OperationKey": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_read_receipts_OperationKey": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Add_receipts_OperationKey_if_missing": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Match_receipts_OperationKey": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Verify_read_receipts_OperationKey')?['d']?['results']",
+                            "where": "@and(equals(item()?['InternalName'],'OperationKey'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Required'],true),equals(item()?['ReadOnlyField'],false),equals(item()?['Hidden'],false),equals(item()?['EnforceUniqueValues'],true),equals(item()?['Indexed'],true),equals(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@MaxLength)')),'255'))"
+                          },
+                          "runAfter": {
+                            "Verify_read_receipts_OperationKey": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_receipts_OperationKey": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Verify_read_receipts_OperationKey')?['status'],'Succeeded'),not(equals(body('Verify_read_receipts_OperationKey')?['d']?['results'],null)),empty(coalesce(body('Verify_read_receipts_OperationKey')?['d']?['__next'],body('Verify_read_receipts_OperationKey')?['@odata.nextLink'],''))),equals(length(body('Match_receipts_OperationKey')),1))",
+                          "actions": {},
+                          "else": {
+                            "actions": {
+                              "Mismatch_receipts_OperationKey": {
+                                "type": "AppendToArrayVariable",
+                                "inputs": {
+                                  "name": "Differences",
+                                  "value": {
+                                    "code": "FIELD_MISSING_OR_MISMATCH",
+                                    "field": "receipts_OperationKey"
+                                  }
+                                },
+                                "runAfter": {}
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Match_receipts_OperationKey": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Read_receipts_IntentJson": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Verify_receipts_OperationKey": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Find_receipts_IntentJson": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Read_receipts_IntentJson')?['d']?['results']",
+                            "where": "@equals(item()?['InternalName'],'IntentJson')"
+                          },
+                          "runAfter": {
+                            "Read_receipts_IntentJson": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Add_receipts_IntentJson_if_missing": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Read_receipts_IntentJson')?['status'],'Succeeded'),not(equals(body('Read_receipts_IntentJson')?['d']?['results'],null)),empty(coalesce(body('Read_receipts_IntentJson')?['d']?['__next'],body('Read_receipts_IntentJson')?['@odata.nextLink'],''))),empty(body('Find_receipts_IntentJson')),equals(triggerBody()?['boolean'],true),equals(outputs('Receipt_list')?['ItemCount'],0))",
+                          "actions": {
+                            "Create_receipts_IntentJson": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_sharepointonline",
+                                  "operationId": "HttpRequest",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                                },
+                                "authentication": {
+                                  "type": "Raw",
+                                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                                },
+                                "parameters": {
+                                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                                  "parameters/method": "POST",
+                                  "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields/createfieldasxml",
+                                  "parameters/headers": {
+                                    "Accept": "application/json;odata=verbose",
+                                    "Content-Type": "application/json;odata=verbose"
+                                  },
+                                  "parameters/body": {
+                                    "parameters": {
+                                      "__metadata": {
+                                        "type": "SP.XmlSchemaFieldCreationInformation"
+                                      },
+                                      "SchemaXml": "<Field Name=\"IntentJson\" StaticName=\"IntentJson\" DisplayName=\"IntentJson\" Type=\"Note\" Required=\"TRUE\" RichText=\"FALSE\" AppendOnly=\"FALSE\" NumLines=\"6\" />",
+                                      "Options": 0
+                                    }
+                                  }
+                                },
+                                "retryPolicy": {
+                                  "type": "none"
+                                }
+                              },
+                              "runAfter": {}
+                            }
+                          },
+                          "else": {
+                            "actions": {}
+                          },
+                          "runAfter": {
+                            "Find_receipts_IntentJson": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_read_receipts_IntentJson": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Add_receipts_IntentJson_if_missing": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Match_receipts_IntentJson": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Verify_read_receipts_IntentJson')?['d']?['results']",
+                            "where": "@and(equals(item()?['InternalName'],'IntentJson'),equals(item()?['TypeAsString'],'Note'),equals(item()?['Required'],true),equals(item()?['ReadOnlyField'],false),equals(item()?['Hidden'],false),equals(item()?['EnforceUniqueValues'],false),not(equals(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@RichText)'))),'true')),not(equals(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@AppendOnly)'))),'true')))"
+                          },
+                          "runAfter": {
+                            "Verify_read_receipts_IntentJson": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_receipts_IntentJson": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Verify_read_receipts_IntentJson')?['status'],'Succeeded'),not(equals(body('Verify_read_receipts_IntentJson')?['d']?['results'],null)),empty(coalesce(body('Verify_read_receipts_IntentJson')?['d']?['__next'],body('Verify_read_receipts_IntentJson')?['@odata.nextLink'],''))),equals(length(body('Match_receipts_IntentJson')),1))",
+                          "actions": {},
+                          "else": {
+                            "actions": {
+                              "Mismatch_receipts_IntentJson": {
+                                "type": "AppendToArrayVariable",
+                                "inputs": {
+                                  "name": "Differences",
+                                  "value": {
+                                    "code": "FIELD_MISSING_OR_MISMATCH",
+                                    "field": "receipts_IntentJson"
+                                  }
+                                },
+                                "runAfter": {}
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Match_receipts_IntentJson": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Read_receipts_ResultJson": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Verify_receipts_IntentJson": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Find_receipts_ResultJson": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Read_receipts_ResultJson')?['d']?['results']",
+                            "where": "@equals(item()?['InternalName'],'ResultJson')"
+                          },
+                          "runAfter": {
+                            "Read_receipts_ResultJson": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Add_receipts_ResultJson_if_missing": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Read_receipts_ResultJson')?['status'],'Succeeded'),not(equals(body('Read_receipts_ResultJson')?['d']?['results'],null)),empty(coalesce(body('Read_receipts_ResultJson')?['d']?['__next'],body('Read_receipts_ResultJson')?['@odata.nextLink'],''))),empty(body('Find_receipts_ResultJson')),equals(triggerBody()?['boolean'],true),equals(outputs('Receipt_list')?['ItemCount'],0))",
+                          "actions": {
+                            "Create_receipts_ResultJson": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_sharepointonline",
+                                  "operationId": "HttpRequest",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                                },
+                                "authentication": {
+                                  "type": "Raw",
+                                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                                },
+                                "parameters": {
+                                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                                  "parameters/method": "POST",
+                                  "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields/createfieldasxml",
+                                  "parameters/headers": {
+                                    "Accept": "application/json;odata=verbose",
+                                    "Content-Type": "application/json;odata=verbose"
+                                  },
+                                  "parameters/body": {
+                                    "parameters": {
+                                      "__metadata": {
+                                        "type": "SP.XmlSchemaFieldCreationInformation"
+                                      },
+                                      "SchemaXml": "<Field Name=\"ResultJson\" StaticName=\"ResultJson\" DisplayName=\"ResultJson\" Type=\"Note\" Required=\"FALSE\" RichText=\"FALSE\" AppendOnly=\"FALSE\" NumLines=\"6\" />",
+                                      "Options": 0
+                                    }
+                                  }
+                                },
+                                "retryPolicy": {
+                                  "type": "none"
+                                }
+                              },
+                              "runAfter": {}
+                            }
+                          },
+                          "else": {
+                            "actions": {}
+                          },
+                          "runAfter": {
+                            "Find_receipts_ResultJson": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_read_receipts_ResultJson": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Add_receipts_ResultJson_if_missing": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Match_receipts_ResultJson": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Verify_read_receipts_ResultJson')?['d']?['results']",
+                            "where": "@and(equals(item()?['InternalName'],'ResultJson'),equals(item()?['TypeAsString'],'Note'),equals(item()?['Required'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Hidden'],false),equals(item()?['EnforceUniqueValues'],false),not(equals(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@RichText)'))),'true')),not(equals(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@AppendOnly)'))),'true')))"
+                          },
+                          "runAfter": {
+                            "Verify_read_receipts_ResultJson": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_receipts_ResultJson": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Verify_read_receipts_ResultJson')?['status'],'Succeeded'),not(equals(body('Verify_read_receipts_ResultJson')?['d']?['results'],null)),empty(coalesce(body('Verify_read_receipts_ResultJson')?['d']?['__next'],body('Verify_read_receipts_ResultJson')?['@odata.nextLink'],''))),equals(length(body('Match_receipts_ResultJson')),1))",
+                          "actions": {},
+                          "else": {
+                            "actions": {
+                              "Mismatch_receipts_ResultJson": {
+                                "type": "AppendToArrayVariable",
+                                "inputs": {
+                                  "name": "Differences",
+                                  "value": {
+                                    "code": "FIELD_MISSING_OR_MISMATCH",
+                                    "field": "receipts_ResultJson"
+                                  }
+                                },
+                                "runAfter": {}
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Match_receipts_ResultJson": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Read_receipts_Complete": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Verify_receipts_ResultJson": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Find_receipts_Complete": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Read_receipts_Complete')?['d']?['results']",
+                            "where": "@equals(item()?['InternalName'],'Complete')"
+                          },
+                          "runAfter": {
+                            "Read_receipts_Complete": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Add_receipts_Complete_if_missing": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Read_receipts_Complete')?['status'],'Succeeded'),not(equals(body('Read_receipts_Complete')?['d']?['results'],null)),empty(coalesce(body('Read_receipts_Complete')?['d']?['__next'],body('Read_receipts_Complete')?['@odata.nextLink'],''))),empty(body('Find_receipts_Complete')),equals(triggerBody()?['boolean'],true),equals(outputs('Receipt_list')?['ItemCount'],0))",
+                          "actions": {
+                            "Create_receipts_Complete": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_sharepointonline",
+                                  "operationId": "HttpRequest",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                                },
+                                "authentication": {
+                                  "type": "Raw",
+                                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                                },
+                                "parameters": {
+                                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                                  "parameters/method": "POST",
+                                  "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields/createfieldasxml",
+                                  "parameters/headers": {
+                                    "Accept": "application/json;odata=verbose",
+                                    "Content-Type": "application/json;odata=verbose"
+                                  },
+                                  "parameters/body": {
+                                    "parameters": {
+                                      "__metadata": {
+                                        "type": "SP.XmlSchemaFieldCreationInformation"
+                                      },
+                                      "SchemaXml": "<Field Name=\"Complete\" StaticName=\"Complete\" DisplayName=\"Complete\" Type=\"Boolean\" Required=\"FALSE\"><Default>0</Default></Field>",
+                                      "Options": 0
+                                    }
+                                  }
+                                },
+                                "retryPolicy": {
+                                  "type": "none"
+                                }
+                              },
+                              "runAfter": {}
+                            }
+                          },
+                          "else": {
+                            "actions": {}
+                          },
+                          "runAfter": {
+                            "Find_receipts_Complete": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_read_receipts_Complete": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Add_receipts_Complete_if_missing": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Match_receipts_Complete": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Verify_read_receipts_Complete')?['d']?['results']",
+                            "where": "@and(equals(item()?['InternalName'],'Complete'),equals(item()?['TypeAsString'],'Boolean'),equals(item()?['Required'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Hidden'],false),equals(item()?['EnforceUniqueValues'],false),contains(createArray('0','false'),toLower(string(item()?['DefaultValue']))))"
+                          },
+                          "runAfter": {
+                            "Verify_read_receipts_Complete": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_receipts_Complete": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Verify_read_receipts_Complete')?['status'],'Succeeded'),not(equals(body('Verify_read_receipts_Complete')?['d']?['results'],null)),empty(coalesce(body('Verify_read_receipts_Complete')?['d']?['__next'],body('Verify_read_receipts_Complete')?['@odata.nextLink'],''))),equals(length(body('Match_receipts_Complete')),1))",
+                          "actions": {},
+                          "else": {
+                            "actions": {
+                              "Mismatch_receipts_Complete": {
+                                "type": "AppendToArrayVariable",
+                                "inputs": {
+                                  "name": "Differences",
+                                  "value": {
+                                    "code": "FIELD_MISSING_OR_MISMATCH",
+                                    "field": "receipts_Complete"
+                                  }
+                                },
+                                "runAfter": {}
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Match_receipts_Complete": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Read_receipts_Uncertain": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Verify_receipts_Complete": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Find_receipts_Uncertain": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Read_receipts_Uncertain')?['d']?['results']",
+                            "where": "@equals(item()?['InternalName'],'Uncertain')"
+                          },
+                          "runAfter": {
+                            "Read_receipts_Uncertain": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Add_receipts_Uncertain_if_missing": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Read_receipts_Uncertain')?['status'],'Succeeded'),not(equals(body('Read_receipts_Uncertain')?['d']?['results'],null)),empty(coalesce(body('Read_receipts_Uncertain')?['d']?['__next'],body('Read_receipts_Uncertain')?['@odata.nextLink'],''))),empty(body('Find_receipts_Uncertain')),equals(triggerBody()?['boolean'],true),equals(outputs('Receipt_list')?['ItemCount'],0))",
+                          "actions": {
+                            "Create_receipts_Uncertain": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_sharepointonline",
+                                  "operationId": "HttpRequest",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                                },
+                                "authentication": {
+                                  "type": "Raw",
+                                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                                },
+                                "parameters": {
+                                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                                  "parameters/method": "POST",
+                                  "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields/createfieldasxml",
+                                  "parameters/headers": {
+                                    "Accept": "application/json;odata=verbose",
+                                    "Content-Type": "application/json;odata=verbose"
+                                  },
+                                  "parameters/body": {
+                                    "parameters": {
+                                      "__metadata": {
+                                        "type": "SP.XmlSchemaFieldCreationInformation"
+                                      },
+                                      "SchemaXml": "<Field Name=\"Uncertain\" StaticName=\"Uncertain\" DisplayName=\"Uncertain\" Type=\"Boolean\" Required=\"FALSE\"><Default>0</Default></Field>",
+                                      "Options": 0
+                                    }
+                                  }
+                                },
+                                "retryPolicy": {
+                                  "type": "none"
+                                }
+                              },
+                              "runAfter": {}
+                            }
+                          },
+                          "else": {
+                            "actions": {}
+                          },
+                          "runAfter": {
+                            "Find_receipts_Uncertain": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_read_receipts_Uncertain": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Add_receipts_Uncertain_if_missing": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Match_receipts_Uncertain": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Verify_read_receipts_Uncertain')?['d']?['results']",
+                            "where": "@and(equals(item()?['InternalName'],'Uncertain'),equals(item()?['TypeAsString'],'Boolean'),equals(item()?['Required'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Hidden'],false),equals(item()?['EnforceUniqueValues'],false),contains(createArray('0','false'),toLower(string(item()?['DefaultValue']))))"
+                          },
+                          "runAfter": {
+                            "Verify_read_receipts_Uncertain": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_receipts_Uncertain": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Verify_read_receipts_Uncertain')?['status'],'Succeeded'),not(equals(body('Verify_read_receipts_Uncertain')?['d']?['results'],null)),empty(coalesce(body('Verify_read_receipts_Uncertain')?['d']?['__next'],body('Verify_read_receipts_Uncertain')?['@odata.nextLink'],''))),equals(length(body('Match_receipts_Uncertain')),1))",
+                          "actions": {},
+                          "else": {
+                            "actions": {
+                              "Mismatch_receipts_Uncertain": {
+                                "type": "AppendToArrayVariable",
+                                "inputs": {
+                                  "name": "Differences",
+                                  "value": {
+                                    "code": "FIELD_MISSING_OR_MISMATCH",
+                                    "field": "receipts_Uncertain"
+                                  }
+                                },
+                                "runAfter": {}
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Match_receipts_Uncertain": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Read_receipts_Retryable": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Verify_receipts_Uncertain": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Find_receipts_Retryable": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Read_receipts_Retryable')?['d']?['results']",
+                            "where": "@equals(item()?['InternalName'],'Retryable')"
+                          },
+                          "runAfter": {
+                            "Read_receipts_Retryable": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Add_receipts_Retryable_if_missing": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Read_receipts_Retryable')?['status'],'Succeeded'),not(equals(body('Read_receipts_Retryable')?['d']?['results'],null)),empty(coalesce(body('Read_receipts_Retryable')?['d']?['__next'],body('Read_receipts_Retryable')?['@odata.nextLink'],''))),empty(body('Find_receipts_Retryable')),equals(triggerBody()?['boolean'],true),equals(outputs('Receipt_list')?['ItemCount'],0))",
+                          "actions": {
+                            "Create_receipts_Retryable": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_sharepointonline",
+                                  "operationId": "HttpRequest",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                                },
+                                "authentication": {
+                                  "type": "Raw",
+                                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                                },
+                                "parameters": {
+                                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                                  "parameters/method": "POST",
+                                  "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields/createfieldasxml",
+                                  "parameters/headers": {
+                                    "Accept": "application/json;odata=verbose",
+                                    "Content-Type": "application/json;odata=verbose"
+                                  },
+                                  "parameters/body": {
+                                    "parameters": {
+                                      "__metadata": {
+                                        "type": "SP.XmlSchemaFieldCreationInformation"
+                                      },
+                                      "SchemaXml": "<Field Name=\"Retryable\" StaticName=\"Retryable\" DisplayName=\"Retryable\" Type=\"Boolean\" Required=\"FALSE\"><Default>0</Default></Field>",
+                                      "Options": 0
+                                    }
+                                  }
+                                },
+                                "retryPolicy": {
+                                  "type": "none"
+                                }
+                              },
+                              "runAfter": {}
+                            }
+                          },
+                          "else": {
+                            "actions": {}
+                          },
+                          "runAfter": {
+                            "Find_receipts_Retryable": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_read_receipts_Retryable": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Add_receipts_Retryable_if_missing": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Match_receipts_Retryable": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Verify_read_receipts_Retryable')?['d']?['results']",
+                            "where": "@and(equals(item()?['InternalName'],'Retryable'),equals(item()?['TypeAsString'],'Boolean'),equals(item()?['Required'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Hidden'],false),equals(item()?['EnforceUniqueValues'],false),contains(createArray('0','false'),toLower(string(item()?['DefaultValue']))))"
+                          },
+                          "runAfter": {
+                            "Verify_read_receipts_Retryable": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_receipts_Retryable": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Verify_read_receipts_Retryable')?['status'],'Succeeded'),not(equals(body('Verify_read_receipts_Retryable')?['d']?['results'],null)),empty(coalesce(body('Verify_read_receipts_Retryable')?['d']?['__next'],body('Verify_read_receipts_Retryable')?['@odata.nextLink'],''))),equals(length(body('Match_receipts_Retryable')),1))",
+                          "actions": {},
+                          "else": {
+                            "actions": {
+                              "Mismatch_receipts_Retryable": {
+                                "type": "AppendToArrayVariable",
+                                "inputs": {
+                                  "name": "Differences",
+                                  "value": {
+                                    "code": "FIELD_MISSING_OR_MISMATCH",
+                                    "field": "receipts_Retryable"
+                                  }
+                                },
+                                "runAfter": {}
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Match_receipts_Retryable": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Read_receipts_DomainEffects": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Verify_receipts_Retryable": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Find_receipts_DomainEffects": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Read_receipts_DomainEffects')?['d']?['results']",
+                            "where": "@equals(item()?['InternalName'],'DomainEffects')"
+                          },
+                          "runAfter": {
+                            "Read_receipts_DomainEffects": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Add_receipts_DomainEffects_if_missing": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Read_receipts_DomainEffects')?['status'],'Succeeded'),not(equals(body('Read_receipts_DomainEffects')?['d']?['results'],null)),empty(coalesce(body('Read_receipts_DomainEffects')?['d']?['__next'],body('Read_receipts_DomainEffects')?['@odata.nextLink'],''))),empty(body('Find_receipts_DomainEffects')),equals(triggerBody()?['boolean'],true),equals(outputs('Receipt_list')?['ItemCount'],0))",
+                          "actions": {
+                            "Create_receipts_DomainEffects": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_sharepointonline",
+                                  "operationId": "HttpRequest",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                                },
+                                "authentication": {
+                                  "type": "Raw",
+                                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                                },
+                                "parameters": {
+                                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                                  "parameters/method": "POST",
+                                  "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields/createfieldasxml",
+                                  "parameters/headers": {
+                                    "Accept": "application/json;odata=verbose",
+                                    "Content-Type": "application/json;odata=verbose"
+                                  },
+                                  "parameters/body": {
+                                    "parameters": {
+                                      "__metadata": {
+                                        "type": "SP.XmlSchemaFieldCreationInformation"
+                                      },
+                                      "SchemaXml": "<Field Name=\"DomainEffects\" StaticName=\"DomainEffects\" DisplayName=\"DomainEffects\" Type=\"Boolean\" Required=\"FALSE\"><Default>0</Default></Field>",
+                                      "Options": 0
+                                    }
+                                  }
+                                },
+                                "retryPolicy": {
+                                  "type": "none"
+                                }
+                              },
+                              "runAfter": {}
+                            }
+                          },
+                          "else": {
+                            "actions": {}
+                          },
+                          "runAfter": {
+                            "Find_receipts_DomainEffects": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_read_receipts_DomainEffects": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Add_receipts_DomainEffects_if_missing": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Match_receipts_DomainEffects": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Verify_read_receipts_DomainEffects')?['d']?['results']",
+                            "where": "@and(equals(item()?['InternalName'],'DomainEffects'),equals(item()?['TypeAsString'],'Boolean'),equals(item()?['Required'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Hidden'],false),equals(item()?['EnforceUniqueValues'],false),contains(createArray('0','false'),toLower(string(item()?['DefaultValue']))))"
+                          },
+                          "runAfter": {
+                            "Verify_read_receipts_DomainEffects": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_receipts_DomainEffects": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Verify_read_receipts_DomainEffects')?['status'],'Succeeded'),not(equals(body('Verify_read_receipts_DomainEffects')?['d']?['results'],null)),empty(coalesce(body('Verify_read_receipts_DomainEffects')?['d']?['__next'],body('Verify_read_receipts_DomainEffects')?['@odata.nextLink'],''))),equals(length(body('Match_receipts_DomainEffects')),1))",
+                          "actions": {},
+                          "else": {
+                            "actions": {
+                              "Mismatch_receipts_DomainEffects": {
+                                "type": "AppendToArrayVariable",
+                                "inputs": {
+                                  "name": "Differences",
+                                  "value": {
+                                    "code": "FIELD_MISSING_OR_MISMATCH",
+                                    "field": "receipts_DomainEffects"
+                                  }
+                                },
+                                "runAfter": {}
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Match_receipts_DomainEffects": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Read_receipts_AttemptToken": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Verify_receipts_DomainEffects": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Find_receipts_AttemptToken": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Read_receipts_AttemptToken')?['d']?['results']",
+                            "where": "@equals(item()?['InternalName'],'AttemptToken')"
+                          },
+                          "runAfter": {
+                            "Read_receipts_AttemptToken": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Add_receipts_AttemptToken_if_missing": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Read_receipts_AttemptToken')?['status'],'Succeeded'),not(equals(body('Read_receipts_AttemptToken')?['d']?['results'],null)),empty(coalesce(body('Read_receipts_AttemptToken')?['d']?['__next'],body('Read_receipts_AttemptToken')?['@odata.nextLink'],''))),empty(body('Find_receipts_AttemptToken')),equals(triggerBody()?['boolean'],true),equals(outputs('Receipt_list')?['ItemCount'],0))",
+                          "actions": {
+                            "Create_receipts_AttemptToken": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_sharepointonline",
+                                  "operationId": "HttpRequest",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                                },
+                                "authentication": {
+                                  "type": "Raw",
+                                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                                },
+                                "parameters": {
+                                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                                  "parameters/method": "POST",
+                                  "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields/createfieldasxml",
+                                  "parameters/headers": {
+                                    "Accept": "application/json;odata=verbose",
+                                    "Content-Type": "application/json;odata=verbose"
+                                  },
+                                  "parameters/body": {
+                                    "parameters": {
+                                      "__metadata": {
+                                        "type": "SP.XmlSchemaFieldCreationInformation"
+                                      },
+                                      "SchemaXml": "<Field Name=\"AttemptToken\" StaticName=\"AttemptToken\" DisplayName=\"AttemptToken\" Type=\"Text\" Required=\"FALSE\" MaxLength=\"255\" />",
+                                      "Options": 0
+                                    }
+                                  }
+                                },
+                                "retryPolicy": {
+                                  "type": "none"
+                                }
+                              },
+                              "runAfter": {}
+                            }
+                          },
+                          "else": {
+                            "actions": {}
+                          },
+                          "runAfter": {
+                            "Find_receipts_AttemptToken": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_read_receipts_AttemptToken": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Add_receipts_AttemptToken_if_missing": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Match_receipts_AttemptToken": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Verify_read_receipts_AttemptToken')?['d']?['results']",
+                            "where": "@and(equals(item()?['InternalName'],'AttemptToken'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Required'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Hidden'],false),equals(item()?['EnforceUniqueValues'],false),equals(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@MaxLength)')),'255'))"
+                          },
+                          "runAfter": {
+                            "Verify_read_receipts_AttemptToken": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_receipts_AttemptToken": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Verify_read_receipts_AttemptToken')?['status'],'Succeeded'),not(equals(body('Verify_read_receipts_AttemptToken')?['d']?['results'],null)),empty(coalesce(body('Verify_read_receipts_AttemptToken')?['d']?['__next'],body('Verify_read_receipts_AttemptToken')?['@odata.nextLink'],''))),equals(length(body('Match_receipts_AttemptToken')),1))",
+                          "actions": {},
+                          "else": {
+                            "actions": {
+                              "Mismatch_receipts_AttemptToken": {
+                                "type": "AppendToArrayVariable",
+                                "inputs": {
+                                  "name": "Differences",
+                                  "value": {
+                                    "code": "FIELD_MISSING_OR_MISMATCH",
+                                    "field": "receipts_AttemptToken"
+                                  }
+                                },
+                                "runAfter": {}
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Match_receipts_AttemptToken": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Read_receipts_SealedAttempts": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Verify_receipts_AttemptToken": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Find_receipts_SealedAttempts": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Read_receipts_SealedAttempts')?['d']?['results']",
+                            "where": "@equals(item()?['InternalName'],'SealedAttempts')"
+                          },
+                          "runAfter": {
+                            "Read_receipts_SealedAttempts": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Add_receipts_SealedAttempts_if_missing": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Read_receipts_SealedAttempts')?['status'],'Succeeded'),not(equals(body('Read_receipts_SealedAttempts')?['d']?['results'],null)),empty(coalesce(body('Read_receipts_SealedAttempts')?['d']?['__next'],body('Read_receipts_SealedAttempts')?['@odata.nextLink'],''))),empty(body('Find_receipts_SealedAttempts')),equals(triggerBody()?['boolean'],true),equals(outputs('Receipt_list')?['ItemCount'],0))",
+                          "actions": {
+                            "Create_receipts_SealedAttempts": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_sharepointonline",
+                                  "operationId": "HttpRequest",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                                },
+                                "authentication": {
+                                  "type": "Raw",
+                                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                                },
+                                "parameters": {
+                                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                                  "parameters/method": "POST",
+                                  "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields/createfieldasxml",
+                                  "parameters/headers": {
+                                    "Accept": "application/json;odata=verbose",
+                                    "Content-Type": "application/json;odata=verbose"
+                                  },
+                                  "parameters/body": {
+                                    "parameters": {
+                                      "__metadata": {
+                                        "type": "SP.XmlSchemaFieldCreationInformation"
+                                      },
+                                      "SchemaXml": "<Field Name=\"SealedAttempts\" StaticName=\"SealedAttempts\" DisplayName=\"SealedAttempts\" Type=\"Note\" Required=\"FALSE\" RichText=\"FALSE\" AppendOnly=\"FALSE\" NumLines=\"6\" />",
+                                      "Options": 0
+                                    }
+                                  }
+                                },
+                                "retryPolicy": {
+                                  "type": "none"
+                                }
+                              },
+                              "runAfter": {}
+                            }
+                          },
+                          "else": {
+                            "actions": {}
+                          },
+                          "runAfter": {
+                            "Find_receipts_SealedAttempts": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_read_receipts_SealedAttempts": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Add_receipts_SealedAttempts_if_missing": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Match_receipts_SealedAttempts": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Verify_read_receipts_SealedAttempts')?['d']?['results']",
+                            "where": "@and(equals(item()?['InternalName'],'SealedAttempts'),equals(item()?['TypeAsString'],'Note'),equals(item()?['Required'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Hidden'],false),equals(item()?['EnforceUniqueValues'],false),not(equals(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@RichText)'))),'true')),not(equals(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@AppendOnly)'))),'true')))"
+                          },
+                          "runAfter": {
+                            "Verify_read_receipts_SealedAttempts": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_receipts_SealedAttempts": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Verify_read_receipts_SealedAttempts')?['status'],'Succeeded'),not(equals(body('Verify_read_receipts_SealedAttempts')?['d']?['results'],null)),empty(coalesce(body('Verify_read_receipts_SealedAttempts')?['d']?['__next'],body('Verify_read_receipts_SealedAttempts')?['@odata.nextLink'],''))),equals(length(body('Match_receipts_SealedAttempts')),1))",
+                          "actions": {},
+                          "else": {
+                            "actions": {
+                              "Mismatch_receipts_SealedAttempts": {
+                                "type": "AppendToArrayVariable",
+                                "inputs": {
+                                  "name": "Differences",
+                                  "value": {
+                                    "code": "FIELD_MISSING_OR_MISMATCH",
+                                    "field": "receipts_SealedAttempts"
+                                  }
+                                },
+                                "runAfter": {}
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Match_receipts_SealedAttempts": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Read_receipts_Stage": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Verify_receipts_SealedAttempts": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Find_receipts_Stage": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Read_receipts_Stage')?['d']?['results']",
+                            "where": "@equals(item()?['InternalName'],'Stage')"
+                          },
+                          "runAfter": {
+                            "Read_receipts_Stage": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Add_receipts_Stage_if_missing": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Read_receipts_Stage')?['status'],'Succeeded'),not(equals(body('Read_receipts_Stage')?['d']?['results'],null)),empty(coalesce(body('Read_receipts_Stage')?['d']?['__next'],body('Read_receipts_Stage')?['@odata.nextLink'],''))),empty(body('Find_receipts_Stage')),equals(triggerBody()?['boolean'],true),equals(outputs('Receipt_list')?['ItemCount'],0))",
+                          "actions": {
+                            "Create_receipts_Stage": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_sharepointonline",
+                                  "operationId": "HttpRequest",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                                },
+                                "authentication": {
+                                  "type": "Raw",
+                                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                                },
+                                "parameters": {
+                                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                                  "parameters/method": "POST",
+                                  "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields/createfieldasxml",
+                                  "parameters/headers": {
+                                    "Accept": "application/json;odata=verbose",
+                                    "Content-Type": "application/json;odata=verbose"
+                                  },
+                                  "parameters/body": {
+                                    "parameters": {
+                                      "__metadata": {
+                                        "type": "SP.XmlSchemaFieldCreationInformation"
+                                      },
+                                      "SchemaXml": "<Field Name=\"Stage\" StaticName=\"Stage\" DisplayName=\"Stage\" Type=\"Text\" Required=\"FALSE\" MaxLength=\"255\" />",
+                                      "Options": 0
+                                    }
+                                  }
+                                },
+                                "retryPolicy": {
+                                  "type": "none"
+                                }
+                              },
+                              "runAfter": {}
+                            }
+                          },
+                          "else": {
+                            "actions": {}
+                          },
+                          "runAfter": {
+                            "Find_receipts_Stage": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_read_receipts_Stage": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Add_receipts_Stage_if_missing": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Match_receipts_Stage": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Verify_read_receipts_Stage')?['d']?['results']",
+                            "where": "@and(equals(item()?['InternalName'],'Stage'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Required'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Hidden'],false),equals(item()?['EnforceUniqueValues'],false),equals(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@MaxLength)')),'255'))"
+                          },
+                          "runAfter": {
+                            "Verify_read_receipts_Stage": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_receipts_Stage": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Verify_read_receipts_Stage')?['status'],'Succeeded'),not(equals(body('Verify_read_receipts_Stage')?['d']?['results'],null)),empty(coalesce(body('Verify_read_receipts_Stage')?['d']?['__next'],body('Verify_read_receipts_Stage')?['@odata.nextLink'],''))),equals(length(body('Match_receipts_Stage')),1))",
+                          "actions": {},
+                          "else": {
+                            "actions": {
+                              "Mismatch_receipts_Stage": {
+                                "type": "AppendToArrayVariable",
+                                "inputs": {
+                                  "name": "Differences",
+                                  "value": {
+                                    "code": "FIELD_MISSING_OR_MISMATCH",
+                                    "field": "receipts_Stage"
+                                  }
+                                },
+                                "runAfter": {}
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Match_receipts_Stage": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Read_requests_Introduction": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists(guid'3d17485d-1dac-41f0-a1af-24e45daa4567')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Verify_receipts_Stage": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Find_requests_Introduction": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Read_requests_Introduction')?['d']?['results']",
+                            "where": "@equals(item()?['InternalName'],'Introduction')"
+                          },
+                          "runAfter": {
+                            "Read_requests_Introduction": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Add_requests_Introduction_if_missing": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Read_requests_Introduction')?['status'],'Succeeded'),not(equals(body('Read_requests_Introduction')?['d']?['results'],null)),empty(coalesce(body('Read_requests_Introduction')?['d']?['__next'],body('Read_requests_Introduction')?['@odata.nextLink'],''))),empty(body('Find_requests_Introduction')),equals(triggerBody()?['boolean'],true),true)",
+                          "actions": {
+                            "Create_requests_Introduction": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_sharepointonline",
+                                  "operationId": "HttpRequest",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                                },
+                                "authentication": {
+                                  "type": "Raw",
+                                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                                },
+                                "parameters": {
+                                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                                  "parameters/method": "POST",
+                                  "parameters/uri": "_api/web/lists(guid'3d17485d-1dac-41f0-a1af-24e45daa4567')/fields/createfieldasxml",
+                                  "parameters/headers": {
+                                    "Accept": "application/json;odata=verbose",
+                                    "Content-Type": "application/json;odata=verbose"
+                                  },
+                                  "parameters/body": {
+                                    "parameters": {
+                                      "__metadata": {
+                                        "type": "SP.XmlSchemaFieldCreationInformation"
+                                      },
+                                      "SchemaXml": "<Field Name=\"Introduction\" StaticName=\"Introduction\" DisplayName=\"Introduction\" Type=\"Note\" Required=\"FALSE\" RichText=\"FALSE\" AppendOnly=\"FALSE\" NumLines=\"6\" />",
+                                      "Options": 0
+                                    }
+                                  }
+                                },
+                                "retryPolicy": {
+                                  "type": "none"
+                                }
+                              },
+                              "runAfter": {}
+                            }
+                          },
+                          "else": {
+                            "actions": {}
+                          },
+                          "runAfter": {
+                            "Find_requests_Introduction": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_read_requests_Introduction": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            },
+                            "parameters": {
+                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                              "parameters/method": "GET",
+                              "parameters/uri": "_api/web/lists(guid'3d17485d-1dac-41f0-a1af-24e45daa4567')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=verbose"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Add_requests_Introduction_if_missing": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Match_requests_Introduction": {
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@body('Verify_read_requests_Introduction')?['d']?['results']",
+                            "where": "@and(equals(item()?['InternalName'],'Introduction'),equals(item()?['TypeAsString'],'Note'),equals(item()?['Required'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Hidden'],false),equals(item()?['EnforceUniqueValues'],false),not(equals(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@RichText)'))),'true')),not(equals(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@AppendOnly)'))),'true')))"
+                          },
+                          "runAfter": {
+                            "Verify_read_requests_Introduction": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Verify_requests_Introduction": {
+                          "type": "If",
+                          "expression": "@and(and(equals(actions('Verify_read_requests_Introduction')?['status'],'Succeeded'),not(equals(body('Verify_read_requests_Introduction')?['d']?['results'],null)),empty(coalesce(body('Verify_read_requests_Introduction')?['d']?['__next'],body('Verify_read_requests_Introduction')?['@odata.nextLink'],''))),equals(length(body('Match_requests_Introduction')),1))",
+                          "actions": {},
+                          "else": {
+                            "actions": {
+                              "Mismatch_requests_Introduction": {
+                                "type": "AppendToArrayVariable",
+                                "inputs": {
+                                  "name": "Differences",
+                                  "value": {
+                                    "code": "FIELD_MISSING_OR_MISMATCH",
+                                    "field": "requests_Introduction"
+                                  }
+                                },
+                                "runAfter": {}
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Match_requests_Introduction": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {
+                          "Receipt_list_mismatch": {
+                            "type": "AppendToArrayVariable",
+                            "inputs": {
+                              "name": "Differences",
+                              "value": {
+                                "code": "RECEIPT_LIST_IDENTITY_MISMATCH",
+                                "field": ""
+                              }
+                            },
+                            "runAfter": {}
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Receipt_list": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "Receipt_list_missing": {
+                        "type": "AppendToArrayVariable",
+                        "inputs": {
+                          "name": "Differences",
+                          "value": {
+                            "code": "RECEIPT_LIST_MISSING_OR_READ_INCOMPLETE",
+                            "field": ""
+                          }
+                        },
+                        "runAfter": {}
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Read_receipts_after_setup": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "No_schema_permission": {
+                    "type": "AppendToArrayVariable",
+                    "inputs": {
+                      "name": "Differences",
+                      "value": {
+                        "code": "MANAGE_LISTS_PERMISSION_UNVERIFIED",
+                        "field": ""
+                      }
+                    },
+                    "runAfter": {}
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_web_permissions": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_schema_snapshots": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Schema_extensions_ready": {
+          "type": "If",
+          "expression": "@and(equals(actions('Setup_or_audit')?['status'],'Succeeded'),empty(variables('Differences')))",
+          "actions": {
+            "Schema_targets": {
+              "type": "Compose",
+              "inputs": [
+                {
+                  "role": "participants",
+                  "base": "_api/web/lists(guid'fd3adf46-f81d-4a7b-a80c-567fde0175dc')"
+                },
+                {
+                  "role": "language",
+                  "base": "_api/web/lists(guid'3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63')"
+                },
+                {
+                  "role": "culture",
+                  "base": "_api/web/lists(guid'cf7ed5b4-2e11-4a0a-a417-6c63ed60f614')"
+                },
+                {
+                  "role": "timezone",
+                  "base": "_api/web/lists(guid'7beddfff-1881-4a82-8003-29933b836350')"
+                },
+                {
+                  "role": "groups",
+                  "base": "_api/web/lists(guid'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6')"
+                },
+                {
+                  "role": "members",
+                  "base": "_api/web/lists(guid'db611ec3-7fa3-477a-878e-effbbb195cb8')"
+                },
+                {
+                  "role": "requests",
+                  "base": "_api/web/lists(guid'3d17485d-1dac-41f0-a1af-24e45daa4567')"
+                },
+                {
+                  "role": "receipts",
+                  "base": "_api/web/lists/getbytitle('TandemOperationReceipts')"
+                }
+              ],
+              "runAfter": {}
+            },
+            "Each_schema_metadata": {
+              "type": "Foreach",
+              "foreach": "@outputs('Schema_targets')",
+              "actions": {
+                "Read_schema_list": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "authentication": {
+                      "type": "Raw",
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                    },
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "@concat(items('Each_schema_metadata')?['base'],'?$select=Id,Title,BaseTemplate,ValidationFormula')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=verbose"
+                      }
+                    }
+                  },
+                  "runAfter": {}
+                },
+                "Read_schema_fields": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "authentication": {
+                      "type": "Raw",
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                    },
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "@concat(items('Each_schema_metadata')?['base'],'/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=verbose"
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Read_schema_list": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Record_schema_snapshot": {
+                  "type": "AppendToArrayVariable",
+                  "inputs": {
+                    "name": "SchemaSnapshots",
+                    "value": {
+                      "role": "@items('Each_schema_metadata')?['role']",
+                      "Id": "@body('Read_schema_list')?['d']?['Id']",
+                      "Title": "@body('Read_schema_list')?['d']?['Title']",
+                      "BaseTemplate": "@body('Read_schema_list')?['d']?['BaseTemplate']",
+                      "ValidationFormula": "@body('Read_schema_list')?['d']?['ValidationFormula']",
+                      "Fields": "@body('Read_schema_fields')?['d']?['results']",
+                      "complete": "@and(equals(actions('Read_schema_fields')?['status'],'Succeeded'),not(equals(body('Read_schema_fields')?['d']?['results'],null)),empty(coalesce(body('Read_schema_fields')?['d']?['__next'],body('Read_schema_fields')?['@odata.nextLink'],'')))"
+                    }
+                  },
+                  "runAfter": {
+                    "Read_schema_fields": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 1
+                }
+              },
+              "runAfter": {
+                "Schema_targets": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Incomplete_schema_snapshots": {
+              "type": "Query",
+              "inputs": {
+                "from": "@variables('SchemaSnapshots')",
+                "where": "@not(equals(item()?['complete'],true))"
+              },
+              "runAfter": {
+                "Each_schema_metadata": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Schema_request": {
+              "type": "Compose",
+              "inputs": {
+                "contractVersion": 1,
+                "rulesVersion": 1,
+                "mode": "SCHEMA",
+                "metadata": {
+                  "lists": "@variables('SchemaSnapshots')"
+                }
+              },
+              "runAfter": {
+                "Incomplete_schema_snapshots": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Validate_collected_schema": {
+              "type": "Scope",
+              "runAfter": {
+                "Schema_request": [
+                  "Succeeded"
+                ]
+              },
+              "actions": {
+                "Call_schema_validator": {
+                  "type": "Workflow",
+                  "inputs": {
+                    "host": {
+                      "workflowReferenceName": "f1f91974-4124-557e-b7fe-d51e9972681d"
+                    },
+                    "body": {
+                      "text": "@string(outputs('Schema_request'))"
+                    }
+                  },
+                  "runAfter": {}
+                },
+                "Parse_schema_result": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@json(body('Call_schema_validator')?['resultjson'])",
+                    "schema": {
+                      "type": "object"
+                    }
+                  },
+                  "runAfter": {
+                    "Call_schema_validator": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          },
+          "runAfter": {
+            "Setup_or_audit": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          }
+        },
+        "Setup_report": {
+          "type": "Compose",
+          "inputs": {
+            "kind": "TandemBatchSchema",
+            "sourceTicket": 81,
+            "packageBuildId": "4db7f9fa-6d67-48b0-a7a6-33638d7ff4a1",
+            "applyRequested": "@equals(triggerBody()?['boolean'],true)",
+            "runReference": "@workflow()?['run']?['name']",
+            "schemaVerified": "@and(equals(actions('Schema_extensions_ready')?['status'],'Succeeded'),equals(body('Parse_schema_result')?['code'],'OK'),equals(body('Parse_schema_result')?['result']?['schemaMatches'],true),equals(body('Parse_schema_result')?['result']?['allSchema'],true))",
+            "schemaResult": "@body('Parse_schema_result')?['result']",
+            "collectionComplete": "@and(equals(actions('Each_schema_metadata')?['status'],'Succeeded'),equals(length(variables('SchemaSnapshots')),8),empty(body('Incomplete_schema_snapshots')))",
+            "differences": "@variables('Differences')",
+            "rowWrites": 0,
+            "deletes": 0,
+            "permissionChanges": 0,
+            "receiptList": "@outputs('Receipt_list')",
+            "scope": "Additive schema only; no automatic conversions or rollback. Dry run by default."
+          },
+          "runAfter": {
+            "Schema_extensions_ready": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

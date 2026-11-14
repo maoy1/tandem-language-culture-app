@@ -1,0 +1,26 @@
+{
+  "sourceTicket": 81,
+  "overviewTicket": 45,
+  "solutionName": "TandemCoreBatch",
+  "solutionVersion": "1.0.0.1",
+  "state": "SCHEMA_COLLECTOR_INPUT_REPAIR_NATIVE_RETEST_PENDING",
+  "nativeSharedChildTemplateId": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+  "productionFlows": {
+    "TandemValidateContext": 81,
+    "TandemDiscovery": 7,
+    "TandemParticipantSubmission": 61,
+    "TandemSendRequest": 10,
+    "TandemMyRequests": 62,
+    "TandemCancelRequest": 63,
+    "TandemRespondRequest": 11,
+    "TandemSendGroupJoinRequest": 17,
+    "TandemRespondGroupJoinRequest": 65,
+    "TandemMyGroups": 64,
+    "TandemUpdateGroup": 13,
+    "TandemLeaveGroup": 14
+  },
+  "import": "All components get fresh batch-specific IDs, imported disabled; no silent replacement or duplicate active participant validators.",
+  "maintenance": "Two optional disposable owner helpers, separate from the twelve production flows: dry-by-default TandemBatchSchemaSetup and connector-free TandemCoreValidationSmoke (45 synthetic cases). Required schema extensions and new native tests remain NOT RUN.",
+  "nativeAcceptance": "NOT RUN; old native evidence is versioned and does not certify this batch.",
+  "email": "#21 excluded from twelve-flow scope; approved in-app plus email, Tandemteam@elsevier.com REST probe failed. No email connector or delivery workaround in this batch."
+}
