@@ -1,0 +1,86 @@
+{
+  "sourceTicket": 11,
+  "overviewTicket": 45,
+  "flowName": "TandemRespondRequest",
+  "version": "11.1.0",
+  "packageBuildId": "94e47272-28bc-4529-bb2f-521b90e43011",
+  "flowId": "fd170a11-2aec-4bab-a3f1-38ed38f23211",
+  "state": "GENERATED_LOCAL_TESTED_NATIVE_INTEGRATION_NOT_RUN",
+  "trigger": {
+    "kind": "PowerAppV2",
+    "source": "participant_response_flow.snapshot.json approved trigger; NOT certified source export",
+    "orderedInputs": [
+      {"property": "number", "title": "ParticipantId", "type": "positive integer", "authority": false},
+      {"property": "number_1", "title": "RequestId", "type": "positive integer"},
+      {"property": "text", "title": "Decision", "type": "Accept/Decline exact case"},
+      {"property": "text_1", "title": "GroupName", "type": "Accept: nonblank string max255"},
+      {"property": "text_2", "title": "ExchangeType", "type": "Accept: Language/Culture/Combined"},
+      {"property": "number_2", "title": "Capacity", "type": "integer; Language2/3, Culture/Combined2..10"},
+      {"property": "text_3", "title": "LanguageFocusIds", "type": "JSON positive-integer array max100, unique"},
+      {"property": "text_4", "title": "CultureFocusIds", "type": "JSON positive-integer array max100, unique"},
+      {"property": "text_5", "title": "IntentId", "type": "required GUID retained per explicit action"}
+    ],
+    "decline": "Unused acceptance properties retain their legacy types but are not parsed/validated. Send empty strings,0,[],[].",
+    "intentReason": "One GUID per explicit action; retries retain it. Receipt freezes typed actor/target/payload. Changed payload with the same key conflicts.",
+    "intentArrayOrder": "Preserve input array order on retry. Persisted group lookup arrays are compared as sets."
+  },
+  "outputs": {
+    "success": "Boolean; verified complete result/release or saved historical success",
+    "message": "text",
+    "groupid": "number; accepted group ID only on success; otherwise0, Decline0",
+    "resultcode": "ACCEPTED/DECLINED or bounded failure code",
+    "operationkey": "technical action reference, not authorization"
+  },
+  "authority": {
+    "adapter": "Native #81 Raw Invoker SharePoint envelope. Resolve currentuser.Id to exactly one Participants.ParticipantaccountId.",
+    "require": "Resolved profile equals number and Personal recipient, no TargetGroup, different sender; current recipient account binding rechecked.",
+    "nativeProof": "NOT RUN. Manual #81 owner probe does not establish Power Apps caller/private write isolation.",
+    "noLeader": true,
+    "noOwnerFallback": true
+  },
+  "shared": {
+    "workflowReferenceName": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+    "buildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
+    "contractVersion": 1,
+    "rulesVersion": 1,
+    "modes": ["PAIR", "GROUP"],
+    "gates": "success=true/resultcode=OK plus resultjson code/versions/authorizesAction=false; PAIR result.eligible; GROUP result.purposeValid AND capacityValid",
+    "initialGroupMeaning": "GROUP evaluates both proposed members with Closed/setupComplete=false/focusSharersAvailable=false. Its join-only compatible=false is expected and does not authorize initial creation.",
+    "data": "Two current REST profiles, complete active catalogue sets, Any sentinel resolved by ISOcode=any even if inactive, explicit null if absent; optional TimezoneId remains null.",
+    "freshness": "PAIR/GROUP before decision and before publication; subsequent exact profile ETag comparisons. Parent retains request CAS and group guard.",
+    "unchanged": "No shared child, schema baseline, normalization/rules source or imported flow changed."
+  },
+  "storage": {
+    "receipts": "_api/web/lists/getbytitle('TandemOperationReceipts')",
+    "receiptSchemaOwner": "#81 finalized generation contract; not tenant verified",
+    "receiptFieldsUsed": ["OperationKey", "IntentJson", "ResultJson", "Complete", "Uncertain", "Retryable", "DomainEffects", "AttemptToken", "SealedAttempts", "Stage"],
+    "newGroupFields": [],
+    "existingGroupGuard": "WriteOwner",
+    "requests": ["RequestType", "TargetGroupId", "SenderParticipantId", "RecipientParticipantId", "Status", "ConnectionKey", "WinningOperationKey", "OperationComplete"],
+    "unique": ["receipts.OperationKey", "groups.SourceRequestId", "members.MembershipKey", "requests.ConnectionKey"],
+    "membershipKey": "request:{requestId}:participant:{participantId}",
+    "operationKey": "respond:{trustedRecipientParticipantId}:{lowercaseIntentGuid}",
+    "attemptToken": "fresh native guid()",
+    "writeOwner": "OperationKey + ':' + AttemptToken; plain string; other writers check empty/exact match, never parse",
+    "historyConnectionKey": "history:{requestId}",
+    "titleUnusedOnReceipts": true
+  },
+  "recovery": {
+    "maxSealedAttempts": 3,
+    "safeBoundary": "Member-create definite HTTP400/401/403/404/409/412/422 rejection plus successful complete unique-key absence readback. Earlier effects have passed exact readbacks.",
+    "retry": "Seal UUID/Retryable then exact-token release. Same immutable intent can CAS-claim, finalize failed sealed release, revalidate/reuse source group and existing episodes. Left/mismatched episodes fail.",
+    "unknown": "Timeout/429/5xx without exact stable readback: Uncertain, retain token, no lease/TTL takeover. Exceptional assistance verifies settled runs/data.",
+    "completed": "Save/verify receipt before release. Failed release returns false; completed replay finalizes matching old-token release only and returns historical result.",
+    "rollback": false
+  },
+  "tenantGates": [
+    "Parent receipt setup/readback and request-field audit",
+    "Existing child/Invoker reference in permitted environment",
+    "Legacy child-reference resolution or companion parent-only Solution import",
+    "Actual Power Apps trusted caller and intended read/write rights under existing entitlements",
+    "Native Accept/Decline/race/fault/readback and cross-writer integration"
+  ],
+  "nativeIntegration": "NOT RUN",
+  "ordinaryParticipantAccess": "DEFERRED_BY_OWNER",
+  "issueMutation": "None; owner requested commit only. #81 change-ledger handoff in docs/ISSUE_11_RESPOND_REQUEST.md."
+}

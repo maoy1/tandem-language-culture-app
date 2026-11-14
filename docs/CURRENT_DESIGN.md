@@ -560,3 +560,29 @@ Owner chose **2,000 characters** for the optional plain-text group-join introduc
 Technical field proposal: optional plain-text Note column Introduction on Connection Requests, rich text/append disabled; actual column/settings are NOT verified or applied. SharePoint field mapping/setup and the flow/API/app mapping remain #17 work. All schema changes must update #81 baseline/audit/contract and affected consumers (#62/#65/#67), with existing native evidence retained by version. #81 has no Introduction persistence/parser today, so this planning decision does not change its current five-mode rule engine/package. Add actual schema coverage when the field is introduced.
 
 Contract evidence only: acceptance cases empty/omitted, 2,000 accepted and 2,001 rejected in both app/server are NOT RUN. #17 remains Planned, not implemented/Ready. No flow, list, data, permission or existing app changed. This clears the remaining explicit product choice for core group-join implementation; receipt-schema and Solution SharePoint/caller prerequisites still need technical verification.
+# Issue 11 native response build — 11.1.0
+
+[#11 TandemRespondRequest](https://github.com/maoy1/tandem-language-culture-app/issues/11)
+now has an isolated generated native consumer candidate. See
+[its contract/handover](ISSUE_11_RESPOND_REQUEST.md) and
+`config/respond_request_flow_contract.json`. Original eight inputs remain;
+required ninth IntentId freezes one typed action for replay. The authenticated
+Invoker must resolve to the Personal recipient; there is no leader.
+
+This consumer uses the existing #81 child contract1/rules1 PAIR eligibility and
+GROUP initial-member purpose/capacity checks, before decision and publication.
+Pending exact-ETag winner, unique source group/episodes, shared WriteOwner,
+complete committed readbacks and no-rollback bounded recovery remain parent
+operation guards. WriteOwner is the plain operationKey + ':' + attemptUUID;
+receipt AttemptToken is native guid(), sealed UUIDs are capped at three.
+All ten finalized TandemOperationReceipts fields are consumed via exact list title;
+no group/receipt additions requested. #81 owns actual setup/audit and this
+consumer's drift-ledger handoff is in ISSUE_11_RESPOND_REQUEST.md.
+
+Legacy and parent-only unmanaged Solution candidates are generated; shared child/
+rules/schema source is unchanged. Neither import path nor native Power Apps
+binding, trusted caller, intended permissions, business parity or cross-flow
+acceptance is certified. These remain NOT RUN; ordinary-account access remains
+owner-deferred. No working imported flow/app, notification channel, permissions
+or historical proof changed. Owner authorized parallel flow builds and commit
+only, with no push/issue edit.
