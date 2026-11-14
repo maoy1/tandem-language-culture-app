@@ -1,0 +1,241 @@
+Screens:
+  scrDiscovery:
+    Properties:
+      Fill: "=RGBA(250,250,250,1)"
+    Children:
+      -
+        scrDiscovery_Nav_scrRequests:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Text: "=\"My requests\""
+            X: "=Parent.Width - 610"
+            Y: "=20"
+            Width: "=140"
+            Height: "=40"
+            Size: "=12"
+            DisplayMode: "=If(varDiscoveryBusy || varDiscoverySending || (varReqBusy || varReqSending) || (varGrpBusy || varGrpSending) || (!IsBlank(varReqDialog)) || (!IsBlank(varGrpDialog)), DisplayMode.Disabled, DisplayMode.Edit)"
+            OnSelect: "=Set(varAppActorId, varDiscoveryActorId); Navigate(scrRequests, ScreenTransition.None); Set(varReqBusy, true);\nSet(varReqError, \"\");\nSet(varReqDiagnostic, \"\");\nSet(varReqLoaded, false);\nSet(varReqInspectRequestId, If(!IsBlank(varRequestsIntent), varReqIntentRequest, varReqSelected.requestId));\nSet(varReqSelected, Blank());\nClear(reqRows);\nIf(IsBlank(varReqTab), Set(varReqTab, \"Received\"));\nIf(IsBlank(varAppActorId) || varAppActorId <= 0,\n    Set(varReqError, \"Open My registration and select your saved profile first\"),\n    If(!IsBlank(varRequestsIntent) && varReqIntentActor <> varAppActorId,\n        Set(varReqError, \"Return to the saved profile used for the unresolved action before refreshing.\"),\n        IfError(\n            Set(varReqReadResponse, TandemMyRequests.Run(varAppActorId));\n            If(varReqReadResponse.resultcode = \"OK\",\n                ClearCollect(reqRows,\n                    ForAll(Table(ParseJSON(varReqReadResponse.requestsjson)) As reqRow,\n                        {requestId: Value(reqRow.Value.requestId),\n                         requestType: Text(reqRow.Value.requestType),\n                         direction: Text(reqRow.Value.direction),\n                         status: Text(reqRow.Value.status),\n                         created: Text(reqRow.Value.created),\n                         availability: Text(reqRow.Value.availability),\n                         processing: Boolean(reqRow.Value.processing),\n                         completed: Boolean(reqRow.Value.completed),\n                         introduction: Text(reqRow.Value.introduction),\n                         canAccept: Boolean(reqRow.Value.actions.accept),\n                         canDecline: Boolean(reqRow.Value.actions.decline),\n                         canCancel: Boolean(reqRow.Value.actions.cancel)}));\n                Set(varReqSelected, LookUp(reqRows, requestId = varReqInspectRequestId));\n                Set(varReqLoaded, true),\n                Set(varReqError, \"Requests could not load. Code: \" & varReqReadResponse.resultcode & \". Reference: \" & varReqReadResponse.runreference)\n            ),\n            Clear(reqRows);\n            Set(varReqDiagnostic, FirstError.Message);\n            Set(varReqError, \"Requests could not load. Check the app connection or try Refresh. No action result is implied.\")\n        )\n    )\n);\nSet(varReqBusy, false)"
+      -
+        scrDiscovery_Nav_scrMyGroups:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Text: "=\"My groups\""
+            X: "=Parent.Width - 460"
+            Y: "=20"
+            Width: "=140"
+            Height: "=40"
+            Size: "=12"
+            DisplayMode: "=If(varDiscoveryBusy || varDiscoverySending || (varReqBusy || varReqSending) || (varGrpBusy || varGrpSending) || (!IsBlank(varReqDialog)) || (!IsBlank(varGrpDialog)), DisplayMode.Disabled, DisplayMode.Edit)"
+            OnSelect: "=Set(varAppActorId, varDiscoveryActorId); Navigate(scrMyGroups, ScreenTransition.None); Set(varGrpBusy, true);\nSet(varGrpLoaded, false);\nSet(varGrpError, \"\");\nSet(varGrpStatus, \"\");\nSet(varGrpDiagnostic, \"\");\nClear(grpRows);\nIf(IsBlank(varAppActorId) || varAppActorId <= 0,\n    Set(varGrpError, \"Open your own saved registration, then open My groups.\"),\n    IfError(\n    Set(varGrpRead, TandemMyGroups.Run(varAppActorId));\n    If(varGrpRead.resultcode = \"OK\",\n        ClearCollect(grpRows,\n            ForAll(Table(ParseJSON(varGrpRead.groupsjson)) As grpRow,\n                {groupId: Value(grpRow.Value.groupId),\n                 membershipId: Value(grpRow.Value.membershipId),\n                 name: Text(grpRow.Value.name), purpose: Text(grpRow.Value.purpose),\n                 exchangeType: Text(grpRow.Value.exchangeType),\n                 capacity: Value(grpRow.Value.capacity), state: Text(grpRow.Value.state),\n                 memberCount: Value(grpRow.Value.memberCount), freeSlots: Value(grpRow.Value.freeSlots),\n                 expectedETag: Text(grpRow.Value.expectedETag),\n                 detail: Text(grpRow.Value.exchangeType) & \" exchange\" & Char(10) & \"Languages: \" & Concat(Table(grpRow.Value.languageFocus) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Cultures: \" & Concat(Table(grpRow.Value.cultureFocus) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & Text(grpRow.Value.purpose) & Char(10) & Char(10) & \"Current members\" & Char(10) & Concat(Table(grpRow.Value.members) As grpMember, Text(grpMember.Value.displayName) & Char(10) & \"Teaches: \" & Concat(Table(grpMember.Value.teachLanguages) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Learning: \" & Concat(Table(grpMember.Value.learnLanguages) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Cultures to share: \" & Concat(Table(grpMember.Value.shareCultures) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Cultures of interest: \" & Concat(Table(grpMember.Value.learnCultures) As grpLabel, Text(grpLabel.Value.label), \", \") & Char(10) & \"Time zone: \" & Coalesce(Text(grpMember.Value.timeZone.label), \"Not specified\") & Char(10) & \"Learning focus: \" & Text(grpMember.Value.learningFocus) & Char(10) & \"Comments: \" & Text(grpMember.Value.comments), Char(10) & Char(10))}));\n        Reset(grpList);\n        Set(varGrpStatus, varGrpRead.groupstatus);\n        Set(varGrpLoaded, true),\n        Set(varGrpError, \"Groups could not load (\" & varGrpRead.resultcode & \"). Reference: \" & varGrpRead.runreference)\n    ),\n    Set(varGrpDiagnostic, FirstError.Message);\n    Clear(grpRows); Set(varGrpStatus, \"\");\n    Set(varGrpError, \"Groups could not load completely. Select Refresh to try again.\")\n    )\n);\nSet(varGrpBusy, false)"
+      -
+        lblDiscoveryTitle:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=24"
+            Text: "=\"Find an exchange\""
+            X: "=24"
+            Y: "=16"
+            Width: "=Parent.Width - 640"
+            Height: "=44"
+            FontWeight: "=FontWeight.Semibold"
+      -
+        btnDiscoveryBack:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"My registration\""
+            X: "=Parent.Width - 300"
+            Y: "=20"
+            Width: "=160"
+            DisplayMode: "=If(varDiscoverySending, DisplayMode.Disabled, DisplayMode.Edit)"
+            OnSelect: "=Navigate(MainScreen1, ScreenTransition.None)"
+      -
+        btnDiscoveryRefresh:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"Refresh\""
+            X: "=Parent.Width - 128"
+            Y: "=20"
+            Width: "=104"
+            DisplayMode: "=If(varDiscoveryBusy || varDiscoverySending, DisplayMode.Disabled, DisplayMode.Edit)"
+            OnSelect: "=Set(varDiscoveryBusy, true);\nSet(varDiscoveryError, \"\");\nClear(colDiscoveryPeople); Clear(colDiscoveryGroups);\nIfError(\n    Set(varDiscoveryResponse, TandemDiscovery.Run(varDiscoveryActorId));\n    If(varDiscoveryResponse.resultcode = \"OK\",\n        ClearCollect(colDiscoveryPeople,\n            ForAll(Table(ParseJSON(varDiscoveryResponse.candidatesjson)) As r,\n                {kind: \"Person\", targetId: Value(r.Value.profileId),\n                 title: Text(r.Value.displayName), summary: Text(r.Value.fitType),\n                 detail: \"Teaches: \" & Concat(Table(r.Value.profile.teachLanguages) As x, Text(x.Value.label), \", \") & Char(10) & \"Learning: \" & Concat(Table(r.Value.profile.learnLanguages) As x, Text(x.Value.label), \", \") & Char(10) & \"Cultures to share: \" & Concat(Table(r.Value.profile.shareCultures) As x, Text(x.Value.label), \", \") & Char(10) & \"Cultures of interest: \" & Concat(Table(r.Value.profile.learnCultures) As x, Text(x.Value.label), \", \") & Char(10) & \"Time zone: \" & Coalesce(Text(r.Value.profile.timeZone.label), \"Not specified\") & Char(10) & \"Learning focus: \" & Text(r.Value.profile.learningFocus) & Char(10) & \"Comments: \" & Text(r.Value.profile.comments) & Char(10) & Char(10) & If(!IsEmpty(Table(r.Value.match.canLearnLanguageIds)), \"You can learn: \" & Concat(Filter(Table(r.Value.profile.teachLanguages) As x, Value(x.Value.id) in ForAll(Table(r.Value.match.canLearnLanguageIds) As mid, Value(mid.Value))) As matched, Text(matched.Value.label), \", \") & Char(10), \"\") & If(!IsEmpty(Table(r.Value.match.canShareLanguageIds)), \"You can teach: \" & Concat(Filter(Table(r.Value.profile.learnLanguages) As x, Value(x.Value.id) in ForAll(Table(r.Value.match.canShareLanguageIds) As mid, Value(mid.Value))) As matched, Text(matched.Value.label), \", \") & Char(10), \"\") & If(!IsEmpty(Table(r.Value.match.canLearnCultureIds)), \"You can learn about: \" & Concat(Filter(Table(r.Value.profile.shareCultures) As x, Value(x.Value.id) in ForAll(Table(r.Value.match.canLearnCultureIds) As mid, Value(mid.Value))) As matched, Text(matched.Value.label), \", \") & Char(10), \"\") & If(!IsEmpty(Table(r.Value.match.canShareCultureIds)), \"You can share about: \" & Concat(Filter(Table(r.Value.profile.learnCultures) As x, Value(x.Value.id) in ForAll(Table(r.Value.match.canShareCultureIds) As mid, Value(mid.Value))) As matched, Text(matched.Value.label), \", \") & Char(10), \"\")}));\n        ClearCollect(colDiscoveryGroups,\n            ForAll(Table(ParseJSON(varDiscoveryResponse.groupsjson)) As r,\n                {kind: \"Group\", targetId: Value(r.Value.groupId),\n                 title: Text(r.Value.name),\n                 summary: Text(r.Value.memberCount) & \"/\" & Text(r.Value.capacity) & \" members · \" & Text(r.Value.freeSlots) & \" places available\",\n                 detail: Text(r.Value.exchangeType) & \" exchange · Open\" & Char(10) & \"Languages: \" & Concat(Table(r.Value.languageFocus) As x, Text(x.Value.label), \", \") & Char(10) & \"Cultures: \" & Concat(Table(r.Value.cultureFocus) As x, Text(x.Value.label), \", \") & Char(10) & Text(r.Value.description) & Char(10) & Char(10) & \"Members\" & Char(10) & Concat(Table(r.Value.members) As m, Text(m.Value.displayName) & Char(10) & \"Teaches: \" & Concat(Table(m.Value.teachLanguages) As x, Text(x.Value.label), \", \") & Char(10) & \"Learning: \" & Concat(Table(m.Value.learnLanguages) As x, Text(x.Value.label), \", \") & Char(10) & \"Cultures to share: \" & Concat(Table(m.Value.shareCultures) As x, Text(x.Value.label), \", \") & Char(10) & \"Cultures of interest: \" & Concat(Table(m.Value.learnCultures) As x, Text(x.Value.label), \", \") & Char(10) & \"Time zone: \" & Coalesce(Text(m.Value.timeZone.label), \"Not specified\") & Char(10) & \"Learning focus: \" & Text(m.Value.learningFocus) & Char(10) & \"Comments: \" & Text(m.Value.comments), Char(10) & Char(10))})),\n        Set(varDiscoveryError, Switch(varDiscoveryResponse.resultcode,\n            \"PROFILE_UNAVAILABLE\", \"Your saved profile is not currently available for discovery. Review your registration and availability.\",\n            \"Discovery could not load. Reference: \" & varDiscoveryResponse.runreference))\n    ),\n    Clear(colDiscoveryPeople); Clear(colDiscoveryGroups);\n    Set(varDiscoveryError, \"Discovery could not load. Select Refresh to try again.\")\n);\nSet(varDiscoveryBusy, false)"
+      -
+        lblDiscoveryState:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=12"
+            Text: "=If(varDiscoveryBusy, \"Loading compatible people and groups…\", varDiscoveryError)"
+            X: "=24"
+            Y: "=68"
+            Width: "=Parent.Width - 48"
+            Height: "=56"
+            Color: "=If(IsBlank(varDiscoveryError), RGBA(50,49,48,1), RGBA(164,38,44,1))"
+      -
+        btnDiscoveryPeople:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"People (\" & CountRows(colDiscoveryPeople) & \")\""
+            X: "=24"
+            Y: "=128"
+            Width: "=160"
+            OnSelect: "=Set(varDiscoveryTab, \"People\"); If(IsBlank(varDiscoveryIntent), Set(varDiscoveryConfirmed, false); Set(varDiscoveryOutcome, \"\"); Reset(txtDiscoveryIntroduction))"
+            DisplayMode: "=If(!varDiscoveryBusy && !varDiscoverySending && IsBlank(varDiscoveryIntent), DisplayMode.Edit, DisplayMode.Disabled)"
+      -
+        btnDiscoveryGroups:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"Groups (\" & CountRows(colDiscoveryGroups) & \")\""
+            X: "=196"
+            Y: "=128"
+            Width: "=160"
+            OnSelect: "=Set(varDiscoveryTab, \"Groups\"); If(IsBlank(varDiscoveryIntent), Set(varDiscoveryConfirmed, false); Set(varDiscoveryOutcome, \"\"); Reset(txtDiscoveryIntroduction))"
+            DisplayMode: "=If(!varDiscoveryBusy && !varDiscoverySending && IsBlank(varDiscoveryIntent), DisplayMode.Edit, DisplayMode.Disabled)"
+      -
+        galDiscovery:
+          Control: "Gallery@2.15.0"
+          Properties:
+            Items: "=If(varDiscoveryTab = \"People\", colDiscoveryPeople, colDiscoveryGroups)"
+            X: "=24"
+            Y: "=184"
+            Width: "=Min(380, Parent.Width * 0.32)"
+            Height: "=Parent.Height - 208"
+            TemplateSize: "=108"
+            TemplateFill: "=If(ThisItem.IsSelected, RGBA(225,239,250,1), RGBA(255,255,255,1))"
+            OnSelect: "=If(IsBlank(varDiscoveryIntent), Set(varDiscoveryConfirmed, false); Set(varDiscoveryOutcome, \"\"); Reset(txtDiscoveryIntroduction))"
+            DisplayMode: "=If(!varDiscoveryBusy && !varDiscoverySending && IsBlank(varDiscoveryIntent), DisplayMode.Edit, DisplayMode.Disabled)"
+            AccessibleLabel: "=\"Compatible people and groups\""
+          Variant: "BrowseLayout_Vertical_TwoTextVariant_ver5.0"
+          Children:
+            -
+              lblDiscoveryRowTitle:
+                Control: "Label@2.5.1"
+                Properties:
+                  Font: "=Font.'Segoe UI'"
+                  Size: "=12"
+                  Text: "=ThisItem.title"
+                  X: "=12"
+                  Y: "=8"
+                  Width: "=Parent.TemplateWidth - 24"
+                  Height: "=44"
+                  FontWeight: "=FontWeight.Semibold"
+                  OnSelect: "=Select(Parent)"
+            -
+              lblDiscoveryRowSummary:
+                Control: "Label@2.5.1"
+                Properties:
+                  Font: "=Font.'Segoe UI'"
+                  Size: "=12"
+                  Text: "=ThisItem.summary"
+                  X: "=12"
+                  Y: "=54"
+                  Width: "=Parent.TemplateWidth - 24"
+                  Height: "=48"
+                  OnSelect: "=Select(Parent)"
+      -
+        lblDiscoveryEmpty:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=12"
+            Text: "=\"No compatible \" & Lower(varDiscoveryTab) & \" are available right now.\""
+            X: "=24"
+            Y: "=192"
+            Width: "=galDiscovery.Width"
+            Height: "=100"
+            Visible: "=!varDiscoveryBusy && IsBlank(varDiscoveryError) && IsEmpty(If(varDiscoveryTab = \"People\", colDiscoveryPeople, colDiscoveryGroups))"
+      -
+        lblDiscoverySelected:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=20"
+            Text: "=galDiscovery.Selected.title"
+            X: "=galDiscovery.X + galDiscovery.Width + 24"
+            Y: "=184"
+            Width: "=Parent.Width - Self.X - 24"
+            Height: "=48"
+            FontWeight: "=FontWeight.Semibold"
+      -
+        txtDiscoveryDetails:
+          Control: "Classic/TextInput@2.3.2"
+          Properties:
+            Default: "=galDiscovery.Selected.detail"
+            DisplayMode: "=DisplayMode.View"
+            Mode: "=TextMode.MultiLine"
+            X: "=lblDiscoverySelected.X"
+            Y: "=240"
+            Width: "=Parent.Width - Self.X - 24"
+            Height: "=Max(100, Parent.Height - 520)"
+            Size: "=12"
+            AccessibleLabel: "=\"Exchange and member details\""
+      -
+        lblDiscoveryIntroduction:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=12"
+            Text: "=\"Introduction (optional, up to 2,000 characters)\""
+            X: "=lblDiscoverySelected.X"
+            Y: "=txtDiscoveryDetails.Y + txtDiscoveryDetails.Height + 8"
+            Width: "=txtDiscoveryDetails.Width"
+            Height: "=32"
+            Visible: "=varDiscoveryTab = \"Groups\" && !IsBlank(galDiscovery.Selected.targetId)"
+      -
+        txtDiscoveryIntroduction:
+          Control: "Classic/TextInput@2.3.2"
+          Properties:
+            Default: "=\"\""
+            Mode: "=TextMode.MultiLine"
+            MaxLength: "=2000"
+            X: "=lblDiscoverySelected.X"
+            Y: "=lblDiscoveryIntroduction.Y + 32"
+            Width: "=txtDiscoveryDetails.Width"
+            Height: "=64"
+            Visible: "=lblDiscoveryIntroduction.Visible"
+            DisplayMode: "=If(IsBlank(varDiscoveryIntent) && !varDiscoverySending, DisplayMode.Edit, DisplayMode.Disabled)"
+            AccessibleLabel: "=\"Optional group introduction\""
+      -
+        btnDiscoverySend:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=If(varDiscoverySending, \"Sending…\", If(!IsBlank(varDiscoveryIntent), \"Retry same request\", If(varDiscoveryTab = \"Groups\", \"Request to join\", \"Send request\")))"
+            X: "=lblDiscoverySelected.X"
+            Y: "=txtDiscoveryIntroduction.Y + 76"
+            Width: "=210"
+            DisplayMode: "=If(varDiscoveryBusy || varDiscoverySending || varDiscoveryConfirmed || (IsBlank(varDiscoveryIntent) && IsBlank(galDiscovery.Selected.targetId)), DisplayMode.Disabled, DisplayMode.Edit)"
+            OnSelect: "=Set(varDiscoverySending, true);\nSet(varDiscoveryOutcome, \"\");\nIf(IsBlank(varDiscoveryIntent),\n    Set(varDiscoveryIntent, Text(GUID()));\n    Set(varDiscoveryIntentKind, galDiscovery.Selected.kind);\n    Set(varDiscoveryIntentTarget, galDiscovery.Selected.targetId);\n    Set(varDiscoveryIntentActor, varDiscoveryActorId);\n    Set(varDiscoveryIntentIntroduction, txtDiscoveryIntroduction.Text)\n);\nIfError(\n    If(varDiscoveryIntentKind = \"Person\",\n        Set(varDiscoveryPersonResult, TandemSendRequest.Run(varDiscoveryIntentActor, varDiscoveryIntentTarget, varDiscoveryIntent));\n        Set(varDiscoverySendSuccess, varDiscoveryPersonResult.success);\n        Set(varDiscoverySendCode, varDiscoveryPersonResult.resultcode);\n        Set(varDiscoverySendId, varDiscoveryPersonResult.requestid);\n        Set(varDiscoverySendReference, varDiscoveryPersonResult.runreference),\n        Set(varDiscoveryGroupResult, TandemSendGroupJoinRequest.Run(varDiscoveryIntentTarget, varDiscoveryIntent, {text_1: varDiscoveryIntentIntroduction}));\n        Set(varDiscoverySendSuccess, varDiscoveryGroupResult.success);\n        Set(varDiscoverySendCode, varDiscoveryGroupResult.resultcode);\n        Set(varDiscoverySendId, varDiscoveryGroupResult.requestid);\n        Set(varDiscoverySendReference, varDiscoveryGroupResult.runreference)\n    );\n    If(varDiscoverySendSuccess,\n        Set(varDiscoveryOutcome, \"Request recorded (#\" & varDiscoverySendId & \"). Check My requests for its current status.\");\n        Set(varDiscoveryIntent, Blank());\n        Set(varDiscoveryConfirmed, true),\n        Set(varDiscoveryOutcome, \"Request not confirmed (\" & varDiscoverySendCode & \"). Reference: \" & varDiscoverySendReference & \". Retry keeps the same request intent.\")\n    ),\n    Set(varDiscoveryOutcome, \"No confirmation received. Retry keeps the same request intent; check My requests before starting another.\")\n);\nSet(varDiscoverySending, false)"
+      -
+        btnDiscoveryNewIntent:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"Start a new request\""
+            X: "=btnDiscoverySend.X + 222"
+            Y: "=btnDiscoverySend.Y"
+            Width: "=190"
+            Visible: "=!IsBlank(varDiscoveryIntent)"
+            DisplayMode: "=If(varDiscoverySending, DisplayMode.Disabled, DisplayMode.Edit)"
+            OnSelect: "=Set(varDiscoveryIntent, Blank()); Set(varDiscoveryConfirmed, false); Set(varDiscoveryOutcome, \"New request intent started. Check My requests first if the earlier result was uncertain.\"); Reset(txtDiscoveryIntroduction)"
+      -
+        lblDiscoveryOutcome:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=12"
+            Text: "=varDiscoveryOutcome"
+            X: "=lblDiscoverySelected.X"
+            Y: "=btnDiscoverySend.Y + 48"
+            Width: "=txtDiscoveryDetails.Width"
+            Height: "=84"
