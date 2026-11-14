@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "sourceTicket": 81,
   "flow": "TandemValidateContext",
-  "state": "V1_IMPORTED_AND_CALLED_CHILDREN_INPUT_VALIDATION_FAILED_V2_PREPARED",
+  "state": "V2_NATIVE_QUICK_PASS_FULL_AND_CONSUMER_PENDING",
   "implementationCertified": false,
   "officialReferences": [
     "https://learn.microsoft.com/en-us/power-automate/create-child-flows",
@@ -18,7 +18,7 @@
     "tenantBrowser": "No connected authenticated tenant tab available",
     "evidenceBoundary": "Owner invocation body + inspected native unmanaged export, not live SharePoint/ordinary-user proof",
     "generatedSolutionImport": "PASS: imported generated v1 and parent completed 44 real child calls",
-    "generatedValidation": "FAIL_V1_REQUEST_TEXT_44_OF_44; V2 QUICK RETEST NOT RUN"
+    "generatedValidation": "V1_FAIL_RETAINED; V2_QUICK_PASS_3_OF_3; FULL_44_PENDING"
   },
   "firstOwnerCheck": {
     "action": "Existing Tandem environment > More > Solutions; inspect only",
@@ -183,5 +183,7 @@
     "nativeResult": "NOT_IMPORTED_NOT_TESTED",
     "metadataProvenance": "Supplied snapshots; no live audit certification",
     "callerBoundary": "Pure evaluator, never authorization; existing parent Invoker retained"
-  }
+  },
+  "nativeQuickRunReference": "08584069506351729738499173108cU14",
+  "nativeQuickEvidence": "artifacts/shared_validation/results/v2-quick.owner-report.json"
 }

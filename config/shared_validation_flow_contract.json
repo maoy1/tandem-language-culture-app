@@ -6,7 +6,7 @@
   "rulesVersion": 1,
   "packageBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
   "solutionName": "TandemSharedValidation81",
-  "state": "V1_NATIVE_INPUT_FAILURE_FIXED_V2_QUICK_RETEST_PENDING",
+  "state": "V2_NATIVE_QUICK_PASS_FULL_REGRESSION_AND_CONSUMER_PARITY_PENDING",
   "trigger": {
     "kind": "Button",
     "input": {
@@ -80,8 +80,10 @@
   "localTests": 335,
   "newCases": 93,
   "nativeSyntheticSmokeCases": 44,
-  "nativeStatus": "V1 failed all 44 at Request_text; V2 NOT_IMPORTED_NOT_TESTED",
+  "nativeStatus": "V2_QUICK_PASS_3_OF_3; V2_FULL_44_NOT_RUN; CONSUMER_PARITY_NOT_RUN",
   "nativeQuickSmokeCases": 3,
   "solutionVersion": "1.0.0.1",
-  "nativeFailureEvidence": "artifacts/shared_validation/results/v1-request-text.owner-error.json"
+  "nativeFailureEvidence": "artifacts/shared_validation/results/v1-request-text.owner-error.json",
+  "nativeQuickRunReference": "08584069506351729738499173108cU14",
+  "nativeQuickEvidence": "artifacts/shared_validation/results/v2-quick.owner-report.json"
 }

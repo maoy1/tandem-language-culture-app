@@ -5,7 +5,7 @@
   "newCases": 93,
   "fullSuite": 335,
   "localResult": "PASS",
-  "nativeResult": "V2_NOT_IMPORTED_NOT_TESTED",
+  "nativeResult": "V2_QUICK_PASS_3_OF_3; FULL_44_NOT_RUN; CONSUMERS_NOT_RUN",
   "priorNativeFailure": "results/v1-smoke.owner-report.json",
   "inputError": "results/v1-request-text.owner-error.json",
   "localReproduction": "Native JSON deserialization rejects v1 primitive string schema; wrapper handles document once",
@@ -28,5 +28,7 @@
       "maximumActionDepth": 2
     }
   },
-  "command": "python -X utf8 -m pytest -q -p no:cacheprovider"
+  "command": "python -X utf8 -m pytest -q -p no:cacheprovider",
+  "nativeQuickRunReference": "08584069506351729738499173108cU14",
+  "nativeQuickEvidence": "artifacts/shared_validation/results/v2-quick.owner-report.json"
 }
