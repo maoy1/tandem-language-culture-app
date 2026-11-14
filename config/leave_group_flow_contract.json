@@ -1,0 +1,212 @@
+{
+  "sourceTicket": 14,
+  "version": "14.1.0",
+  "state": "OWNER_PREVIEW_GENERATED_NATIVE_NOT_RUN",
+  "flowName": "TandemLeaveGroup",
+  "builder": {
+    "module": "scripts/power_automate/leave_group_flow.py",
+    "api": "build_actions(source, people, groups, build_id); trigger(source); build_package(source, output, groups=None, build_id=None)",
+    "source": "Observed legacy Get_item participant list binding, standard shared_sharepointonline Invoker, exact native Raw expression and site; Get_item operation is not reused.",
+    "receiptBinding": "groups['lists']['receipts'] = {'listId': '<actual verified GUID>', 'schemaVerified': True}",
+    "default": "No receipt binding; Configuration_verified is false and invocation returns CONFIGURATION_REQUIRED before any read/write. Zero GUID is an unreachable placeholder, not a tenant list."
+  },
+  "package": {
+    "sourceTicket": 14,
+    "version": "14.1.0",
+    "buildId": "4ad78357-d0de-4920-88e1-e998ad529a6b",
+    "flowId": "cfc4160a-232e-40d3-908d-99d618cf7cf7",
+    "actions": 234,
+    "maximumActionDepth": 4,
+    "sourceSha256": "e1e0b8f560ecb2769535c4f02edacfb2e5cf92a40ac8db38b64eb41e30c98e93",
+    "generatorSha256": "e6e8e74a42cdab9f7ead08b817d4c176a504e8fc9d09dd329cdb261e47441e27",
+    "packageSha256": "0d8f4f688b1b410200d7f692f014ad01d4bf10643783a41ee0a1eab7de038b1f",
+    "connectionSource": "Invoker",
+    "rawAuthenticationPreserved": true,
+    "ownerFallback": false,
+    "schemaBindingVerified": false,
+    "receiptListId": "00000000-0000-0000-0000-000000000000",
+    "sharedCalls": 0,
+    "writeRetries": "none",
+    "domainWrite": "Only own Active membership -> Left/LeftAt",
+    "guardToken": "OperationKey + colon + attempt UUID <=255; opaque across writers",
+    "solutionAssembly": "PARENT_PENDING",
+    "native": "NOT RUN",
+    "ordinaryUserAccess": "DEFERRED_NOT_VERIFIED"
+  },
+  "schemaPrerequisite": {
+    "provider": "Parent #81 setup/audit; no field/list creation by this flow",
+    "proposalSource": "C:\\Users\\Maoy1\\.codex\\worktrees\\tandem-group-join-contract\\tandem-language-culture-app\\config\\batch_schema_contract.json",
+    "proposalSha256": "f189c44795dd448faaf7c8a0087b3aeed6357b264f21f8cb4e8860955b308495",
+    "proposalState": "IMPLEMENTED_SCHEMA_TARGET_NOT_APPLIED_OR_TENANT_VERIFIED",
+    "receiptTitle": "TandemOperationReceipts",
+    "receiptFields": [
+      {
+        "name": "OperationKey",
+        "type": "Text",
+        "required": true,
+        "unique": true,
+        "indexed": true,
+        "maxLength": 255
+      },
+      {
+        "name": "IntentJson",
+        "type": "Note",
+        "required": true
+      },
+      {
+        "name": "ResultJson",
+        "type": "Note",
+        "required": false
+      },
+      {
+        "name": "Complete",
+        "type": "Boolean",
+        "required": false,
+        "default": "0"
+      },
+      {
+        "name": "Uncertain",
+        "type": "Boolean",
+        "required": false,
+        "default": "0"
+      },
+      {
+        "name": "Retryable",
+        "type": "Boolean",
+        "required": false,
+        "default": "0"
+      },
+      {
+        "name": "DomainEffects",
+        "type": "Boolean",
+        "required": false,
+        "default": "0"
+      },
+      {
+        "name": "AttemptToken",
+        "type": "Text",
+        "required": false,
+        "maxLength": 255
+      },
+      {
+        "name": "SealedAttempts",
+        "type": "Note",
+        "required": false
+      },
+      {
+        "name": "Stage",
+        "type": "Text",
+        "required": false,
+        "maxLength": 255
+      }
+    ],
+    "mapping": "Existing config/tenant_schema_mapping.json and config/group_schema_mapping.json; source requests GUID 3d17485d-1dac-41f0-a1af-24e45daa4567",
+    "requirements": "Exact internal names/types/requiredness/unique OperationKey/index, plain non-append/non-rich IntentJson/ResultJson/SealedAttempts; existing membership key unique/indexed and group WriteOwner Text<=255. Fresh trusted complete schema verification before binding schemaVerified=true; native Invoker read/edit rights and controlled writers remain access prerequisites. Generic-list Title must accept omitted value (optional/default); parent must verify this before enabling writes, since the proposal does not specify Title. No assumption of a usable default is a runtime proof.",
+    "native": "NOT RUN; proposed receipt listId is null; this task did not apply or verify tenant schema"
+  },
+  "inputs": {
+    "order": [
+      "number",
+      "number_1",
+      "number_2",
+      "text"
+    ],
+    "number": {
+      "title": "ParticipantId",
+      "type": "positive integer <=2147483647",
+      "authority": "reference only; exactly one own profile resolved from SharePoint currentuser"
+    },
+    "number_1": {
+      "title": "GroupId",
+      "type": "positive integer <=2147483647"
+    },
+    "number_2": {
+      "title": "MembershipId",
+      "type": "positive integer <=2147483647",
+      "meaning": "Explicit immutable episode; never select a newer episode on retry"
+    },
+    "text": {
+      "title": "IntentId",
+      "type": "UUID, case-insensitive canonical lower-case operation key",
+      "meaning": "Generate once for each explicit Leave; retain UUID and all target IDs for transport retries"
+    },
+    "allRequired": true,
+    "additionalProperties": false
+  },
+  "operationKey": "leave:{trustedActorId}:{lowercase IntentId}",
+  "intent": {
+    "kind": "LeaveGroup",
+    "version": 1,
+    "actorId": "trustedActorId",
+    "groupId": "GroupId",
+    "membershipId": "MembershipId"
+  },
+  "sharedGuard": {
+    "field": "Groups.WriteOwner",
+    "format": "OperationKey + colon + server-generated attempt UUID; maximum 255 chars",
+    "crossWriter": "Same opaque operation:attempt string/empty-field CAS mutex as #11. Never inspect/parse/clear another token; all writers of capacity/state/membership must honor the guard. Only WriteOwner overlaps other group writers.",
+    "claim": "Read exact group, require blank owner; MERGE WriteOwner only with exact numeric quoted ETag and retries none; reread same ID/state/capacity/source/setup + exact own token.",
+    "release": "Only after Complete/result receipt readback; fresh group read, CAS clear only the exact saved old token using current exact ETag. Reread to prove old token absent. A different token is preserved.",
+    "recovery": "Incomplete/uncertain existing receipt is read-only OUTCOME_UNKNOWN; no lease, TTL, automatic takeover, sealing platform, delete or speculative unlock. Completed receipt retry may release only its old token, with no member/receipt rewrites."
+  },
+  "authority": {
+    "initial": "Unique own profile from currentuser; own MembershipId/GroupId/ParticipantId exact match, typed group/member/request snapshots.",
+    "commit": "Group.SetupComplete=true; Group.SourceRequestId -> Accepted+OperationComplete Personal request. Extract request ID from canonical MembershipKey request:{requestId}:participant:{actorId}; fresh Accepted+OperationComplete. Initial personal episode must reference group source and include actor as a party. Joined episode must reference Group request with TargetGroupId matching group, SenderParticipantId matching actor, null recipient.",
+    "fresh": "Repeat exact group/member and both source/request commitment checks under WriteOwner; exactly one physical Active episode for actor, and its ID matches requested episode. A raw Active provisional episode never authorizes Leave.",
+    "availability": "Operational committed MembershipStatus=Active authorizes explicit Leave independently of ParticipationStatus/OpenToConnections. Paused/Inactive/openness changes preserve memberships. No Discovery Require_available_actor, profile-content/catalogue normalization or compatibility call. New-join requester and focus-sharer eligibility remain separate consumer rules."
+  },
+  "reads": {
+    "ownProfile": "$top=2; exactly one; reject paging",
+    "members": "All physical episodes for group, top2001 bound2000, typed rows, no partial page; count every Active including provisional/paused rows.",
+    "freshCounts": "Under guard before and after Leave; own Active count must go 1->0 and total Active decrease exactly one; free slots=max(0,Capacity-activeCount). Replays return saved historical counts; UI must refresh for current state."
+  },
+  "writes": {
+    "maximumPerNewSuccess": 5,
+    "actionDefinitions": 5,
+    "sequence": [
+      "Create unique immutable receipt with attempt UUID",
+      "Claim group WriteOwner exact ETag",
+      "Own Active membership exact ETag -> MembershipStatus Left + LeftAt UTC seconds",
+      "Complete receipt with exact ETag + immutable ResultJson, DomainEffects true, Stage Complete",
+      "Release only matching old group token exact ETag"
+    ],
+    "forbidden": [
+      "any membership creation/delete/rejoin/revival",
+      "group state/capacity/focus/SetupComplete edits",
+      "request updates",
+      "profile/openness updates",
+      "notification/event/schema/permission writes"
+    ],
+    "history": "Preserve JoinedAt, MembershipKey, parties, other episodes, Closed/Ended and all unrelated properties; no automatic discovery-state repair.",
+    "retryPolicy": "none on every connector action",
+    "settledReadback": "Succeeded/Failed/TimedOut only; Skipped cannot reconcile a write; positive ReceiptReady and ReleaseProved guards permit safe continuation across failed native containers."
+  },
+  "outputs": {
+    "success": "Boolean; true only LEFT after Complete receipt and old token absence proved",
+    "resultcode": "Text: LEFT | ALREADY_LEFT | UNAUTHORIZED | NOT_MEMBER | PROVISIONAL_MEMBERSHIP | MEMBERSHIP_INTEGRITY | MEMBERSHIP_CHANGED | GROUP_INTEGRITY | INTENT_CONFLICT | RECEIPT_INTEGRITY | GROUP_BUSY | GROUP_BUSY_OR_UNKNOWN | OUTCOME_UNKNOWN | RELEASE_PENDING | INCOMPLETE_READ | CONFIGURATION_REQUIRED | INVALID_INPUT | READ_OR_DATA_FAILED",
+    "message": "Constant sanitized Text",
+    "resultjson": "Text JSON object below only on success; otherwise {}",
+    "replay": "Boolean; saved completed receipt used and success proved",
+    "writeattempted": "Boolean; any receipt/guard/membership write attempted, not just domain effect",
+    "outcomeunknown": "Boolean; write attempted without full confirmed success, conservatively includes a saved incomplete receipt/failed release",
+    "runreference": "Text flow run name",
+    "buildid": "Text builder build UUID",
+    "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF"
+  },
+  "resultjson": {
+    "kind": "LeaveGroup",
+    "operationkey": "Actor-scoped intent key, no account/email/token",
+    "groupid": "integer",
+    "membershipid": "integer",
+    "status": "Left",
+    "leftat": "UTC timestamp",
+    "groupstate": "Preserved Open/Closed/Ended",
+    "membercount": "physical Active count at completion",
+    "freeslots": "max(0,capacity-count) at completion"
+  },
+  "replay": "Same intent+same frozen payload returns saved historical result without reapplying leave. Same intent changed targets -> INTENT_CONFLICT. Different intent for already Left episode -> ALREADY_LEFT/false, zero writes; refresh history. Rejoined/new episode is never substituted for old MembershipId.",
+  "native": "NOT RUN",
+  "ordinaryAccess": "DEFERRED_NOT_VERIFIED",
+  "solutionAssembly": "PARENT_PENDING",
+  "drift": "New consumer only. Receipt proposal adopted from parent, not applied. #81 parent must bind/audit proposed role/fields and update its ledger/baseline before native dependent writes; no shared evaluator or other flow modules edited here. See docs/ISSUE_14_LEAVE_GROUP.md."
+}

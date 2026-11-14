@@ -1,0 +1,60 @@
+{
+  "sourceTicket": 14,
+  "version": "14.1.0",
+  "buildId": "4ad78357-d0de-4920-88e1-e998ad529a6b",
+  "packageSha256": "0d8f4f688b1b410200d7f692f014ad01d4bf10643783a41ee0a1eab7de038b1f",
+  "generatorSha256": "e6e8e74a42cdab9f7ead08b817d4c176a504e8fc9d09dd329cdb261e47441e27",
+  "sourceSha256": "e1e0b8f560ecb2769535c4f02edacfb2e5cf92a40ac8db38b64eb41e30c98e93",
+  "baseCommit": "7eba0ba0e5739477d4259474c2cb8fb8b3e3ee94",
+  "branch": "codex/issue-14-leave-group",
+  "fullSuite": {
+    "status": "PASS",
+    "passed": 440,
+    "command": "python -X utf8 -m pytest -q --tb=short -p no:cacheprovider",
+    "scope": "Final production graph behavior; four additional authority-reminder cases and EOF whitespace cleanup afterwards, all covered by final focused suite. No behavior change."
+  },
+  "finalLeaveSuite": {
+    "status": "PASS",
+    "passed": 87,
+    "command": "python -X utf8 -m pytest tests/test_leave_group_flow.py -q --tb=short -p no:cacheprovider",
+    "scope": "Includes Paused/Inactive x openness on/off; own committed operational Active membership remains authority"
+  },
+  "metrics": {
+    "actions": 234,
+    "maximumActionDepth": 4
+  },
+  "writeActionDefinitions": 5,
+  "maximumWritesPerNewSuccess": 5,
+  "maximumMembershipWrites": 1,
+  "happyPathReads": 21,
+  "replayWrites": "0, or 1 exact old-token release only",
+  "writeRetries": "none",
+  "sharedCalls": 0,
+  "graphChecks": "PASS: generated/ZIP/readable equality, exact IO/Invoker/Raw, hashes, global names, sibling runAfter and expression references, five allowed write shapes, blocked preview no-I/O",
+  "regressions": [
+    "spoof actor/nonmember/missing episode",
+    "initial source and extracted membership request commit, fresh under group guard",
+    "provisional physical count without authority",
+    "receipt intent conflict/replay/canonical UUID",
+    "second leave/history/rejoined episode not substituted",
+    "all five write stages fail/timeout/stale/committed502 readback",
+    "incomplete unknown recovery read-only",
+    "completed receipt old-token release recovery",
+    "foreign group token/stale claim protected",
+    "Closed/Ended/state/profile/openness and other rows preserved",
+    "Discovery loses sole learner/retains valid focus",
+    "unknown receipt output fields rejected"
+  ],
+  "native": {
+    "schemaSetup": "BLOCKED_UNVERIFIED_PARENT_RECEIPT_GUID_AND_FIELDS",
+    "importInvocation": "NOT RUN",
+    "membershipWritesAndCrossWriters": "NOT RUN",
+    "solutionAssembly": "PARENT_PENDING",
+    "ordinaryUserAccess": "DEFERRED_NOT_VERIFIED",
+    "latency": "NOT RUN"
+  },
+  "otherFlowModulesEdited": false,
+  "sharedChildEdited": false,
+  "issue63CommitUnchanged": "5271978a8782dd5e039764cd570a972a2f5d50be",
+  "driftLedgerDraft": "docs/ISSUE_14_LEAVE_GROUP.md; parent owns actual receipt baseline/setup and issue publication, no GitHub edits here"
+}
