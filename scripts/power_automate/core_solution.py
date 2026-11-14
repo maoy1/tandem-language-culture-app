@@ -55,7 +55,9 @@ def assemble(native_source, documents, output, include_setup=True):
               'solutionVersion': CONTRACT['solutionVersion'], 'productionFlowCount': len(expected),
               'maintenanceFlowCount': int(include_setup), 'importState': 'disabled',
               'nativeResult': 'NOT_IMPORTED_NOT_TESTED', 'ordinaryUserAccessVerified': False,
-              'sourceExportSha256': hashlib.sha256(Path(native_source).read_bytes()).hexdigest(), 'flows': {}}
+              'sourceExportSha256': hashlib.sha256(Path(native_source).read_bytes()).hexdigest(), 'flows': {},
+              'automatedConnectionEvidence': 'Legacy Embedded source inspected; automatic Solution binding/import/execution NOT RUN',
+              'ordinaryUserAccess': 'Deferred by owner; not verified by owner-context tests'}
     original_child = CONTRACT['nativeSharedChildTemplateId']
     child_id = identifier('TandemValidateContext')
     for name, source in source_docs.items():
@@ -82,6 +84,17 @@ def assemble(native_source, documents, output, include_setup=True):
                 host = action['inputs']['host']
                 if host.get('workflowReferenceName') != original_child: raise ValueError('Unrecognized child dependency')
                 host['workflowReferenceName'] = child_id
+            if action['type'] == 'OpenApiConnection':
+                inputs = action['inputs']
+                if inputs['host'].get('apiId') != '/providers/Microsoft.PowerApps/apis/shared_sharepointonline':
+                    raise ValueError('Core batch only uses SharePoint')
+                parameters = inputs['parameters']
+                if parameters.get('dataset') != batch_schema.CONTRACT['site']:
+                    raise ValueError('Unexpected target site')
+                method = parameters.get('parameters/method', 'GET')
+                if method != 'GET' and '/items' in str(parameters.get('parameters/uri', '')):
+                    if inputs.get('retryPolicy') != {'type': 'none'}:
+                        raise ValueError('Business writes must not automatically retry')
         if '_connectionEvidence' in doc: doc.pop('_connectionEvidence')
         props['displayName'] = name + ' (batch preview)'
         id_ = identifier(name)
