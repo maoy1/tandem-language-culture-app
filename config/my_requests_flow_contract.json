@@ -143,18 +143,19 @@
   },
   "defaultArtifact": {
     "path": "artifacts/my_requests/TandemMyRequests-v7.definition.json",
-    "buildId": "2c9d2814-dcfb-4951-8abe-955b9067863b",
+    "buildId": "018eb8bd-3987-4dd9-a6ed-e271ab6878f4",
     "sha256": "9edaa4b8f3561d36c2f5e83a995e6d4db19dea58fcaab5fc04908dd9c18a99e5",
     "includeIntroduction": false,
     "actualSchema": "NOT_APPLIED_NOT_VERIFIED"
   },
   "introductionTargetArtifact": {
     "path": "artifacts/my_requests/TandemMyRequests-v7-introduction-target.definition.json",
-    "buildId": "24da4c0a-fd53-4143-8bfc-3d94b15e5913",
+    "buildId": "1b4c6c75-2417-40b6-84cf-93a841b37c6a",
     "sha256": "96c0f5c25e81c140f2b0e0c0965bcbf5880a5c9445bb1935e7b78dc75f5086a8",
     "includeIntroduction": true,
     "actualSchema": "NOT_APPLIED_NOT_VERIFIED",
     "expectedSharedBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
     "batchUse": "Recompile or explicit canonical-manifest pin rewrite in parent assembly; new engine build/hash NOT silently accepted. Then actual setup/readback and native consumer tests BEFORE use."
-  }
+  },
+  "batchDependencyCurrent": "Shared source refreshed against #81 c4c8932; final engine build/ID explicitly rebound by coordinated assembler; new native tests NOT RUN."
 }
