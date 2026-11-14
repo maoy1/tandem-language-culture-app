@@ -107,7 +107,7 @@ CAPTURE = '''If(IsBlank(varRequestsIntent),
     Set(varReqIntentDecision, varReqDialog);
     Set(varReqIntentName, If(varReqDialog = "Accept" && varReqSelected.requestType = "Personal", Trim(reqName.Text), ""));
     Set(varReqIntentType, If(varReqDialog = "Accept" && varReqSelected.requestType = "Personal", reqType.Selected.Value, "Language"));
-    Set(varReqIntentCapacity, If(varReqDialog = "Accept" && varReqSelected.requestType = "Personal", reqCapacity.Selected.Value, 2));
+    Set(varReqIntentCapacity, If(varReqDialog = "Accept" && varReqSelected.requestType = "Personal", Value(reqCapacity.Selected.Value), 2));
     Set(varReqIntentLanguages, If(varReqDialog = "Accept" && varReqSelected.requestType = "Personal" && reqType.Selected.Value <> "Culture",
         "[" & Concat(reqLanguages.SelectedItems As reqFocus, Text(Value(reqFocus.Id), "0", "en-US"), ",") & "]", "[]"));
     Set(varReqIntentCultures, If(varReqDialog = "Accept" && varReqSelected.requestType = "Personal" && reqType.Selected.Value <> "Language",
@@ -120,7 +120,7 @@ EDITABLE = 'IsBlank(varRequestsIntent) && !varReqBusy && !varReqSending'
 PERSONAL_ACCEPT = 'varReqDialog = "Accept" && varReqSelected.requestType = "Personal"'
 VALID_CONFIG = '''!IsBlank(Trim(reqName.Text)) && Len(Trim(reqName.Text)) <= 255 &&
     !IsBlank(reqType.Selected.Value) && !IsBlank(reqCapacity.Selected.Value) &&
-    reqCapacity.Selected.Value >= 2 && reqCapacity.Selected.Value <= If(reqType.Selected.Value = "Language", 3, 10) &&
+    Value(reqCapacity.Selected.Value) >= 2 && Value(reqCapacity.Selected.Value) <= If(reqType.Selected.Value = "Language", 3, 10) &&
     (reqType.Selected.Value = "Culture" || (!IsEmpty(reqLanguages.SelectedItems) && CountRows(reqLanguages.SelectedItems) <= 100)) &&
     (reqType.Selected.Value = "Language" || (!IsEmpty(reqCultures.SelectedItems) && CountRows(reqCultures.SelectedItems) <= 100))'''
 
@@ -196,7 +196,7 @@ def screen():
     c.append(text('reqName', Default='""', MaxLength='255', X='reqPanel.X + 24', Y='260', Width='812', Height='40', AccessibleLabel='"Group name"', Visible=form_visible, DisplayMode=f'If({EDITABLE}, DisplayMode.Edit, DisplayMode.Disabled)'))
     c.append(combo('reqType', Items='["Language", "Culture", "Combined"]', DefaultSelectedItems='["Language"]', X='reqPanel.X + 24', Y='346', Width='382', Visible=form_visible, AccessibleLabel='"Exchange type"', OnChange='Reset(reqCapacity); Reset(reqLanguages); Reset(reqCultures)'))
     c.append(label('reqCapacityLabel', Text='"Total capacity, including both participants"', X='reqPanel.X + 430', Y='314', Width='406', Height='28', Visible=form_visible))
-    c.append(combo('reqCapacity', Items='Sequence(If(reqType.Selected.Value = "Language", 2, 9), 2)', DisplayFields='["Value"]', SearchFields='["Value"]', IsSearchable='false', DefaultSelectedItems='[2]', X='reqPanel.X + 430', Y='346', Width='406', Visible=form_visible, AccessibleLabel='"Total group capacity"'))
+    c.append(combo('reqCapacity', Items='ForAll(Sequence(If(reqType.Selected.Value = "Language", 2, 9), 2) As reqSize, Text(reqSize.Value, "0", "en-US"))', DisplayFields='["Value"]', SearchFields='["Value"]', IsSearchable='false', DefaultSelectedItems='["2"]', X='reqPanel.X + 430', Y='346', Width='406', Visible=form_visible, AccessibleLabel='"Total group capacity"'))
     for name, field, excluded, y in [('reqLanguages', 'Teachlanguages', 'Culture', 432), ('reqCultures', 'ShareCultures', 'Language', 518)]:
         c.append(combo(name, Items=f'Choices([@Participants].{field})', DefaultSelectedItems='[]', SelectMultiple='true', IsSearchable='true',
                        X='reqPanel.X + 24', Y=str(y), Width='812', Visible=form_visible,
