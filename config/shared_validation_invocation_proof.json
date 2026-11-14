@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "sourceTicket": 81,
+  "flow": "TandemValidateContext",
+  "state": "SOLUTION_PAGE_AVAILABLE_NATIVE_PARENT_CHILD_PROOF_PENDING",
+  "implementationCertified": false,
+  "officialReferences": [
+    "https://learn.microsoft.com/en-us/power-automate/create-child-flows",
+    "https://learn.microsoft.com/en-us/power-automate/create-flow-solution"
+  ],
+  "observedPrerequisites": {
+    "legacyPackageImport": "Owner-proven under #28; not Solution/child-flow proof",
+    "solutionAvailability": "OWNER_CONFIRMED_SOLUTIONS_LIST_OPENS",
+    "solutionMakerPermission": "NOT_VERIFIED",
+    "existingEntitlements": "NOT_VERIFIED_FOR_CHILD_FLOW",
+    "nativeInvocation": "NOT_RUN",
+    "callerConnectionPropagation": "Microsoft documents that parent connections cannot pass to child flows",
+    "tenantBrowser": "No connected authenticated tenant tab available",
+    "evidenceBoundary": "Solutions page access only; does not prove Solution creation, flow authoring, entitlements or successful invocation"
+  },
+  "firstOwnerCheck": {
+    "action": "Existing Tandem environment > More > Solutions; inspect only",
+    "return": "Solutions list opens, or exact access/database/licence prompt",
+    "stopBefore": [
+      "Trial or paid upgrade",
+      "Database/environment creation",
+      "Working flow migration",
+      "Connection-mode/permission changes"
+    ],
+    "result": "PASS_OWNER_REPORTED_SOLUTIONS_LIST_OPENS"
+  },
+  "invocationProof": {
+    "state": "DESIGN_ONLY_NOT_A_PACKAGE",
+    "purpose": "Two disposable connector-free flows in one permitted existing Solution; no business data",
+    "child": "Tandem81InvocationChild",
+    "parent": "Tandem81InvocationParent",
+    "inputs": {
+      "ProofToken": "TANDEM81_INVOCATION_V1 then TANDEM81_INVOCATION_V2 on second run"
+    },
+    "expectedChildResponse": [
+      "echoed ProofToken",
+      "ChildRunReference from workflow run name"
+    ],
+    "expectedParentReport": [
+      "Compose shows matching ProofToken",
+      "Compose shows ChildRunReference",
+      "actual child run with same input completed successfully"
+    ],
+    "repeat": "Second token and a distinct successful child run",
+    "negative": "After baseline proof, native dependency/validation failure behavior is a separate unchecked case; initial echo does not prove it.",
+    "deployment": "Use a tenant-native minimal exported Solution as the inspected packaging reference once availability is confirmed. Do not hand over a fabricated legacy package as proof of solution invocation.",
+    "cleanup": "After preserving an unmanaged export and run evidence, turn off/delete only disposable proof components; retain existing publisher, working flows and connections."
+  },
+  "trustBoundary": {
+    "firstProof": "Connector-free invocation only; no claim of identity/SharePoint/private-data capability",
+    "parentResponsibilities": [
+      "Resolve authenticated Invoker and bind actor before sending context",
+      "Keep write-time state/ETag/unique-key/replay/authority protections",
+      "Do not accept app-supplied eligibility or identity as proof"
+    ],
+    "childSharePointReads": "Not selected; requires separately reviewed embedded connection and data/caller boundary. No owner-credential substitution or run-only switch in production flows.",
+    "fullSchemaAudit": "Explicit maintenance/deployment mode; not repeated wholesale on every send/cancel/read",
+    "freshChecks": "Operation-specific current data remains required; no stale audit approval or compatibility reservation"
+  },
+  "sequence": [
+    81,
+    10,
+    62,
+    63,
+    7,
+    61,
+    11
+  ],
+  "consumerReview": [
+    {
+      "ticket": 10,
+      "flow": "TandemSendRequest v3",
+      "actions": 125,
+      "depth": 5,
+      "change": "Central schema/normalization/pair compatibility; read actor/target instead of all profiles",
+      "retain": "Invoker binding, immutable send intent/replay, live-key uniqueness, pending write reconciliation",
+      "reviewedSource": "artifacts/send_request/TandemSendRequest-v3.definition.json",
+      "sourceSha256": "1e30b846a5a6922f07f8912e7fd69049ca524a305b49210a39cd04760ca47f90"
+    },
+    {
+      "ticket": 62,
+      "flow": "TandemMyRequests v6",
+      "actions": 228,
+      "depth": 4,
+      "change": "Central metadata validation (113 ordered definitions in metadata section); scope audience/history reads",
+      "retain": "Caller/audience, membership commitment, whole-reference and history integrity; no pair matching needed",
+      "reviewedSource": "artifacts/my_requests/TandemMyRequests-v6.definition.json",
+      "sourceSha256": "4a36561fad2ac8c114165bfc579435fa6b1ff5f21efd8090ebfd91c77e168e84"
+    },
+    {
+      "ticket": 63,
+      "flow": "TandemCancelRequest v3",
+      "actions": 138,
+      "depth": 5,
+      "change": "Central schema validation; no availability/compatibility prerequisite for cancel",
+      "retain": "Sender authority, Pending CAS, terminal history and retry readback",
+      "reviewedSource": "artifacts/cancel_request/TandemCancelRequest-v3.definition.json",
+      "sourceSha256": "01ded0145e5cecd4af70b9b664def8950070066f5a4fce7dc6ad66d3f699c7b1"
+    },
+    {
+      "ticket": 7,
+      "flow": "TandemDiscovery v2",
+      "actions": 165,
+      "depth": 6,
+      "change": "Central shared normalization and person/group rules",
+      "retain": "Authenticated own profile, candidate retrieval, approved projection, current group commitment and result/read bounds",
+      "reviewedSource": "artifacts/tandem_discovery/TandemDiscovery-v2.definition.json",
+      "sourceSha256": "e1e0b8f560ecb2769535c4f02edacfb2e5cf92a40ac8db38b64eb41e30c98e93"
+    },
+    {
+      "ticket": 61,
+      "flow": "Participant submission v2",
+      "actions": 26,
+      "depth": 3,
+      "change": "Central relevant profile/catalogue validation; no pair matching",
+      "retain": "Event/current item binding, Status-only update if changed, ETag protection and readback",
+      "reviewedSource": "artifacts/participant_submission/TandemParticipantSubmission-v2.definition.json",
+      "sourceSha256": "ff85f0971e8313e3189d9af0d4403118348a0bdcb45be5c109cfa510c1ee0ee0"
+    },
+    {
+      "ticket": 11,
+      "flow": "TandemRespondRequest historical snapshot",
+      "actions": 77,
+      "depth": 6,
+      "change": "Complete replacement using shared pair/group validation; historical snapshot not current protocol-compliant package",
+      "retain": "Recipient authority, decision replay/atomicity, group and membership persistence/recovery",
+      "reviewedSource": "config/participant_response_flow.snapshot.json",
+      "sourceSha256": "c27105970d632fbc5ef2f36361dc3f0247a7386570d408b974f9d7149c8af794"
+    }
+  ],
+  "versionChangeImpact": {
+    "schemaChanged": false,
+    "rulesChanged": false,
+    "existingPackagesChanged": false,
+    "currentNativeProof": "NOT_RUN",
+    "priorEvidence": "Preserved by version; no repeated smoke requested",
+    "openIssue10": "Replay test reported failed and earlier Pending-row origin unresolved; later supplied no-overlap run correctly rejected. Refactor does not resolve those results."
+  }
+}
