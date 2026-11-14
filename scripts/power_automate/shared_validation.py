@@ -176,8 +176,11 @@ def definition_actions(baseline, build_id, source_hash):
         n = 'Initialize_' + name
         a[n] = {'type': 'InitializeVariable', 'inputs': {'variables': [{'name': name, 'type': kind, 'value': value}]}, 'runAfter': d.after(previous)}
         previous = n
-    stage = {'Request_text': d.parse("@triggerBody()?['text']", {'type': 'string', 'maxLength': 250000}),
-             'Envelope': d.parse("@json(body('Request_text'))", {'type': 'object',
+    # Parse JSON deserializes a string before applying its schema. Validate the
+    # text as a property of an object, then deserialize that property once.
+    stage = {'Request_text': d.parse({'value': "@triggerBody()?['text']"}, {'type': 'object',
+                 'required': ['value'], 'properties': {'value': {'type': 'string', 'maxLength': 250000}}}),
+             'Envelope': d.parse("@json(body('Request_text')?['value'])", {'type': 'object',
              'required': ['contractVersion', 'rulesVersion', 'mode'], 'properties': {
                  'contractVersion': {'type': 'integer'}, 'rulesVersion': {'type': 'integer'}, 'mode': {'type': 'string'}}}, 'Request_text')}
     stage['Header_code'] = d.compose("@if(and(equals(body('Envelope')?['contractVersion'],1),equals(body('Envelope')?['rulesVersion'],1)),if(contains(createArray('SCHEMA','NORMALIZE','PAIR','GROUP','PROFILE'),body('Envelope')?['mode']),'READY','UNSUPPORTED_MODE'),'VERSION_MISMATCH')", 'Envelope')
@@ -195,6 +198,9 @@ def definition_actions(baseline, build_id, source_hash):
         'sourceSha256': source_hash, 'runReference': "@workflow()?['run']?['name']",
         'success': "@and(" + succeeded + ',' + bounded + ",equals(variables('Code'),'OK'))", 'code': '@' + code,
         'result': '@if(and(' + succeeded + ',' + bounded + "),variables('Result'),json('{}'))", 'authorizesAction': False,
+        'diagnostics': {key: "@actions('" + name + "')?['status']" for key, name in [
+            ('requestText', 'Request_text'), ('envelope', 'Envelope'), ('header', 'Header_code'),
+            ('schemaMode', 'Schema_mode'), ('rulesMode', 'Rules_mode')]},
         'connectors': 0, 'reads': 0, 'writes': 0})
     a['Validation_report']['runAfter'] = d.after('Result_size')
     a['Respond_to_a_Power_App_or_flow'] = {'type': 'Response', 'kind': 'PowerApp', 'runAfter': d.after('Validation_report'),
@@ -261,28 +267,41 @@ def smoke_cases():
     return cases
 
 
-def parent_actions(child_id, cases, build_id):
+def quick_cases():
+    """Small native gate before the full sequential 44-case regression run."""
+    all_cases = {case['id']: case for case in smoke_cases()}
+    cases = [deepcopy(all_cases[name]) for name in ['PAIR_COMBINED_RECIPROCAL', 'OWNER_NO_OVERLAP_38_32', 'CONTRACT_VERSION_REJECTED']]
+    for case in cases:
+        payload = case['payload']
+        wanted = [payload.get('leftId'), payload.get('rightId')]
+        payload['profiles'] = [p for p in payload['profiles'] if p['profileId'] in wanted]
+    return cases
+
+
+def parent_actions(child_id, cases, build_id, suite='FULL'):
     inner = {'Call_validation_child': {'type': 'Workflow', 'inputs': {'host': {'workflowReferenceName': child_id},
                'body': {'text': "@string(items('Each_smoke_case')?['payload'])"}}, 'runAfter': {}},
              'Parse_child_result': d.parse("@json(body('Call_validation_child')?['resultjson'])", {'type': 'object'}, 'Call_validation_child')}
     inner['Append_smoke_result'] = {'type': 'AppendToArrayVariable', 'runAfter': d.after('Parse_child_result'),
          'inputs': {'name': 'Results', 'value': {'id': "@items('Each_smoke_case')?['id']",
           'passed': "@and(equals(body('Parse_child_result')?['code'],items('Each_smoke_case')?['code']),equals(body('Parse_child_result')?['result'],items('Each_smoke_case')?['expected']),equals(body('Parse_child_result')?['packageBuildId'],'" + build_id + "'))",
-          'childRunReference': "@body('Parse_child_result')?['runReference']", 'actual': "@body('Parse_child_result')?['result']"}}}
+          'childRunReference': "@body('Parse_child_result')?['runReference']", 'actual': "@body('Parse_child_result')?['result']",
+          'actualCode': "@body('Parse_child_result')?['code']", 'expectedCode': "@items('Each_smoke_case')?['code']",
+          'diagnostics': "@body('Parse_child_result')?['diagnostics']"}}}
     a = {'Initialize_results': {'type': 'InitializeVariable', 'inputs': {'variables': [{'name': 'Results', 'type': 'array', 'value': []}]}, 'runAfter': {}},
          'Smoke_cases': d.compose(cases, 'Initialize_results'),
          'Each_smoke_case': {'type': 'Foreach', 'foreach': "@outputs('Smoke_cases')", 'actions': inner,
             'runtimeConfiguration': {'concurrency': {'repetitions': 1}}, 'runAfter': d.after('Smoke_cases')}}
     a['Failed_cases'] = d.query("@variables('Results')", "not(equals(item()?['passed'],true))")
     a['Failed_cases']['runAfter'] = {'Each_smoke_case': ALL}
-    a['Smoke_report'] = d.compose({'kind': 'TandemValidationSmoke', 'sourceTicket': 81, 'packageBuildId': build_id,
+    a['Smoke_report'] = d.compose({'kind': 'TandemValidationSmoke', 'suite': suite, 'sourceTicket': 81, 'packageBuildId': build_id,
         'syntheticOnly': True, 'runReference': "@workflow()?['run']?['name']", 'testCount': len(cases),
         'completedCount': "@length(variables('Results'))", 'allPassed': "@and(equals(actions('Each_smoke_case')?['status'],'Succeeded'),empty(body('Failed_cases')),equals(length(variables('Results'))," + str(len(cases)) + '))',
         'failedCases': "@body('Failed_cases')", 'connectors': 0, 'reads': 0, 'writes': 0}, 'Failed_cases')
     return a
 
 
-def build_package(source, output, baseline_path=None):
+def build_package(source, output, baseline_path=None, previous_review=None):
     output = Path(output)
     if output.exists() or output.with_suffix('.review.json').exists(): raise FileExistsError(output)
     baseline_path = Path(baseline_path or ROOT / 'config/shared_validation_schema.json')
@@ -292,6 +311,24 @@ def build_package(source, output, baseline_path=None):
     build_id = str(uuid4())
     rules_hash = hashlib.sha256(Path(rules.__file__).read_bytes()).hexdigest()
     new_ids = {k: str(uuid4()) for k in flows}
+    version = '1.0.0.0'
+    prior = None
+    if previous_review:
+        prior = json.loads(Path(previous_review).read_text())
+        if prior['sourceTicket'] != 81 or prior['solutionName'] != 'TandemSharedValidation81':
+            raise ValueError('Only this #81 generated Solution may be updated')
+        if prior['sourceExportSha256'] != hashlib.sha256(Path(source).read_bytes()).hexdigest():
+            raise ValueError('The native source must match the prior generated package')
+        new_ids = {'child': prior['flows']['TandemValidateContext']['id'],
+                   'parent': prior['flows']['TandemValidationSmoke']['id']}
+        parts = [int(p) for p in prior.get('solutionVersion', '1.0.0.0').split('.')]
+        if len(parts) != 4: raise ValueError('Expected four-part prior Solution version')
+        parts[-1] += 1
+        version = '.'.join(map(str, parts))
+    quick_node, quick_doc = deepcopy(flows['parent'])
+    custom.find('Workflows').append(quick_node)
+    flows['quick'] = (quick_node, quick_doc)
+    new_ids['quick'] = prior['flows'].get('TandemValidationQuickSmoke', {}).get('id', str(uuid4())) if prior else str(uuid4())
     child_actions = definition_actions(baseline, build_id, rules_hash)
     cases = smoke_cases()
     # Include complete and intentionally mismatched schema snapshots in native smoke.
@@ -304,7 +341,9 @@ def build_package(source, output, baseline_path=None):
         cases.append({'id': label, 'payload': {'contractVersion': 1, 'rulesVersion': 1, 'mode': 'SCHEMA', 'metadata': metadata},
             'code': 'OK' if label == 'SCHEMA_BASELINE' else 'SCHEMA_MISMATCH', 'expected': expected})
     parent = parent_actions(new_ids['child'], cases, build_id)
-    names = {'child': 'TandemValidateContext', 'parent': 'TandemValidationSmoke'}
+    quick = parent_actions(new_ids['child'], quick_cases(), build_id, suite='QUICK')
+    definitions = {'child': child_actions, 'parent': parent, 'quick': quick}
+    names = {'child': 'TandemValidateContext', 'parent': 'TandemValidationSmoke', 'quick': 'TandemValidationQuickSmoke'}
     new_entries = {n: b for n, b in entries.items() if not n.startswith('Workflows/')}
     for role, (node, doc) in flows.items():
         id_ = new_ids[role]; name = names[role]
@@ -320,11 +359,11 @@ def build_package(source, output, baseline_path=None):
         definition['triggers']['manual']['inputs']['schema'] = {'type': 'object', 'properties': {} if role == 'parent' else {
             'text': {'title': 'RequestJson', 'type': 'string', 'x-ms-dynamically-added': True, 'x-ms-content-hint': 'TEXT'}},
             'required': [] if role == 'parent' else ['text']}
-        definition['actions'] = child_actions if role == 'child' else parent
+        definition['actions'] = definitions[role]
         new_entries[file] = (json.dumps(doc, indent=2) + '\n').encode()
     manifest = solution.find('SolutionManifest')
     manifest.find('UniqueName').text = 'TandemSharedValidation81'
-    manifest.find('Version').text = '1.0.0.0'
+    manifest.find('Version').text = version
     manifest.find('./LocalizedNames/LocalizedName').set('description', 'Tandem Shared Validation 81')
     roots = manifest.find('RootComponents'); roots.clear()
     for id_ in new_ids.values(): ET.SubElement(roots, 'RootComponent', {'type': '29', 'id': '{' + id_ + '}', 'behavior': '0'})
@@ -338,13 +377,15 @@ def build_package(source, output, baseline_path=None):
         'packageSha256': hashlib.sha256(output.read_bytes()).hexdigest(),
         'sourceSha256': rules_hash, 'schemaSha256': hashlib.sha256(baseline_path.read_bytes()).hexdigest(),
         'generatorSha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-        'flows': {names[k]: {'id': new_ids[k], **measure(child_actions if k == 'child' else parent)} for k in new_ids},
-        'testCount': len(cases), 'connectors': 0, 'reads': 0, 'writes': 0,
-        'newSolutionAndNewFlowIds': True, 'consumerCutover': False, 'importState': 'disabled',
+        'flows': {names[k]: {'id': new_ids[k], **measure(definitions[k])} for k in new_ids},
+        'testCount': len(cases), 'quickTestCount': len(quick_cases()), 'solutionVersion': version,
+        'connectors': 0, 'reads': 0, 'writes': 0,
+        'newSolutionAndNewFlowIds': not bool(prior), 'updateFromBuild': prior['packageBuildId'] if prior else None,
+        'consumerCutover': False, 'importState': 'disabled',
         'nativeResult': 'NOT_IMPORTED_NOT_TESTED', 'metadataProvenance': 'Supplied snapshots; no live audit certification',
         'callerBoundary': 'Pure evaluator, never authorization; existing parent Invoker retained'}
     write_json(output.with_suffix('.review.json'), review)
-    for name, actions in [('child', child_actions), ('smoke', parent)]: write_json(output.with_suffix('.' + name + '.definition.json'), actions)
+    for name, actions in [('child', child_actions), ('smoke', parent), ('quick', quick)]: write_json(output.with_suffix('.' + name + '.definition.json'), actions)
     return review
 
 
@@ -386,4 +427,5 @@ def synthetic_metadata(baseline):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', type=Path, required=True); parser.add_argument('--output', type=Path, required=True)
-    args = parser.parse_args(); print(json.dumps(build_package(args.source, args.output), indent=2))
+    parser.add_argument('--previous-review', type=Path)
+    args = parser.parse_args(); print(json.dumps(build_package(args.source, args.output, previous_review=args.previous_review), indent=2))

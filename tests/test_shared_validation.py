@@ -32,6 +32,11 @@ class ChildRunner(FlowRunner):
     Scalar XPath is explicitly modeled rather than treating attribute nodes as
     scalar values. Native execution of these expressions remains a smoke gate.
     """
+    def parse_content(self, value, schema):
+        # Parse JSON deserializes JSON text before validating its value. The
+        # original generic subset interpreter skipped that native boundary.
+        return json.loads(value) if isinstance(value, str) else value
+
     def expr(self, text, context):
         pattern = r"xpath\(xml\(if\(empty\(item\(\)\?\['SchemaXml'\]\),'<Field/>',item\(\)\?\['SchemaXml'\]\)\),'([^']+)'\)"
         def replace(match):
@@ -241,6 +246,35 @@ def test_generated_parent_executes_child_contract_and_reports_all_case_results()
     assert report['failedCases'] == []
 
 
+def test_v1_primitive_string_parser_reproduces_the_reported_native_failure():
+    # Keep the exact shipped v1 definition as regression evidence. With native
+    # Parse JSON semantics it rejects every JSON document at Request_text.
+    old = json.loads((shared.ROOT / 'artifacts/shared_validation/TandemSharedValidation81-v1.child.definition.json').read_text())
+    runner = ChildRunner(NoIO())
+    runner.run(old, {'items': {}, 'triggerBody': {'text': json.dumps(request(leftId=1, rightId=2))}})
+    assert runner.action_states['Request_text'] == 'Failed'
+    assert json.loads(runner.response['resultjson'])['code'] == 'INVALID_INPUT'
+
+
+@pytest.mark.parametrize('mode', ['PAIR', 'SCHEMA'])
+def test_json_document_string_is_validated_inside_object_then_decoded_once(mode):
+    payload = request(mode=mode, leftId=1, rightId=2)
+    if mode == 'SCHEMA':payload['metadata'] = shared.synthetic_metadata(BASELINE)
+    result = execute(json.dumps(payload))
+    assert result['code'] == 'OK'
+    assert result['diagnostics']['requestText'] == 'Succeeded'
+    assert result['diagnostics']['envelope'] == 'Succeeded'
+
+
+def test_quick_parent_checks_three_cases_and_exposes_diagnostics_on_failure():
+    runner = ParentRunner(NoIO())
+    runner.run(shared.parent_actions('child-id', shared.quick_cases(), 'local-build', suite='QUICK'))
+    report = runner.outputs['Smoke_report']
+    assert report['suite'] == 'QUICK' and report['allPassed']
+    assert report['completedCount'] == report['testCount'] == 3
+    assert all('actualCode' in row and row['diagnostics']['requestText'] == 'Succeeded' for row in runner.variables['Results'])
+
+
 def native_export(path):
     """Small synthetic export with the inspected native packaging structure."""
     child_id = '11111111-1111-4111-8111-111111111111';parent_id = '22222222-2222-4222-8222-222222222222'
@@ -285,6 +319,21 @@ def test_native_solution_has_fresh_linked_ids_disabled_import_and_no_connectors(
         assert all(n.findtext('StateCode')=='0' for n in custom.findall('./Workflows/Workflow'))
     for value in review['flows'].values():assert value['actions']<=500 and value['maximumActionDepth']<=8
     with pytest.raises(FileExistsError):shared.build_package(source,output)
+
+
+def test_update_keeps_only_prior_generated_component_ids_and_adds_quick_parent(tmp_path):
+    source=tmp_path/'source.zip';native_export(source)
+    initial=tmp_path/'v1.zip';prior=shared.build_package(source,initial)
+    output=tmp_path/'v2.zip';updated=shared.build_package(source,output,previous_review=initial.with_suffix('.review.json'))
+    assert updated['solutionVersion'] == '1.0.0.1'
+    assert updated['updateFromBuild'] == prior['packageBuildId']
+    for name in ['TandemValidateContext','TandemValidationSmoke']:
+        assert updated['flows'][name]['id'] == prior['flows'][name]['id']
+    assert updated['quickTestCount'] == 3 and not updated['consumerCutover']
+    with ZipFile(output) as z:
+        solution=ET.fromstring(z.read('solution.xml'))
+        assert solution.findtext('./SolutionManifest/Version') == '1.0.0.1'
+        assert len(solution.findall('./SolutionManifest/RootComponents/RootComponent')) == 3
 
 
 def test_no_expected_business_rejection_uses_division_failure_or_terminate():

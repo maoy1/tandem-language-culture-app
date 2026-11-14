@@ -1,0 +1,279 @@
+{
+  "kind": "TandemValidationSmoke",
+  "sourceTicket": 81,
+  "packageBuildId": "31382f7e-a0df-44a2-9fde-223a11774e67",
+  "syntheticOnly": true,
+  "runReference": "08584069519927027175534029560CU24",
+  "testCount": 44,
+  "completedCount": 44,
+  "allPassed": false,
+  "failedCases": [
+    {
+      "id": "PAIR_COMBINED_RECIPROCAL",
+      "passed": false,
+      "childRunReference": "08584069519911373329500357854CU30",
+      "actual": {}
+    },
+    {
+      "id": "PAIR_ONE_WAY_LANGUAGE",
+      "passed": false,
+      "childRunReference": "08584069519886538773839168120CU10",
+      "actual": {}
+    },
+    {
+      "id": "PAIR_CULTURE_ONLY_SHARE_ONLY",
+      "passed": false,
+      "childRunReference": "08584069519823527855379101851CU19",
+      "actual": {}
+    },
+    {
+      "id": "PAIR_CULTURE_REVERSE",
+      "passed": false,
+      "childRunReference": "08584069519769075229869041954CU21",
+      "actual": {}
+    },
+    {
+      "id": "PAIR_INTEREST_ALONE",
+      "passed": false,
+      "childRunReference": "08584069519720265873384805930CU04",
+      "actual": {}
+    },
+    {
+      "id": "PAIR_SELF",
+      "passed": false,
+      "childRunReference": "08584069519689988668197380973CU01",
+      "actual": {}
+    },
+    {
+      "id": "PAIR_UNRELATED",
+      "passed": false,
+      "childRunReference": "08584069519647014207388338590CU26",
+      "actual": {}
+    },
+    {
+      "id": "PAIR_PAUSED",
+      "passed": false,
+      "childRunReference": "08584069519600057828756670926CU19",
+      "actual": {}
+    },
+    {
+      "id": "PAIR_CLOSED",
+      "passed": false,
+      "childRunReference": "08584069519554551214985642376CU28",
+      "actual": {}
+    },
+    {
+      "id": "PAIR_REVIEW",
+      "passed": false,
+      "childRunReference": "08584069519505423168768473754CU20",
+      "actual": {}
+    },
+    {
+      "id": "PAIR_INACTIVE",
+      "passed": false,
+      "childRunReference": "08584069519435899561266806193CU29",
+      "actual": {}
+    },
+    {
+      "id": "PAIR_ANY_LANGUAGE_DEFERRED",
+      "passed": false,
+      "childRunReference": "08584069519403673022290747618CU17",
+      "actual": {}
+    },
+    {
+      "id": "PAIR_NULL_DEDUP_BLANK_ZONE",
+      "passed": false,
+      "childRunReference": "08584069519357765719635081777CU08",
+      "actual": {}
+    },
+    {
+      "id": "PAIR_CURRENT_PAUSED",
+      "passed": false,
+      "childRunReference": "08584069519330428172469931986CU13",
+      "actual": {}
+    },
+    {
+      "id": "PAIR_SHARE_ONLY_NO_LEARN",
+      "passed": false,
+      "childRunReference": "08584069519300861772472167269CU08",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_LANGUAGE_OPEN",
+      "passed": false,
+      "childRunReference": "08584069519275305829150174972CU02",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_CULTURE_OPEN",
+      "passed": false,
+      "childRunReference": "08584069519242397038527614335CU04",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_COMBINED_SPLIT_ROLES",
+      "passed": false,
+      "childRunReference": "08584069519184076146585641272CU05",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_COMBINED_MEMBER_ONE_FOCUS",
+      "passed": false,
+      "childRunReference": "08584069519152760383066324496CU07",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_CLOSED",
+      "passed": false,
+      "childRunReference": "08584069519111378923927121013CU15",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_ENDED",
+      "passed": false,
+      "childRunReference": "08584069519086304888900613082cU14",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_FULL_OPEN",
+      "passed": false,
+      "childRunReference": "08584069519013155448783246774CU26",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_LANGUAGE_CAPACITY_TOO_LARGE",
+      "passed": false,
+      "childRunReference": "08584069518973668216045530528CU24",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_CULTURE_CAPACITY_TOO_LARGE",
+      "passed": false,
+      "childRunReference": "08584069518920168019214989705CU13",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_UNSUPPORTED_DECLARED_FOCUS",
+      "passed": false,
+      "childRunReference": "08584069518874830067150094445CU03",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_UNRELATED_EXISTING_MEMBER",
+      "passed": false,
+      "childRunReference": "08584069518840111962591400891CU08",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_CANDIDATE_UNRELATED",
+      "passed": false,
+      "childRunReference": "08584069518815439327750100505CU08",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_CANDIDATE_ALREADY_MEMBER",
+      "passed": false,
+      "childRunReference": "08584069518792268330512277509CU00",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_DUPLICATE_MEMBER",
+      "passed": false,
+      "childRunReference": "08584069518759333617297468869CU00",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_MISSING_MEMBER_PROFILE",
+      "passed": false,
+      "childRunReference": "08584069518723923088328949387CU24",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_SELF_ONLY_FOCUS_RELATION",
+      "passed": false,
+      "childRunReference": "08584069518567713346185965512CU11",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_COMBINED_MISSING_CULTURE",
+      "passed": false,
+      "childRunReference": "08584069518525159111501526815CU04",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_ANY_LANGUAGE_FOCUS_DEFERRED",
+      "passed": false,
+      "childRunReference": "08584069518492304280177581886CU16",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_SETUP_INCOMPLETE",
+      "passed": false,
+      "childRunReference": "08584069518432150447403077413CU13",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_SHARER_AVAILABILITY_UNVERIFIED",
+      "passed": false,
+      "childRunReference": "08584069518403269975358441041CU15",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_PAUSED_MEMBER_NOT_DROPPED_FROM_COUNT",
+      "passed": false,
+      "childRunReference": "08584069518378360797281438038CU29",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_CANDIDATE_PAUSED",
+      "passed": false,
+      "childRunReference": "08584069518348393705521788354CU25",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_TYPE_FOCUS_MISMATCH",
+      "passed": false,
+      "childRunReference": "08584069518312414256266954814CU10",
+      "actual": {}
+    },
+    {
+      "id": "GROUP_EMPTY_FOCUS",
+      "passed": false,
+      "childRunReference": "08584069518252482697273260250CU00",
+      "actual": {}
+    },
+    {
+      "id": "OWNER_NO_OVERLAP_38_32",
+      "passed": false,
+      "childRunReference": "08584069518219573119697253867CU29",
+      "actual": {}
+    },
+    {
+      "id": "LEGACY_NULL_PARTICIPATION",
+      "passed": false,
+      "childRunReference": "08584069518190404439129463767CU05",
+      "actual": {}
+    },
+    {
+      "id": "CONTRACT_VERSION_REJECTED",
+      "passed": false,
+      "childRunReference": "08584069518159936864214112387CU30",
+      "actual": {}
+    },
+    {
+      "id": "SCHEMA_BASELINE",
+      "passed": false,
+      "childRunReference": "08584069518133783087223902870CU21",
+      "actual": {}
+    },
+    {
+      "id": "SCHEMA_CHANGED_REQUIRED",
+      "passed": false,
+      "childRunReference": "08584069518106773536298442510CU17",
+      "actual": {}
+    }
+  ],
+  "connectors": 0,
+  "reads": 0,
+  "writes": 0
+}

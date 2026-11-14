@@ -94,6 +94,8 @@ class FlowRunner(Runner):
         super().__init__();self.server=server;self.actor=actor;self.outputs=defaultdict(lambda:None);self.action_states={};self.response=None
     def body(self,n):
         value=self.outputs[n];return value['body'] if isinstance(value,dict) and 'statusCode'in value else value
+    def parse_content(self,value,schema):
+        return value
     def run(self,actions,ctx=None):
         ctx=ctx or {'items':{},'triggerBody':{'number':self.actor}};done={};todo=dict(actions)
         while todo:
@@ -107,7 +109,7 @@ class FlowRunner(Runner):
                         if self.outputs[name]['statusCode']>=400:state='Failed'
                     elif kind=='Compose':self.outputs[name]=self.inputs(p,ctx)
                     elif kind=='ParseJson':
-                        self.outputs[name]=self.inputs(p['content'],ctx);validate(self.outputs[name],p['schema'])
+                        self.outputs[name]=self.parse_content(self.inputs(p['content'],ctx),p['schema']);validate(self.outputs[name],p['schema'])
                     elif kind=='InitializeVariable':
                         for v in p['variables']:self.variables[v['name']]=deepcopy(v['value'])
                     elif kind=='SetVariable':self.variables[p['name']]=self.inputs(p['value'],ctx)

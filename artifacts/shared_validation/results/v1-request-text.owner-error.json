@@ -1,0 +1,16 @@
+{
+  "sourceTicket": 81,
+  "smokeRunReference": "08584069519927027175534029560CU24",
+  "failedAction": "Request_text",
+  "ownerError": "ValidationFailed: The schema validation failed.",
+  "reportedInputShape": "content is a serialized JSON object document",
+  "reportedSchema": {
+    "type": "string",
+    "maxLength": 250000
+  },
+  "classification": "Input boundary defect: Parse JSON deserializes the document then rejects the resulting object against string schema",
+  "localReproduction": "Shipped v1 graph fails Request_text under native-style Parse JSON deserialization; version/schema/pair cases return INVALID_INPUT with empty result",
+  "fix": "Validate {value: RequestJson} as object with bounded string property, then deserialize value once",
+  "liveDataReads": 0,
+  "writes": 0
+}

@@ -4,9 +4,9 @@
   "flowName": "TandemValidateContext",
   "contractVersion": 1,
   "rulesVersion": 1,
-  "packageBuildId": "31382f7e-a0df-44a2-9fde-223a11774e67",
+  "packageBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
   "solutionName": "TandemSharedValidation81",
-  "state": "IMPLEMENTED_PURE_CHILD_NATIVE_IMPORT_AND_CONSUMER_PARITY_PENDING",
+  "state": "V1_NATIVE_INPUT_FAILURE_FIXED_V2_QUICK_RETEST_PENDING",
   "trigger": {
     "kind": "Button",
     "input": {
@@ -52,7 +52,8 @@
   "response": {
     "success": "Evaluation completed with code OK; DOES NOT mean pair/group eligible or authorize a write",
     "resultcode": "OK/VERSION_MISMATCH/UNSUPPORTED_MODE/INVALID_INPUT/INVALID_PROFILE_DATA/PROFILE_NOT_FOUND/PROFILE_COUNT_INVALID/SCHEMA_MISMATCH/RESPONSE_BOUND",
-    "resultjson": "JSON object with result, versions, build, source hash, child run reference, authorizesAction=false and zero I/O counters"
+    "resultjson": "JSON object with result, versions, build, source hash, child run reference, authorizesAction=false and zero I/O counters",
+    "diagnostics": "Additive stage statuses inside resultjson only; parent failedCases includes actualCode,expectedCode,diagnostics without raw input"
   },
   "consumerRules": [
     "Bind authenticated actor and fetch current relevant data in trusted parent; no owner credential substitution",
@@ -75,9 +76,12 @@
     "liveSchemaAudit": "NOT_RUN; current package validates supplied metadata only"
   },
   "sourceExportSha256": "5560d8d80f78de67966160fe0276711494b76c0f176e19356d6cf32d2c4c191c",
-  "newPackageSha256": "cb0102c74fc669541cb30895dea065f45ce6e410204df742bd949f190bae02c0",
-  "localTests": 330,
-  "newCases": 88,
+  "newPackageSha256": "608052804073ccd2874a1f9d83fbfeb62fd331fcbe86e7be5ed375139576717e",
+  "localTests": 335,
+  "newCases": 93,
   "nativeSyntheticSmokeCases": 44,
-  "nativeStatus": "NOT_IMPORTED_NOT_TESTED"
+  "nativeStatus": "V1 failed all 44 at Request_text; V2 NOT_IMPORTED_NOT_TESTED",
+  "nativeQuickSmokeCases": 3,
+  "solutionVersion": "1.0.0.1",
+  "nativeFailureEvidence": "artifacts/shared_validation/results/v1-request-text.owner-error.json"
 }

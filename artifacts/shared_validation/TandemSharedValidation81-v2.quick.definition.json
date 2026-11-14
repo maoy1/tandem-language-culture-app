@@ -1,0 +1,354 @@
+{
+  "Initialize_results": {
+    "type": "InitializeVariable",
+    "inputs": {
+      "variables": [
+        {
+          "name": "Results",
+          "type": "array",
+          "value": []
+        }
+      ]
+    },
+    "runAfter": {}
+  },
+  "Smoke_cases": {
+    "type": "Compose",
+    "inputs": [
+      {
+        "id": "PAIR_COMBINED_RECIPROCAL",
+        "payload": {
+          "contractVersion": 1,
+          "rulesVersion": 1,
+          "mode": "PAIR",
+          "profiles": [
+            {
+              "profileId": 1,
+              "accountKey": " SYNTHETIC-1 ",
+              "status": "Active",
+              "participationStatus": "Active",
+              "openToConnections": true,
+              "teachIds": [
+                1
+              ],
+              "learnIds": [
+                2
+              ],
+              "shareCultureIds": [
+                10
+              ],
+              "learnCultureIds": [
+                20
+              ],
+              "timezoneId": null
+            },
+            {
+              "profileId": 2,
+              "accountKey": "synthetic-2",
+              "status": "Active",
+              "participationStatus": "Active",
+              "openToConnections": true,
+              "teachIds": [
+                2
+              ],
+              "learnIds": [
+                1
+              ],
+              "shareCultureIds": [
+                20
+              ],
+              "learnCultureIds": [
+                10
+              ],
+              "timezoneId": null
+            }
+          ],
+          "catalogues": {
+            "languageIds": [
+              1,
+              2,
+              3,
+              99
+            ],
+            "cultureIds": [
+              10,
+              20
+            ],
+            "timezoneIds": [
+              100
+            ],
+            "anyLanguageId": 99
+          },
+          "leftId": 1,
+          "rightId": 2
+        },
+        "code": "OK",
+        "expected": {
+          "eligible": true,
+          "fitType": "Combined",
+          "canLearnLanguageIds": [
+            2
+          ],
+          "canShareLanguageIds": [
+            1
+          ],
+          "canLearnCultureIds": [
+            20
+          ],
+          "canShareCultureIds": [
+            10
+          ]
+        }
+      },
+      {
+        "id": "OWNER_NO_OVERLAP_38_32",
+        "payload": {
+          "contractVersion": 1,
+          "rulesVersion": 1,
+          "mode": "PAIR",
+          "profiles": [
+            {
+              "profileId": 38,
+              "accountKey": "synthetic38",
+              "status": "Active",
+              "participationStatus": "Active",
+              "openToConnections": true,
+              "teachIds": [
+                60,
+                63
+              ],
+              "learnIds": [
+                65,
+                57
+              ],
+              "shareCultureIds": [
+                24,
+                23
+              ],
+              "learnCultureIds": [
+                9,
+                7
+              ]
+            },
+            {
+              "profileId": 32,
+              "accountKey": "synthetic32",
+              "status": "Active",
+              "participationStatus": "Active",
+              "openToConnections": true,
+              "teachIds": [],
+              "learnIds": [
+                59
+              ],
+              "shareCultureIds": [],
+              "learnCultureIds": []
+            }
+          ],
+          "catalogues": {
+            "languageIds": [
+              60,
+              63,
+              65,
+              57,
+              59
+            ],
+            "cultureIds": [
+              24,
+              23,
+              9,
+              7
+            ],
+            "timezoneIds": [],
+            "anyLanguageId": null
+          },
+          "leftId": 38,
+          "rightId": 32
+        },
+        "code": "OK",
+        "expected": {
+          "eligible": false,
+          "fitType": null,
+          "canLearnLanguageIds": [],
+          "canShareLanguageIds": [],
+          "canLearnCultureIds": [],
+          "canShareCultureIds": []
+        }
+      },
+      {
+        "id": "CONTRACT_VERSION_REJECTED",
+        "payload": {
+          "contractVersion": 999,
+          "rulesVersion": 1,
+          "mode": "PAIR",
+          "profiles": [
+            {
+              "profileId": 1,
+              "accountKey": " SYNTHETIC-1 ",
+              "status": "Active",
+              "participationStatus": "Active",
+              "openToConnections": true,
+              "teachIds": [
+                1
+              ],
+              "learnIds": [
+                2
+              ],
+              "shareCultureIds": [
+                10
+              ],
+              "learnCultureIds": [
+                20
+              ],
+              "timezoneId": null
+            },
+            {
+              "profileId": 2,
+              "accountKey": "synthetic-2",
+              "status": "Active",
+              "participationStatus": "Active",
+              "openToConnections": true,
+              "teachIds": [
+                2
+              ],
+              "learnIds": [
+                1
+              ],
+              "shareCultureIds": [
+                20
+              ],
+              "learnCultureIds": [
+                10
+              ],
+              "timezoneId": null
+            }
+          ],
+          "catalogues": {
+            "languageIds": [
+              1,
+              2,
+              3,
+              99
+            ],
+            "cultureIds": [
+              10,
+              20
+            ],
+            "timezoneIds": [
+              100
+            ],
+            "anyLanguageId": 99
+          },
+          "leftId": 1,
+          "rightId": 2
+        },
+        "code": "VERSION_MISMATCH",
+        "expected": {}
+      }
+    ],
+    "runAfter": {
+      "Initialize_results": [
+        "Succeeded"
+      ]
+    }
+  },
+  "Each_smoke_case": {
+    "type": "Foreach",
+    "foreach": "@outputs('Smoke_cases')",
+    "actions": {
+      "Call_validation_child": {
+        "type": "Workflow",
+        "inputs": {
+          "host": {
+            "workflowReferenceName": "e9aa88eb-a666-4df1-b088-176be7bcd00d"
+          },
+          "body": {
+            "text": "@string(items('Each_smoke_case')?['payload'])"
+          }
+        },
+        "runAfter": {}
+      },
+      "Parse_child_result": {
+        "type": "ParseJson",
+        "inputs": {
+          "content": "@json(body('Call_validation_child')?['resultjson'])",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "runAfter": {
+          "Call_validation_child": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Append_smoke_result": {
+        "type": "AppendToArrayVariable",
+        "runAfter": {
+          "Parse_child_result": [
+            "Succeeded"
+          ]
+        },
+        "inputs": {
+          "name": "Results",
+          "value": {
+            "id": "@items('Each_smoke_case')?['id']",
+            "passed": "@and(equals(body('Parse_child_result')?['code'],items('Each_smoke_case')?['code']),equals(body('Parse_child_result')?['result'],items('Each_smoke_case')?['expected']),equals(body('Parse_child_result')?['packageBuildId'],'c79b7b64-b3ce-4de3-aa74-0ed62bca1524'))",
+            "childRunReference": "@body('Parse_child_result')?['runReference']",
+            "actual": "@body('Parse_child_result')?['result']",
+            "actualCode": "@body('Parse_child_result')?['code']",
+            "expectedCode": "@items('Each_smoke_case')?['code']",
+            "diagnostics": "@body('Parse_child_result')?['diagnostics']"
+          }
+        }
+      }
+    },
+    "runtimeConfiguration": {
+      "concurrency": {
+        "repetitions": 1
+      }
+    },
+    "runAfter": {
+      "Smoke_cases": [
+        "Succeeded"
+      ]
+    }
+  },
+  "Failed_cases": {
+    "type": "Query",
+    "inputs": {
+      "from": "@variables('Results')",
+      "where": "@not(equals(item()?['passed'],true))"
+    },
+    "runAfter": {
+      "Each_smoke_case": [
+        "Succeeded",
+        "Failed",
+        "Skipped",
+        "TimedOut"
+      ]
+    }
+  },
+  "Smoke_report": {
+    "type": "Compose",
+    "inputs": {
+      "kind": "TandemValidationSmoke",
+      "suite": "QUICK",
+      "sourceTicket": 81,
+      "packageBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
+      "syntheticOnly": true,
+      "runReference": "@workflow()?['run']?['name']",
+      "testCount": 3,
+      "completedCount": "@length(variables('Results'))",
+      "allPassed": "@and(equals(actions('Each_smoke_case')?['status'],'Succeeded'),empty(body('Failed_cases')),equals(length(variables('Results')),3))",
+      "failedCases": "@body('Failed_cases')",
+      "connectors": 0,
+      "reads": 0,
+      "writes": 0
+    },
+    "runAfter": {
+      "Failed_cases": [
+        "Succeeded"
+      ]
+    }
+  }
+}
