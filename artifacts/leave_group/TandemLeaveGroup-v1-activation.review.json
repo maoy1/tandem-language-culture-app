@@ -1,0 +1,11 @@
+{
+  "sourceTicket": 14,
+  "receivingRepairTicket": 81,
+  "delivery": "TandemCoreBatch 1.0.0.2; not the historical standalone ZIP",
+  "historicalGeneratorSha256": "79750cb3c0ff02e879274997f1f3b84018442ce3e6a06d1e81d376b724582af6",
+  "historicalPackageSha256": "dd87c748a9a6fcd9b0d4bca5946797d7d394f9121c9b15e9cbc0cbb5959b8c27",
+  "generatorSha256": "03bcaac2400784f5a132ada4fb4846b4581b0670f7b9e3493dc6a5a40b3e3da8",
+  "definitionSha256": "a3e9e6441a376ded05074d1f54bac4f427234a523a62490b6f9c01d1f77fcf90",
+  "nativeActivation": "NOT RUN",
+  "change": "Receipt-not-ready preserves existing Code without assigning it to itself"
+}
