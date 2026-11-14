@@ -1,0 +1,1548 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "cre46_sharepointonline_a22363a216"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "number": {
+                  "description": "",
+                  "title": "ParticipantId",
+                  "type": "number",
+                  "x-ms-content-hint": "NUMBER",
+                  "x-ms-dynamically-added": true
+                },
+                "number_1": {
+                  "description": "Please enter a number",
+                  "title": "RequestId",
+                  "type": "number",
+                  "x-ms-content-hint": "NUMBER",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "required": [
+                "number",
+                "number_1"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Initialize_ErrorCode": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ErrorCode",
+                "type": "string",
+                "value": "INVALID_INPUT"
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "Initialize_ResultCode": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ResultCode",
+                "type": "string",
+                "value": "READ_OR_DATA_FAILED"
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_ErrorCode": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Initialize_CurrentStatus": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CurrentStatus",
+                "type": "string",
+                "value": ""
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_ResultCode": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Initialize_Complete": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Complete",
+                "type": "boolean",
+                "value": false
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_CurrentStatus": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Initialize_Replay": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Replay",
+                "type": "boolean",
+                "value": false
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_Complete": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Initialize_WriteAttempted": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "WriteAttempted",
+                "type": "boolean",
+                "value": false
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_Replay": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Cancel_work": {
+          "type": "Scope",
+          "actions": {
+            "Input": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@triggerBody()",
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "number",
+                    "number_1"
+                  ],
+                  "properties": {
+                    "number": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "number_1": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "runAfter": {}
+            },
+            "Validated_input": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": ""
+              },
+              "runAfter": {
+                "Input": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_invoker": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "Validated_input": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/currentuser?$select=Id",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                },
+                "retryPolicy": {
+                  "type": "none"
+                }
+              }
+            },
+            "Invoker": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Read_invoker')?['d']",
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "Id"
+                  ],
+                  "properties": {
+                    "Id": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_invoker": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Resolve_actor": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "Invoker": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "@concat('_api/web/lists(guid''fd3adf46-f81d-4a7b-a80c-567fde0175dc'')/items?$select=Id&$filter=ParticipantaccountId eq ',string(body('Invoker')?['Id']),'&$top=2')",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                },
+                "retryPolicy": {
+                  "type": "none"
+                }
+              }
+            },
+            "Require_actor_count": {
+              "type": "If",
+              "expression": "@and(and(not(equals(body('Resolve_actor')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Resolve_actor')?['d']?['results'],json('[]'))),1),empty(body('Resolve_actor')?['d']?['__next'])),equals(length(coalesce(body('Resolve_actor')?['d']?['results'],json('[]'))),1))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Require_actor_count_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "UNAUTHORIZED"
+                    },
+                    "runAfter": {}
+                  },
+                  "Require_actor_count_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Require_actor_count_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Resolve_actor": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Actor": {
+              "type": "Compose",
+              "inputs": "@first(body('Resolve_actor')?['d']?['results'])",
+              "runAfter": {
+                "Require_actor_count": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Require_actor_reference": {
+              "type": "If",
+              "expression": "@equals(outputs('Actor')?['Id'],body('Input')?['number'])",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Require_actor_reference_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "UNAUTHORIZED"
+                    },
+                    "runAfter": {}
+                  },
+                  "Require_actor_reference_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Require_actor_reference_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Actor": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_list_type": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "Require_actor_reference": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'3d17485d-1dac-41f0-a1af-24e45daa4567')?$select=Id,ListItemEntityTypeFullName",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                },
+                "retryPolicy": {
+                  "type": "none"
+                }
+              }
+            },
+            "Require_list_type": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Read_list_type')?['d']",
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "ListItemEntityTypeFullName"
+                  ],
+                  "properties": {
+                    "ListItemEntityTypeFullName": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_list_type": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_request": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "Require_list_type": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "@concat('_api/web/lists(guid''3d17485d-1dac-41f0-a1af-24e45daa4567'')/items(',string(body('Input')?['number_1']),')?$select=Id,SenderParticipantId,RecipientParticipantId,TargetGroupId,RequestType,Status,SendOperationKey,ConnectionKey,WinningOperationKey,OperationComplete')",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                },
+                "retryPolicy": {
+                  "type": "none"
+                }
+              }
+            },
+            "Require_sender": {
+              "type": "If",
+              "expression": "@equals(body('Read_request')?['d']?['SenderParticipantId'],outputs('Actor')?['Id'])",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Require_sender_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "UNAUTHORIZED"
+                    },
+                    "runAfter": {}
+                  },
+                  "Require_sender_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Require_sender_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_request": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Before_row_parse_guard": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": "REQUEST_INTEGRITY"
+              },
+              "runAfter": {
+                "Require_sender": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Before_row": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@if(xpath(xml(json(concat('{\"root\":{\"row\":',string(outputs('Before_row_NativePatternValues')),'}}'))),'(count(/root/row/v0[not(((string-length(.)>=3 and substring(.,1,1)=''\"'' and substring(.,string-length(.),1)=''\"'' and translate(substring(.,2,string-length(.)-2),''0123456789'','''')='''') or (substring(.,string-length(.),1)=''\n'' and (string-length(substring(.,1,string-length(.)-1))>=3 and substring(substring(.,1,string-length(.)-1),1,1)=''\"'' and substring(substring(.,1,string-length(.)-1),string-length(substring(.,1,string-length(.)-1)),1)=''\"'' and translate(substring(substring(.,1,string-length(.)-1),2,string-length(substring(.,1,string-length(.)-1))-2),''0123456789'','''')=''''))))])=0)'),body('Before_row_NativeShape'),false)",
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "Id",
+                    "SenderParticipantId",
+                    "RecipientParticipantId",
+                    "TargetGroupId",
+                    "RequestType",
+                    "Status",
+                    "SendOperationKey",
+                    "ConnectionKey",
+                    "WinningOperationKey",
+                    "OperationComplete",
+                    "__metadata"
+                  ],
+                  "properties": {
+                    "Id": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "SenderParticipantId": {
+                      "type": "number",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "RecipientParticipantId": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "TargetGroupId": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "RequestType": {
+                      "type": "string",
+                      "enum": [
+                        "Personal",
+                        "Group"
+                      ]
+                    },
+                    "Status": {
+                      "type": "string",
+                      "enum": [
+                        "Pending",
+                        "Accepted",
+                        "Declined",
+                        "Cancelled"
+                      ]
+                    },
+                    "SendOperationKey": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 255
+                    },
+                    "ConnectionKey": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "WinningOperationKey": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "OperationComplete": {
+                      "type": "boolean"
+                    },
+                    "__metadata": {
+                      "type": "object",
+                      "required": [
+                        "etag",
+                        "type"
+                      ],
+                      "properties": {
+                        "etag": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Before_row_NativePatternValues": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Before_row_checks": {
+              "type": "If",
+              "expression": "@and(equals(body('Before_row')?['SenderParticipantId'],int(body('Before_row')?['SenderParticipantId'])),equals(coalesce(body('Before_row')?['RecipientParticipantId'],0),int(coalesce(body('Before_row')?['RecipientParticipantId'],0))),equals(body('Before_row')?['Id'],body('Input')?['number_1']),equals(body('Before_row')?['SenderParticipantId'],outputs('Actor')?['Id']),equals(body('Before_row')?['__metadata']?['type'],body('Read_list_type')?['d']?['ListItemEntityTypeFullName']),not(empty(trim(body('Before_row')?['SendOperationKey']))),or(and(equals(body('Before_row')?['RequestType'],'Personal'),greater(coalesce(body('Before_row')?['RecipientParticipantId'],0),0),not(equals(body('Before_row')?['RecipientParticipantId'],body('Before_row')?['SenderParticipantId'])),equals(body('Before_row')?['TargetGroupId'],null)),and(equals(body('Before_row')?['RequestType'],'Group'),equals(body('Before_row')?['RecipientParticipantId'],null),greater(coalesce(body('Before_row')?['TargetGroupId'],0),0))),or(and(equals(body('Before_row')?['Status'],'Pending'),equals(body('Before_row')?['OperationComplete'],false),empty(body('Before_row')?['WinningOperationKey']),equals(body('Before_row')?['ConnectionKey'],if(equals(body('Before_row')?['RequestType'],'Personal'),concat('open:person:',string(if(less(int(body('Before_row')?['SenderParticipantId']),int(coalesce(body('Before_row')?['RecipientParticipantId'],0))),int(body('Before_row')?['SenderParticipantId']),int(coalesce(body('Before_row')?['RecipientParticipantId'],0)))),':',string(if(greater(int(body('Before_row')?['SenderParticipantId']),int(coalesce(body('Before_row')?['RecipientParticipantId'],0))),int(body('Before_row')?['SenderParticipantId']),int(coalesce(body('Before_row')?['RecipientParticipantId'],0))))),concat('open:group:',string(body('Before_row')?['TargetGroupId']),':participant:',string(int(body('Before_row')?['SenderParticipantId'])))))),and(equals(body('Before_row')?['Status'],'Accepted'),equals(body('Before_row')?['OperationComplete'],false),not(empty(body('Before_row')?['WinningOperationKey'])),equals(body('Before_row')?['ConnectionKey'],if(equals(body('Before_row')?['RequestType'],'Personal'),concat('open:person:',string(if(less(int(body('Before_row')?['SenderParticipantId']),int(coalesce(body('Before_row')?['RecipientParticipantId'],0))),int(body('Before_row')?['SenderParticipantId']),int(coalesce(body('Before_row')?['RecipientParticipantId'],0)))),':',string(if(greater(int(body('Before_row')?['SenderParticipantId']),int(coalesce(body('Before_row')?['RecipientParticipantId'],0))),int(body('Before_row')?['SenderParticipantId']),int(coalesce(body('Before_row')?['RecipientParticipantId'],0))))),concat('open:group:',string(body('Before_row')?['TargetGroupId']),':participant:',string(int(body('Before_row')?['SenderParticipantId'])))))),and(not(equals(body('Before_row')?['Status'],'Pending')),equals(body('Before_row')?['OperationComplete'],true),not(empty(body('Before_row')?['WinningOperationKey'])),equals(body('Before_row')?['ConnectionKey'],concat('history:request:',string(body('Before_row')?['Id']))))))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Before_row_checks_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "Before_row_checks_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Before_row_checks_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Before_row": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Before_row_integrity": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": ""
+              },
+              "runAfter": {
+                "Before_row_checks": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Cancel_key": {
+              "type": "Compose",
+              "inputs": "@concat('cancel:',string(outputs('Actor')?['Id']),':request:',string(body('Input')?['number_1']))",
+              "runAfter": {
+                "Before_row_integrity": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Choose_pending": {
+              "type": "If",
+              "expression": "@equals(body('Before_row')?['Status'],'Pending')",
+              "actions": {
+                "Mark_write_attempt": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "WriteAttempted",
+                    "value": true
+                  },
+                  "runAfter": {}
+                },
+                "Cancel_CAS": {
+                  "type": "OpenApiConnection",
+                  "runAfter": {
+                    "Mark_write_attempt": [
+                      "Succeeded"
+                    ]
+                  },
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "POST",
+                      "parameters/uri": "@concat('_api/web/lists(guid''3d17485d-1dac-41f0-a1af-24e45daa4567'')/items(',string(body('Input')?['number_1']),')')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=verbose",
+                        "Content-Type": "application/json;odata=verbose",
+                        "X-HTTP-Method": "MERGE",
+                        "IF-MATCH": "@body('Before_row')?['__metadata']?['etag']"
+                      },
+                      "parameters/body": {
+                        "__metadata": {
+                          "type": "@body('Before_row')?['__metadata']?['type']"
+                        },
+                        "Status": "Cancelled",
+                        "ConnectionKey": "@concat('history:request:',string(body('Input')?['number_1']))",
+                        "WinningOperationKey": "@outputs('Cancel_key')",
+                        "OperationComplete": true
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "authentication": {
+                      "type": "Raw",
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                    },
+                    "retryPolicy": {
+                      "type": "none"
+                    }
+                  }
+                },
+                "Read_after_CAS": {
+                  "type": "OpenApiConnection",
+                  "runAfter": {
+                    "Cancel_CAS": [
+                      "Succeeded",
+                      "Failed",
+                      "TimedOut"
+                    ]
+                  },
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "@concat('_api/web/lists(guid''3d17485d-1dac-41f0-a1af-24e45daa4567'')/items(',string(body('Input')?['number_1']),')?$select=Id,SenderParticipantId,RecipientParticipantId,TargetGroupId,RequestType,Status,SendOperationKey,ConnectionKey,WinningOperationKey,OperationComplete')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=verbose"
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "authentication": {
+                      "type": "Raw",
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                    },
+                    "retryPolicy": {
+                      "type": "none"
+                    }
+                  }
+                },
+                "After_row_parse_guard": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ErrorCode",
+                    "value": "REQUEST_INTEGRITY"
+                  },
+                  "runAfter": {
+                    "Read_after_CAS": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "After_row": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@if(xpath(xml(json(concat('{\"root\":{\"row\":',string(outputs('After_row_NativePatternValues')),'}}'))),'(count(/root/row/v0[not(((string-length(.)>=3 and substring(.,1,1)=''\"'' and substring(.,string-length(.),1)=''\"'' and translate(substring(.,2,string-length(.)-2),''0123456789'','''')='''') or (substring(.,string-length(.),1)=''\n'' and (string-length(substring(.,1,string-length(.)-1))>=3 and substring(substring(.,1,string-length(.)-1),1,1)=''\"'' and substring(substring(.,1,string-length(.)-1),string-length(substring(.,1,string-length(.)-1)),1)=''\"'' and translate(substring(substring(.,1,string-length(.)-1),2,string-length(substring(.,1,string-length(.)-1))-2),''0123456789'','''')=''''))))])=0)'),body('After_row_NativeShape'),false)",
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "Id",
+                        "SenderParticipantId",
+                        "RecipientParticipantId",
+                        "TargetGroupId",
+                        "RequestType",
+                        "Status",
+                        "SendOperationKey",
+                        "ConnectionKey",
+                        "WinningOperationKey",
+                        "OperationComplete",
+                        "__metadata"
+                      ],
+                      "properties": {
+                        "Id": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        },
+                        "SenderParticipantId": {
+                          "type": "number",
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        },
+                        "RecipientParticipantId": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        },
+                        "TargetGroupId": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        },
+                        "RequestType": {
+                          "type": "string",
+                          "enum": [
+                            "Personal",
+                            "Group"
+                          ]
+                        },
+                        "Status": {
+                          "type": "string",
+                          "enum": [
+                            "Pending",
+                            "Accepted",
+                            "Declined",
+                            "Cancelled"
+                          ]
+                        },
+                        "SendOperationKey": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 255
+                        },
+                        "ConnectionKey": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "WinningOperationKey": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "OperationComplete": {
+                          "type": "boolean"
+                        },
+                        "__metadata": {
+                          "type": "object",
+                          "required": [
+                            "etag",
+                            "type"
+                          ],
+                          "properties": {
+                            "etag": {
+                              "type": "string"
+                            },
+                            "type": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "After_row_NativePatternValues": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "After_row_checks": {
+                  "type": "If",
+                  "expression": "@and(equals(body('After_row')?['SenderParticipantId'],int(body('After_row')?['SenderParticipantId'])),equals(coalesce(body('After_row')?['RecipientParticipantId'],0),int(coalesce(body('After_row')?['RecipientParticipantId'],0))),equals(body('After_row')?['Id'],body('Input')?['number_1']),equals(body('After_row')?['SenderParticipantId'],outputs('Actor')?['Id']),equals(body('After_row')?['__metadata']?['type'],body('Read_list_type')?['d']?['ListItemEntityTypeFullName']),not(empty(trim(body('After_row')?['SendOperationKey']))),or(and(equals(body('After_row')?['RequestType'],'Personal'),greater(coalesce(body('After_row')?['RecipientParticipantId'],0),0),not(equals(body('After_row')?['RecipientParticipantId'],body('After_row')?['SenderParticipantId'])),equals(body('After_row')?['TargetGroupId'],null)),and(equals(body('After_row')?['RequestType'],'Group'),equals(body('After_row')?['RecipientParticipantId'],null),greater(coalesce(body('After_row')?['TargetGroupId'],0),0))),or(and(equals(body('After_row')?['Status'],'Pending'),equals(body('After_row')?['OperationComplete'],false),empty(body('After_row')?['WinningOperationKey']),equals(body('After_row')?['ConnectionKey'],if(equals(body('After_row')?['RequestType'],'Personal'),concat('open:person:',string(if(less(int(body('After_row')?['SenderParticipantId']),int(coalesce(body('After_row')?['RecipientParticipantId'],0))),int(body('After_row')?['SenderParticipantId']),int(coalesce(body('After_row')?['RecipientParticipantId'],0)))),':',string(if(greater(int(body('After_row')?['SenderParticipantId']),int(coalesce(body('After_row')?['RecipientParticipantId'],0))),int(body('After_row')?['SenderParticipantId']),int(coalesce(body('After_row')?['RecipientParticipantId'],0))))),concat('open:group:',string(body('After_row')?['TargetGroupId']),':participant:',string(int(body('After_row')?['SenderParticipantId'])))))),and(equals(body('After_row')?['Status'],'Accepted'),equals(body('After_row')?['OperationComplete'],false),not(empty(body('After_row')?['WinningOperationKey'])),equals(body('After_row')?['ConnectionKey'],if(equals(body('After_row')?['RequestType'],'Personal'),concat('open:person:',string(if(less(int(body('After_row')?['SenderParticipantId']),int(coalesce(body('After_row')?['RecipientParticipantId'],0))),int(body('After_row')?['SenderParticipantId']),int(coalesce(body('After_row')?['RecipientParticipantId'],0)))),':',string(if(greater(int(body('After_row')?['SenderParticipantId']),int(coalesce(body('After_row')?['RecipientParticipantId'],0))),int(body('After_row')?['SenderParticipantId']),int(coalesce(body('After_row')?['RecipientParticipantId'],0))))),concat('open:group:',string(body('After_row')?['TargetGroupId']),':participant:',string(int(body('After_row')?['SenderParticipantId'])))))),and(not(equals(body('After_row')?['Status'],'Pending')),equals(body('After_row')?['OperationComplete'],true),not(empty(body('After_row')?['WinningOperationKey'])),equals(body('After_row')?['ConnectionKey'],concat('history:request:',string(body('After_row')?['Id']))))))",
+                  "actions": {},
+                  "else": {
+                    "actions": {
+                      "After_row_checks_error": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ErrorCode",
+                          "value": "REQUEST_INTEGRITY"
+                        },
+                        "runAfter": {}
+                      },
+                      "After_row_checks_stop": {
+                        "type": "Compose",
+                        "inputs": "@div(1,0)",
+                        "runAfter": {
+                          "After_row_checks_error": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "After_row": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "After_row_integrity": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ErrorCode",
+                    "value": ""
+                  },
+                  "runAfter": {
+                    "After_row_checks": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Require_same_request": {
+                  "type": "If",
+                  "expression": "@and(equals(body('Before_row')?['Id'],body('After_row')?['Id']),equals(body('Before_row')?['SenderParticipantId'],body('After_row')?['SenderParticipantId']),equals(body('Before_row')?['RecipientParticipantId'],body('After_row')?['RecipientParticipantId']),equals(body('Before_row')?['TargetGroupId'],body('After_row')?['TargetGroupId']),equals(body('Before_row')?['RequestType'],body('After_row')?['RequestType']),equals(body('Before_row')?['SendOperationKey'],body('After_row')?['SendOperationKey']))",
+                  "actions": {},
+                  "else": {
+                    "actions": {
+                      "Require_same_request_error": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ErrorCode",
+                          "value": "REQUEST_INTEGRITY"
+                        },
+                        "runAfter": {}
+                      },
+                      "Require_same_request_stop": {
+                        "type": "Compose",
+                        "inputs": "@div(1,0)",
+                        "runAfter": {
+                          "Require_same_request_error": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "After_row_integrity": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Reconcile": {
+                  "type": "If",
+                  "expression": "@equals(body('After_row')?['Status'],'Pending')",
+                  "actions": {
+                    "Unsettled_code": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "ResultCode",
+                        "value": "@if(equals(outputs('Cancel_CAS')?['statusCode'],412),'RETRY_REQUIRED','OUTCOME_UNKNOWN')"
+                      },
+                      "runAfter": {}
+                    },
+                    "Unsettled_state": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "CurrentStatus",
+                        "value": "Pending"
+                      },
+                      "runAfter": {
+                        "Unsettled_code": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Unsettled_complete": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "Complete",
+                        "value": false
+                      },
+                      "runAfter": {
+                        "Unsettled_state": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Unsettled_replay": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "Replay",
+                        "value": false
+                      },
+                      "runAfter": {
+                        "Unsettled_complete": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "After_terminal": {
+                        "type": "If",
+                        "expression": "@and(equals(body('After_row')?['Status'],'Cancelled'),equals(body('After_row')?['WinningOperationKey'],outputs('Cancel_key')),equals(body('After_row')?['OperationComplete'],true))",
+                        "actions": {
+                          "After_saved_code": {
+                            "type": "SetVariable",
+                            "inputs": {
+                              "name": "ResultCode",
+                              "value": "CANCELLED"
+                            },
+                            "runAfter": {}
+                          },
+                          "After_saved_state": {
+                            "type": "SetVariable",
+                            "inputs": {
+                              "name": "CurrentStatus",
+                              "value": "Cancelled"
+                            },
+                            "runAfter": {
+                              "After_saved_code": [
+                                "Succeeded"
+                              ]
+                            }
+                          },
+                          "After_saved_complete": {
+                            "type": "SetVariable",
+                            "inputs": {
+                              "name": "Complete",
+                              "value": true
+                            },
+                            "runAfter": {
+                              "After_saved_state": [
+                                "Succeeded"
+                              ]
+                            }
+                          },
+                          "After_saved_replay": {
+                            "type": "SetVariable",
+                            "inputs": {
+                              "name": "Replay",
+                              "value": false
+                            },
+                            "runAfter": {
+                              "After_saved_complete": [
+                                "Succeeded"
+                              ]
+                            }
+                          }
+                        },
+                        "else": {
+                          "actions": {
+                            "After_other_code": {
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "ResultCode",
+                                "value": "@if(equals(body('After_row')?['OperationComplete'],false),'ACCEPTED_INCOMPLETE','ALREADY_DECIDED')"
+                              },
+                              "runAfter": {}
+                            },
+                            "After_other_state": {
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "CurrentStatus",
+                                "value": "@body('After_row')?['Status']"
+                              },
+                              "runAfter": {
+                                "After_other_code": [
+                                  "Succeeded"
+                                ]
+                              }
+                            },
+                            "After_other_complete": {
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "Complete",
+                                "value": "@body('After_row')?['OperationComplete']"
+                              },
+                              "runAfter": {
+                                "After_other_state": [
+                                  "Succeeded"
+                                ]
+                              }
+                            },
+                            "After_other_replay": {
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "Replay",
+                                "value": false
+                              },
+                              "runAfter": {
+                                "After_other_complete": [
+                                  "Succeeded"
+                                ]
+                              }
+                            }
+                          }
+                        },
+                        "runAfter": {}
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Require_same_request": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "After_row_NativeShape": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@body('Read_after_CAS')?['d']",
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "Id",
+                        "SenderParticipantId",
+                        "RecipientParticipantId",
+                        "TargetGroupId",
+                        "RequestType",
+                        "Status",
+                        "SendOperationKey",
+                        "ConnectionKey",
+                        "WinningOperationKey",
+                        "OperationComplete",
+                        "__metadata"
+                      ],
+                      "properties": {
+                        "Id": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        },
+                        "SenderParticipantId": {
+                          "type": "number",
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        },
+                        "RecipientParticipantId": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        },
+                        "TargetGroupId": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        },
+                        "RequestType": {
+                          "type": "string",
+                          "enum": [
+                            "Personal",
+                            "Group"
+                          ]
+                        },
+                        "Status": {
+                          "type": "string",
+                          "enum": [
+                            "Pending",
+                            "Accepted",
+                            "Declined",
+                            "Cancelled"
+                          ]
+                        },
+                        "SendOperationKey": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 255
+                        },
+                        "ConnectionKey": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "WinningOperationKey": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "OperationComplete": {
+                          "type": "boolean"
+                        },
+                        "__metadata": {
+                          "type": "object",
+                          "required": [
+                            "etag",
+                            "type"
+                          ],
+                          "properties": {
+                            "etag": {
+                              "type": "string"
+                            },
+                            "type": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "After_row_parse_guard": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "After_row_NativePatternValues": {
+                  "type": "Compose",
+                  "inputs": {
+                    "v0": "@body('After_row_NativeShape')?['__metadata']?['etag']"
+                  },
+                  "runAfter": {
+                    "After_row_NativeShape": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "Before_terminal": {
+                    "type": "If",
+                    "expression": "@and(equals(body('Before_row')?['Status'],'Cancelled'),equals(body('Before_row')?['WinningOperationKey'],outputs('Cancel_key')),equals(body('Before_row')?['OperationComplete'],true))",
+                    "actions": {
+                      "Before_saved_code": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ResultCode",
+                          "value": "CANCELLED"
+                        },
+                        "runAfter": {}
+                      },
+                      "Before_saved_state": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "CurrentStatus",
+                          "value": "Cancelled"
+                        },
+                        "runAfter": {
+                          "Before_saved_code": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "Before_saved_complete": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "Complete",
+                          "value": true
+                        },
+                        "runAfter": {
+                          "Before_saved_state": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "Before_saved_replay": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "Replay",
+                          "value": true
+                        },
+                        "runAfter": {
+                          "Before_saved_complete": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    },
+                    "else": {
+                      "actions": {
+                        "Before_other_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "ResultCode",
+                            "value": "@if(equals(body('Before_row')?['OperationComplete'],false),'ACCEPTED_INCOMPLETE','ALREADY_DECIDED')"
+                          },
+                          "runAfter": {}
+                        },
+                        "Before_other_state": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "CurrentStatus",
+                            "value": "@body('Before_row')?['Status']"
+                          },
+                          "runAfter": {
+                            "Before_other_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Before_other_complete": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Complete",
+                            "value": "@body('Before_row')?['OperationComplete']"
+                          },
+                          "runAfter": {
+                            "Before_other_state": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Before_other_replay": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Replay",
+                            "value": false
+                          },
+                          "runAfter": {
+                            "Before_other_complete": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {}
+                  }
+                }
+              },
+              "runAfter": {
+                "Cancel_key": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Before_row_NativeShape": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Read_request')?['d']",
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "Id",
+                    "SenderParticipantId",
+                    "RecipientParticipantId",
+                    "TargetGroupId",
+                    "RequestType",
+                    "Status",
+                    "SendOperationKey",
+                    "ConnectionKey",
+                    "WinningOperationKey",
+                    "OperationComplete",
+                    "__metadata"
+                  ],
+                  "properties": {
+                    "Id": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "SenderParticipantId": {
+                      "type": "number",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "RecipientParticipantId": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "TargetGroupId": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "RequestType": {
+                      "type": "string",
+                      "enum": [
+                        "Personal",
+                        "Group"
+                      ]
+                    },
+                    "Status": {
+                      "type": "string",
+                      "enum": [
+                        "Pending",
+                        "Accepted",
+                        "Declined",
+                        "Cancelled"
+                      ]
+                    },
+                    "SendOperationKey": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 255
+                    },
+                    "ConnectionKey": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "WinningOperationKey": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "OperationComplete": {
+                      "type": "boolean"
+                    },
+                    "__metadata": {
+                      "type": "object",
+                      "required": [
+                        "etag",
+                        "type"
+                      ],
+                      "properties": {
+                        "etag": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Before_row_parse_guard": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Before_row_NativePatternValues": {
+              "type": "Compose",
+              "inputs": {
+                "v0": "@body('Before_row_NativeShape')?['__metadata']?['etag']"
+              },
+              "runAfter": {
+                "Before_row_NativeShape": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_WriteAttempted": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Final_code": {
+          "type": "Compose",
+          "inputs": "@if(empty(variables('ErrorCode')),if(empty(variables('CurrentStatus')),if(variables('WriteAttempted'),'OUTCOME_UNKNOWN','READ_OR_DATA_FAILED'),variables('ResultCode')),variables('ErrorCode'))",
+          "runAfter": {
+            "Cancel_work": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          }
+        },
+        "Messages": {
+          "type": "Compose",
+          "inputs": {
+            "CANCELLED": "Your request was cancelled.",
+            "ALREADY_DECIDED": "This request already has a saved decision. Refresh history.",
+            "ACCEPTED_INCOMPLETE": "This request has been accepted and setup is not yet complete. It cannot be cancelled.",
+            "OUTCOME_UNKNOWN": "The cancellation outcome could not be confirmed. Refresh and retry the same request.",
+            "RETRY_REQUIRED": "The request changed while cancellation was attempted. Refresh and retry.",
+            "REQUEST_INTEGRITY": "The request record is incomplete or inconsistent. Contact support before retrying.",
+            "REQUEST_SCHEMA_UNVERIFIED": "Request configuration has not been verified. Contact the app owner.",
+            "READ_OR_DATA_FAILED": "The request could not be verified. Refresh and try again.",
+            "UNAUTHORIZED": "Only the sender can cancel this request.",
+            "INVALID_INPUT": "Choose a valid request before cancelling."
+          },
+          "runAfter": {
+            "Final_code": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Respond_to_a_Power_App_or_flow": {
+          "type": "Response",
+          "kind": "PowerApp",
+          "runAfter": {
+            "Messages": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "statusCode": 200,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "title": "success",
+                  "x-ms-content-hint": "BOOLEAN",
+                  "x-ms-dynamically-added": true
+                },
+                "message": {
+                  "type": "string",
+                  "title": "message",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "resultcode": {
+                  "type": "string",
+                  "title": "resultcode",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "currentstatus": {
+                  "type": "string",
+                  "title": "currentstatus",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "operationcomplete": {
+                  "type": "boolean",
+                  "title": "operationcomplete",
+                  "x-ms-content-hint": "BOOLEAN",
+                  "x-ms-dynamically-added": true
+                },
+                "replay": {
+                  "type": "boolean",
+                  "title": "replay",
+                  "x-ms-content-hint": "BOOLEAN",
+                  "x-ms-dynamically-added": true
+                },
+                "runreference": {
+                  "type": "string",
+                  "title": "runreference",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "mode": {
+                  "type": "string",
+                  "title": "mode",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "writeattempted": {
+                  "type": "boolean",
+                  "title": "writeattempted",
+                  "x-ms-content-hint": "BOOLEAN",
+                  "x-ms-dynamically-added": true
+                },
+                "outcomeunknown": {
+                  "type": "boolean",
+                  "title": "outcomeunknown",
+                  "x-ms-content-hint": "BOOLEAN",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "additionalProperties": {}
+            },
+            "body": {
+              "success": "@equals(outputs('Final_code'),'CANCELLED')",
+              "message": "@coalesce(outputs('Messages')?[outputs('Final_code')],'The request could not be verified. Refresh and try again.')",
+              "resultcode": "@outputs('Final_code')",
+              "currentstatus": "@if(empty(variables('ErrorCode')),variables('CurrentStatus'),'')",
+              "operationcomplete": "@and(empty(variables('ErrorCode')),variables('Complete'))",
+              "replay": "@variables('Replay')",
+              "runreference": "@workflow()?['run']?['name']",
+              "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF",
+              "writeattempted": "@variables('WriteAttempted')",
+              "outcomeunknown": "@and(variables('WriteAttempted'),or(equals(outputs('Final_code'),'OUTCOME_UNKNOWN'),not(empty(variables('ErrorCode')))))"
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

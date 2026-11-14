@@ -1,0 +1,85 @@
+{
+  "sourceTicket": 81,
+  "solutionVersion": "1.0.0.2",
+  "componentIdsPreserved": true,
+  "flows": [
+    {
+      "flow": "TandemDiscovery",
+      "graph": "PASS",
+      "unsupportedPatterns": 0
+    },
+    {
+      "flow": "TandemParticipantSubmission",
+      "graph": "PASS",
+      "unsupportedPatterns": 0
+    },
+    {
+      "flow": "TandemSendRequest",
+      "graph": "PASS",
+      "unsupportedPatterns": 0
+    },
+    {
+      "flow": "TandemMyRequests",
+      "graph": "PASS",
+      "unsupportedPatterns": 0
+    },
+    {
+      "flow": "TandemCancelRequest",
+      "graph": "PASS",
+      "unsupportedPatterns": 0
+    },
+    {
+      "flow": "TandemRespondRequest",
+      "graph": "PASS",
+      "unsupportedPatterns": 0
+    },
+    {
+      "flow": "TandemSendGroupJoinRequest",
+      "graph": "PASS",
+      "unsupportedPatterns": 0
+    },
+    {
+      "flow": "TandemRespondGroupJoinRequest",
+      "graph": "PASS",
+      "unsupportedPatterns": 0
+    },
+    {
+      "flow": "TandemMyGroups",
+      "graph": "PASS",
+      "unsupportedPatterns": 0
+    },
+    {
+      "flow": "TandemUpdateGroup",
+      "graph": "PASS",
+      "unsupportedPatterns": 0
+    },
+    {
+      "flow": "TandemLeaveGroup",
+      "graph": "PASS",
+      "unsupportedPatterns": 0
+    },
+    {
+      "flow": "TandemValidateContext",
+      "graph": "PASS",
+      "unsupportedPatterns": 0
+    },
+    {
+      "flow": "TandemBatchSchemaSetup",
+      "graph": "PASS",
+      "unsupportedPatterns": 0
+    },
+    {
+      "flow": "TandemCoreValidationSmoke",
+      "graph": "PASS",
+      "unsupportedPatterns": 0
+    }
+  ],
+  "nativeActivation": "PASS_OWNER_CONFIRMED_FIVE_REPAIRED_FLOWS",
+  "rowWrites": 0,
+  "schemaChanges": 0,
+  "circularDependencyFlow": "TandemRespondGroupJoinRequest",
+  "ownerEvidence": "Owner identified the circular error in group response, then confirmed all five repaired flows can activate on the replacement package.",
+  "nativeActivationEvidence": "native-activation.owner-confirmation.json",
+  "nativeSmoke": "PASS_OWNER_SUPPLIED_REPORT",
+  "nativeSmokeEvidence": "native-smoke.owner-report.json"
+}

@@ -71,7 +71,7 @@ def components(path):
 def test_exact_delivered_registry_and_missing_all_are_clear_before_writes(tmp_path):
     assert set(build.CONSUMER_ARTIFACTS) | {'TandemValidateContext'} == set(core.CONTRACT['productionFlows'])
     assert build.CONSUMER_ARTIFACTS['TandemUpdateGroup'] == 'artifacts/update_group/TandemUpdateGroup-v1.parent.json'
-    assert build.CONSUMER_ARTIFACTS['TandemRespondGroupJoinRequest'] == 'artifacts/group_response/TandemRespondGroupJoinRequest.definition.json'
+    assert build.CONSUMER_ARTIFACTS['TandemRespondGroupJoinRequest'] == 'artifacts/group_response/TandemRespondGroupJoinRequest-activation.definition.json'
     destination = output(tmp_path)
     with pytest.raises(ValueError, match='Core batch incomplete') as error:
         build.build(tmp_path / 'unused-native.zip', destination, checkout=tmp_path, build_id=BUILD)
