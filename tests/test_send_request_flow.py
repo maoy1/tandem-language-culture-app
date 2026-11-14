@@ -128,7 +128,8 @@ def test_schema_unknown_never_writes(variant):
     if variant=='lookup':next(x for x in s.fields if x['InternalName']=='TargetGroup')['SchemaXml']='<Field List="other-list" />'
     if variant=='choice':next(x for x in s.fields if x['InternalName']=='RequestType')['SchemaXml']='<Field><CHOICES><CHOICE>Wrong</CHOICE></CHOICES></Field>'
     if variant=='paging':s.schema_page=True
-    r=execute(s);assert r.response['resultcode']=='REQUEST_SCHEMA_UNVERIFIED' and s.writes==0
+    r=FlowRunner(s);r.run(send.build_preflight_actions(source(),PEOPLE,GROUPS,'schema-only'))
+    assert not json.loads(r.response['reportjson'])['schemaVerified'] and s.writes==0
 
 def test_tampered_sender_reference_stops_before_request_or_candidate_reads():
     s=Server();r=execute(s,actor=2)
@@ -200,7 +201,8 @@ def test_actual_export_adapter_finds_nested_request_actions_and_preserves_auth(t
 def test_metadata_preflight_requires_status_type_and_canonical_choices():
     for field,change in [('Status',{'Required':False}),('RequestType',{'SchemaXml':'<Field FillInChoice="TRUE"><CHOICES><CHOICE>Personal</CHOICE><CHOICE>Group</CHOICE></CHOICES></Field>'}),('SenderParticipantId',{'ReadOnlyField':True})]:
         server=Server();next(x for x in server.fields if x['InternalName']==field).update(change)
-        runner=execute(server);assert runner.response['resultcode']=='REQUEST_SCHEMA_UNVERIFIED' and server.writes==0
+        runner=FlowRunner(server);runner.run(send.build_preflight_actions(source(),PEOPLE,GROUPS,'maintenance'))
+        assert not json.loads(runner.response['reportjson'])['schemaVerified'] and server.writes==0
 
 
 def test_replay_rejects_incoherent_winning_marker_without_writing():
@@ -225,7 +227,8 @@ def test_number_metadata_contract_not_replaced_by_legacy_lookup_guess(variant):
     if variant=='oldLookup':field.update(InternalName='SenderParticipant',TypeAsString='Lookup',SchemaXml='<Field List="'+PEOPLE['lists']['participants']['listId']+'" />')
     if variant=='fractionalColumn':field['SchemaXml']='<Field Decimals="2" />'
     if variant=='wrongRecipientRequired':next(x for x in server.fields if x['InternalName']=='RecipientParticipantId')['Required']=True
-    result=execute(server);assert result.response['resultcode']=='REQUEST_SCHEMA_UNVERIFIED' and server.writes==0
+    result=FlowRunner(server);result.run(send.build_preflight_actions(source(),PEOPLE,GROUPS,'maintenance'))
+    assert not json.loads(result.response['reportjson'])['schemaVerified'] and server.writes==0
 
 
 def test_readback_accepts_whole_number_reference_representation():
@@ -324,3 +327,13 @@ def test_delivered_native_parent_document_executes_with_delivered_child():
     assert runner.response['resultcode']=='SAVED' and server.writes==1
     runner=SendRunner(server);runner.run(actions,context)
     assert runner.response['resultcode']=='REPLAY' and server.writes==1
+
+
+def test_business_parent_never_repeats_deployment_schema_scan():
+    actions=send.build_actions(source(),PEOPLE,GROUPS,'test-build')
+    names=[path[-1] for path,_ in walk(actions)]
+    assert not any(name.startswith('Schema_') or name in ['Read_request_list','Read_request_fields','Require_request_schema'] for name in names)
+    assert not any('/fields?' in str(action.get('inputs',{})) for _,action in walk(actions))
+    assert actions['Send_report']['inputs']['schemaVerified'] is False
+    server=Server();server.fields=[];runner=execute(server)
+    assert runner.response['resultcode']=='SAVED'  # typed current rows/unique-boundary model; deployment audit is separate

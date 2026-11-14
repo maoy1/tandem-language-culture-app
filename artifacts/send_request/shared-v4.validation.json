@@ -99,5 +99,14 @@
     "artifacts/send_request/TandemSendRequest-v4-shared.review.json": "c77648a8afc04d077027b417a9ccb9a242c83c6b36794c41feeee4d276c75c9c",
     "artifacts/send_request/TandemSendRequest-v4-shared.solution-parent.json": "46a36196cfa6a2759cf332b2a3113d0034611e60601caccf945c69961c74ed26",
     "artifacts/send_request/TandemSendRequest-v4-shared.zip": "e4dc1dda4e3f0c38d044c8f9dac91492e8274ebda2598f5c29a4d734d0f57a3f"
+  },
+  "finalBatchRefinement": {
+    "focusedTestsPassed": 57,
+    "actions": 99,
+    "maximumActionDepth": 4,
+    "packageBuildId": "5a207485-1a32-4e74-9b26-8baa26fad322",
+    "sha256": "49d40f0690da0f057aaec91ba0518bd1d5b2babd688db9b43771197c992df907",
+    "schemaAuditPerClick": false,
+    "nativeResult": "NOT RUN"
   }
 }

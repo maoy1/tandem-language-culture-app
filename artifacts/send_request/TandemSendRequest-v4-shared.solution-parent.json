@@ -384,217 +384,6 @@
                 ]
               }
             },
-            "Read_request_list": {
-              "type": "OpenApiConnection",
-              "inputs": {
-                "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                  "connectionName": "shared_sharepointonline",
-                  "operationId": "HttpRequest"
-                },
-                "parameters": {
-                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                  "parameters/method": "GET",
-                  "parameters/uri": "_api/web/lists(guid'3d17485d-1dac-41f0-a1af-24e45daa4567')?$select=Id,BaseTemplate,ItemCount",
-                  "parameters/headers": {
-                    "Accept": "application/json;odata=verbose"
-                  }
-                },
-                "authentication": {
-                  "type": "Raw",
-                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
-                }
-              },
-              "runAfter": {
-                "Connection_key": [
-                  "Succeeded"
-                ]
-              }
-            },
-            "Read_request_fields": {
-              "type": "OpenApiConnection",
-              "inputs": {
-                "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                  "connectionName": "shared_sharepointonline",
-                  "operationId": "HttpRequest"
-                },
-                "parameters": {
-                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                  "parameters/method": "GET",
-                  "parameters/uri": "_api/web/lists(guid'3d17485d-1dac-41f0-a1af-24e45daa4567')/fields?$select=InternalName,TypeAsString,Required,Hidden,ReadOnlyField,Indexed,EnforceUniqueValues,SchemaXml&$top=5000",
-                  "parameters/headers": {
-                    "Accept": "application/json;odata=verbose"
-                  }
-                },
-                "authentication": {
-                  "type": "Raw",
-                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
-                }
-              },
-              "runAfter": {
-                "Read_request_list": [
-                  "Succeeded"
-                ]
-              }
-            },
-            "Schema_SenderParticipantId": {
-              "type": "Query",
-              "inputs": {
-                "from": "@body('Read_request_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'SenderParticipantId'),equals(item()?['TypeAsString'],'Number'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Required'],true),equals(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@Decimals)')),'0'))"
-              },
-              "runAfter": {
-                "Read_request_fields": [
-                  "Succeeded"
-                ]
-              }
-            },
-            "Schema_RecipientParticipantId": {
-              "type": "Query",
-              "inputs": {
-                "from": "@body('Read_request_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'RecipientParticipantId'),equals(item()?['TypeAsString'],'Number'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Required'],false),equals(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@Decimals)')),'0'))"
-              },
-              "runAfter": {
-                "Schema_SenderParticipantId": [
-                  "Succeeded"
-                ]
-              }
-            },
-            "Schema_TargetGroup": {
-              "type": "Query",
-              "inputs": {
-                "from": "@body('Read_request_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'TargetGroup'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Required'],false),equals(replace(replace(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@List)'))),'{',''),'}',''),'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'))"
-              },
-              "runAfter": {
-                "Schema_RecipientParticipantId": [
-                  "Succeeded"
-                ]
-              }
-            },
-            "Schema_RequestType": {
-              "type": "Query",
-              "inputs": {
-                "from": "@body('Read_request_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'RequestType'),equals(item()?['TypeAsString'],'Choice'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Personal'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Group'),equals(length(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()')),2),or(empty(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@FillInChoice)')))),equals(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@FillInChoice)'))),'false')))"
-              },
-              "runAfter": {
-                "Schema_TargetGroup": [
-                  "Succeeded"
-                ]
-              }
-            },
-            "Schema_Status": {
-              "type": "Query",
-              "inputs": {
-                "from": "@body('Read_request_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'Status'),equals(item()?['TypeAsString'],'Choice'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Pending'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Accepted'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Declined'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Cancelled'),equals(length(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()')),4),or(empty(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@FillInChoice)')))),equals(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@FillInChoice)'))),'false')))"
-              },
-              "runAfter": {
-                "Schema_RequestType": [
-                  "Succeeded"
-                ]
-              }
-            },
-            "Schema_SendOperationKey": {
-              "type": "Query",
-              "inputs": {
-                "from": "@body('Read_request_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'SendOperationKey'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],true),equals(item()?['Required'],true),equals(item()?['Indexed'],true),equals(item()?['EnforceUniqueValues'],true))"
-              },
-              "runAfter": {
-                "Schema_Status": [
-                  "Succeeded"
-                ]
-              }
-            },
-            "Schema_ConnectionKey": {
-              "type": "Query",
-              "inputs": {
-                "from": "@body('Read_request_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'ConnectionKey'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],true),equals(item()?['Required'],true),equals(item()?['Indexed'],true),equals(item()?['EnforceUniqueValues'],true))"
-              },
-              "runAfter": {
-                "Schema_SendOperationKey": [
-                  "Succeeded"
-                ]
-              }
-            },
-            "Schema_WinningOperationKey": {
-              "type": "Query",
-              "inputs": {
-                "from": "@body('Read_request_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'WinningOperationKey'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false))"
-              },
-              "runAfter": {
-                "Schema_ConnectionKey": [
-                  "Succeeded"
-                ]
-              }
-            },
-            "Schema_OperationComplete": {
-              "type": "Query",
-              "inputs": {
-                "from": "@body('Read_request_fields')?['d']?['results']",
-                "where": "@and(equals(item()?['InternalName'],'OperationComplete'),equals(item()?['TypeAsString'],'Boolean'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false))"
-              },
-              "runAfter": {
-                "Schema_WinningOperationKey": [
-                  "Succeeded"
-                ]
-              }
-            },
-            "Require_request_schema": {
-              "type": "If",
-              "expression": "@and(and(not(equals(body('Read_request_fields')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_request_fields')?['d']?['results'],json('[]'))),5000),empty(body('Read_request_fields')?['d']?['__next'])),equals(body('Read_request_list')?['d']?['Id'],'3d17485d-1dac-41f0-a1af-24e45daa4567'),equals(body('Read_request_list')?['d']?['BaseTemplate'],100),equals(length(body('Schema_SenderParticipantId')),1),equals(length(body('Schema_RecipientParticipantId')),1),equals(length(body('Schema_TargetGroup')),1),equals(length(body('Schema_RequestType')),1),equals(length(body('Schema_Status')),1),equals(length(body('Schema_SendOperationKey')),1),equals(length(body('Schema_ConnectionKey')),1),equals(length(body('Schema_WinningOperationKey')),1),equals(length(body('Schema_OperationComplete')),1))",
-              "actions": {},
-              "else": {
-                "actions": {
-                  "Set_REQUEST_SCHEMA_UNVERIFIED": {
-                    "type": "SetVariable",
-                    "inputs": {
-                      "name": "ErrorCode",
-                      "value": "REQUEST_SCHEMA_UNVERIFIED"
-                    },
-                    "runAfter": {}
-                  },
-                  "Stop_REQUEST_SCHEMA_UNVERIFIED": {
-                    "type": "ParseJson",
-                    "inputs": {
-                      "content": {
-                        "allowed": false
-                      },
-                      "schema": {
-                        "type": "object",
-                        "required": [
-                          "allowed"
-                        ],
-                        "properties": {
-                          "allowed": {
-                            "type": "boolean",
-                            "enum": [
-                              true
-                            ]
-                          }
-                        }
-                      }
-                    },
-                    "runAfter": {
-                      "Set_REQUEST_SCHEMA_UNVERIFIED": [
-                        "Succeeded"
-                      ]
-                    }
-                  }
-                }
-              },
-              "runAfter": {
-                "Schema_OperationComplete": [
-                  "Succeeded"
-                ]
-              }
-            },
             "Read_send_intent": {
               "type": "OpenApiConnection",
               "inputs": {
@@ -617,7 +406,7 @@
                 }
               },
               "runAfter": {
-                "Require_request_schema": [
+                "Connection_key": [
                   "Succeeded"
                 ]
               }
@@ -1989,7 +1778,7 @@
             "kind": "TandemSendRequest",
             "schemaVersion": 1,
             "sourceTicket": 10,
-            "packageBuildId": "67071ada-681d-4522-ad5f-5d9c97235a7d",
+            "packageBuildId": "5a207485-1a32-4e74-9b26-8baa26fad322",
             "runReference": "@workflow()?['run']?['name']",
             "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF",
             "ordinaryUserAccessVerified": false,
@@ -1997,7 +1786,8 @@
             "code": "@if(not(empty(variables('ErrorCode'))),variables('ErrorCode'),if(not(empty(variables('ResultCode'))),variables('ResultCode'),'READ_OR_DATA_FAILED'))",
             "requestId": "@variables('RequestId')",
             "status": "@variables('SavedStatus')",
-            "schemaVerified": "@equals(actions('Require_request_schema')?['status'],'Succeeded')"
+            "schemaVerified": false,
+            "schemaVerification": "MAINTENANCE_81"
           },
           "runAfter": {
             "Send_request": [

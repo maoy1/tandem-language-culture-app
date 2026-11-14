@@ -43,7 +43,7 @@ def trigger(source):
     schema['properties']['text']={'type':'string','title':'IntentId','x-ms-content-hint':'TEXT','x-ms-dynamically-added':True}
     schema['required'].append('text');return t
 
-def build_actions(source, people, groups, build_id):
+def build_actions(source, people, groups, build_id, include_schema_audit=False):
     common=deepcopy(source['properties']['definition']['actions']['Get_item']['inputs'])
     site=common['parameters']['dataset'];base="_api/web/lists(guid'"+REQUESTS+"')"
     def http(uri,prev=None,method='GET',payload=None):
@@ -73,34 +73,36 @@ def build_actions(source, people, groups, build_id):
     s['Require_uuid']=gate(uuid_test,'INVALID_INTENT','Input_intent');s['Read_invoker']['runAfter']=d.after('Require_uuid')
     s['Operation_key']=d.compose("@concat('personal:',string(outputs('Own_profile')?['Id']),':',toLower(body('Input_intent')?['intent']))",'Require_own_profile')
     s['Connection_key']=d.compose("@concat('open:person:',string(if(less(outputs('Own_profile')?['Id'],body('Input_reference')),outputs('Own_profile')?['Id'],body('Input_reference'))),':',string(if(less(outputs('Own_profile')?['Id'],body('Input_reference')),body('Input_reference'),outputs('Own_profile')?['Id'])))",'Operation_key')
-    s['Read_request_list']=http(base+'?$select=Id,BaseTemplate,ItemCount','Connection_key')
-    s['Read_request_fields']=http(base+'/fields?$select=InternalName,TypeAsString,Required,Hidden,ReadOnlyField,Indexed,EnforceUniqueValues,SchemaXml&$top=5000','Read_request_list')
-    prior='Read_request_fields';matches=[]
-    for field,kind in EXPECTED.items():
-        terms=["equals(item()?['InternalName'],'"+field+"')","equals(item()?['TypeAsString'],'"+kind+"')","equals(item()?['Hidden'],false)","equals(item()?['ReadOnlyField'],false)"]
-        terms.append("equals(item()?['Required'],"+str(field in ['SenderParticipantId','RequestType','Status','SendOperationKey','ConnectionKey']).lower()+')')
-        if field not in ['SendOperationKey','ConnectionKey']:terms.append("equals(item()?['EnforceUniqueValues'],false)")
-        if field in ['SendOperationKey','ConnectionKey']:
-            terms += ["equals(item()?['Required'],true)","equals(item()?['Indexed'],true)","equals(item()?['EnforceUniqueValues'],true)"]
-        if field=='SenderParticipantId':terms.append("equals(item()?['Required'],true)")
-        if field in ['RecipientParticipantId','TargetGroup']:terms.append("equals(item()?['Required'],false)")
-        if kind=='Lookup':
-            target=groups['lists']['groups']['listId'] if field=='TargetGroup' else people['lists']['participants']['listId']
-            terms.append("equals(replace(replace(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@List)'))),'{',''),'}',''),'"+target+"')")
-        if kind=='Number':
-            terms.append("equals(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@Decimals)')),'0')")
-        if kind=='Choice':
-            choices=['Personal','Group'] if field=='RequestType' else ['Pending','Accepted','Declined','Cancelled']
-            terms.extend("contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'"+c+"')" for c in choices)
-            terms.append("equals(length(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()')),"+str(len(choices))+')')
-            fill="toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@FillInChoice)')))"
-            terms.append('or(empty('+fill+"),equals("+fill+",'false'))")
-        key='Schema_'+field;s[key]=d.query("@body('Read_request_fields')?['d']?['results']",'and('+','.join(terms)+')',prior);prior=key
-        matches.append("equals(length(body('"+key+"')),1)")
-    s['Require_request_schema']=gate('and('+d.complete('Read_request_fields',5000)+",equals(body('Read_request_list')?['d']?['Id'],'"+REQUESTS+"'),equals(body('Read_request_list')?['d']?['BaseTemplate'],100),"+','.join(matches)+')','REQUEST_SCHEMA_UNVERIFIED',prior)
+    # Historical metadata-only preflight stays reproducible; production uses #81 maintenance.
+    if include_schema_audit:
+        s['Read_request_list']=http(base+'?$select=Id,BaseTemplate,ItemCount','Connection_key')
+        s['Read_request_fields']=http(base+'/fields?$select=InternalName,TypeAsString,Required,Hidden,ReadOnlyField,Indexed,EnforceUniqueValues,SchemaXml&$top=5000','Read_request_list')
+        prior='Read_request_fields';matches=[]
+        for field,kind in EXPECTED.items():
+            terms=["equals(item()?['InternalName'],'"+field+"')","equals(item()?['TypeAsString'],'"+kind+"')","equals(item()?['Hidden'],false)","equals(item()?['ReadOnlyField'],false)"]
+            terms.append("equals(item()?['Required'],"+str(field in ['SenderParticipantId','RequestType','Status','SendOperationKey','ConnectionKey']).lower()+')')
+            if field not in ['SendOperationKey','ConnectionKey']:terms.append("equals(item()?['EnforceUniqueValues'],false)")
+            if field in ['SendOperationKey','ConnectionKey']:
+                terms += ["equals(item()?['Required'],true)","equals(item()?['Indexed'],true)","equals(item()?['EnforceUniqueValues'],true)"]
+            if field=='SenderParticipantId':terms.append("equals(item()?['Required'],true)")
+            if field in ['RecipientParticipantId','TargetGroup']:terms.append("equals(item()?['Required'],false)")
+            if kind=='Lookup':
+                target=groups['lists']['groups']['listId'] if field=='TargetGroup' else people['lists']['participants']['listId']
+                terms.append("equals(replace(replace(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@List)'))),'{',''),'}',''),'"+target+"')")
+            if kind=='Number':
+                terms.append("equals(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@Decimals)')),'0')")
+            if kind=='Choice':
+                choices=['Personal','Group'] if field=='RequestType' else ['Pending','Accepted','Declined','Cancelled']
+                terms.extend("contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'"+c+"')" for c in choices)
+                terms.append("equals(length(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()')),"+str(len(choices))+')')
+                fill="toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@FillInChoice)')))"
+                terms.append('or(empty('+fill+"),equals("+fill+",'false'))")
+            key='Schema_'+field;s[key]=d.query("@body('Read_request_fields')?['d']?['results']",'and('+','.join(terms)+')',prior);prior=key
+            matches.append("equals(length(body('"+key+"')),1)")
+        s['Require_request_schema']=gate('and('+d.complete('Read_request_fields',5000)+",equals(body('Read_request_list')?['d']?['Id'],'"+REQUESTS+"'),equals(body('Read_request_list')?['d']?['BaseTemplate'],100),"+','.join(matches)+')','REQUEST_SCHEMA_UNVERIFIED',prior)
     select='Id,SenderParticipantId,RecipientParticipantId,TargetGroupId,RequestType,Status,SendOperationKey,ConnectionKey,WinningOperationKey,OperationComplete'
     def readkey(field,value,prev):return http(d.cat(base+'/items?$select='+select+'&$filter='+field+" eq '",value,"'&$top=2"),prev)
-    s['Read_send_intent']=readkey('SendOperationKey',"@outputs('Operation_key')",'Require_request_schema')
+    s['Read_send_intent']=readkey('SendOperationKey',"@outputs('Operation_key')",'Require_request_schema' if include_schema_audit else 'Connection_key')
     s['Require_intent_read']=gate(d.complete('Read_send_intent',1),'INTENT_READ_INCOMPLETE','Read_send_intent')
     def result(code,row,prev=None):
         prefix=code+'_'
@@ -181,7 +183,7 @@ def build_actions(source, people, groups, build_id):
       'runReference':"@workflow()?['run']?['name']",'mode':'OWNER_PREVIEW_PENDING_ACCESS_PROOF','ordinaryUserAccessVerified':False,
       'success':"@and(not(empty(variables('ResultCode'))),empty(variables('ErrorCode')))",
       'code':"@if(not(empty(variables('ErrorCode'))),variables('ErrorCode'),if(not(empty(variables('ResultCode'))),variables('ResultCode'),'READ_OR_DATA_FAILED'))",
-      'requestId':"@variables('RequestId')",'status':"@variables('SavedStatus')",'schemaVerified':"@equals(actions('Require_request_schema')?['status'],'Succeeded')"})
+      'requestId':"@variables('RequestId')",'status':"@variables('SavedStatus')",'schemaVerified':"@equals(actions('Require_request_schema')?['status'],'Succeeded')" if include_schema_audit else False,'schemaVerification':'LEGACY_PREFLIGHT_ONLY' if include_schema_audit else 'MAINTENANCE_81'})
     a['Send_report']['runAfter']={'Send_request':ALL}
     keys=['resultjson','requestid','status','resultcode','errormessage','runreference']
     props=deepcopy(source['properties']['definition']['actions']['Respond_to_a_Power_App_or_flow']['inputs']['schema']['properties'])
@@ -193,7 +195,7 @@ def build_actions(source, people, groups, build_id):
     measure(a);return a
 
 def build_preflight_actions(source,people,groups,build_id):
-    full=build_actions(source,people,groups,build_id)['Send_request']['actions'];read={};collect=False
+    full=build_actions(source,people,groups,build_id,include_schema_audit=True)['Send_request']['actions'];read={};collect=False
     for name,action in full.items():
         if name=='Read_request_list':collect=True
         if collect:read[name]=deepcopy(action)

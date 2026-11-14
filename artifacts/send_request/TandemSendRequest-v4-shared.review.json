@@ -1,14 +1,14 @@
 {
   "sourceTicket": 10,
-  "packageBuildId": "67071ada-681d-4522-ad5f-5d9c97235a7d",
+  "packageBuildId": "5a207485-1a32-4e74-9b26-8baa26fad322",
   "flowName": "TandemSendRequest v4",
-  "actions": 113,
+  "actions": 99,
   "maximumActionDepth": 4,
   "limits": {
     "actions": 500,
     "nesting": 8
   },
-  "sha256": "e4dc1dda4e3f0c38d044c8f9dac91492e8274ebda2598f5c29a4d734d0f57a3f",
+  "sha256": "49d40f0690da0f057aaec91ba0518bd1d5b2babd688db9b43771197c992df907",
   "rulesSourceSha256": "dfe0dcd587a5a348080dde288183ed3dff2d02d1f652f0ae23010b2e6e649c72",
   "connectionSource": "Invoker",
   "ownerCredentialFallback": false,
@@ -36,7 +36,7 @@
   "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF",
   "solutionParent": {
     "file": "TandemSendRequest-v4-shared.solution-parent.json",
-    "sha256": "46a36196cfa6a2759cf332b2a3113d0034611e60601caccf945c69961c74ed26",
+    "sha256": "ae3178e974e34d54117703bdd388f1716c6a27136273aea6954963a31c6ab825",
     "sourceExportSha256": "ce19af2e37e7de4a9317ec4c63e8d5777beaf23a57120c99b4e38d38ce4946d4",
     "runtimeSource": "invoker",
     "state": "DOCUMENT_ONLY_PARENT_ASSEMBLY_AND_NATIVE_TESTS_PENDING"

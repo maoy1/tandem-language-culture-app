@@ -87,5 +87,15 @@
       "#65"
     ],
     "consumerImpact": "Only #10 generated parent/build/hash changes; app inputs/outputs and request uniqueness/intent protocol unchanged. Actor unavailability now shares TARGET_UNAVAILABLE_OR_INCOMPATIBLE with recipient rejection."
+  },
+  "batchRefinement": {
+    "schemaVerification": "#81 maintenance only; historical #10 preflight reproducible separately",
+    "schemaAuditPerClick": false,
+    "actions": 99,
+    "maximumActionDepth": 4,
+    "packageBuildId": "5a207485-1a32-4e74-9b26-8baa26fad322",
+    "sha256": "49d40f0690da0f057aaec91ba0518bd1d5b2babd688db9b43771197c992df907",
+    "nativeResult": "NOT RUN",
+    "focusedTestsPassed": 57
   }
 }
