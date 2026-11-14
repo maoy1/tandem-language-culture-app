@@ -36,8 +36,10 @@
     "exactRequestTextError": "REQUESTED_NOT_YET_SUPPLIED",
     "oldApplyRun": "08584069362059040197682124425CU28",
     "oldChildRun": "08584069361400134595726594162CU01",
-    "correctedImportAndReadOnlyAudit": "NOT_RUN",
-    "ordinaryUserAccess": "DEFERRED_NOT_VERIFIED"
+    "correctedImportAndReadOnlyAudit": "OWNER_CONFIRMED_PASS_SUMMARY",
+    "ordinaryUserAccess": "DEFERRED_NOT_VERIFIED",
+    "readOnlyAuditEvidence": "results/schema-audit.owner-confirmation.json",
+    "repeatApply": "NOT_RUN"
   },
   "nextOwnerStep": "Update existing TandemCoreBatch Solution, preserve existing connections and disabled business/event flows, then run TandemBatchSchemaSetup ApplyChanges=No and return Setup_report."
 }
