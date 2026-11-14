@@ -23,7 +23,8 @@
     "NORMALIZE": "profiles and active-catalogue ID sets; returns normalized internal profiles/catalogues",
     "PAIR": "profiles/catalogues plus leftId and rightId; returns eligible,fitType and four overlap arrays",
     "GROUP": "profiles/catalogues plus candidateId and group; caller supplies fresh committed member IDs and focusSharersAvailable evidence; returns group rules",
-    "PROFILE": "exactly one profile plus catalogues; checks content independently of availability. Known Any selection can be valid content while excluded from matching."
+    "PROFILE": "exactly one profile plus catalogues; checks content independently of availability. Known Any selection can be valid content while excluded from matching.",
+    "PAIRS": "Additive batch engine mode: profiles/catalogues + leftId; returns result.pairs eligible pair projections with profileId, exactly the existing PAIR semantics. Discovery uses one invocation for the candidate set; no authorization."
   },
   "rawProfile": {
     "required": [
@@ -105,7 +106,8 @@
       "Baseline-defined role count",
       "Plain-text Note schema checks",
       "One-time schema collector/setup",
-      "Native-derived disabled Solution assembly"
+      "Native-derived disabled Solution assembly",
+      "PAIRS set evaluation to avoid one native child invocation per person"
     ],
     "consumerTickets": [
       7,

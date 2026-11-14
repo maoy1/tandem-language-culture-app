@@ -17,7 +17,7 @@ from . import discovery_flow as d
 from .schema_audit import ALL, measure
 
 ROOT = Path(__file__).resolve().parents[2]
-MODES = ['SCHEMA', 'NORMALIZE', 'PAIR', 'GROUP', 'PROFILE']
+MODES = ['SCHEMA', 'NORMALIZE', 'PAIR', 'PAIRS', 'GROUP', 'PROFILE']
 CONTRACT_VERSION = 1
 
 
@@ -157,6 +157,17 @@ def rule_actions():
         finish('OK', rules.pair_expression_projection("first(body('Find_left'))", "first(body('Find_right'))"), 'Pair'),
         {'Pair_missing': setvar('Code', 'PROFILE_NOT_FOUND')}, 'Find_right')
     branches['Evaluate_pair'] = d.condition("equals(body('Envelope')?['mode'],'PAIR')", pair, {}, 'Return_normalization')
+    # Discovery evaluates the candidate set in one child invocation, rather
+    # than paying a native child-run boundary for every candidate profile.
+    pairs = {'Parse_pairs_actor': d.parse("@body('Envelope')?['leftId']", {'type': 'integer', 'minimum': 1}),
+        'Find_pairs_actor': d.query("@body('Normalize_Profiles')", "equals(item()?['profileId'],body('Parse_pairs_actor'))", 'Parse_pairs_actor')}
+    projection = {'profileId': "@item()?['profileId']", **rules.pair_expression_projection("first(body('Find_pairs_actor'))", 'item()')}
+    calculate = {'Select_pair_results': d.select("@body('Normalize_Profiles')", projection),
+        'Eligible_pair_results': d.query("@body('Select_pair_results')", "equals(item()?['eligible'],true)", 'Select_pair_results')}
+    calculate.update(finish('OK', {'pairs': "@body('Eligible_pair_results')"}, 'Pairs', 'Eligible_pair_results'))
+    pairs['Pairs_actor_exists'] = d.condition("equals(length(body('Find_pairs_actor')),1)", calculate,
+        {'Pairs_actor_missing': setvar('Code', 'PROFILE_NOT_FOUND')}, 'Find_pairs_actor')
+    branches['Evaluate_pairs'] = d.condition("equals(body('Envelope')?['mode'],'PAIRS')", pairs, {}, 'Evaluate_pair')
     group = {'Parse_group': d.parse("@body('Envelope')?['group']", rules.group_schema()),
         'Parse_candidate': d.parse("@body('Envelope')?['candidateId']", {'type': 'integer', 'minimum': 1}, 'Parse_group'),
         'Find_members': d.query("@body('Normalize_Profiles')", "contains(body('Parse_group')?['memberProfileIds'],item()?['profileId'])", 'Parse_candidate'),
@@ -165,7 +176,7 @@ def rule_actions():
     groupcalc.update(finish('OK', "@outputs('Group_Result')", 'Group_done', 'Group_Result'))
     group['Candidate_exists'] = d.condition("equals(length(body('Find_candidate')),1)", groupcalc,
         {'Candidate_missing': setvar('Code', 'PROFILE_NOT_FOUND')}, 'Find_candidate')
-    branches['Evaluate_group'] = d.condition("equals(body('Envelope')?['mode'],'GROUP')", group, {}, 'Evaluate_pair')
+    branches['Evaluate_group'] = d.condition("equals(body('Envelope')?['mode'],'GROUP')", group, {}, 'Evaluate_pairs')
     # Content validation is independent of participation/validation status.
     profile = {'Single_profile': d.condition("equals(length(body('Normalize_Profiles')),1)",
         finish('OK', {'valid': "@or(not(empty(first(body('Normalize_Parse_profiles'))?['teachIds'])),not(empty(first(body('Normalize_Parse_profiles'))?['learnIds'])),not(empty(first(body('Normalize_Parse_profiles'))?['shareCultureIds'])),not(empty(first(body('Normalize_Parse_profiles'))?['learnCultureIds'])))"}, 'Profile'),
@@ -189,10 +200,10 @@ def definition_actions(baseline, build_id, source_hash):
              'Envelope': d.parse("@json(body('Request_text')?['value'])", {'type': 'object',
              'required': ['contractVersion', 'rulesVersion', 'mode'], 'properties': {
                  'contractVersion': {'type': 'integer'}, 'rulesVersion': {'type': 'integer'}, 'mode': {'type': 'string'}}}, 'Request_text')}
-    stage['Header_code'] = d.compose("@if(and(equals(body('Envelope')?['contractVersion'],1),equals(body('Envelope')?['rulesVersion'],1)),if(contains(createArray('SCHEMA','NORMALIZE','PAIR','GROUP','PROFILE'),body('Envelope')?['mode']),'READY','UNSUPPORTED_MODE'),'VERSION_MISMATCH')", 'Envelope')
+    stage['Header_code'] = d.compose("@if(and(equals(body('Envelope')?['contractVersion'],1),equals(body('Envelope')?['rulesVersion'],1)),if(contains(createArray('SCHEMA','NORMALIZE','PAIR','PAIRS','GROUP','PROFILE'),body('Envelope')?['mode']),'READY','UNSUPPORTED_MODE'),'VERSION_MISMATCH')", 'Envelope')
     stage['Set_header_error'] = setvar('Code', "@if(equals(outputs('Header_code'),'READY'),'INVALID_INPUT',outputs('Header_code'))", 'Header_code')
     stage['Schema_mode'] = d.condition("and(equals(outputs('Header_code'),'READY'),equals(body('Envelope')?['mode'],'SCHEMA'))", metadata_actions(baseline), {}, 'Set_header_error')
-    stage['Rules_mode'] = d.condition("and(equals(outputs('Header_code'),'READY'),contains(createArray('NORMALIZE','PAIR','GROUP','PROFILE'),body('Envelope')?['mode']))", rule_actions(), {}, 'Schema_mode')
+    stage['Rules_mode'] = d.condition("and(equals(outputs('Header_code'),'READY'),contains(createArray('NORMALIZE','PAIR','PAIRS','GROUP','PROFILE'),body('Envelope')?['mode']))", rule_actions(), {}, 'Schema_mode')
     a['Evaluate'] = {'type': 'Scope', 'actions': stage, 'runAfter': d.after(previous)}
     succeeded = "equals(actions('Evaluate')?['status'],'Succeeded')"
     a['Result_size'] = d.compose("@length(string(variables('Result')))")
