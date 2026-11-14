@@ -2,10 +2,10 @@
   "sourceTicket": 81,
   "packageBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
   "packageSha256": "608052804073ccd2874a1f9d83fbfeb62fd331fcbe86e7be5ed375139576717e",
-  "newCases": 93,
-  "fullSuite": 335,
+  "newCases": 115,
+  "fullSuite": 357,
   "localResult": "PASS",
-  "nativeResult": "QUICK3_FULL44_AND_OWNER_SP_PARENT_CHILD_PASS; CONNECTION_EXPORT_AND_CONSUMERS_PENDING",
+  "nativeResult": "QUICK3_FULL44_AND_OWNER_SP_PROBE_PASS; NATIVE_MANUAL_INVOKER_TEMPLATE_VERIFIED; BUSINESS_PARITY_PENDING",
   "priorNativeFailure": "results/v1-smoke.owner-report.json",
   "inputError": "results/v1-request-text.owner-error.json",
   "localReproduction": "Native JSON deserialization rejects v1 primitive string schema; wrapper handles document once",
@@ -34,5 +34,9 @@
   "nativeFullRunReference": "08584069504668815720383921608CU09",
   "nativeFullEvidence": "artifacts/shared_validation/results/v2-full.owner-report.json",
   "nativeCallerProbeEvidence": "artifacts/shared_validation/results/sharepoint-caller-probe.owner-evidence.json",
-  "nativeCallerProbeChildRunReference": "08584069483776257593504328231CU07"
+  "nativeCallerProbeChildRunReference": "08584069483776257593504328231CU07",
+  "nativeConnectionEnvelopeEvidence": "artifacts/shared_validation/results/native-sharepoint-solution.analysis.json",
+  "nativeConnectionExportSha256": "ce19af2e37e7de4a9317ec4c63e8d5777beaf23a57120c99b4e38d38ce4946d4",
+  "nativeSourceAdapterCases": 22,
+  "runtimePackageUnchangedBySourceAdapter": true
 }

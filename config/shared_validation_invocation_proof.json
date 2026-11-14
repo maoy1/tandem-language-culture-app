@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "sourceTicket": 81,
   "flow": "TandemValidateContext",
-  "state": "OWNER_SHAREPOINT_PARENT_CHILD_PASS_NATIVE_CONNECTION_EXPORT_PENDING",
+  "state": "NATIVE_MANUAL_SHAREPOINT_INVOKER_TEMPLATE_VERIFIED_BUSINESS_PARITY_PENDING",
   "implementationCertified": false,
   "officialReferences": [
     "https://learn.microsoft.com/en-us/power-automate/create-child-flows",
@@ -20,8 +20,9 @@
     "generatedSolutionImport": "PASS: imported generated v1 and parent completed 44 real child calls",
     "generatedValidation": "V1_FAIL_RETAINED; V2_QUICK_3_AND_FULL_44_PASS",
     "sharePointParentExecution": "OWNER_REPORTED_SP_ID16_AND_SHARED_CHILD_OK",
-    "solutionConnectionReferences": "NOT_INSPECTED; native Solution export pending",
-    "runOnlyInvokerMode": "Not independently established by returned owner-context bodies; inspect export/configuration"
+    "solutionConnectionReferences": "VERIFIED_NATIVE_EXPORT_MANUAL_INVOKER",
+    "runOnlyInvokerMode": "runtimeSource=invoker; resolved native SharePoint component and exact Raw trigger-token binding",
+    "automatedEventOwnerBinding": "Not supplied by manual Invoker seed; preserve/verify separately for #61"
   },
   "firstOwnerCheck": {
     "action": "Existing Tandem environment > More > Solutions; inspect only",
@@ -192,5 +193,7 @@
   "nativeFullRunReference": "08584069504668815720383921608CU09",
   "nativeFullEvidence": "artifacts/shared_validation/results/v2-full.owner-report.json",
   "nativeCallerProbeEvidence": "artifacts/shared_validation/results/sharepoint-caller-probe.owner-evidence.json",
-  "nativeCallerProbeChildRunReference": "08584069483776257593504328231CU07"
+  "nativeCallerProbeChildRunReference": "08584069483776257593504328231CU07",
+  "nativeConnectionEnvelopeEvidence": "artifacts/shared_validation/results/native-sharepoint-solution.analysis.json",
+  "nativeConnectionExportSha256": "ce19af2e37e7de4a9317ec4c63e8d5777beaf23a57120c99b4e38d38ce4946d4"
 }

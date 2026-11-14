@@ -6,7 +6,7 @@
   "rulesVersion": 1,
   "packageBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
   "solutionName": "TandemSharedValidation81",
-  "state": "NATIVE_SYNTHETIC_AND_OWNER_CALLER_PROBE_PASS_CONNECTION_EXPORT_PENDING",
+  "state": "NATIVE_SHARED_FULL_AND_MANUAL_INVOKER_ENVELOPE_VERIFIED_BUSINESS_PARITY_PENDING",
   "trigger": {
     "kind": "Button",
     "input": {
@@ -77,10 +77,10 @@
   },
   "sourceExportSha256": "5560d8d80f78de67966160fe0276711494b76c0f176e19356d6cf32d2c4c191c",
   "newPackageSha256": "608052804073ccd2874a1f9d83fbfeb62fd331fcbe86e7be5ed375139576717e",
-  "localTests": 335,
-  "newCases": 93,
+  "localTests": 357,
+  "newCases": 115,
   "nativeSyntheticSmokeCases": 44,
-  "nativeStatus": "QUICK3_FULL44_PASS; OWNER_SP_ID16_CHILD_OK; CONNECTION_EXPORT_AND_REAL_CONSUMER_PARITY_PENDING",
+  "nativeStatus": "QUICK3_FULL44_PASS; OWNER_SP_ID16_CHILD_OK; NATIVE_RUNTIME_SOURCE_INVOKER_VERIFIED; BUSINESS_PARITY_NOT_RUN",
   "nativeQuickSmokeCases": 3,
   "solutionVersion": "1.0.0.1",
   "nativeFailureEvidence": "artifacts/shared_validation/results/v1-request-text.owner-error.json",
@@ -89,5 +89,9 @@
   "nativeFullRunReference": "08584069504668815720383921608CU09",
   "nativeFullEvidence": "artifacts/shared_validation/results/v2-full.owner-report.json",
   "nativeCallerProbeEvidence": "artifacts/shared_validation/results/sharepoint-caller-probe.owner-evidence.json",
-  "nativeCallerProbeChildRunReference": "08584069483776257593504328231CU07"
+  "nativeCallerProbeChildRunReference": "08584069483776257593504328231CU07",
+  "nativeConnectionEnvelopeEvidence": "artifacts/shared_validation/results/native-sharepoint-solution.analysis.json",
+  "nativeConnectionExportSha256": "ce19af2e37e7de4a9317ec4c63e8d5777beaf23a57120c99b4e38d38ce4946d4",
+  "nativeSourceAdapterCases": 22,
+  "runtimePackageUnchangedBySourceAdapter": true
 }
