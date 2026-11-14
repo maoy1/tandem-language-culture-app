@@ -32,7 +32,7 @@ class ReaderRunner(FlowRunner):
             if getattr(self.server, 'child_transport_failure', False):
                 raise ValueError('PRIVATE_CHILD_FAILURE')
             child = ChildRunner(NoIO())
-            child.run(shared.definition_actions(BASELINE, flow.SHARED['packageBuildId'], 'local-source'),
+            child.run(shared.definition_actions(BASELINE, getattr(self.server,'shared_child_build',flow.SHARED['packageBuildId']), 'local-source'),
                       {'items': {}, 'triggerBody': self.inputs(self.child_body, context)})
             response = child.response
             if getattr(self.server, 'child_mutation', None):
@@ -488,6 +488,7 @@ def test_readable_solution_parent_preserves_native_invoker_and_original_trigger(
     native=tmp_path/'native.zip';export_fixture(native)
     monkeypatch.setattr(flow,'CHILD_ID',CHILD)
     monkeypatch.setattr(flow,'SHARED',{**flow.SHARED,'packageBuildId':'unit-build'})
+    monkeypatch.setattr(flow,'NATIVE_SHARED_BUILD','unit-build')
     src=tmp_path/'original.json';src.write_text(json.dumps(source()))
     output=tmp_path/'reader.definition.json'
     review=flow.build_parent(src,native,output)
@@ -516,3 +517,79 @@ def test_delivered_parent_executes_against_real_child_and_is_source_current():
     assert runner.response['resultcode']=='OK' and row(runner,71)['actions']['accept']
     assert server.data==before
     assert not any(v in json.dumps(runner.response) for v in ['PRIVATE_','accountKey','MembershipKey','SendOperationKey'])
+
+
+@pytest.mark.parametrize('field,value',[('ParticipationStatus','Paused'),('ParticipationStatus','Inactive'),('ParticipationStatus',None),('OpenToConnections',False),('OpenToConnections',None),('Status','Needs review'),('Status',None)])
+def test_current_group_responder_authority_ignores_personal_availability(field,value):
+    server=Fake();server.group();server.data['profiles'][0][field]=value;before=deepcopy(server.data)
+    result=execute(server);entry=row(result,71)
+    assert result.response['resultcode']=='OK' and entry['direction']=='Received'
+    assert entry['actions']=={'cancel':False,'decline':True,'accept':True}
+    assert server.data==before
+
+
+@pytest.mark.parametrize('field,value',[('ParticipationStatus','Paused'),('ParticipationStatus','Inactive'),('OpenToConnections',False),('Status','Needs review')])
+def test_new_group_requester_availability_remains_separate_from_member_authority(field,value):
+    server=Fake();server.group();server.data['profiles'][2][field]=value
+    entry=row(execute(server),71)
+    assert entry['availability']=='UnavailablePending' and entry['actions']['decline'] and not entry['actions']['accept']
+
+
+def test_include_introduction_alias_is_compile_selection_not_tenant_verification():
+    legacy=flow.build_actions(source(),PEOPLE,GROUPS,'alias',introduction_verified=True)
+    target=flow.build_actions(source(),PEOPLE,GROUPS,'alias',include_introduction=True)
+    assert legacy==target
+    assert 'Introduction' in target['Read_authorized_requests']['actions']['Read_requests']['inputs']['parameters']['parameters/uri']
+    server=Fake();server.group();server.data['requests'][-1]['Introduction']='<b>plain text</b>'
+    result=ReaderRunner(server);result.run(target)
+    assert row(result,71)['introduction']=='<b>plain text</b>'
+    with pytest.raises(ValueError):flow.build_actions(source(),PEOPLE,GROUPS,'alias',introduction_verified=True,include_introduction=False)
+
+
+@pytest.mark.parametrize('path_name,include',[('TandemMyRequests-v7.definition.json',False),('TandemMyRequests-v7-introduction-target.definition.json',True)])
+def test_build_review_never_claims_tenant_setup_for_target_inclusion(path_name,include):
+    import hashlib
+    path=flow.ROOT/'artifacts/my_requests'/path_name;review=json.loads(path.with_suffix('.review.json').read_text())
+    assert review['includeIntroduction'] is include
+    assert review['introductionVerified'] is False and review['introductionSetupStatus']=='NOT_APPLIED_NOT_VERIFIED'
+    assert review['nativeStatus']=='NOT_IMPORTED_NOT_TESTED'
+    assert review['definitionSha256']==hashlib.sha256(path.read_bytes()).hexdigest()
+    assert review['generatorSha256']==hashlib.sha256(Path(flow.__file__).read_bytes()).hexdigest()
+    server=Fake();server.group();server.data['requests'][-1]['Introduction']='x'*2000
+    result=ReaderRunner(server);result.run(json.loads(path.read_text())['properties']['definition']['actions'])
+    assert result.response['resultcode']=='OK'
+    if include:assert row(result,71)['introduction']=='x'*2000
+    else:assert 'introduction' not in row(result,71)
+
+
+@pytest.mark.parametrize('actual,pinned,expected', [('new-batch-build','new-batch-build','OK'),('new-batch-build',None,'SHARED_VALIDATION_FAILED'),('c79b7b64-b3ce-4de3-aa74-0ed62bca1524','new-batch-build','SHARED_VALIDATION_FAILED')])
+def test_explicit_shared_build_pin_matches_real_child_exactly(actual,pinned,expected):
+    server=Fake();server.group();server.shared_child_build=actual
+    graph=flow.build_actions(source(),PEOPLE,GROUPS,'local-batch',expected_shared_build_id=pinned)
+    result=ReaderRunner(server);result.run(graph)
+    assert result.response['resultcode']==expected
+    if expected=='OK':assert row(result,71)['actions']['accept']
+    else:failure(result,'SHARED_VALIDATION_FAILED')
+
+
+@pytest.mark.parametrize('bad',['',"x'),true,equals('x",None,42])
+def test_shared_build_override_never_injects_or_wildcards(bad):
+    if bad is None:assert flow.shared_build_option(bad)==flow.SHARED['packageBuildId']
+    else:
+        with pytest.raises(ValueError):flow.build_actions(source(),PEOPLE,GROUPS,'x',expected_shared_build_id=bad)
+
+
+def test_parent_expected_runtime_build_is_separate_from_inspected_seed_build(tmp_path,monkeypatch):
+    from test_solution_source import export_fixture,CHILD
+    native=tmp_path/'native.zip';export_fixture(native)
+    monkeypatch.setattr(flow,'CHILD_ID',CHILD)
+    monkeypatch.setattr(flow,'NATIVE_SHARED_BUILD','unit-build')
+    original=tmp_path/'source.json';original.write_text(json.dumps(source()))
+    output=tmp_path/'target.definition.json'
+    review=flow.build_parent(original,native,output,include_introduction=True,expected_shared_build_id='explicit-manifest-next-build')
+    assert review['sharedBuildId']=='explicit-manifest-next-build'
+    assert review['nativeSeedSharedBuildId']=='unit-build'
+    assert review['introductionVerified'] is False and review['includeIntroduction'] is True
+    graph=json.loads(output.read_text())['properties']['definition']['actions']
+    assert 'explicit-manifest-next-build' in graph['Read_authorized_requests']['actions']['Normalization_verified']['expression']
+    assert graph['Read_authorized_requests']['actions']['Call_normalization']['inputs']['host']['workflowReferenceName']==CHILD

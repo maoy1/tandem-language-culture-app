@@ -3,6 +3,7 @@ from copy import deepcopy
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from uuid import uuid4
@@ -13,7 +14,9 @@ from .schema_audit import measure
 ROOT = Path(__file__).resolve().parents[2]
 NAME = 'TandemMyRequests v7'
 SHARED = json.loads((ROOT / 'config/shared_validation_flow_contract.json').read_text())
-CHILD_ID = json.loads((ROOT / 'artifacts/shared_validation/results/native-sharepoint-solution.analysis.json').read_text())['sharedChildId']
+NATIVE_EVIDENCE = json.loads((ROOT / 'artifacts/shared_validation/results/native-sharepoint-solution.analysis.json').read_text())
+CHILD_ID = NATIVE_EVIDENCE['sharedChildId']
+NATIVE_SHARED_BUILD = NATIVE_EVIDENCE['sharedBuildId']
 BOUNDS = {'requests': 500, 'memberships': 2000, 'profiles': 500, 'groups': 100, 'fields': 500, 'responseChars': 250000}
 REQUESTS = '3d17485d-1dac-41f0-a1af-24e45daa4567'
 
@@ -97,7 +100,35 @@ def source_metadata(original):
     return source['parameters']['dataset'], deepcopy(source['authentication'])
 
 
-def build_actions(original, people, groups, build_id, introduction_verified=False):
+def introduction_option(introduction_verified=False, include_introduction=None):
+    """Select target fields only; neither spelling certifies tenant setup.
+
+    introduction_verified is a compatibility alias for existing batch callers.
+    Compile planned target packages before setup, but do not run them until the
+    actual Introduction field/settings are applied and read back successfully.
+    """
+    if type(introduction_verified) is not bool or (include_introduction is not None and type(include_introduction) is not bool):
+        raise ValueError('Introduction inclusion must be boolean')
+    if introduction_verified and include_introduction is False:
+        raise ValueError('Conflicting Introduction inclusion options')
+    return introduction_verified if include_introduction is None else include_introduction
+
+
+def shared_build_option(expected_shared_build_id=None):
+    """Exact runtime expectation supplied by canonical config or explicit manifest.
+
+    Reusing a native connection seed is not proof that a newer engine is tested.
+    There is no wildcard/version-only fallback and no runtime build discovery.
+    """
+    value = SHARED['packageBuildId'] if expected_shared_build_id is None else expected_shared_build_id
+    if not isinstance(value, str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,128}', value):
+        raise ValueError('Expected explicit safe shared build identifier')
+    return value
+
+
+def build_actions(original, people, groups, build_id, introduction_verified=False, *, include_introduction=None, expected_shared_build_id=None):
+    include_introduction = introduction_option(introduction_verified, include_introduction)
+    expected_shared_build_id = shared_build_option(expected_shared_build_id)
     site, auth = source_metadata(original)
     targets = {'requests': REQUESTS, 'profiles': people['lists']['participants']['listId'],
                'groups': groups['lists']['groups']['listId'], 'memberships': groups['lists']['members']['listId']}
@@ -132,7 +163,7 @@ def build_actions(original, people, groups, build_id, introduction_verified=Fals
         'groups': 'Id,SourceRequestId,SetupComplete,State,Capacity,WriteOwner',
         'memberships': 'Id,GroupId,ParticipantId,MembershipStatus,MembershipKey,LeftAt',
     }
-    if introduction_verified:
+    if include_introduction:
         selects['requests'] += ',Introduction'
     schemas = {
         'requests': obj({'Id': integer(), 'Created': text(), 'SenderParticipantId': {'type': 'number', 'minimum': 1}, 'RecipientParticipantId': {'type': ['number', 'null'], 'minimum': 1}, 'TargetGroupId': integer(True),
@@ -142,7 +173,7 @@ def build_actions(original, people, groups, build_id, introduction_verified=Fals
         'groups': obj({'Id': integer(), 'SourceRequestId': integer(), 'SetupComplete': {'type': 'boolean'}, 'State': choice('Open', 'Closed', 'Ended'), 'Capacity': {'type': 'integer', 'minimum': 2, 'maximum': 10}, 'WriteOwner': {'type': ['string', 'null']}}),
         'memberships': obj({'Id': integer(), 'GroupId': integer(), 'ParticipantId': integer(), 'MembershipStatus': choice('Active', 'Left'), 'MembershipKey': text(), 'LeftAt': {'type': ['string', 'null']}}),
     }
-    if introduction_verified:
+    if include_introduction:
         schemas['requests']['properties']['Introduction'] = {'type': ['string', 'null'], 'maxLength': 2000}
     for role in selects:
         read = 'Read_' + role; bound = role + '_complete'; parsed = 'Raw_requests' if role == 'requests' else 'Data_' + role
@@ -187,7 +218,7 @@ def build_actions(original, people, groups, build_id, introduction_verified=Fals
         'host': {'workflowReferenceName': CHILD_ID}, 'body': {'text': "@string(outputs('Normalization_envelope'))"}}}
     s['Normalization_report'] = parse("@json(body('Call_normalization')?['resultjson'])", {'type': 'object'}, 'Call_normalization')
     report = "body('Normalization_report')"
-    valid = f"and(equals({report}?['kind'],'TandemValidateContext'),equals({report}?['contractVersion'],1),equals({report}?['rulesVersion'],1),equals({report}?['packageBuildId'],'{SHARED['packageBuildId']}'),equals({report}?['success'],true),equals({report}?['code'],'OK'),equals({report}?['authorizesAction'],false),equals({report}?['connectors'],0),equals({report}?['reads'],0),equals({report}?['writes'],0))"
+    valid = f"and(equals({report}?['kind'],'TandemValidateContext'),equals({report}?['contractVersion'],1),equals({report}?['rulesVersion'],1),equals({report}?['packageBuildId'],'{expected_shared_build_id}'),equals({report}?['success'],true),equals({report}?['code'],'OK'),equals({report}?['authorizesAction'],false),equals({report}?['connectors'],0),equals({report}?['reads'],0),equals({report}?['writes'],0))"
     s['Normalization_verified'] = gate('Normalization_verified', valid, 'SHARED_VALIDATION_FAILED', 'Normalization_report')
     s['Normalized_profiles'] = parse("@body('Normalization_report')?['result']?['profiles']", {'type': 'array', 'maxItems': BOUNDS['profiles'], 'items': obj({
         'profileId': integer(), 'status': {'type': ['string', 'null']},
@@ -209,7 +240,7 @@ def build_actions(original, people, groups, build_id, introduction_verified=Fals
     pending = f"equals({r}?['Status'],'Pending')"
     unsettled = f"or({pending},and(equals({r}?['Status'],'Accepted'),equals({r}?['OperationComplete'],false)))"
     valid = f"and(or({personal},{group}),not(empty(trim({r}?['SendOperationKey']))),equals({r}?['ConnectionKey'],if({unsettled},{live},concat('history:request:',string({r}?['Id'])))),if({pending},and(equals({r}?['OperationComplete'],false),empty({r}?['WinningOperationKey'])),and(not(empty(trim(coalesce({r}?['WinningOperationKey'],'')))),or(equals({r}?['Status'],'Accepted'),equals({r}?['OperationComplete'],true)))))"
-    if introduction_verified:
+    if include_introduction:
         valid = f"and({valid},lessOrEquals(length(coalesce({r}?['Introduction'],'')),2000))"
     s['Validate_requests'] = loop("@body('Data_requests')", {'Request_integrity': gate('Request_integrity', valid, 'REQUEST_DATA_INCOMPLETE')}, 'Actor_exists')
     # Source and episode authority includes exact party/group binding; Left/provisional never grant authority.
@@ -250,9 +281,9 @@ def build_actions(original, people, groups, build_id, introduction_verified=Fals
         'completed': '@' + r + "?['OperationComplete']",
         'availability': f"@if({pending},if(outputs('Request_available'),'Available','UnavailablePending'),'NotApplicable')",
         'actions': {'cancel': '@and(' + own + ',' + pending + ')', 'decline': '@and(' + canrespond + ',' + pending + ')',
-                    'accept': '@and(' + canrespond + ',' + pending + ",outputs('Request_available')," + available(first('Actor_profile')) + ')'},
+                    'accept': '@and(' + canrespond + ',' + pending + ",outputs('Request_available')," + f"if(equals({r}?['RequestType'],'Group'),true," + available(first('Actor_profile')) + '))'},
     }, 'Visible_parties_exist')
-    if introduction_verified:
+    if include_introduction:
         visible['Append_public_request']['inputs']['value']['introduction'] = f"@if(equals({r}?['RequestType'],'Group'),coalesce({r}?['Introduction'],''),'')"
     s['Each_visible_request'] = loop("@body('Audience_requests')", visible, 'Audience_requests')
     s['Response_bound'] = gate('Response_bound', "lessOrEquals(length(string(variables('Requests'))),250000)", 'RESPONSE_BOUND', 'Each_visible_request')
@@ -271,13 +302,15 @@ def build_actions(original, people, groups, build_id, introduction_verified=Fals
     return a
 
 
-def build_package(source, output, introduction_verified=False):
+def build_package(source, output, introduction_verified=False, *, include_introduction=None, expected_shared_build_id=None):
+    include_introduction = introduction_option(introduction_verified, include_introduction)
+    expected_shared_build_id = shared_build_option(expected_shared_build_id)
     source, output = Path(source), Path(output)
     if any(p.exists() for p in [output, output.with_suffix('.definition.json'), output.with_suffix('.review.json')]): raise FileExistsError(output)
     original = read_source(source); site, _ = source_metadata(original)
     people = json.loads((ROOT / 'config/tenant_schema_mapping.json').read_text(encoding='utf-8'))
     groups = json.loads((ROOT / 'config/group_schema_mapping.json').read_text(encoding='utf-8'))
-    build_id = str(uuid4()); actions = build_actions(original, people, groups, build_id, introduction_verified)
+    build_id = str(uuid4()); actions = build_actions(original, people, groups, build_id, include_introduction=include_introduction, expected_shared_build_id=expected_shared_build_id)
     with TemporaryDirectory() as temp:
         p = Path(temp) / 'envelope.zip'; envelope(p, sharepoint_site=site)
         with ZipFile(p) as z: entries = {n: json.loads(z.read(n)) for n in z.namelist()}
@@ -301,7 +334,7 @@ def build_package(source, output, introduction_verified=False):
               'sourcePublicShape': list(original['properties']['definition']['actions']['Request_rows']['inputs']['select']),
               'sourceShapeChange': 'Retain every original Request_rows field including created and Created desc, ID desc ordering; add group/type/completion/availability/actions. Full UI binding pending.',
               'packageSha256': hashlib.sha256(output.read_bytes()).hexdigest(), 'generatorSha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-              'tenantResult': 'NOT_IMPORTED_NOT_TESTED', 'ordinaryUserAccessVerified': False, 'requestSchema': 'MAINTENANCE_81_NO_PER_CLICK_AUDIT', 'sharedChildId': CHILD_ID, 'sharedBuildId': SHARED['packageBuildId'], 'introductionVerified': introduction_verified, 'nativeSolutionConsumerParity': 'NOT_RUN', 'legacyWorkflowDependencyImport': 'UNPROVEN_USE_REVIEWABLE_SOLUTION_PARENT',
+              'tenantResult': 'NOT_IMPORTED_NOT_TESTED', 'ordinaryUserAccessVerified': False, 'requestSchema': 'MAINTENANCE_81_NO_PER_CLICK_AUDIT', 'sharedChildId': CHILD_ID, 'sharedBuildId': expected_shared_build_id, 'sharedBuildPinPolicy': 'EXACT_CANONICAL_OR_EXPLICIT_MANIFEST_BUILD_NO_FALLBACK', 'nativeSeedSharedBuildId': NATIVE_SHARED_BUILD, 'includeIntroduction': include_introduction, 'introductionVerified': False, 'introductionSetupStatus': 'NOT_APPLIED_NOT_VERIFIED', 'introductionParameterNote': 'Both include_introduction and legacy introduction_verified select planned target fields only; no tenant verification claim', 'nativeSolutionConsumerParity': 'NOT_RUN', 'legacyWorkflowDependencyImport': 'UNPROVEN_USE_REVIEWABLE_SOLUTION_PARENT',
               'referenceAdapter': 'SenderParticipantId/RecipientParticipantId Number with XML Decimals=0; whole-valued numeric refs normalized to int before canonical keys/public IDs.',
               'limits': {'actions': 500, 'maximumActionDepth': 8}, 'globalActionNamesUnique': True}
     output.with_suffix('.definition.json').write_bytes((json.dumps(document, indent=2) + '\n').encode('utf-8'))
@@ -309,22 +342,24 @@ def build_package(source, output, introduction_verified=False):
     return review
 
 
-def build_parent(source, solution_source, output, introduction_verified=False):
+def build_parent(source, solution_source, output, introduction_verified=False, *, include_introduction=None, expected_shared_build_id=None):
     """Readable #62 Solution parent only; enclosing Solution packaging belongs to parent integration.
 
     A legacy ZIP cannot establish the external Workflow dependency or native
     Power Apps Solution parity. Do not hand it over as an importable replacement.
     """
     from .solution_source import inspect_caller_export, invoker_parent_document, walk
+    include_introduction = introduction_option(introduction_verified, include_introduction)
+    expected_shared_build_id = shared_build_option(expected_shared_build_id)
     output = Path(output)
     review_path = output.with_suffix('.review.json')
     if output.exists() or review_path.exists(): raise FileExistsError(output)
     original = read_source(source); site, _ = source_metadata(original)
-    seed = inspect_caller_export(solution_source, site, SHARED['packageBuildId'])
+    seed = inspect_caller_export(solution_source, site, NATIVE_SHARED_BUILD)
     people = json.loads((ROOT / 'config/tenant_schema_mapping.json').read_text())
     groups = json.loads((ROOT / 'config/group_schema_mapping.json').read_text())
     build_id = str(uuid4())
-    actions = build_actions(original, people, groups, build_id, introduction_verified)
+    actions = build_actions(original, people, groups, build_id, include_introduction=include_introduction, expected_shared_build_id=expected_shared_build_id)
     document = invoker_parent_document(seed, original['properties']['definition']['triggers'], actions)
     document['properties']['displayName'] = NAME
     # Seed is a probe template; new workflow identity/root is assigned by the
@@ -333,7 +368,7 @@ def build_parent(source, solution_source, output, introduction_verified=False):
     output.write_text(json.dumps(document, indent=2)+'\n', encoding='utf-8', newline='\n')
     review = {'sourceTicket': 62, 'packageBuildId': build_id, **measure(actions),
         'writes': 0, 'connectorReadDefinitions': sum(a['type']=='OpenApiConnection' for _, a in walk(actions)),
-        'sharedChildId': CHILD_ID, 'sharedBuildId': SHARED['packageBuildId'],
+        'sharedChildId': CHILD_ID, 'sharedBuildId': expected_shared_build_id, 'sharedBuildPinPolicy': 'EXACT_CANONICAL_OR_EXPLICIT_MANIFEST_BUILD_NO_FALLBACK', 'nativeSeedSharedBuildId': NATIVE_SHARED_BUILD,
         'sharedMode': 'NORMALIZE', 'schemaAuditPerClick': False,
         'runtimeSource': 'invoker', 'sourceTriggerPreserved': True,
         'sourceExportSha256': hashlib.sha256(Path(source).read_bytes()).hexdigest(),
@@ -342,7 +377,7 @@ def build_parent(source, solution_source, output, introduction_verified=False):
         'definitionSha256': hashlib.sha256(output.read_bytes()).hexdigest(),
         'sharedImplementationSha256': hashlib.sha256((ROOT/'scripts/power_automate/shared_validation.py').read_bytes()).hexdigest(),
         'sharedContractVersion': 1, 'sharedRulesVersion': 1,
-        'introductionVerified': introduction_verified, 'bounds': BOUNDS,
+        'includeIntroduction': include_introduction, 'introductionVerified': False, 'introductionSetupStatus': 'NOT_APPLIED_NOT_VERIFIED', 'introductionParameterNote': 'Both include_introduction and legacy introduction_verified select planned target fields only; no tenant verification claim', 'bounds': BOUNDS,
         'nativeStatus': 'NOT_IMPORTED_NOT_TESTED', 'ordinaryUserAccessVerified': False,
         'packaging': 'READABLE_SOLUTION_PARENT; parent integration assigns new workflow ID/root and packages existing child dependency; no legacy ZIP delivered',
         'nativeEvidence': 'v6 empty-history PASS retained separately; #81 child QUICK3/FULL44 and inspected Invoker envelope do not certify this parent',
@@ -354,9 +389,11 @@ def build_parent(source, solution_source, output, introduction_verified=False):
 def main():
     p = argparse.ArgumentParser(description=__doc__); p.add_argument('--source', type=Path, required=True); p.add_argument('--output', type=Path, required=True)
     p.add_argument('--solution-source', type=Path, help='Inspected native #81 unmanaged source; emits readable parent instead of legacy ZIP')
-    p.add_argument('--introduction-verified', action='store_true', help='Only after #17 actual Introduction setup/readback verification')
+    p.add_argument('--expected-shared-build-id', help='Exact runtime build from explicit canonical batch manifest; no wildcard or auto-detection')
+    p.add_argument('--include-introduction', action='store_true', default=None, help='Compile planned target field; actual setup/readback required BEFORE tenant use, no verification claim')
+    p.add_argument('--introduction-verified', action='store_true', help='Compatibility alias for target inclusion only; does NOT certify actual schema')
     args = p.parse_args()
-    report = build_parent(args.source, args.solution_source, args.output, args.introduction_verified) if args.solution_source else build_package(args.source, args.output, args.introduction_verified)
+    report = build_parent(args.source, args.solution_source, args.output, args.introduction_verified, include_introduction=args.include_introduction, expected_shared_build_id=args.expected_shared_build_id) if args.solution_source else build_package(args.source, args.output, args.introduction_verified, include_introduction=args.include_introduction, expected_shared_build_id=args.expected_shared_build_id)
     print(json.dumps(report, indent=2))
 
 

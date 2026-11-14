@@ -1,0 +1,43 @@
+{
+  "sourceTicket": 62,
+  "packageBuildId": "24da4c0a-fd53-4143-8bfc-3d94b15e5913",
+  "actions": 128,
+  "maximumActionDepth": 4,
+  "writes": 0,
+  "connectorReadDefinitions": 6,
+  "sharedChildId": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+  "sharedBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
+  "sharedBuildPinPolicy": "EXACT_CANONICAL_OR_EXPLICIT_MANIFEST_BUILD_NO_FALLBACK",
+  "nativeSeedSharedBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
+  "sharedMode": "NORMALIZE",
+  "schemaAuditPerClick": false,
+  "runtimeSource": "invoker",
+  "sourceTriggerPreserved": true,
+  "sourceExportSha256": "34befb29df105e601ee32dfaf321c307938ed15a82884f1c2c1df794958e574f",
+  "solutionSeedSha256": "ce19af2e37e7de4a9317ec4c63e8d5777beaf23a57120c99b4e38d38ce4946d4",
+  "generatorSha256": "12bd2ec19c6b711ed94cd43f2ef236e64ab7ae3666ca2a5fbfcb09923e219deb",
+  "definitionSha256": "96c0f5c25e81c140f2b0e0c0965bcbf5880a5c9445bb1935e7b78dc75f5086a8",
+  "sharedImplementationSha256": "4d16f3291116cf5c297c28d22403d8a56edf6e9a3d9c220f6ce8034d7564428f",
+  "sharedContractVersion": 1,
+  "sharedRulesVersion": 1,
+  "includeIntroduction": true,
+  "introductionVerified": false,
+  "introductionSetupStatus": "NOT_APPLIED_NOT_VERIFIED",
+  "introductionParameterNote": "Both include_introduction and legacy introduction_verified select planned target fields only; no tenant verification claim",
+  "bounds": {
+    "requests": 500,
+    "memberships": 2000,
+    "profiles": 500,
+    "groups": 100,
+    "fields": 500,
+    "responseChars": 250000
+  },
+  "nativeStatus": "NOT_IMPORTED_NOT_TESTED",
+  "ordinaryUserAccessVerified": false,
+  "packaging": "READABLE_SOLUTION_PARENT; parent integration assigns new workflow ID/root and packages existing child dependency; no legacy ZIP delivered",
+  "nativeEvidence": "v6 empty-history PASS retained separately; #81 child QUICK3/FULL44 and inspected Invoker envelope do not certify this parent",
+  "limits": {
+    "actions": 500,
+    "maximumActionDepth": 8
+  }
+}

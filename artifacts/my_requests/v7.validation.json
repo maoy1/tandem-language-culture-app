@@ -1,14 +1,14 @@
 {
   "sourceTicket": 62,
   "version": "v7",
-  "packageBuildId": "72df3b79-e724-412f-bfb9-e48a1a6011c1",
-  "definitionSha256": "f18ee0b70837ae3c809d902e83912ca364d5d98d5a6e5999928051ad30d0526a",
-  "fullWorktreeSuite": 463,
-  "readerCases": 106,
+  "packageBuildId": "2c9d2814-dcfb-4951-8abe-955b9067863b",
+  "definitionSha256": "9edaa4b8f3561d36c2f5e83a995e6d4db19dea58fcaab5fc04908dd9c18a99e5",
+  "fullWorktreeSuite": 485,
+  "readerCases": 128,
   "sharedChildAndNativeEnvelopeCases": 115,
   "testsResult": "PASS",
   "command": "C:/projects/small_projects/tandem-language-culture-app/.venv/Scripts/python.exe -X utf8 -m pytest -q --disable-warnings --maxfail=2",
-  "elapsedSeconds": 80.82,
+  "elapsedSeconds": 52.5,
   "structure": {
     "actions": 128,
     "maximumActionDepth": 4
@@ -23,9 +23,9 @@
   "sharedChildId": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
   "sharedBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
   "sharedImplementationSha256": "4d16f3291116cf5c297c28d22403d8a56edf6e9a3d9c220f6ce8034d7564428f",
-  "introductionSetup": "NOT_APPLIED_NOT_VERIFIED; default artifact does not select/expose; explicit verified build tested locally only",
+  "introductionSetup": "NOT_APPLIED_NOT_VERIFIED; include_introduction and legacy introduction_verified compile prospective fields only",
   "parentPackaging": "Readable native-envelope parent delivered; enclosing Solution ZIP assigned to parent integration. Legacy Workflow dependency import unproven, no v7 legacy ZIP delivered.",
-  "nativeParentImportAndPowerAppsParity": "NOT RUN",
+  "nativeParentImportAndPowerAppsParity": "NOT RUN; parent core assembler owns actual batch pin/source reconciliation and final assembled Solution",
   "nativePopulatedHistoryAuthorityFailureAcceptance": "NOT RUN",
   "ordinaryUserPrivacy": "NOT RUN; owner-deferred",
   "previousV6Evidence": "artifacts/my_requests/validation.json unchanged; owner empty-history PASS remains v6-only",
@@ -33,5 +33,30 @@
   "drift": "No shared engine/interface/schema/catalogue change. #62 availability-only adapter and consumer artifacts; #81 issue ledger unchanged per explicit no-issue-edit scope; no-impact assessment appended in design/plan/test evidence.",
   "deployments": 0,
   "issueEdits": 0,
-  "pushed": false
+  "pushed": false,
+  "previousV7Build": {
+    "buildId": "72df3b79-e724-412f-bfb9-e48a1a6011c1",
+    "sha256": "f18ee0b70837ae3c809d902e83912ca364d5d98d5a6e5999928051ad30d0526a",
+    "tests": 463,
+    "readerCases": 106,
+    "sourceCommit": "b9d6516; historical artifacts/results remain in Git"
+  },
+  "introductionTarget": {
+    "buildId": "24da4c0a-fd53-4143-8bfc-3d94b15e5913",
+    "sha256": "96c0f5c25e81c140f2b0e0c0965bcbf5880a5c9445bb1935e7b78dc75f5086a8",
+    "path": "artifacts/my_requests/TandemMyRequests-v7-introduction-target.definition.json",
+    "expectedSharedBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
+    "nativeStatus": "NOT_IMPORTED_NOT_TESTED"
+  },
+  "expectedSharedBuildParameter": "expected_shared_build_id default current canonical SHARED build; explicit manifest-derived exact pin supported in build_actions/build_parent/build_package and CLI. Native seed build separated; no wildcard/version-only fallback.",
+  "responderAuthority": "Current committed operational Active group member can respond despite Paused/Inactive/null participation or closed personal openness. Group requester/target hints remain separate; writers recheck requester/focus-sharer/compatibility/freshness/CAS.",
+  "strictSharedHashGate": "UNCHANGED; exact delivered sharedImplementationSha256 == current shared source hash regression remains mandatory.",
+  "ownerCombinedIntegrationReport": {
+    "pass": 397,
+    "hashDriftFailures": 1,
+    "oldSharedHashPrefix": "4d16",
+    "newFoundationHashPrefix": "7365",
+    "resolution": "Parent merges reviewed foundation into #62 and regenerates artifacts; NOT done or claimed here. No drift gate weakened."
+  },
+  "prospectiveBatchSetup": "Owner reports #81 setup114actions/depth6 audits8roles/new59-field baseline; planning context, actual schema/native setup NOT RUN here."
 }
