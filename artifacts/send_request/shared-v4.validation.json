@@ -1,0 +1,103 @@
+{
+  "sourceTicket": 10,
+  "packageBuildId": "67071ada-681d-4522-ad5f-5d9c97235a7d",
+  "integrationBase": "origin/main 7eba0ba via merge c96fa9f",
+  "implementationBranch": "codex/issue-10-send-package",
+  "state": "LOCAL_IMPLEMENTATION_PASS_SOLUTION_INTEGRATION_PENDING",
+  "localTests": {
+    "finalFullSuite": {
+      "command": "python3.13 -m pytest -q --disable-warnings",
+      "passed": 413,
+      "failed": 0,
+      "durationSeconds": 119.0
+    },
+    "finalSendSuite": {
+      "command": "python3.13 -m pytest tests/test_send_request_flow.py -q --disable-warnings",
+      "passed": 56,
+      "failed": 0,
+      "durationSeconds": 11.75
+    },
+    "earlierCombinedSendSharedAdapterSuite": {
+      "passed": 170,
+      "failed": 0,
+      "note": "Before adding delivered native-parent document case; final full suite includes it."
+    }
+  },
+  "structure": {
+    "parent": {
+      "actions": 113,
+      "maximumActionDepth": 4
+    },
+    "sharedChild": {
+      "actions": 84,
+      "maximumActionDepth": 7
+    },
+    "limits": {
+      "actions": 500,
+      "maximumActionDepth": 8
+    },
+    "result": "PASS"
+  },
+  "artifactIntegrity": "PASS: ZIP CRC and definition equality; review ZIP/native-parent hashes; measures match delivered definitions",
+  "graphExecution": "Emitted parent with delivered shared v2 child action graph through ChildRunner; Workflow transport is adapted only. Delivered native-envelope parent also executed for SAVED then REPLAY.",
+  "localRegressions": {
+    "native38_32_nooverlap": "PASS",
+    "saved_then_replay_before_availability_or_child": "PASS",
+    "nullavailability_both_parties_all_three_fields": "PASS",
+    "spoof_actor_before_candidate_request_child": "PASS",
+    "childfailsclosed_transport_badjson_version_rules_build_success_code_eligibility_authority": "PASS",
+    "single_post_unique_opposite_race": "PASS",
+    "lost_success_exact_readback": "PASS",
+    "unknown_outcome_not_reported_saved": "PASS",
+    "terminal_history_replay": "PASS",
+    "native_envelope_parent_document": "PASS"
+  },
+  "sharedChild": {
+    "childId": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+    "contractVersion": 1,
+    "rulesVersion": 1,
+    "mode": "PAIR",
+    "packageBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524"
+  },
+  "driftReview81": {
+    "assessment": "NO_SHARED_SCHEMA_RULE_CONTRACT_VERSION_BUILD_CHANGE; consumer #10 integration only",
+    "sharedFilesComparedWithOriginMain": 7,
+    "result": "PASS",
+    "requestMappingComparedWithPremergeIssue10Baseline": "PASS e1bdc45",
+    "otherConsumers": "NO_IMPACT",
+    "issueLedgerUpdate": "PENDING_PARENT; no issue writes authorized for this delivery"
+  },
+  "nativeEvidence": {
+    "shared81ExistingBuild": "Prior native QUICK3/FULL44 and inspected Invoker seed retained; not rerun or extended by local tests",
+    "sendV4PowerAppsSolutionCallerParity": "NOT RUN",
+    "sendV4WriteReplayRace": "NOT RUN",
+    "ordinaryParticipantPrivacy": "DEFERRED / NOT RUN"
+  },
+  "pendingIntegration": [
+    "Parent assembles Solution using native-envelope parent, own workflow/component identity, existing child dependency and Invoker reference",
+    "Native #10 import/app caller/child/write/replay/race acceptance",
+    "All-writer coordinated cutover",
+    "Parent updates #81 ledger and #10/PR78; issue remains open"
+  ],
+  "preservation": {
+    "backupDirectory": "C:\\Users\\Maoy1\\AppData\\Local\\Temp\\tandem-send10-untracked-604e522d-bed8-4059-84ed-2955954b9335",
+    "conflictingFiles": 11,
+    "copyAndHeldByteEquality": "PASS",
+    "differingValidationJsonSha256": "abfdaa33a76c6808095a21b80e8fcc0b75b8aa317631b9fc858341531dd2488f",
+    "mergedMainValidationJsonSha256": "90c5046c9014f1b2afc5738642b602b16ef151f5a3875e5f66998fe09c95d111",
+    "rawSendExportSha256": "823383a1b2941a38ebf80c3e2f0a288f72a9956d24db793767e2dda5eeff0ab8",
+    "rawFilesCommitted": false
+  },
+  "schemaOrPermissionSettingChanges": 0,
+  "pushes": 0,
+  "issueWrites": 0,
+  "sha256": {
+    "scripts/power_automate/send_request_flow.py": "b45536889747352adff4f695b9d192d98fc57ee17f622b0e31eca534d09b4646",
+    "tests/test_send_request_flow.py": "6c41485e3cc4636ef2a0835287ca590605ae5ae9a0adffa69a94d16babc0f411",
+    "config/send_request_flow_contract.json": "f5c07b1a7d59b24a573a374b6e42546b82a88c18f905c1df561c0536b88bf3c4",
+    "artifacts/send_request/TandemSendRequest-v4-shared.definition.json": "4ce8257351ae2958b81c8e64f880f3c77761e0a39ea8160acafbb227d84fab67",
+    "artifacts/send_request/TandemSendRequest-v4-shared.review.json": "c77648a8afc04d077027b417a9ccb9a242c83c6b36794c41feeee4d276c75c9c",
+    "artifacts/send_request/TandemSendRequest-v4-shared.solution-parent.json": "46a36196cfa6a2759cf332b2a3113d0034611e60601caccf945c69961c74ed26",
+    "artifacts/send_request/TandemSendRequest-v4-shared.zip": "e4dc1dda4e3f0c38d044c8f9dac91492e8274ebda2598f5c29a4d734d0f57a3f"
+  }
+}

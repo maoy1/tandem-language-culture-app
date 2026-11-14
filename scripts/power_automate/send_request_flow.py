@@ -11,7 +11,9 @@ from .build_import_probe import build_package as envelope
 from .schema_audit import measure, ALL
 
 ROOT=Path(__file__).resolve().parents[2]
-NAME='TandemSendRequest v3'
+NAME='TandemSendRequest v4'
+SHARED_CHILD='e9aa88eb-a666-4df1-b088-176be7bcd00d'
+SHARED_BUILD='c79b7b64-b3ce-4de3-aa74-0ed62bca1524'
 REQUESTS='3d17485d-1dac-41f0-a1af-24e45daa4567'
 EXPECTED={'SenderParticipantId':'Number','RecipientParticipantId':'Number','TargetGroup':'Lookup',
  'RequestType':'Choice','Status':'Choice','SendOperationKey':'Text','ConnectionKey':'Text',
@@ -51,7 +53,7 @@ def build_actions(source, people, groups, build_id):
         if method!='GET':inp['retryPolicy']={'type':'none'}
         return {'type':'OpenApiConnection','inputs':inp,'runAfter':d.after(prev)}
     def gate(test,code,prev=None):
-        return d.condition(test,{}, {'Set_'+code:d.setvar('ErrorCode',code),'Stop_'+code:d.compose('@div(1,0)','Set_'+code)},prev)
+        return d.condition(test,{}, {'Set_'+code:d.setvar('ErrorCode',code),'Stop_'+code:d.parse({'allowed':False},{'type':'object','required':['allowed'],'properties':{'allowed':{'type':'boolean','enum':[True]}}},'Set_'+code)},prev)
     adapter=deepcopy(source);adapter['properties']['definition']['triggers']['manual']['inputs']['schema']['properties']={'number':{'type':'number'}}
     template=d.build_actions(adapter,people,groups,build_id)['Discovery_reads']['actions']
     a={};previous=None
@@ -109,18 +111,42 @@ def build_actions(source, people, groups, build_id):
     replay={'Prior_intent':d.compose("@first(body('Read_send_intent')?['d']?['results'])")}
     replay['Require_same_intent']=gate(exact("outputs('Prior_intent')"),'INTENT_CONFLICT','Prior_intent')
     replay.update(result('REPLAY',"outputs('Prior_intent')",'Require_same_intent'))
-    # The same maintained availability/compatibility adapter as Discovery; no caller-supplied facts.
+    # Parent owns fresh authenticated reads; #81 owns normalization and PAIR rules.
+    # No full SCHEMA mode or participant normalization is emitted in this parent.
     new={};copying=False
     for name,action in template.items():
         if name=='Get_item':copying=True
         if copying:new[name]=deepcopy(action)
-        if name=='Require_available_actor':break
+        if name=='Raw_catalogues':break
     new['Get_item']['runAfter']={};new['Get_item']['inputs']['parameters']['id']="@outputs('Own_profile')?['Id']"
-    new['Find_actor']['inputs']['where']="@equals(item()?['profileId'],outputs('Own_profile')?['Id'])"
-    new['Target_profile']=d.query("@body('Shared_Profiles')","equals(item()?['profileId'],body('Input_reference'))",'Require_available_actor')
-    new['Target']=d.compose("@first(union(body('Target_profile'),createArray(json('{}'))))",'Target_profile')
-    compatible=rules.pair_rules()['eligible'].wdl({'left':"outputs('Actor')",'right':"outputs('Target')"})
-    new['Require_current_fit']=gate("and(equals(length(body('Target_profile')),1),"+compatible+')','TARGET_UNAVAILABLE_OR_INCOMPATIBLE','Target')
+    # Read only the two current parties. The extra record and completeness gate
+    # fail closed on unexpected duplicates/paging rather than normalizing everyone.
+    new['Candidate_source']['inputs']['parameters'].update({'$filter':"@concat('ID eq ',string(outputs('Own_profile')?['Id']),' or ID eq ',string(body('Input_reference')))",'$top':3})
+    new['Candidate_source']['runtimeConfiguration']={'paginationPolicy':{'minimumItemCount':3}}
+    new['Require_profile_bound']=gate(d.complete('Candidate_source',2,False),'PROFILE_BOUND_OR_INCOMPLETE','Candidate_source')
+    projection={'profileId':"@item()?['ID']",'accountKey':"@item()?['Participantaccount']?['Claims']",
+      'status':"@item()?['Status']?['Value']",'participationStatus':"@item()?['ParticipationStatus']?['Value']",
+      'openToConnections':"@item()?['OpenToConnections']",'timezoneId':"@item()?['Timezone']?['Id']"}
+    for target,actual in [('teachIds','Teachlanguages'),('learnIds','Learnlanguages'),('shareCultureIds','ShareCultures'),('learnCultureIds','LearnCultures')]:
+        projection[target]="@item()?['"+actual+"#Id']"
+    new['Raw_profiles']=d.select("@body('Candidate_source')?['value']",projection,'Raw_catalogues')
+    new['Pair_payload']=d.compose({'contractVersion':1,'rulesVersion':1,'mode':'PAIR',
+      'leftId':"@outputs('Own_profile')?['Id']",'rightId':"@body('Input_reference')",
+      'profiles':"@body('Raw_profiles')",'catalogues':"@outputs('Raw_catalogues')"},'Raw_profiles')
+    new['Call_validation_child']={'type':'Workflow','inputs':{'host':{'workflowReferenceName':SHARED_CHILD},
+      'body':{'text':"@string(outputs('Pair_payload'))"},'retryPolicy':{'type':'none'}},'runAfter':d.after('Pair_payload')}
+    new['Set_child_failure']=d.setvar('ErrorCode','SHARED_VALIDATION_FAILED','Call_validation_child')
+    new['Set_child_failure']['runAfter']={'Call_validation_child':['Succeeded','Failed','TimedOut']}
+    header={'kind':{'type':'string','enum':['TandemValidateContext']},'sourceTicket':{'type':'integer','enum':[81]},
+      'contractVersion':{'type':'integer','enum':[1]},'rulesVersion':{'type':'integer','enum':[1]},
+      'packageBuildId':{'type':'string','enum':[SHARED_BUILD]},'success':{'type':'boolean','enum':[True]},
+      'code':{'type':'string','enum':['OK']},'authorizesAction':{'type':'boolean','enum':[False]},
+      **{k:{'type':'integer','enum':[0]} for k in ['connectors','reads','writes']},
+      'result':{'type':'object','required':['eligible'],'properties':{'eligible':{'type':'boolean'}}}}
+    new['Parse_child_result']=d.parse("@json(body('Call_validation_child')?['resultjson'])",{'type':'object','required':list(header),'properties':header},'Set_child_failure')
+    new['Require_child_success']=gate("equals(actions('Call_validation_child')?['status'],'Succeeded')",'SHARED_CALL_FAILED','Parse_child_result')
+    new['Clear_child_failure']=d.setvar('ErrorCode','','Require_child_success')
+    new['Require_current_fit']=gate("equals(body('Parse_child_result')?['result']?['eligible'],true)",'TARGET_UNAVAILABLE_OR_INCOMPATIBLE','Clear_child_failure')
     new['Read_live_connection']=readkey('ConnectionKey',"@outputs('Connection_key')",'Require_current_fit')
     new['Require_connection_read']=gate(d.complete('Read_live_connection',1),'CONNECTION_READ_INCOMPLETE','Read_live_connection')
     new['Require_no_live_connection']=gate("empty(body('Read_live_connection')?['d']?['results'])",'CONNECTION_EXISTS','Require_connection_read')
@@ -139,14 +165,15 @@ def build_actions(source, people, groups, build_id):
     # Readback alone may settle a lost success response; no broad 502-as-duplicate classification.
     new['Verified_create']=d.condition(exact("outputs('Created_row')"),result('SAVED',"outputs('Created_row')"),{'Unknown_create':d.setvar('ErrorCode','CREATE_OUTCOME_UNKNOWN')},'Created_row')
     s['Has_saved_intent']=d.condition("not(empty(body('Read_send_intent')?['d']?['results']))",replay,new,'Require_intent_read')
-    # Shared normalization's Terminate is converted to a failed local branch so this flow still responds.
     def safe(actions):
         for name,action in list(actions.items()):
-            if action['type']=='Terminate':actions[name]={'type':'Scope','runAfter':action.get('runAfter',{}),'actions':{name+'_Set_integrity_error':d.setvar('ErrorCode','PROFILE_DATA_INVALID'),name+'_Stop_integrity':d.compose('@div(1,0)',name+'_Set_integrity_error')}}
+            if action['type']=='Compose' and action.get('inputs')=='@div(1,0)':
+                actions[name]=d.parse({'allowed':False},{'type':'object','required':['allowed'],
+                  'properties':{'allowed':{'type':'boolean','enum':[True]}}})
+                actions[name]['runAfter']=action.get('runAfter',{})
             else:
-                for key in ['actions']:
-                    if key in action:safe(action[key])
-                if 'else'in action:safe(action['else']['actions'])
+                if 'actions' in action:safe(action['actions'])
+                if 'else' in action:safe(action['else']['actions'])
     safe(s)
     a['Send_request']={'type':'Scope','actions':s,'runAfter':d.after(previous)}
     # Reconciled saved result wins over a failed POST action, but only after exact immutable readback.
@@ -184,9 +211,9 @@ def build_preflight_actions(source,people,groups,build_id):
     actions['Respond']={'type':'Response','kind':'PowerApp','runAfter':d.after('Schema_report'),'inputs':{'statusCode':200,'schema':{'type':'object','properties':{'reportjson':{'type':'string','title':'reportjson','x-ms-content-hint':'TEXT','x-ms-dynamically-added':True}}},'body':{'reportjson':"@string(outputs('Schema_report'))"}}}
     return actions
 
-def build_package(output,export=None,source=None,preflight=False):
+def build_package(output,export=None,source=None,preflight=False,solution_export=None):
     output=Path(output)
-    if any(p.exists() for p in [output,output.with_suffix('.definition.json'),output.with_suffix('.review.json')]):raise FileExistsError(output)
+    if any(p.exists() for p in [output,output.with_suffix('.definition.json'),output.with_suffix('.review.json'),output.with_suffix('.solution-parent.json')]):raise FileExistsError(output)
     source=source or original_source(export);people=json.loads((ROOT/'config/tenant_schema_mapping.json').read_text());groups=json.loads((ROOT/'config/group_schema_mapping.json').read_text())
     if source['properties']['connectionReferences']['shared_sharepointonline']['source']!='Invoker':raise ValueError('Invoker required')
     site=source['properties']['definition']['actions']['Get_item']['inputs']['parameters']['dataset'];build_id=str(uuid4())
@@ -208,12 +235,23 @@ def build_package(output,export=None,source=None,preflight=False):
         for name,doc in entries.items():z.writestr(name,json.dumps(doc,indent=2)+'\n')
     review={'sourceTicket':10,'packageBuildId':build_id,'flowName':flow_name,**measure(actions),'limits':{'actions':500,'nesting':8},'sha256':hashlib.sha256(output.read_bytes()).hexdigest(),
       'rulesSourceSha256':hashlib.sha256(Path(rules.__file__).read_bytes()).hexdigest(),'connectionSource':'Invoker','ownerCredentialFallback':False,
-      'tenantResult':'NOT_IMPORTED_NOT_TESTED','ordinaryUserAccessVerified':False,'requestSchemaVerifiedInTenant':False,'schemaWrites':0,'membershipWrites':0,'groupWrites':0,
+      'tenantResult':'NOT_IMPORTED_NOT_TESTED','ordinaryUserAccessVerified':False,'requestSchemaVerifiedInTenant':False,'sharedValidation':None if preflight else {'childId':SHARED_CHILD,'contractVersion':1,'rulesVersion':1,'mode':'PAIR','packageBuildId':SHARED_BUILD},
+      'deployment':'LEGACY_METADATA_ONLY' if preflight else 'REVIEW_ONLY_LEGACY_ENVELOPE; FINAL_DEPLOY_REQUIRES_SOLUTION_PARENT; WORKFLOW_LINK_NOT_NATIVE_PROVEN',
+      'schemaWrites':0,'membershipWrites':0,'groupWrites':0,
       'requestWrites':0 if preflight else 'At most one POST guarded by observed metadata and native unique SendOperationKey/ConnectionKey; retries disabled, readback reconciles exact immutable intent.',
       'sourceExportSha256':hashlib.sha256(Path(export).read_bytes()).hexdigest() if export else None,
       'existingActorTargetInputsPreserved':not preflight,'existingSuccessMessageOutputsPreserved':not preflight,'addedRequiredInput':None if preflight else 'text IntentId; client must retain same UUID for transport retries',
       'existingSendAppBindingsPreserved':False,'metadataOnly':preflight,'mode':'OWNER_PREVIEW_PENDING_ACCESS_PROOF'}
+    if solution_export and not preflight:
+        from .solution_source import inspect_caller_export, invoker_parent_document
+        seed=inspect_caller_export(solution_export,site,SHARED_BUILD)
+        parent=invoker_parent_document(seed,trigger(source),actions)
+        parent_path=output.with_suffix('.solution-parent.json')
+        parent_path.write_bytes((json.dumps(parent,indent=2)+'\n').encode())
+        review['solutionParent']={'file':parent_path.name,'sha256':hashlib.sha256(parent_path.read_bytes()).hexdigest(),
+          'sourceExportSha256':seed['receipt']['sourceExportSha256'],'runtimeSource':'invoker',
+          'state':'DOCUMENT_ONLY_PARENT_ASSEMBLY_AND_NATIVE_TESTS_PENDING'}
     output.with_suffix('.definition.json').write_bytes((json.dumps(document,indent=2)+'\n').encode());output.with_suffix('.review.json').write_bytes((json.dumps(review,indent=2)+'\n').encode());return review
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True);p.add_argument('--source',type=Path,required=True);p.add_argument('--preflight',action='store_true');args=p.parse_args();print(json.dumps(build_package(args.output,args.source,preflight=args.preflight),indent=2))
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True);p.add_argument('--source',type=Path,required=True);p.add_argument('--preflight',action='store_true');p.add_argument('--solution-source',type=Path);args=p.parse_args();print(json.dumps(build_package(args.output,args.source,preflight=args.preflight,solution_export=args.solution_source),indent=2))

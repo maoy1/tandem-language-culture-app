@@ -6,8 +6,11 @@ import pytest
 from test_discovery_flow import Fake,FlowRunner,source as discovery_source,PEOPLE,GROUPS
 from test_coordination_fixture import walk
 from scripts.power_automate import send_request_flow as send
+from scripts.power_automate import shared_validation as shared
+from test_shared_validation import ChildRunner, NoIO
 
 INTENT='01234567-89ab-cdef-0123-456789abcdef'
+CHILD_ACTIONS=json.loads((shared.ROOT/'artifacts/shared_validation/TandemSharedValidation81-v2.child.definition.json').read_text(encoding='utf-8'))
 def source():
     s=discovery_source();schema=s['properties']['definition']['triggers']['manual']['inputs']['schema']
     schema['properties']['number_1']={'type':'number','description':'RecipientParticipantId'};schema['required'].append('number_1')
@@ -26,8 +29,33 @@ def fields():
 
 class Server(Fake):
     def __init__(self):
-        super().__init__();self.rows=[];self.fields=fields();self.writes=0;self.create_mode='ok';self.schema_page=False
+        super().__init__();self.child_mode='ok';self.child_calls=[];self.rows=[];self.fields=fields();self.writes=0;self.create_mode='ok';self.schema_page=False
     def request(self,p):
+        if '__child' in p:
+            self.child_calls.append(deepcopy(p['__child']))
+            if self.child_mode in ['failed','timeout']:return {'statusCode':504,'body':{}}
+            child=ChildRunner(NoIO())
+            child.run(CHILD_ACTIONS,{'items':{},'triggerBody':p['__child']})
+            result=deepcopy(child.response)
+            if self.child_mode=='badjson':result['resultjson']='bad json'
+            elif self.child_mode!='ok':
+                report=json.loads(result['resultjson'])
+                if self.child_mode=='version':report['contractVersion']=2
+                elif self.child_mode=='rules':report['rulesVersion']=2
+                elif self.child_mode=='build':report['packageBuildId']='unreviewed-build'
+                elif self.child_mode=='unsuccessful':report['success']=False
+                elif self.child_mode=='code':report['code']='INVALID_INPUT'
+                elif self.child_mode=='missingeligible':report['result'].pop('eligible',None)
+                elif self.child_mode=='stringeligible':report['result']['eligible']='true'
+                elif self.child_mode=='authorizes':report['authorizesAction']=True
+                result['resultjson']=json.dumps(report)
+            return {'statusCode':200,'body':result}
+        # Model SharePoint's server-side pair filter, including synthetic extras.
+        if 'id' not in p and '$filter' in p and '__child' not in p:
+            ids=list(map(int,re.findall(r'ID eq (\d+)',p['$filter'])))
+            if ids:
+                self.queries.append('GetItems')
+                return {'statusCode':200,'body':{'value':deepcopy([x for x in self.profiles if x['ID'] in ids]),**({'@odata.nextLink':'next'} if self.paged=='profiles' else {})}}
         uri=p.get('parameters/uri','')
         if send.REQUESTS not in uri:return super().request(p)
         self.queries.append(uri)
@@ -50,8 +78,20 @@ class Server(Fake):
         key,value=re.search(r"\$filter=(\w+) eq '([^']*)'",uri).groups()
         return response({'results':[x for x in self.rows if x[key]==value]})
 
+class SendRunner(ChildRunner):
+    """Only adapt the Workflow transport; execute parent and actual child graphs."""
+    def run(self,actions,ctx=None):
+        adapted=deepcopy(actions)
+        for name,action in adapted.items():
+            if action['type']=='Workflow':
+                assert action['inputs']['host']=={'workflowReferenceName':send.SHARED_CHILD}
+                action['type']='OpenApiConnection'
+                action['inputs']={'parameters':{'__child':action['inputs']['body']}}
+        return super().run(adapted,ctx)
+
+
 def execute(server=None,target=2,actor=1,intent=INTENT):
-    runner=FlowRunner(server or Server());runner.run(send.build_actions(source(),PEOPLE,GROUPS,'synthetic-build'),{'items':{},'triggerBody':{'number':actor,'number_1':target,'text':intent}});return runner
+    runner=SendRunner(server or Server());runner.run(send.build_actions(source(),PEOPLE,GROUPS,'synthetic-build'),{'items':{},'triggerBody':{'number':actor,'number_1':target,'text':intent}});return runner
 
 def test_send_exact_pending_then_replay_retains_one_row():
     s=Server();r=execute(s)
@@ -198,3 +238,89 @@ def test_readback_accepts_whole_number_reference_representation():
     server.request=coerce
     assert execute(server).response['resultcode']=='SAVED'
     assert execute(server).response['resultcode']=='REPLAY' and server.writes==1
+
+
+@pytest.mark.parametrize('mode',['failed','timeout','badjson','version','rules','build','unsuccessful','code','missingeligible','stringeligible','authorizes'])
+def test_child_fails_closed_without_writes_or_live_connection_reads(mode):
+    server=Server();server.child_mode=mode;runner=execute(server)
+    assert runner.response['resultcode']=='SHARED_VALIDATION_FAILED'
+    assert not runner.response['success'] and server.writes==0 and len(server.child_calls)==1
+    assert not any('ConnectionKey eq' in q for q in server.queries)
+
+
+@pytest.mark.parametrize('field',['Status','ParticipationStatus','OpenToConnections'])
+@pytest.mark.parametrize('party',[0,1])
+def test_null_availability_reaches_child_and_never_defaults_available(field,party):
+    server=Server();server.profiles[party][field]=None;runner=execute(server)
+    assert runner.response['resultcode']=='TARGET_UNAVAILABLE_OR_INCOMPATIBLE' and server.writes==0
+    assert len(server.child_calls)==1
+    profile=json.loads(server.child_calls[0]['text'])['profiles'][party]
+    assert profile[{'Status':'status','ParticipationStatus':'participationStatus','OpenToConnections':'openToConnections'}[field]] is None
+
+
+def test_native38_32_nooverlap_through_parent_and_actual_shared_child():
+    from test_discovery_flow import profile
+    case=next(c for c in shared.smoke_cases() if c['id']=='OWNER_NO_OVERLAP_38_32')['payload']
+    server=Server();server.own_id=38
+    server.profiles=[profile(p['profileId'],p['teachIds'],p['learnIds'],p['shareCultureIds'],p['learnCultureIds']) for p in case['profiles']]
+    original=server.request
+    def request(p):
+        uri=p.get('parameters/uri','')
+        for role,key in [('language','languageIds'),('culture','cultureIds'),('timezone','timezoneIds')]:
+            if PEOPLE['lists'][role]['listId'] in uri:
+                server.queries.append(uri)
+                return {'statusCode':200,'body':{'d':{'results':[{'Id':i,'Active':True,'ISOcode':'fixture'} for i in case['catalogues'][key]]}}}
+        return original(p)
+    server.request=request
+    runner=execute(server,actor=38,target=32)
+    assert runner.response['resultcode']=='TARGET_UNAVAILABLE_OR_INCOMPATIBLE' and server.writes==0
+    actual=json.loads(server.child_calls[0]['text'])
+    assert actual['leftId']==38 and actual['rightId']==32 and actual['mode']=='PAIR'
+    assert actual['profiles'][0]['teachIds']==[60,63] and actual['profiles'][1]['learnIds']==[59]
+
+
+def test_saved_then_replay_bypasses_child_and_current_availability_reads():
+    server=Server();assert execute(server).response['resultcode']=='SAVED'
+    server.profiles[0]['OpenToConnections']=None;server.profiles[1]['ParticipationStatus']=None
+    server.child_mode='failed';server.queries=[]
+    result=execute(server).response
+    assert result['resultcode']=='REPLAY' and result['requestid']=='80'
+    assert server.writes==1 and len(server.child_calls)==1
+    assert not any(q in ['GetItem','GetItems'] for q in server.queries)
+
+
+def test_spoof_actor_never_calls_child():
+    server=Server();result=execute(server,actor=2).response
+    assert result['resultcode']=='UNAUTHORIZED_PROFILE' and not server.child_calls and server.writes==0
+
+
+def test_parent_emits_one_pair_call_and_no_duplicated_normalization_or_full_schema_scan():
+    actions=send.build_actions(source(),PEOPLE,GROUPS,'synthetic-build')
+    all_actions=list(walk(actions));calls=[v for _,v in all_actions if v['type']=='Workflow']
+    assert len(calls)==1 and calls[0]['inputs']['body']=={'text':"@string(outputs('Pair_payload'))"}
+    assert calls[0]['inputs']['host']['workflowReferenceName']==send.SHARED_CHILD
+    assert not any(n[-1].startswith('Shared_') for n,_ in all_actions)
+    assert '@div(1,0)' not in json.dumps(actions)
+    payload=next(v['inputs'] for n,v in all_actions if n[-1]=='Pair_payload')
+    assert payload['contractVersion']==payload['rulesVersion']==1 and payload['mode']=='PAIR'
+    assert 'metadata' not in payload
+    runner=execute(Server())
+    candidate=next(v for n,v in all_actions if n[-1]=='Candidate_source')
+    assert candidate['inputs']['parameters']['$top']==3 and '$filter' in candidate['inputs']['parameters']
+    assert runner.response['resultcode']=='SAVED'
+
+
+def test_delivered_native_parent_document_executes_with_delivered_child():
+    from scripts.power_automate.schema_audit import measure
+    path=send.ROOT/'artifacts/send_request/TandemSendRequest-v4-shared.solution-parent.json'
+    parent=json.loads(path.read_text(encoding='utf-8'))
+    assert parent['properties']['connectionReferences']['shared_sharepointonline']['runtimeSource']=='invoker'
+    actions=parent['properties']['definition']['actions']
+    assert measure(actions)=={'actions':113,'maximumActionDepth':4}
+    assert measure(CHILD_ACTIONS)=={'actions':84,'maximumActionDepth':7}
+    server=Server();runner=SendRunner(server)
+    context={'items':{},'triggerBody':{'number':1,'number_1':2,'text':INTENT}}
+    runner.run(actions,context)
+    assert runner.response['resultcode']=='SAVED' and server.writes==1
+    runner=SendRunner(server);runner.run(actions,context)
+    assert runner.response['resultcode']=='REPLAY' and server.writes==1
