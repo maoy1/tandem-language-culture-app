@@ -38,3 +38,13 @@ def test_transport_uniqueness_and_exact_etag_boundary():
 def test_native_scalar_and_array_primitives_used_by_delivered_flows(expression, expected):
     runner = ParentRunner(Connection(seed()))
     assert runner.expr(expression, {'items': {}}) == expected
+
+
+def test_native_foreach_item_matches_named_current_iteration():
+    runner = ParentRunner(Connection(seed()))
+    runner.run({
+        'Init': {'type': 'InitializeVariable', 'inputs': {'variables': [{'name': 'Seen', 'type': 'array', 'value': []}]}},
+        'Each': {'type': 'Foreach', 'foreach': '@createArray(7,8)', 'runAfter': {'Init': ['Succeeded']},
+                 'actions': {'Capture': {'type': 'AppendToArrayVariable',
+                     'inputs': {'name': 'Seen', 'value': {'item': '@item()', 'named': "@items('Each')"}}}}}})
+    assert runner.variables['Seen'] == [{'item': 7, 'named': 7}, {'item': 8, 'named': 8}]
