@@ -1,0 +1,25 @@
+{
+  "sourceTicket": 62,
+  "expectedVersion": "v5 from current handoff; run/build ID not returned",
+  "failedAction": "Data_profiles",
+  "reportedRows": [
+    0,
+    1
+  ],
+  "reportedErrors": [
+    {
+      "property": "ParticipationStatus",
+      "expected": "String",
+      "actual": "Null"
+    },
+    {
+      "property": "OpenToConnections",
+      "expected": "Boolean",
+      "actual": "Null"
+    }
+  ],
+  "classification": "Legacy nullable availability should be ineligible data, not a history-read failure.",
+  "fix": "Permit null for validation/participation/openness; retain strict non-null types/choice vocabulary; available requires explicit Active/Active/true.",
+  "ownerTestDataPreference": "Current affected list rows are test fixtures; bounded reset/reseed is authorized when it materially simplifies testing.",
+  "nativeRetest": "NOT_RUN"
+}

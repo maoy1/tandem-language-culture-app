@@ -1,0 +1,11 @@
+{
+  "sourceTicket": 81,
+  "source": "Owner confirmation2026-11-14 Europe/Berlin",
+  "packageBuildId": "bd66271f-090e-4f5c-a890-8cb5b61173cc",
+  "runReference": "08584069211508254579686294345CU13",
+  "confirmation": "yes all Create actions are grey and marked Skipped",
+  "allCreateActionsSkipped": true,
+  "repeatApplyResult": "PASS",
+  "report": "schema-repeat-apply.owner-report.json",
+  "scope": "Schema setup repeat behavior only; native smoke and business/app/access tests remain separate."
+}

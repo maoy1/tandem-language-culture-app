@@ -1,0 +1,55 @@
+{
+  "kind": "TandemRequestFlowDevelopmentBatch",
+  "revision": 2,
+  "date": "2026-11-08",
+  "validation": {
+    "combinedLocalTestsPassed": 493,
+    "includesCrossFlowContractCheck": true,
+    "native": "NOT_VERIFIED"
+  },
+  "observedMapping": "SenderParticipantId/RecipientParticipantId existing Number Decimals=0; preserve columns. Initial report run08584074297422149453962972460CU27; owner reports empty.",
+  "setup": "See issue10: six new fields, RecipientParticipantId Required=false only; do not change numeric types. Old send cannot supply required keys. Fresh corrected preflight required before writes.",
+  "delivery": "Extract outer archive. Import individual inner ZIPs Create as new; first schema preflight v2. Retires the earlier Lookup-assumption bundle.",
+  "packages": [
+    {
+      "name": "TandemRequestSchemaPreflight-v2",
+      "ticket": 10,
+      "pr": 78,
+      "buildId": "dd0c91b6-13b4-41e0-affd-ebafeeb87404",
+      "sha256": "a5ee3a2590acad54c23979f373c93d2f54a8c8b9fcab30a52c18c00f6e24440a",
+      "actions": 18,
+      "maximumActionDepth": 3,
+      "sourceCommit": "cb869103841cf4a66277294f51fea2574022f66a"
+    },
+    {
+      "name": "TandemSendRequest-v3",
+      "ticket": 10,
+      "pr": 78,
+      "buildId": "a9251019-b7a5-4170-8877-682bb71b8693",
+      "sha256": "af154393528ca065480d92d0aaf31851d443e08034c19c0ea0953e7c521c7d32",
+      "actions": 125,
+      "maximumActionDepth": 5,
+      "sourceCommit": "cb869103841cf4a66277294f51fea2574022f66a"
+    },
+    {
+      "name": "TandemMyRequests-v4",
+      "ticket": 62,
+      "pr": 80,
+      "buildId": "36bebc35-e946-411a-ac3f-dd244bf3dd9a",
+      "sha256": "f84ea923fca0813fbb775eaed4d493ba17c1f66ea5b00dd4d83899c41369ef9a",
+      "actions": 228,
+      "maximumActionDepth": 4,
+      "sourceCommit": "34b4e83a976e904febf812a9451f6d499bfc1213"
+    },
+    {
+      "name": "TandemCancelRequest-v3",
+      "ticket": 63,
+      "pr": 79,
+      "buildId": "30ff0d83-3895-4a0e-89c2-939b360fc5e7",
+      "sha256": "252c97b0ac33c6094f928efb72a86d13742ec543cc7e2edca178a6245959c7cb",
+      "actions": 138,
+      "maximumActionDepth": 5,
+      "sourceCommit": "de15ff1fbecbb3cda4e22f7ce405b3adcbfab9cd"
+    }
+  ]
+}

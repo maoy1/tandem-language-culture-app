@@ -127,7 +127,7 @@ class FlowRunner(Runner):
                         if not self.run(action['actions'],ctx):state='Failed'
                     elif kind=='Foreach':
                         for row in self.inputs(action['foreach'],ctx):
-                            if not self.run(action['actions'],{**ctx,'items':{**ctx['items'],name:row}}):state='Failed'
+                            if not self.run(action['actions'],{**ctx,'item':row,'items':{**ctx['items'],name:row}}):state='Failed'
                     elif kind=='Response':self.response=self.inputs(p['body'],ctx)
                     elif kind=='Terminate':raise Terminated(p)
                     else:raise RuntimeError('Unsupported '+kind)
