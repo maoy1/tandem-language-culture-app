@@ -1,0 +1,2274 @@
+{
+  "Initialize_Code": {
+    "type": "InitializeVariable",
+    "inputs": {
+      "variables": [
+        {
+          "name": "Code",
+          "type": "string",
+          "value": "INVALID_INPUT"
+        }
+      ]
+    },
+    "runAfter": {}
+  },
+  "Initialize_Result": {
+    "type": "InitializeVariable",
+    "inputs": {
+      "variables": [
+        {
+          "name": "Result",
+          "type": "object",
+          "value": {}
+        }
+      ]
+    },
+    "runAfter": {
+      "Initialize_Code": [
+        "Succeeded"
+      ]
+    }
+  },
+  "Initialize_FocusChecks": {
+    "type": "InitializeVariable",
+    "inputs": {
+      "variables": [
+        {
+          "name": "FocusChecks",
+          "type": "array",
+          "value": []
+        }
+      ]
+    },
+    "runAfter": {
+      "Initialize_Result": [
+        "Succeeded"
+      ]
+    }
+  },
+  "Initialize_Differences": {
+    "type": "InitializeVariable",
+    "inputs": {
+      "variables": [
+        {
+          "name": "Differences",
+          "type": "array",
+          "value": []
+        }
+      ]
+    },
+    "runAfter": {
+      "Initialize_FocusChecks": [
+        "Succeeded"
+      ]
+    }
+  },
+  "Evaluate": {
+    "type": "Scope",
+    "actions": {
+      "Request_text": {
+        "type": "ParseJson",
+        "inputs": {
+          "content": "@triggerBody()?['text']",
+          "schema": {
+            "type": "string",
+            "maxLength": 250000
+          }
+        },
+        "runAfter": {}
+      },
+      "Envelope": {
+        "type": "ParseJson",
+        "inputs": {
+          "content": "@json(body('Request_text'))",
+          "schema": {
+            "type": "object",
+            "required": [
+              "contractVersion",
+              "rulesVersion",
+              "mode"
+            ],
+            "properties": {
+              "contractVersion": {
+                "type": "integer"
+              },
+              "rulesVersion": {
+                "type": "integer"
+              },
+              "mode": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "runAfter": {
+          "Request_text": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Header_code": {
+        "type": "Compose",
+        "inputs": "@if(and(equals(body('Envelope')?['contractVersion'],1),equals(body('Envelope')?['rulesVersion'],1)),if(contains(createArray('SCHEMA','NORMALIZE','PAIR','GROUP','PROFILE'),body('Envelope')?['mode']),'READY','UNSUPPORTED_MODE'),'VERSION_MISMATCH')",
+        "runAfter": {
+          "Envelope": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Set_header_error": {
+        "type": "SetVariable",
+        "inputs": {
+          "name": "Code",
+          "value": "@if(equals(outputs('Header_code'),'READY'),'INVALID_INPUT',outputs('Header_code'))"
+        },
+        "runAfter": {
+          "Header_code": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Schema_mode": {
+        "type": "If",
+        "expression": "@and(equals(outputs('Header_code'),'READY'),equals(body('Envelope')?['mode'],'SCHEMA'))",
+        "actions": {
+          "Parse_metadata": {
+            "type": "ParseJson",
+            "inputs": {
+              "content": "@body('Envelope')?['metadata']",
+              "schema": {
+                "type": "object",
+                "required": [
+                  "lists"
+                ],
+                "properties": {
+                  "lists": {
+                    "type": "array",
+                    "maxItems": 7,
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "role",
+                        "Id",
+                        "BaseTemplate",
+                        "Fields",
+                        "complete"
+                      ],
+                      "properties": {
+                        "role": {
+                          "type": "string"
+                        },
+                        "Id": {
+                          "type": "string"
+                        },
+                        "BaseTemplate": {
+                          "type": "integer"
+                        },
+                        "complete": {
+                          "type": "boolean"
+                        },
+                        "ValidationFormula": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "Fields": {
+                          "type": "array",
+                          "maxItems": 500,
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "InternalName",
+                              "TypeAsString",
+                              "Required",
+                              "Indexed",
+                              "EnforceUniqueValues",
+                              "Hidden",
+                              "ReadOnlyField",
+                              "SchemaXml",
+                              "DefaultValue"
+                            ],
+                            "properties": {
+                              "Required": {
+                                "type": "boolean"
+                              },
+                              "Indexed": {
+                                "type": "boolean"
+                              },
+                              "EnforceUniqueValues": {
+                                "type": "boolean"
+                              },
+                              "Hidden": {
+                                "type": "boolean"
+                              },
+                              "ReadOnlyField": {
+                                "type": "boolean"
+                              },
+                              "InternalName": {
+                                "type": "string"
+                              },
+                              "TypeAsString": {
+                                "type": "string"
+                              },
+                              "SchemaXml": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "DefaultValue": {
+                                "type": [
+                                  "string",
+                                  "boolean",
+                                  "null"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "runAfter": {}
+          },
+          "Schema_baseline": {
+            "type": "Compose",
+            "inputs": {
+              "schemaVersion": 1,
+              "sourceTicket": 81,
+              "baselineVersion": 1,
+              "roles": [
+                "participants",
+                "language",
+                "culture",
+                "timezone",
+                "groups",
+                "members",
+                "requests"
+              ],
+              "sourceEvidence": {
+                "participantCatalogue": "08584074638260638544180416987CU28",
+                "groupMembers": "08584074372941101122136369836CU17",
+                "requests": "08584074285601068216673996565CU29"
+              },
+              "sourceMappingHashes": {
+                "participantCatalogue": "83d134c7c5e2d3649ebb57150fb92388796ea211840a809a3f85bc1191790480",
+                "groupMembers": "6fb9509b49034cbeedb48d2890a94233e2f3d8c82cfaf0a298a21412e8df6058",
+                "requests": "27f7f2db5ec5d3f006148dfda94d001e90b59f25fdc7687261012876e812d27f"
+              },
+              "lists": [
+                {
+                  "role": "participants",
+                  "listId": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
+                  "validationFormula": null,
+                  "fields": [
+                    {
+                      "name": "Title",
+                      "type": "Text",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "Participantaccount",
+                      "type": "User",
+                      "required": true,
+                      "unique": true,
+                      "indexed": true,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "Teachlanguages",
+                      "type": "LookupMulti",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": "3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63",
+                      "showField": "Title",
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "Learnlanguages",
+                      "type": "LookupMulti",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": "3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63",
+                      "showField": "Title",
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "ShareCultures",
+                      "type": "LookupMulti",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": "cf7ed5b4-2e11-4a0a-a417-6c63ed60f614",
+                      "showField": "Title",
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "LearnCultures",
+                      "type": "LookupMulti",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": "cf7ed5b4-2e11-4a0a-a417-6c63ed60f614",
+                      "showField": "Title",
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "Timezone",
+                      "type": "Lookup",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": "7beddfff-1881-4a82-8003-29933b836350",
+                      "showField": "IANA_ID",
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "Learningfocus",
+                      "type": "Note",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "Comments",
+                      "type": "Note",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "Status",
+                      "type": "Choice",
+                      "required": false,
+                      "unique": false,
+                      "indexed": true,
+                      "checkDefault": true,
+                      "default": "",
+                      "choices": [
+                        "Draft",
+                        "Active",
+                        "Waiting",
+                        "Matched",
+                        "Inactive",
+                        "Needs review"
+                      ],
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "ParticipationStatus",
+                      "type": "Choice",
+                      "required": true,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": true,
+                      "default": "Active",
+                      "choices": [
+                        "Active",
+                        "Paused",
+                        "Inactive"
+                      ],
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "OpenToConnections",
+                      "type": "Boolean",
+                      "required": true,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": true,
+                      "default": "1",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    }
+                  ]
+                },
+                {
+                  "role": "language",
+                  "listId": "3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63",
+                  "validationFormula": null,
+                  "fields": [
+                    {
+                      "name": "Title",
+                      "type": "Text",
+                      "required": true,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "ISOcode",
+                      "type": "Text",
+                      "required": true,
+                      "unique": true,
+                      "indexed": true,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "Aliases",
+                      "type": "Note",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "Active",
+                      "type": "Boolean",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": true,
+                      "default": "1",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    }
+                  ]
+                },
+                {
+                  "role": "culture",
+                  "listId": "cf7ed5b4-2e11-4a0a-a417-6c63ed60f614",
+                  "validationFormula": null,
+                  "fields": [
+                    {
+                      "name": "Title",
+                      "type": "Text",
+                      "required": true,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "CultureKey",
+                      "type": "Text",
+                      "required": true,
+                      "unique": true,
+                      "indexed": true,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "Active",
+                      "type": "Boolean",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": true,
+                      "default": "1",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    }
+                  ]
+                },
+                {
+                  "role": "timezone",
+                  "listId": "7beddfff-1881-4a82-8003-29933b836350",
+                  "validationFormula": null,
+                  "fields": [
+                    {
+                      "name": "Title",
+                      "type": "Text",
+                      "required": true,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "IANA_ID",
+                      "type": "Text",
+                      "required": true,
+                      "unique": true,
+                      "indexed": true,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "Active",
+                      "type": "Boolean",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": true,
+                      "default": "1",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    }
+                  ]
+                },
+                {
+                  "role": "groups",
+                  "listId": "4bf1b37f-edce-40c5-8fa0-36543a2d0cd6",
+                  "validationFormula": "=and(capacity=int(capacity),or(and(exchangetype=\"language\",or(capacity=2,capacity=3)),and(or(exchangetype=\"culture\",exchangetype=\"combined\"),capacity>=2,capacity<=10)))",
+                  "fields": [
+                    {
+                      "name": "Title",
+                      "type": "Text",
+                      "required": true,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": "255",
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "ExchangeType",
+                      "type": "Choice",
+                      "required": true,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": true,
+                      "default": "",
+                      "choices": [
+                        "Language",
+                        "Culture",
+                        "Combined"
+                      ],
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "LanguageFocus",
+                      "type": "LookupMulti",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": "3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63",
+                      "showField": "Title",
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "CultureFocus",
+                      "type": "LookupMulti",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": "cf7ed5b4-2e11-4a0a-a417-6c63ed60f614",
+                      "showField": "Title",
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "Capacity",
+                      "type": "Number",
+                      "required": true,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": "0",
+                      "maxLength": null,
+                      "min": "2",
+                      "max": "10"
+                    },
+                    {
+                      "name": "State",
+                      "type": "Choice",
+                      "required": true,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": true,
+                      "default": "Closed",
+                      "choices": [
+                        "Open",
+                        "Closed",
+                        "Ended"
+                      ],
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "Purpose",
+                      "type": "Note",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "SourceRequestId",
+                      "type": "Number",
+                      "required": true,
+                      "unique": true,
+                      "indexed": true,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": "0",
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "SetupComplete",
+                      "type": "Boolean",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": true,
+                      "default": "0",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "WriteOwner",
+                      "type": "Text",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": "255",
+                      "min": null,
+                      "max": null
+                    }
+                  ]
+                },
+                {
+                  "role": "members",
+                  "listId": "db611ec3-7fa3-477a-878e-effbbb195cb8",
+                  "validationFormula": null,
+                  "fields": [
+                    {
+                      "name": "Title",
+                      "type": "Text",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": "255",
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "Group",
+                      "type": "Lookup",
+                      "required": true,
+                      "unique": false,
+                      "indexed": true,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": "4bf1b37f-edce-40c5-8fa0-36543a2d0cd6",
+                      "showField": "Title",
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "Participant",
+                      "type": "Lookup",
+                      "required": true,
+                      "unique": false,
+                      "indexed": true,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
+                      "showField": "ID",
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "MembershipStatus",
+                      "type": "Choice",
+                      "required": true,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": true,
+                      "default": "",
+                      "choices": [
+                        "Active",
+                        "Left"
+                      ],
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "JoinedAt",
+                      "type": "DateTime",
+                      "required": true,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "LeftAt",
+                      "type": "DateTime",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "MembershipKey",
+                      "type": "Text",
+                      "required": true,
+                      "unique": true,
+                      "indexed": true,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": "255",
+                      "min": null,
+                      "max": null
+                    }
+                  ]
+                },
+                {
+                  "role": "requests",
+                  "listId": "3d17485d-1dac-41f0-a1af-24e45daa4567",
+                  "validationFormula": null,
+                  "fields": [
+                    {
+                      "name": "SenderParticipantId",
+                      "type": "Number",
+                      "required": true,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": "0",
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "RecipientParticipantId",
+                      "type": "Number",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": "0",
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "Status",
+                      "type": "Choice",
+                      "required": true,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": true,
+                      "default": "Pending",
+                      "choices": [
+                        "Pending",
+                        "Accepted",
+                        "Declined",
+                        "Cancelled"
+                      ],
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "RequestType",
+                      "type": "Choice",
+                      "required": true,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": true,
+                      "default": "Personal",
+                      "choices": [
+                        "Personal",
+                        "Group"
+                      ],
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "TargetGroup",
+                      "type": "Lookup",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": "4bf1b37f-edce-40c5-8fa0-36543a2d0cd6",
+                      "showField": "Title",
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "SendOperationKey",
+                      "type": "Text",
+                      "required": true,
+                      "unique": true,
+                      "indexed": true,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "ConnectionKey",
+                      "type": "Text",
+                      "required": true,
+                      "unique": true,
+                      "indexed": true,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "WinningOperationKey",
+                      "type": "Text",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": false,
+                      "default": "",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    },
+                    {
+                      "name": "OperationComplete",
+                      "type": "Boolean",
+                      "required": false,
+                      "unique": false,
+                      "indexed": false,
+                      "checkDefault": true,
+                      "default": "0",
+                      "choices": null,
+                      "lookupList": null,
+                      "showField": null,
+                      "decimals": null,
+                      "maxLength": null,
+                      "min": null,
+                      "max": null
+                    }
+                  ]
+                }
+              ],
+              "sourceMappingHashMethod": "SHA256 of parsed JSON, sort_keys=True, compact separators, UTF-8"
+            },
+            "runAfter": {
+              "Parse_metadata": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Requested_roles": {
+            "type": "ParseJson",
+            "inputs": {
+              "content": "@coalesce(body('Envelope')?['schemaRoles'],outputs('Schema_baseline')?['roles'])",
+              "schema": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 7,
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "participants",
+                    "language",
+                    "culture",
+                    "timezone",
+                    "groups",
+                    "members",
+                    "requests"
+                  ]
+                }
+              }
+            },
+            "runAfter": {
+              "Schema_baseline": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Expected_lists": {
+            "type": "Query",
+            "inputs": {
+              "from": "@outputs('Schema_baseline')?['lists']",
+              "where": "@contains(body('Requested_roles'),item()?['role'])"
+            },
+            "runAfter": {
+              "Requested_roles": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Each_schema_list": {
+            "type": "Foreach",
+            "foreach": "@body('Expected_lists')",
+            "actions": {
+              "Find_metadata_list": {
+                "type": "Query",
+                "inputs": {
+                  "from": "@body('Parse_metadata')?['lists']",
+                  "where": "@equals(item()?['role'],items('Each_schema_list')?['role'])"
+                },
+                "runAfter": {}
+              },
+              "Metadata_list": {
+                "type": "Compose",
+                "inputs": "@first(union(body('Find_metadata_list'),createArray(json('{}'))))",
+                "runAfter": {
+                  "Find_metadata_list": [
+                    "Succeeded"
+                  ]
+                }
+              },
+              "Metadata_field_names": {
+                "type": "Select",
+                "inputs": {
+                  "from": "@coalesce(outputs('Metadata_list')?['Fields'],json('[]'))",
+                  "select": "@item()?['InternalName']"
+                },
+                "runAfter": {
+                  "Metadata_list": [
+                    "Succeeded"
+                  ]
+                }
+              },
+              "List_matches": {
+                "type": "If",
+                "expression": "@and(equals(length(body('Find_metadata_list')),1),equals(toLower(coalesce(outputs('Metadata_list')?['Id'],'')),items('Each_schema_list')?['listId']),equals(outputs('Metadata_list')?['BaseTemplate'],100),equals(outputs('Metadata_list')?['complete'],true),equals(length(body('Metadata_field_names')),length(union(body('Metadata_field_names'),body('Metadata_field_names')))))",
+                "actions": {
+                  "Each_schema_field": {
+                    "type": "Foreach",
+                    "foreach": "@items('Each_schema_list')?['fields']",
+                    "runtimeConfiguration": {
+                      "concurrency": {
+                        "repetitions": 1
+                      }
+                    },
+                    "actions": {
+                      "Matching_field": {
+                        "type": "Query",
+                        "inputs": {
+                          "from": "@outputs('Metadata_list')?['Fields']",
+                          "where": "@and(equals(item()?['InternalName'],items('Each_schema_field')?['name']),equals(item()?['TypeAsString'],items('Each_schema_field')?['type']),equals(item()?['Required'],items('Each_schema_field')?['required']),equals(item()?['EnforceUniqueValues'],items('Each_schema_field')?['unique']),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false),or(not(items('Each_schema_field')?['indexed']),equals(item()?['Indexed'],true)),or(equals(items('Each_schema_field')?['lookupList'],null),equals(replace(replace(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@List)'))),'{',''),'}',''),items('Each_schema_field')?['lookupList'])),or(equals(items('Each_schema_field')?['showField'],null),equals(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@ShowField)')),items('Each_schema_field')?['showField'])),or(equals(items('Each_schema_field')?['decimals'],null),equals(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@Decimals)')),items('Each_schema_field')?['decimals'])),or(equals(items('Each_schema_field')?['maxLength'],null),equals(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@MaxLength)')),items('Each_schema_field')?['maxLength'])),or(equals(items('Each_schema_field')?['min'],null),equals(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@Min)')),items('Each_schema_field')?['min'])),or(equals(items('Each_schema_field')?['max'],null),equals(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@Max)')),items('Each_schema_field')?['max'])),or(equals(items('Each_schema_field')?['choices'],null),and(equals(length(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()')),length(coalesce(items('Each_schema_field')?['choices'],json('[]')))),equals(length(intersection(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),coalesce(items('Each_schema_field')?['choices'],json('[]')))),length(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'))),not(equals(toLower(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@FillInChoice)'))),'true')))),or(not(items('Each_schema_field')?['checkDefault']),equals(if(equals(item()?['TypeAsString'],'Boolean'),if(contains(createArray('1','true'),toLower(string(coalesce(item()?['DefaultValue'],'')))),'1',if(contains(createArray('0','false'),toLower(string(coalesce(item()?['DefaultValue'],'')))),'0',toLower(string(coalesce(item()?['DefaultValue'],''))))),string(coalesce(item()?['DefaultValue'],''))),items('Each_schema_field')?['default'])))"
+                        },
+                        "runAfter": {}
+                      },
+                      "Field_matches": {
+                        "type": "If",
+                        "expression": "@equals(length(body('Matching_field')),1)",
+                        "actions": {},
+                        "else": {
+                          "actions": {
+                            "Append_field_difference": {
+                              "type": "AppendToArrayVariable",
+                              "inputs": {
+                                "name": "Differences",
+                                "value": {
+                                  "role": "@items('Each_schema_list')?['role']",
+                                  "field": "@items('Each_schema_field')?['name']",
+                                  "code": "FIELD_MISMATCH"
+                                }
+                              },
+                              "runAfter": {}
+                            }
+                          }
+                        },
+                        "runAfter": {
+                          "Matching_field": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    },
+                    "runAfter": {}
+                  },
+                  "List_formula_matches": {
+                    "type": "If",
+                    "expression": "@or(equals(items('Each_schema_list')?['validationFormula'],null),equals(replace(replace(replace(toLower(coalesce(outputs('Metadata_list')?['ValidationFormula'],'')),'[',''),']',''),' ',''),items('Each_schema_list')?['validationFormula']))",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Append_formula_difference": {
+                          "type": "AppendToArrayVariable",
+                          "inputs": {
+                            "name": "Differences",
+                            "value": {
+                              "role": "@items('Each_schema_list')?['role']",
+                              "field": "",
+                              "code": "LIST_VALIDATION_MISMATCH"
+                            }
+                          },
+                          "runAfter": {}
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Each_schema_field": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                },
+                "else": {
+                  "actions": {
+                    "Append_list_difference": {
+                      "type": "AppendToArrayVariable",
+                      "inputs": {
+                        "name": "Differences",
+                        "value": {
+                          "role": "@items('Each_schema_list')?['role']",
+                          "field": "",
+                          "code": "LIST_MISSING_INCOMPLETE_OR_WRONG_ID"
+                        }
+                      },
+                      "runAfter": {}
+                    }
+                  }
+                },
+                "runAfter": {
+                  "Metadata_field_names": [
+                    "Succeeded"
+                  ]
+                }
+              }
+            },
+            "runtimeConfiguration": {
+              "concurrency": {
+                "repetitions": 1
+              }
+            },
+            "runAfter": {
+              "Expected_lists": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Schema_result": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "Result",
+              "value": {
+                "schemaMatches": "@and(empty(variables('Differences')),equals(length(body('Expected_lists')),length(body('Requested_roles'))))",
+                "checkedRoles": "@body('Requested_roles')",
+                "allSchema": "@equals(length(body('Requested_roles')),7)",
+                "differences": "@variables('Differences')",
+                "provenanceVerified": false,
+                "note": "Compares supplied snapshots only; collector owns current complete authenticated reads."
+              }
+            },
+            "runAfter": {
+              "Each_schema_list": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Schema_code": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "Code",
+              "value": "@if(and(empty(variables('Differences')),equals(length(body('Expected_lists')),length(body('Requested_roles')))),'OK','SCHEMA_MISMATCH')"
+            },
+            "runAfter": {
+              "Schema_result": [
+                "Succeeded"
+              ]
+            }
+          }
+        },
+        "else": {
+          "actions": {}
+        },
+        "runAfter": {
+          "Set_header_error": [
+            "Succeeded"
+          ]
+        }
+      },
+      "Rules_mode": {
+        "type": "If",
+        "expression": "@and(equals(outputs('Header_code'),'READY'),contains(createArray('NORMALIZE','PAIR','GROUP','PROFILE'),body('Envelope')?['mode']))",
+        "actions": {
+          "Normalize_Parse_profiles": {
+            "type": "ParseJson",
+            "inputs": {
+              "content": "@body('Envelope')?['profiles']",
+              "schema": {
+                "type": "array",
+                "maxItems": 500,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "profileId",
+                    "accountKey",
+                    "status",
+                    "participationStatus",
+                    "openToConnections"
+                  ],
+                  "properties": {
+                    "profileId": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "accountKey": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "minLength": 1
+                    },
+                    "participationStatus": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "enum": [
+                        "Active",
+                        "Paused",
+                        "Inactive",
+                        null
+                      ]
+                    },
+                    "openToConnections": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "timezoneId": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 1
+                    },
+                    "teachIds": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1
+                      }
+                    },
+                    "learnIds": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1
+                      }
+                    },
+                    "shareCultureIds": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1
+                      }
+                    },
+                    "learnCultureIds": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "runAfter": {}
+          },
+          "Normalize_Parse_catalogues": {
+            "type": "ParseJson",
+            "inputs": {
+              "content": "@body('Envelope')?['catalogues']",
+              "schema": {
+                "type": "object",
+                "required": [
+                  "languageIds",
+                  "cultureIds",
+                  "timezoneIds",
+                  "anyLanguageId"
+                ],
+                "properties": {
+                  "languageIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "cultureIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "timezoneIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "anyLanguageId": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1
+                  }
+                }
+              }
+            },
+            "runAfter": {
+              "Normalize_Parse_profiles": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Normalize_Concrete_languages": {
+            "type": "Query",
+            "inputs": {
+              "from": "@outputs('Normalize_Deduplicated_catalogues')?['languageIds']",
+              "where": "@not(equals(item(),outputs('Normalize_Deduplicated_catalogues')?['anyLanguageId']))"
+            },
+            "runAfter": {
+              "Normalize_Deduplicated_catalogues": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Normalize_Invalid_profiles": {
+            "type": "Query",
+            "inputs": {
+              "from": "@body('Normalize_Parse_profiles')",
+              "where": "@not(and(not(empty(trim(item()?['accountKey']))),equals(length(intersection(union(coalesce(item()?['teachIds'],json('[]')),coalesce(item()?['teachIds'],json('[]'))),outputs('Normalize_Deduplicated_catalogues')?['languageIds'])),length(union(coalesce(item()?['teachIds'],json('[]')),coalesce(item()?['teachIds'],json('[]'))))),equals(length(intersection(union(coalesce(item()?['learnIds'],json('[]')),coalesce(item()?['learnIds'],json('[]'))),outputs('Normalize_Deduplicated_catalogues')?['languageIds'])),length(union(coalesce(item()?['learnIds'],json('[]')),coalesce(item()?['learnIds'],json('[]'))))),equals(length(intersection(union(coalesce(item()?['shareCultureIds'],json('[]')),coalesce(item()?['shareCultureIds'],json('[]'))),outputs('Normalize_Deduplicated_catalogues')?['cultureIds'])),length(union(coalesce(item()?['shareCultureIds'],json('[]')),coalesce(item()?['shareCultureIds'],json('[]'))))),equals(length(intersection(union(coalesce(item()?['learnCultureIds'],json('[]')),coalesce(item()?['learnCultureIds'],json('[]'))),outputs('Normalize_Deduplicated_catalogues')?['cultureIds'])),length(union(coalesce(item()?['learnCultureIds'],json('[]')),coalesce(item()?['learnCultureIds'],json('[]'))))),or(equals(item()?['timezoneId'],null),contains(outputs('Normalize_Deduplicated_catalogues')?['timezoneIds'],item()?['timezoneId']))))"
+            },
+            "runAfter": {
+              "Normalize_Concrete_languages": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Normalize_Profiles": {
+            "type": "Select",
+            "inputs": {
+              "from": "@body('Normalize_Parse_profiles')",
+              "select": {
+                "profileId": "@item()?['profileId']",
+                "status": "@item()?['status']",
+                "participationStatus": "@item()?['participationStatus']",
+                "openToConnections": "@item()?['openToConnections']",
+                "timezoneId": "@item()?['timezoneId']",
+                "accountKey": "@toLower(trim(item()?['accountKey']))",
+                "teachIds": "@intersection(union(coalesce(item()?['teachIds'],json('[]')),coalesce(item()?['teachIds'],json('[]'))),body('Normalize_Concrete_languages'))",
+                "learnIds": "@intersection(union(coalesce(item()?['learnIds'],json('[]')),coalesce(item()?['learnIds'],json('[]'))),body('Normalize_Concrete_languages'))",
+                "shareCultureIds": "@intersection(union(coalesce(item()?['shareCultureIds'],json('[]')),coalesce(item()?['shareCultureIds'],json('[]'))),outputs('Normalize_Deduplicated_catalogues')?['cultureIds'])",
+                "learnCultureIds": "@intersection(union(coalesce(item()?['learnCultureIds'],json('[]')),coalesce(item()?['learnCultureIds'],json('[]'))),outputs('Normalize_Deduplicated_catalogues')?['cultureIds'])"
+              }
+            },
+            "runAfter": {
+              "Normalize_Invalid_profiles": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Normalize_Keys_accountKey": {
+            "type": "Select",
+            "inputs": {
+              "from": "@body('Normalize_Profiles')",
+              "select": "@item()?['accountKey']"
+            },
+            "runAfter": {
+              "Normalize_Profiles": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Normalize_Keys_profileId": {
+            "type": "Select",
+            "inputs": {
+              "from": "@body('Normalize_Profiles')",
+              "select": "@item()?['profileId']"
+            },
+            "runAfter": {
+              "Normalize_Keys_accountKey": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Normalize_Require_valid_input": {
+            "type": "Compose",
+            "inputs": "@and(empty(body('Normalize_Invalid_profiles')),equals(length(body('Normalize_Keys_accountKey')),length(union(body('Normalize_Keys_accountKey'),body('Normalize_Keys_accountKey')))),equals(length(body('Normalize_Keys_profileId')),length(union(body('Normalize_Keys_profileId'),body('Normalize_Keys_profileId')))))",
+            "runAfter": {
+              "Normalize_Keys_profileId": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Normalize_Catalogues": {
+            "type": "Compose",
+            "inputs": {
+              "concreteLanguageIds": "@body('Normalize_Concrete_languages')",
+              "cultureIds": "@outputs('Normalize_Deduplicated_catalogues')?['cultureIds']"
+            },
+            "runAfter": {
+              "Normalize_Require_valid_input": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Normalize_Deduplicated_catalogues": {
+            "type": "Compose",
+            "inputs": {
+              "languageIds": "@union(body('Normalize_Parse_catalogues')?['languageIds'],body('Normalize_Parse_catalogues')?['languageIds'])",
+              "cultureIds": "@union(body('Normalize_Parse_catalogues')?['cultureIds'],body('Normalize_Parse_catalogues')?['cultureIds'])",
+              "timezoneIds": "@union(body('Normalize_Parse_catalogues')?['timezoneIds'],body('Normalize_Parse_catalogues')?['timezoneIds'])",
+              "anyLanguageId": "@body('Normalize_Parse_catalogues')?['anyLanguageId']"
+            },
+            "runAfter": {
+              "Normalize_Parse_catalogues": [
+                "Succeeded"
+              ]
+            }
+          },
+          "Normalized_input_valid": {
+            "type": "If",
+            "expression": "@outputs('Normalize_Require_valid_input')",
+            "actions": {
+              "Return_normalization": {
+                "type": "If",
+                "expression": "@equals(body('Envelope')?['mode'],'NORMALIZE')",
+                "actions": {
+                  "Normalized_result": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Result",
+                      "value": {
+                        "profiles": "@body('Normalize_Profiles')",
+                        "catalogues": "@outputs('Normalize_Catalogues')"
+                      }
+                    },
+                    "runAfter": {}
+                  },
+                  "Normalized_code": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Code",
+                      "value": "OK"
+                    },
+                    "runAfter": {
+                      "Normalized_result": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                },
+                "else": {
+                  "actions": {}
+                },
+                "runAfter": {}
+              },
+              "Evaluate_pair": {
+                "type": "If",
+                "expression": "@equals(body('Envelope')?['mode'],'PAIR')",
+                "actions": {
+                  "Parse_pair": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@body('Envelope')",
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "leftId",
+                          "rightId"
+                        ],
+                        "properties": {
+                          "leftId": {
+                            "type": "integer",
+                            "minimum": 1
+                          },
+                          "rightId": {
+                            "type": "integer",
+                            "minimum": 1
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {}
+                  },
+                  "Find_left": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@body('Normalize_Profiles')",
+                      "where": "@equals(item()?['profileId'],body('Envelope')?['leftId'])"
+                    },
+                    "runAfter": {
+                      "Parse_pair": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Find_right": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@body('Normalize_Profiles')",
+                      "where": "@equals(item()?['profileId'],body('Envelope')?['rightId'])"
+                    },
+                    "runAfter": {
+                      "Find_left": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Pair_exists": {
+                    "type": "If",
+                    "expression": "@and(equals(length(body('Find_left')),1),equals(length(body('Find_right')),1))",
+                    "actions": {
+                      "Pair_result": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "Result",
+                          "value": {
+                            "eligible": "@and(and(equals(first(body('Find_left'))?['status'],'Active'),equals(first(body('Find_left'))?['participationStatus'],'Active'),equals(first(body('Find_left'))?['openToConnections'],true),not(empty(first(body('Find_left'))?['accountKey'])),or(not(empty(first(body('Find_left'))?['teachIds'])),not(empty(first(body('Find_left'))?['learnIds'])),not(empty(first(body('Find_left'))?['shareCultureIds'])),not(empty(first(body('Find_left'))?['learnCultureIds'])))),and(equals(first(body('Find_right'))?['status'],'Active'),equals(first(body('Find_right'))?['participationStatus'],'Active'),equals(first(body('Find_right'))?['openToConnections'],true),not(empty(first(body('Find_right'))?['accountKey'])),or(not(empty(first(body('Find_right'))?['teachIds'])),not(empty(first(body('Find_right'))?['learnIds'])),not(empty(first(body('Find_right'))?['shareCultureIds'])),not(empty(first(body('Find_right'))?['learnCultureIds'])))),not(equals(first(body('Find_left'))?['profileId'],first(body('Find_right'))?['profileId'])),not(equals(first(body('Find_left'))?['accountKey'],first(body('Find_right'))?['accountKey'])),or(or(not(empty(intersection(first(body('Find_left'))?['learnIds'],first(body('Find_right'))?['teachIds']))),not(empty(intersection(first(body('Find_left'))?['teachIds'],first(body('Find_right'))?['learnIds'])))),or(not(empty(intersection(first(body('Find_left'))?['learnCultureIds'],first(body('Find_right'))?['shareCultureIds']))),not(empty(intersection(first(body('Find_left'))?['shareCultureIds'],first(body('Find_right'))?['learnCultureIds']))))))",
+                            "fitType": "@if(and(and(equals(first(body('Find_left'))?['status'],'Active'),equals(first(body('Find_left'))?['participationStatus'],'Active'),equals(first(body('Find_left'))?['openToConnections'],true),not(empty(first(body('Find_left'))?['accountKey'])),or(not(empty(first(body('Find_left'))?['teachIds'])),not(empty(first(body('Find_left'))?['learnIds'])),not(empty(first(body('Find_left'))?['shareCultureIds'])),not(empty(first(body('Find_left'))?['learnCultureIds'])))),and(equals(first(body('Find_right'))?['status'],'Active'),equals(first(body('Find_right'))?['participationStatus'],'Active'),equals(first(body('Find_right'))?['openToConnections'],true),not(empty(first(body('Find_right'))?['accountKey'])),or(not(empty(first(body('Find_right'))?['teachIds'])),not(empty(first(body('Find_right'))?['learnIds'])),not(empty(first(body('Find_right'))?['shareCultureIds'])),not(empty(first(body('Find_right'))?['learnCultureIds'])))),not(equals(first(body('Find_left'))?['profileId'],first(body('Find_right'))?['profileId'])),not(equals(first(body('Find_left'))?['accountKey'],first(body('Find_right'))?['accountKey'])),or(or(not(empty(intersection(first(body('Find_left'))?['learnIds'],first(body('Find_right'))?['teachIds']))),not(empty(intersection(first(body('Find_left'))?['teachIds'],first(body('Find_right'))?['learnIds'])))),or(not(empty(intersection(first(body('Find_left'))?['learnCultureIds'],first(body('Find_right'))?['shareCultureIds']))),not(empty(intersection(first(body('Find_left'))?['shareCultureIds'],first(body('Find_right'))?['learnCultureIds'])))))),if(and(or(not(empty(intersection(first(body('Find_left'))?['learnIds'],first(body('Find_right'))?['teachIds']))),not(empty(intersection(first(body('Find_left'))?['teachIds'],first(body('Find_right'))?['learnIds'])))),or(not(empty(intersection(first(body('Find_left'))?['learnCultureIds'],first(body('Find_right'))?['shareCultureIds']))),not(empty(intersection(first(body('Find_left'))?['shareCultureIds'],first(body('Find_right'))?['learnCultureIds']))))),'Combined',if(or(not(empty(intersection(first(body('Find_left'))?['learnIds'],first(body('Find_right'))?['teachIds']))),not(empty(intersection(first(body('Find_left'))?['teachIds'],first(body('Find_right'))?['learnIds'])))),'Language','Culture')),null)",
+                            "canLearnLanguageIds": "@if(and(and(equals(first(body('Find_left'))?['status'],'Active'),equals(first(body('Find_left'))?['participationStatus'],'Active'),equals(first(body('Find_left'))?['openToConnections'],true),not(empty(first(body('Find_left'))?['accountKey'])),or(not(empty(first(body('Find_left'))?['teachIds'])),not(empty(first(body('Find_left'))?['learnIds'])),not(empty(first(body('Find_left'))?['shareCultureIds'])),not(empty(first(body('Find_left'))?['learnCultureIds'])))),and(equals(first(body('Find_right'))?['status'],'Active'),equals(first(body('Find_right'))?['participationStatus'],'Active'),equals(first(body('Find_right'))?['openToConnections'],true),not(empty(first(body('Find_right'))?['accountKey'])),or(not(empty(first(body('Find_right'))?['teachIds'])),not(empty(first(body('Find_right'))?['learnIds'])),not(empty(first(body('Find_right'))?['shareCultureIds'])),not(empty(first(body('Find_right'))?['learnCultureIds'])))),not(equals(first(body('Find_left'))?['profileId'],first(body('Find_right'))?['profileId'])),not(equals(first(body('Find_left'))?['accountKey'],first(body('Find_right'))?['accountKey'])),or(or(not(empty(intersection(first(body('Find_left'))?['learnIds'],first(body('Find_right'))?['teachIds']))),not(empty(intersection(first(body('Find_left'))?['teachIds'],first(body('Find_right'))?['learnIds'])))),or(not(empty(intersection(first(body('Find_left'))?['learnCultureIds'],first(body('Find_right'))?['shareCultureIds']))),not(empty(intersection(first(body('Find_left'))?['shareCultureIds'],first(body('Find_right'))?['learnCultureIds'])))))),intersection(first(body('Find_left'))?['learnIds'],first(body('Find_right'))?['teachIds']),json('[]'))",
+                            "canShareLanguageIds": "@if(and(and(equals(first(body('Find_left'))?['status'],'Active'),equals(first(body('Find_left'))?['participationStatus'],'Active'),equals(first(body('Find_left'))?['openToConnections'],true),not(empty(first(body('Find_left'))?['accountKey'])),or(not(empty(first(body('Find_left'))?['teachIds'])),not(empty(first(body('Find_left'))?['learnIds'])),not(empty(first(body('Find_left'))?['shareCultureIds'])),not(empty(first(body('Find_left'))?['learnCultureIds'])))),and(equals(first(body('Find_right'))?['status'],'Active'),equals(first(body('Find_right'))?['participationStatus'],'Active'),equals(first(body('Find_right'))?['openToConnections'],true),not(empty(first(body('Find_right'))?['accountKey'])),or(not(empty(first(body('Find_right'))?['teachIds'])),not(empty(first(body('Find_right'))?['learnIds'])),not(empty(first(body('Find_right'))?['shareCultureIds'])),not(empty(first(body('Find_right'))?['learnCultureIds'])))),not(equals(first(body('Find_left'))?['profileId'],first(body('Find_right'))?['profileId'])),not(equals(first(body('Find_left'))?['accountKey'],first(body('Find_right'))?['accountKey'])),or(or(not(empty(intersection(first(body('Find_left'))?['learnIds'],first(body('Find_right'))?['teachIds']))),not(empty(intersection(first(body('Find_left'))?['teachIds'],first(body('Find_right'))?['learnIds'])))),or(not(empty(intersection(first(body('Find_left'))?['learnCultureIds'],first(body('Find_right'))?['shareCultureIds']))),not(empty(intersection(first(body('Find_left'))?['shareCultureIds'],first(body('Find_right'))?['learnCultureIds'])))))),intersection(first(body('Find_left'))?['teachIds'],first(body('Find_right'))?['learnIds']),json('[]'))",
+                            "canLearnCultureIds": "@if(and(and(equals(first(body('Find_left'))?['status'],'Active'),equals(first(body('Find_left'))?['participationStatus'],'Active'),equals(first(body('Find_left'))?['openToConnections'],true),not(empty(first(body('Find_left'))?['accountKey'])),or(not(empty(first(body('Find_left'))?['teachIds'])),not(empty(first(body('Find_left'))?['learnIds'])),not(empty(first(body('Find_left'))?['shareCultureIds'])),not(empty(first(body('Find_left'))?['learnCultureIds'])))),and(equals(first(body('Find_right'))?['status'],'Active'),equals(first(body('Find_right'))?['participationStatus'],'Active'),equals(first(body('Find_right'))?['openToConnections'],true),not(empty(first(body('Find_right'))?['accountKey'])),or(not(empty(first(body('Find_right'))?['teachIds'])),not(empty(first(body('Find_right'))?['learnIds'])),not(empty(first(body('Find_right'))?['shareCultureIds'])),not(empty(first(body('Find_right'))?['learnCultureIds'])))),not(equals(first(body('Find_left'))?['profileId'],first(body('Find_right'))?['profileId'])),not(equals(first(body('Find_left'))?['accountKey'],first(body('Find_right'))?['accountKey'])),or(or(not(empty(intersection(first(body('Find_left'))?['learnIds'],first(body('Find_right'))?['teachIds']))),not(empty(intersection(first(body('Find_left'))?['teachIds'],first(body('Find_right'))?['learnIds'])))),or(not(empty(intersection(first(body('Find_left'))?['learnCultureIds'],first(body('Find_right'))?['shareCultureIds']))),not(empty(intersection(first(body('Find_left'))?['shareCultureIds'],first(body('Find_right'))?['learnCultureIds'])))))),intersection(first(body('Find_left'))?['learnCultureIds'],first(body('Find_right'))?['shareCultureIds']),json('[]'))",
+                            "canShareCultureIds": "@if(and(and(equals(first(body('Find_left'))?['status'],'Active'),equals(first(body('Find_left'))?['participationStatus'],'Active'),equals(first(body('Find_left'))?['openToConnections'],true),not(empty(first(body('Find_left'))?['accountKey'])),or(not(empty(first(body('Find_left'))?['teachIds'])),not(empty(first(body('Find_left'))?['learnIds'])),not(empty(first(body('Find_left'))?['shareCultureIds'])),not(empty(first(body('Find_left'))?['learnCultureIds'])))),and(equals(first(body('Find_right'))?['status'],'Active'),equals(first(body('Find_right'))?['participationStatus'],'Active'),equals(first(body('Find_right'))?['openToConnections'],true),not(empty(first(body('Find_right'))?['accountKey'])),or(not(empty(first(body('Find_right'))?['teachIds'])),not(empty(first(body('Find_right'))?['learnIds'])),not(empty(first(body('Find_right'))?['shareCultureIds'])),not(empty(first(body('Find_right'))?['learnCultureIds'])))),not(equals(first(body('Find_left'))?['profileId'],first(body('Find_right'))?['profileId'])),not(equals(first(body('Find_left'))?['accountKey'],first(body('Find_right'))?['accountKey'])),or(or(not(empty(intersection(first(body('Find_left'))?['learnIds'],first(body('Find_right'))?['teachIds']))),not(empty(intersection(first(body('Find_left'))?['teachIds'],first(body('Find_right'))?['learnIds'])))),or(not(empty(intersection(first(body('Find_left'))?['learnCultureIds'],first(body('Find_right'))?['shareCultureIds']))),not(empty(intersection(first(body('Find_left'))?['shareCultureIds'],first(body('Find_right'))?['learnCultureIds'])))))),intersection(first(body('Find_left'))?['shareCultureIds'],first(body('Find_right'))?['learnCultureIds']),json('[]'))"
+                          }
+                        },
+                        "runAfter": {}
+                      },
+                      "Pair_code": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "Code",
+                          "value": "OK"
+                        },
+                        "runAfter": {
+                          "Pair_result": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    },
+                    "else": {
+                      "actions": {
+                        "Pair_missing": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "PROFILE_NOT_FOUND"
+                          },
+                          "runAfter": {}
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Find_right": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                },
+                "else": {
+                  "actions": {}
+                },
+                "runAfter": {
+                  "Return_normalization": [
+                    "Succeeded"
+                  ]
+                }
+              },
+              "Evaluate_group": {
+                "type": "If",
+                "expression": "@equals(body('Envelope')?['mode'],'GROUP')",
+                "actions": {
+                  "Parse_group": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@body('Envelope')?['group']",
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "groupId",
+                          "exchangeType",
+                          "state",
+                          "capacity",
+                          "setupComplete",
+                          "focusSharersAvailable",
+                          "languageFocusIds",
+                          "cultureFocusIds",
+                          "memberProfileIds"
+                        ],
+                        "properties": {
+                          "groupId": {
+                            "type": "integer",
+                            "minimum": 1
+                          },
+                          "exchangeType": {
+                            "type": "string"
+                          },
+                          "state": {
+                            "type": "string",
+                            "enum": [
+                              "Open",
+                              "Closed",
+                              "Ended"
+                            ]
+                          },
+                          "capacity": {
+                            "type": "integer"
+                          },
+                          "setupComplete": {
+                            "type": "boolean"
+                          },
+                          "focusSharersAvailable": {
+                            "type": "boolean"
+                          },
+                          "languageFocusIds": {
+                            "type": "array",
+                            "items": {
+                              "type": "integer",
+                              "minimum": 1
+                            }
+                          },
+                          "cultureFocusIds": {
+                            "type": "array",
+                            "items": {
+                              "type": "integer",
+                              "minimum": 1
+                            }
+                          },
+                          "memberProfileIds": {
+                            "type": "array",
+                            "items": {
+                              "type": "integer",
+                              "minimum": 1
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {}
+                  },
+                  "Parse_candidate": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@body('Envelope')?['candidateId']",
+                      "schema": {
+                        "type": "integer",
+                        "minimum": 1
+                      }
+                    },
+                    "runAfter": {
+                      "Parse_group": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Find_members": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@body('Normalize_Profiles')",
+                      "where": "@contains(body('Parse_group')?['memberProfileIds'],item()?['profileId'])"
+                    },
+                    "runAfter": {
+                      "Parse_candidate": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Find_candidate": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@body('Normalize_Profiles')",
+                      "where": "@equals(item()?['profileId'],body('Parse_candidate'))"
+                    },
+                    "runAfter": {
+                      "Find_members": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Candidate_exists": {
+                    "type": "If",
+                    "expression": "@equals(length(body('Find_candidate')),1)",
+                    "actions": {
+                      "Group_Language_focus": {
+                        "type": "Foreach",
+                        "foreach": "@body('Parse_group')?['languageFocusIds']",
+                        "actions": {
+                          "Group_Language_Sharers": {
+                            "type": "Query",
+                            "inputs": {
+                              "from": "@body('Find_members')",
+                              "where": "@and(equals(item()?['status'],'Active'),contains(item()?['teachIds'],items('Group_Language_focus')))"
+                            },
+                            "runAfter": {}
+                          },
+                          "Group_Language_Sharers_ids": {
+                            "type": "Select",
+                            "inputs": {
+                              "from": "@body('Group_Language_Sharers')",
+                              "select": "@item()?['profileId']"
+                            },
+                            "runAfter": {
+                              "Group_Language_Sharers": [
+                                "Succeeded"
+                              ]
+                            }
+                          },
+                          "Group_Language_Learners": {
+                            "type": "Query",
+                            "inputs": {
+                              "from": "@body('Find_members')",
+                              "where": "@and(equals(item()?['status'],'Active'),contains(item()?['learnIds'],items('Group_Language_focus')))"
+                            },
+                            "runAfter": {
+                              "Group_Language_Sharers_ids": [
+                                "Succeeded"
+                              ]
+                            }
+                          },
+                          "Group_Language_Learners_ids": {
+                            "type": "Select",
+                            "inputs": {
+                              "from": "@body('Group_Language_Learners')",
+                              "select": "@item()?['profileId']"
+                            },
+                            "runAfter": {
+                              "Group_Language_Learners": [
+                                "Succeeded"
+                              ]
+                            }
+                          },
+                          "Group_Language_Check": {
+                            "type": "AppendToArrayVariable",
+                            "inputs": {
+                              "name": "FocusChecks",
+                              "value": {
+                                "kind": "Language",
+                                "focusId": "@items('Group_Language_focus')",
+                                "supported": "@and(not(empty(body('Group_Language_Sharers_ids'))),not(empty(body('Group_Language_Learners_ids'))),greater(length(union(body('Group_Language_Sharers_ids'),body('Group_Language_Learners_ids'))),1))"
+                              }
+                            },
+                            "runAfter": {
+                              "Group_Language_Learners_ids": [
+                                "Succeeded"
+                              ]
+                            }
+                          }
+                        },
+                        "runtimeConfiguration": {
+                          "concurrency": {
+                            "repetitions": 1
+                          }
+                        },
+                        "runAfter": {}
+                      },
+                      "Group_Culture_focus": {
+                        "type": "Foreach",
+                        "foreach": "@body('Parse_group')?['cultureFocusIds']",
+                        "actions": {
+                          "Group_Culture_Sharers": {
+                            "type": "Query",
+                            "inputs": {
+                              "from": "@body('Find_members')",
+                              "where": "@and(equals(item()?['status'],'Active'),contains(item()?['shareCultureIds'],items('Group_Culture_focus')))"
+                            },
+                            "runAfter": {}
+                          },
+                          "Group_Culture_Sharers_ids": {
+                            "type": "Select",
+                            "inputs": {
+                              "from": "@body('Group_Culture_Sharers')",
+                              "select": "@item()?['profileId']"
+                            },
+                            "runAfter": {
+                              "Group_Culture_Sharers": [
+                                "Succeeded"
+                              ]
+                            }
+                          },
+                          "Group_Culture_Learners": {
+                            "type": "Query",
+                            "inputs": {
+                              "from": "@body('Find_members')",
+                              "where": "@and(equals(item()?['status'],'Active'),contains(item()?['learnCultureIds'],items('Group_Culture_focus')))"
+                            },
+                            "runAfter": {
+                              "Group_Culture_Sharers_ids": [
+                                "Succeeded"
+                              ]
+                            }
+                          },
+                          "Group_Culture_Learners_ids": {
+                            "type": "Select",
+                            "inputs": {
+                              "from": "@body('Group_Culture_Learners')",
+                              "select": "@item()?['profileId']"
+                            },
+                            "runAfter": {
+                              "Group_Culture_Learners": [
+                                "Succeeded"
+                              ]
+                            }
+                          },
+                          "Group_Culture_Check": {
+                            "type": "AppendToArrayVariable",
+                            "inputs": {
+                              "name": "FocusChecks",
+                              "value": {
+                                "kind": "Culture",
+                                "focusId": "@items('Group_Culture_focus')",
+                                "supported": "@and(not(empty(body('Group_Culture_Sharers_ids'))),not(empty(body('Group_Culture_Learners_ids'))),greater(length(union(body('Group_Culture_Sharers_ids'),body('Group_Culture_Learners_ids'))),1))"
+                              }
+                            },
+                            "runAfter": {
+                              "Group_Culture_Learners_ids": [
+                                "Succeeded"
+                              ]
+                            }
+                          }
+                        },
+                        "runtimeConfiguration": {
+                          "concurrency": {
+                            "repetitions": 1
+                          }
+                        },
+                        "runAfter": {
+                          "Group_Language_focus": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "Group_Unsupported": {
+                        "type": "Query",
+                        "inputs": {
+                          "from": "@variables('FocusChecks')",
+                          "where": "@not(equals(item()?['supported'],true))"
+                        },
+                        "runAfter": {
+                          "Group_Culture_focus": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "Group_Unrelated_members": {
+                        "type": "Query",
+                        "inputs": {
+                          "from": "@body('Find_members')",
+                          "where": "@not(and(equals(item()?['status'],'Active'),or(not(empty(intersection(item()?['teachIds'],body('Parse_group')?['languageFocusIds']))),not(empty(intersection(item()?['learnIds'],body('Parse_group')?['languageFocusIds']))),not(empty(intersection(item()?['shareCultureIds'],body('Parse_group')?['cultureFocusIds']))),not(empty(intersection(item()?['learnCultureIds'],body('Parse_group')?['cultureFocusIds']))))))"
+                        },
+                        "runAfter": {
+                          "Group_Unsupported": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "Group_Result": {
+                        "type": "Compose",
+                        "inputs": {
+                          "purposeValid": "@and(or(and(equals(body('Parse_group')?['exchangeType'],'Language'),not(empty(body('Parse_group')?['languageFocusIds'])),not(not(empty(body('Parse_group')?['cultureFocusIds'])))),and(equals(body('Parse_group')?['exchangeType'],'Culture'),not(empty(body('Parse_group')?['cultureFocusIds'])),not(not(empty(body('Parse_group')?['languageFocusIds'])))),and(equals(body('Parse_group')?['exchangeType'],'Combined'),not(empty(body('Parse_group')?['languageFocusIds'])),not(empty(body('Parse_group')?['cultureFocusIds'])))),and(equals(length(intersection(body('Parse_group')?['languageFocusIds'],outputs('Normalize_Catalogues')?['concreteLanguageIds'])),length(body('Parse_group')?['languageFocusIds'])),equals(length(intersection(body('Parse_group')?['cultureFocusIds'],outputs('Normalize_Catalogues')?['cultureIds'])),length(body('Parse_group')?['cultureFocusIds']))),equals(length(body('Parse_group')?['memberProfileIds']),length(union(body('Parse_group')?['memberProfileIds'],body('Parse_group')?['memberProfileIds']))),equals(length(body('Find_members')),length(body('Parse_group')?['memberProfileIds'])),empty(body('Group_Unsupported')),empty(body('Group_Unrelated_members')))",
+                          "capacityValid": "@and(greaterOrEquals(body('Parse_group')?['capacity'],2),lessOrEquals(body('Parse_group')?['capacity'],if(equals(body('Parse_group')?['exchangeType'],'Language'),3,10)),greaterOrEquals(body('Parse_group')?['capacity'],length(body('Parse_group')?['memberProfileIds'])))",
+                          "candidateParticipates": "@and(equals(first(body('Find_candidate'))?['status'],'Active'),or(not(empty(intersection(first(body('Find_candidate'))?['teachIds'],body('Parse_group')?['languageFocusIds']))),not(empty(intersection(first(body('Find_candidate'))?['learnIds'],body('Parse_group')?['languageFocusIds']))),not(empty(intersection(first(body('Find_candidate'))?['shareCultureIds'],body('Parse_group')?['cultureFocusIds']))),not(empty(intersection(first(body('Find_candidate'))?['learnCultureIds'],body('Parse_group')?['cultureFocusIds'])))))",
+                          "compatible": "@and(and(or(and(equals(body('Parse_group')?['exchangeType'],'Language'),not(empty(body('Parse_group')?['languageFocusIds'])),not(not(empty(body('Parse_group')?['cultureFocusIds'])))),and(equals(body('Parse_group')?['exchangeType'],'Culture'),not(empty(body('Parse_group')?['cultureFocusIds'])),not(not(empty(body('Parse_group')?['languageFocusIds'])))),and(equals(body('Parse_group')?['exchangeType'],'Combined'),not(empty(body('Parse_group')?['languageFocusIds'])),not(empty(body('Parse_group')?['cultureFocusIds'])))),and(equals(length(intersection(body('Parse_group')?['languageFocusIds'],outputs('Normalize_Catalogues')?['concreteLanguageIds'])),length(body('Parse_group')?['languageFocusIds'])),equals(length(intersection(body('Parse_group')?['cultureFocusIds'],outputs('Normalize_Catalogues')?['cultureIds'])),length(body('Parse_group')?['cultureFocusIds']))),equals(length(body('Parse_group')?['memberProfileIds']),length(union(body('Parse_group')?['memberProfileIds'],body('Parse_group')?['memberProfileIds']))),equals(length(body('Find_members')),length(body('Parse_group')?['memberProfileIds'])),empty(body('Group_Unsupported')),empty(body('Group_Unrelated_members'))),and(greaterOrEquals(body('Parse_group')?['capacity'],2),lessOrEquals(body('Parse_group')?['capacity'],if(equals(body('Parse_group')?['exchangeType'],'Language'),3,10)),greaterOrEquals(body('Parse_group')?['capacity'],length(body('Parse_group')?['memberProfileIds']))),and(equals(first(body('Find_candidate'))?['status'],'Active'),or(not(empty(intersection(first(body('Find_candidate'))?['teachIds'],body('Parse_group')?['languageFocusIds']))),not(empty(intersection(first(body('Find_candidate'))?['learnIds'],body('Parse_group')?['languageFocusIds']))),not(empty(intersection(first(body('Find_candidate'))?['shareCultureIds'],body('Parse_group')?['cultureFocusIds']))),not(empty(intersection(first(body('Find_candidate'))?['learnCultureIds'],body('Parse_group')?['cultureFocusIds']))))),and(equals(first(body('Find_candidate'))?['status'],'Active'),equals(first(body('Find_candidate'))?['participationStatus'],'Active'),equals(first(body('Find_candidate'))?['openToConnections'],true),not(empty(first(body('Find_candidate'))?['accountKey'])),or(not(empty(first(body('Find_candidate'))?['teachIds'])),not(empty(first(body('Find_candidate'))?['learnIds'])),not(empty(first(body('Find_candidate'))?['shareCultureIds'])),not(empty(first(body('Find_candidate'))?['learnCultureIds'])))),equals(body('Parse_group')?['state'],'Open'),equals(body('Parse_group')?['setupComplete'],true),equals(body('Parse_group')?['focusSharersAvailable'],true),greater(body('Parse_group')?['capacity'],length(body('Parse_group')?['memberProfileIds'])),not(contains(body('Parse_group')?['memberProfileIds'],first(body('Find_candidate'))?['profileId'])))"
+                        },
+                        "runAfter": {
+                          "Group_Unrelated_members": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "Group_done_result": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "Result",
+                          "value": "@outputs('Group_Result')"
+                        },
+                        "runAfter": {
+                          "Group_Result": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "Group_done_code": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "Code",
+                          "value": "OK"
+                        },
+                        "runAfter": {
+                          "Group_done_result": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    },
+                    "else": {
+                      "actions": {
+                        "Candidate_missing": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "PROFILE_NOT_FOUND"
+                          },
+                          "runAfter": {}
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Find_candidate": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                },
+                "else": {
+                  "actions": {}
+                },
+                "runAfter": {
+                  "Evaluate_pair": [
+                    "Succeeded"
+                  ]
+                }
+              },
+              "Evaluate_profile": {
+                "type": "If",
+                "expression": "@equals(body('Envelope')?['mode'],'PROFILE')",
+                "actions": {
+                  "Single_profile": {
+                    "type": "If",
+                    "expression": "@equals(length(body('Normalize_Profiles')),1)",
+                    "actions": {
+                      "Profile_result": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "Result",
+                          "value": {
+                            "valid": "@or(not(empty(first(body('Normalize_Parse_profiles'))?['teachIds'])),not(empty(first(body('Normalize_Parse_profiles'))?['learnIds'])),not(empty(first(body('Normalize_Parse_profiles'))?['shareCultureIds'])),not(empty(first(body('Normalize_Parse_profiles'))?['learnCultureIds'])))"
+                          }
+                        },
+                        "runAfter": {}
+                      },
+                      "Profile_code": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "Code",
+                          "value": "OK"
+                        },
+                        "runAfter": {
+                          "Profile_result": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    },
+                    "else": {
+                      "actions": {
+                        "Profile_count_error": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "PROFILE_COUNT_INVALID"
+                          },
+                          "runAfter": {}
+                        }
+                      }
+                    },
+                    "runAfter": {}
+                  }
+                },
+                "else": {
+                  "actions": {}
+                },
+                "runAfter": {
+                  "Evaluate_group": [
+                    "Succeeded"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "actions": {
+                "Invalid_profile_content": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Code",
+                    "value": "INVALID_PROFILE_DATA"
+                  },
+                  "runAfter": {}
+                }
+              }
+            },
+            "runAfter": {
+              "Normalize_Catalogues": [
+                "Succeeded"
+              ]
+            }
+          }
+        },
+        "else": {
+          "actions": {}
+        },
+        "runAfter": {
+          "Schema_mode": [
+            "Succeeded"
+          ]
+        }
+      }
+    },
+    "runAfter": {
+      "Initialize_Differences": [
+        "Succeeded"
+      ]
+    }
+  },
+  "Result_size": {
+    "type": "Compose",
+    "inputs": "@length(string(variables('Result')))",
+    "runAfter": {
+      "Evaluate": [
+        "Succeeded",
+        "Failed",
+        "Skipped",
+        "TimedOut"
+      ]
+    }
+  },
+  "Validation_report": {
+    "type": "Compose",
+    "inputs": {
+      "kind": "TandemValidateContext",
+      "sourceTicket": 81,
+      "contractVersion": 1,
+      "rulesVersion": 1,
+      "packageBuildId": "31382f7e-a0df-44a2-9fde-223a11774e67",
+      "sourceSha256": "dfe0dcd587a5a348080dde288183ed3dff2d02d1f652f0ae23010b2e6e649c72",
+      "runReference": "@workflow()?['run']?['name']",
+      "success": "@and(equals(actions('Evaluate')?['status'],'Succeeded'),lessOrEquals(outputs('Result_size'),200000),equals(variables('Code'),'OK'))",
+      "code": "@if(equals(actions('Evaluate')?['status'],'Succeeded'),if(lessOrEquals(outputs('Result_size'),200000),variables('Code'),'RESPONSE_BOUND'),'INVALID_INPUT')",
+      "result": "@if(and(equals(actions('Evaluate')?['status'],'Succeeded'),lessOrEquals(outputs('Result_size'),200000)),variables('Result'),json('{}'))",
+      "authorizesAction": false,
+      "connectors": 0,
+      "reads": 0,
+      "writes": 0
+    },
+    "runAfter": {
+      "Result_size": [
+        "Succeeded"
+      ]
+    }
+  },
+  "Respond_to_a_Power_App_or_flow": {
+    "type": "Response",
+    "kind": "PowerApp",
+    "runAfter": {
+      "Validation_report": [
+        "Succeeded"
+      ]
+    },
+    "inputs": {
+      "statusCode": 200,
+      "body": {
+        "resultjson": "@string(outputs('Validation_report'))",
+        "resultcode": "@outputs('Validation_report')?['code']",
+        "success": "@outputs('Validation_report')?['success']"
+      },
+      "schema": {
+        "type": "object",
+        "properties": {
+          "resultjson": {
+            "title": "resultjson",
+            "type": "string",
+            "x-ms-dynamically-added": true
+          },
+          "resultcode": {
+            "title": "resultcode",
+            "type": "string",
+            "x-ms-dynamically-added": true
+          },
+          "success": {
+            "title": "success",
+            "type": "boolean",
+            "x-ms-dynamically-added": true
+          }
+        }
+      }
+    }
+  }
+}

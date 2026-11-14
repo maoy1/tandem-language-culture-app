@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "sourceTicket": 81,
   "flow": "TandemValidateContext",
-  "state": "SOLUTION_PAGE_AVAILABLE_NATIVE_PARENT_CHILD_PROOF_PENDING",
+  "state": "NATIVE_ECHO_PASSED_SHARED_PACKAGE_PREPARED_NATIVE_IMPORT_PENDING",
   "implementationCertified": false,
   "officialReferences": [
     "https://learn.microsoft.com/en-us/power-automate/create-child-flows",
@@ -11,12 +11,12 @@
   "observedPrerequisites": {
     "legacyPackageImport": "Owner-proven under #28; not Solution/child-flow proof",
     "solutionAvailability": "OWNER_CONFIRMED_SOLUTIONS_LIST_OPENS",
-    "solutionMakerPermission": "NOT_VERIFIED",
-    "existingEntitlements": "NOT_VERIFIED_FOR_CHILD_FLOW",
-    "nativeInvocation": "NOT_RUN",
+    "solutionMakerPermission": "Owner created/saved/exported the disposable native Solution",
+    "existingEntitlements": "Owner native connector-free execution succeeded; no wider entitlement/account inference",
+    "nativeInvocation": "PASS_OWNER_V1_TOKEN_RETURN",
     "callerConnectionPropagation": "Microsoft documents that parent connections cannot pass to child flows",
     "tenantBrowser": "No connected authenticated tenant tab available",
-    "evidenceBoundary": "Solutions page access only; does not prove Solution creation, flow authoring, entitlements or successful invocation"
+    "evidenceBoundary": "Owner invocation body + inspected native unmanaged export, not live SharePoint/ordinary-user proof"
   },
   "firstOwnerCheck": {
     "action": "Existing Tandem environment > More > Solutions; inspect only",
@@ -30,7 +30,7 @@
     "result": "PASS_OWNER_REPORTED_SOLUTIONS_LIST_OPENS"
   },
   "invocationProof": {
-    "state": "DESIGN_ONLY_NOT_A_PACKAGE",
+    "state": "PASS_SINGLE_NATIVE_V1_RUN",
     "purpose": "Two disposable connector-free flows in one permitted existing Solution; no business data",
     "child": "Tandem81InvocationChild",
     "parent": "Tandem81InvocationParent",
@@ -49,7 +49,8 @@
     "repeat": "Second token and a distinct successful child run",
     "negative": "After baseline proof, native dependency/validation failure behavior is a separate unchecked case; initial echo does not prove it.",
     "deployment": "Use a tenant-native minimal exported Solution as the inspected packaging reference once availability is confirmed. Do not hand over a fabricated legacy package as proof of solution invocation.",
-    "cleanup": "After preserving an unmanaged export and run evidence, turn off/delete only disposable proof components; retain existing publisher, working flows and connections."
+    "cleanup": "After preserving an unmanaged export and run evidence, turn off/delete only disposable proof components; retain existing publisher, working flows and connections.",
+    "childRunReference": "08584069538865401663915371009CU10"
   },
   "trustBoundary": {
     "firstProof": "Connector-free invocation only; no claim of identity/SharePoint/private-data capability",
@@ -140,5 +141,37 @@
     "currentNativeProof": "NOT_RUN",
     "priorEvidence": "Preserved by version; no repeated smoke requested",
     "openIssue10": "Replay test reported failed and earlier Pending-row origin unresolved; later supplied no-overlap run correctly rejected. Refactor does not resolve those results."
+  },
+  "generatedValidationPackage": {
+    "sourceTicket": 81,
+    "packageBuildId": "31382f7e-a0df-44a2-9fde-223a11774e67",
+    "solutionName": "TandemSharedValidation81",
+    "sourceExportSha256": "5560d8d80f78de67966160fe0276711494b76c0f176e19356d6cf32d2c4c191c",
+    "packageSha256": "cb0102c74fc669541cb30895dea065f45ce6e410204df742bd949f190bae02c0",
+    "sourceSha256": "dfe0dcd587a5a348080dde288183ed3dff2d02d1f652f0ae23010b2e6e649c72",
+    "schemaSha256": "1e2535a753884951d00c455cdb77c16a77495759207023689c72c5bbff70eb9b",
+    "generatorSha256": "b507447115fa3f1a3233af7acf12dfb5595cac7434f8ee702bf80cbf8b8131f8",
+    "flows": {
+      "TandemValidateContext": {
+        "id": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+        "actions": 84,
+        "maximumActionDepth": 7
+      },
+      "TandemValidationSmoke": {
+        "id": "6d3887f7-ea0d-4d3f-8a42-00f64ae750ba",
+        "actions": 8,
+        "maximumActionDepth": 2
+      }
+    },
+    "testCount": 44,
+    "connectors": 0,
+    "reads": 0,
+    "writes": 0,
+    "newSolutionAndNewFlowIds": true,
+    "consumerCutover": false,
+    "importState": "disabled",
+    "nativeResult": "NOT_IMPORTED_NOT_TESTED",
+    "metadataProvenance": "Supplied snapshots; no live audit certification",
+    "callerBoundary": "Pure evaluator, never authorization; existing parent Invoker retained"
   }
 }

@@ -1,0 +1,25 @@
+{
+  "sourceTicket": 81,
+  "packageBuildId": "31382f7e-a0df-44a2-9fde-223a11774e67",
+  "packageSha256": "cb0102c74fc669541cb30895dea065f45ce6e410204df742bd949f190bae02c0",
+  "newCases": 88,
+  "fullSuite": 330,
+  "localResult": "PASS",
+  "nativeResult": "NOT_IMPORTED_NOT_TESTED",
+  "generatedParentChildCasesExecutedLocally": 44,
+  "flows": {
+    "TandemValidateContext": {
+      "id": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+      "actions": 84,
+      "maximumActionDepth": 7
+    },
+    "TandemValidationSmoke": {
+      "id": "6d3887f7-ea0d-4d3f-8a42-00f64ae750ba",
+      "actions": 8,
+      "maximumActionDepth": 2
+    }
+  },
+  "command": "python -X utf8 -m pytest -q -p no:cacheprovider",
+  "initialRestrictedRun": "77 passed, 1 temp-directory fixture error; permitted rerun and final complete suite passed",
+  "nativeEchoEvidence": "results/invocation.owner-evidence.json"
+}

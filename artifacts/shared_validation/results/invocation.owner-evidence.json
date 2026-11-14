@@ -1,0 +1,28 @@
+{
+  "sourceTicket": 81,
+  "kind": "TandemInvocationProofOwnerEvidence",
+  "reportedBody": {
+    "prooftoken": "TANDEM81_INVOCATION_V1",
+    "childrunreference": "08584069538865401663915371009CU10"
+  },
+  "parentRunReference": "NOT_SUPPLIED",
+  "result": "PASS_CONNECTOR_FREE_PARENT_TO_CHILD_TOKEN_RETURN",
+  "sourceExport": {
+    "fileName": "Tandem81InvocationProof_1_0_0_1.zip",
+    "sha256": "5560d8d80f78de67966160fe0276711494b76c0f176e19356d6cf32d2c4c191c",
+    "solutionName": "Tandem81InvocationProof",
+    "solutionVersion": "1.0.0.1",
+    "managed": false,
+    "flowCount": 2,
+    "connections": 0,
+    "nativeLinkVerifiedLocally": true
+  },
+  "notProven": [
+    "Second token run",
+    "Generated new Solution import/run",
+    "Production parent integration",
+    "SharePoint connection propagation",
+    "Ordinary-user access or general tenant licensing"
+  ],
+  "originalExportCommitted": false
+}

@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "sourceTicket": 81,
+  "flowName": "TandemValidateContext",
+  "contractVersion": 1,
+  "rulesVersion": 1,
+  "packageBuildId": "31382f7e-a0df-44a2-9fde-223a11774e67",
+  "solutionName": "TandemSharedValidation81",
+  "state": "IMPLEMENTED_PURE_CHILD_NATIVE_IMPORT_AND_CONSUMER_PARITY_PENDING",
+  "trigger": {
+    "kind": "Button",
+    "input": {
+      "text": "RequestJson: JSON string, at most 250000 characters"
+    },
+    "requiredEnvelope": [
+      "contractVersion=1",
+      "rulesVersion=1",
+      "mode"
+    ]
+  },
+  "modes": {
+    "SCHEMA": "metadata.lists raw complete snapshots {role,Id,BaseTemplate,complete,Fields,ValidationFormula}; optional schemaRoles subsets; default all seven roles. Fields use native InternalName/TypeAsString/Required/Indexed/EnforceUniqueValues/Hidden/ReadOnlyField/DefaultValue/SchemaXml. No reads/collection/provenance verification in this mode.",
+    "NORMALIZE": "profiles and active-catalogue ID sets; returns normalized internal profiles/catalogues",
+    "PAIR": "profiles/catalogues plus leftId and rightId; returns eligible,fitType and four overlap arrays",
+    "GROUP": "profiles/catalogues plus candidateId and group; caller supplies fresh committed member IDs and focusSharersAvailable evidence; returns group rules",
+    "PROFILE": "exactly one profile plus catalogues; checks content independently of availability. Known Any selection can be valid content while excluded from matching."
+  },
+  "rawProfile": {
+    "required": [
+      "profileId positive integer",
+      "accountKey nonblank technical identity key",
+      "status string or null",
+      "participationStatus Active/Paused/Inactive or null",
+      "openToConnections boolean or null"
+    ],
+    "optional": [
+      "timezoneId positive integer or null",
+      "teachIds/learnIds/shareCultureIds/learnCultureIds positive-integer arrays or null"
+    ],
+    "maxProfiles": 500,
+    "availability": "Only explicit Active/Active/true; blanks stay ineligible, not defaulted"
+  },
+  "catalogues": {
+    "required": [
+      "languageIds",
+      "cultureIds",
+      "timezoneIds",
+      "anyLanguageId integer or explicit null"
+    ],
+    "source": "Trusted parent passes active concrete catalogue IDs plus the known deferred Any sentinel; duplicate IDs deduplicated"
+  },
+  "response": {
+    "success": "Evaluation completed with code OK; DOES NOT mean pair/group eligible or authorize a write",
+    "resultcode": "OK/VERSION_MISMATCH/UNSUPPORTED_MODE/INVALID_INPUT/INVALID_PROFILE_DATA/PROFILE_NOT_FOUND/PROFILE_COUNT_INVALID/SCHEMA_MISMATCH/RESPONSE_BOUND",
+    "resultjson": "JSON object with result, versions, build, source hash, child run reference, authorizesAction=false and zero I/O counters"
+  },
+  "consumerRules": [
+    "Bind authenticated actor and fetch current relevant data in trusted parent; no owner credential substitution",
+    "Inspect result.eligible for PAIR, result.compatible and other operation conditions for GROUP, result.valid for PROFILE, result.schemaMatches for SCHEMA; success alone never grants eligibility",
+    "Never return NORMALIZE internal account keys to the app; approved public projections remain consumer-owned",
+    "Keep operation-specific audience/authority, commitment, replay, ETag and unique-key writes at their authoritative boundary",
+    "Full schema mode is for explicit audit/change/deployment checks; do not repeat unrelated metadata for each business action",
+    "A manual audit does not reserve eligibility/capacity or certify future state",
+    "No production consumer has been switched; parent Solution packaging with Invoker SharePoint connections still requires native parity proof"
+  ],
+  "boundaries": {
+    "connectors": 0,
+    "businessReads": 0,
+    "writes": 0,
+    "responseResultCharacters": 200000,
+    "metadataRoles": 7,
+    "metadataFieldsPerRole": 500,
+    "schemaBaselineFields": 48,
+    "permissionsOrLicencesChanged": false,
+    "liveSchemaAudit": "NOT_RUN; current package validates supplied metadata only"
+  },
+  "sourceExportSha256": "5560d8d80f78de67966160fe0276711494b76c0f176e19356d6cf32d2c4c191c",
+  "newPackageSha256": "cb0102c74fc669541cb30895dea065f45ce6e410204df742bd949f190bae02c0",
+  "localTests": 330,
+  "newCases": 88,
+  "nativeSyntheticSmokeCases": 44,
+  "nativeStatus": "NOT_IMPORTED_NOT_TESTED"
+}
