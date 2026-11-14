@@ -1,0 +1,35 @@
+{
+  "source": "Owner-supplied report and child outputs",
+  "kind": "TandemBatchSchema",
+  "sourceTicket": 81,
+  "packageBuildId": "4db7f9fa-6d67-48b0-a7a6-33638d7ff4a1",
+  "applyRequested": true,
+  "runReference": "08584069362059040197682124425CU28",
+  "schemaVerified": false,
+  "schemaResult": {},
+  "collectionComplete": true,
+  "differences": [],
+  "rowWrites": 0,
+  "deletes": 0,
+  "permissionChanges": 0,
+  "receiptList": {
+    "Id": "864dfe53-b67c-4504-9d48-ad4356b813d8",
+    "Title": "TandemOperationReceipts",
+    "BaseTemplate": 100,
+    "ItemCount": 0
+  },
+  "child": {
+    "runReference": "08584069361400134595726594162CU01",
+    "success": false,
+    "code": "INVALID_INPUT",
+    "result": {},
+    "diagnostics": {
+      "requestText": "Failed",
+      "envelope": "Skipped",
+      "header": "Skipped",
+      "schemaMode": "Skipped",
+      "rulesMode": "Skipped"
+    }
+  },
+  "assessment": "Native child invocation/build confirmed; metadata collected; full schema NOT VERIFIED. Exact Request_text failure detail requested. No rerun/list changes requested."
+}
