@@ -1,0 +1,3216 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "cre46_sharepointonline_a22363a216"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "number": {
+                  "type": "number",
+                  "title": "ParticipantId",
+                  "x-ms-content-hint": "NUMBER",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "required": [
+                "number"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Initialize_ErrorCode": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ErrorCode",
+                "type": "string",
+                "value": ""
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "Initialize_Groups": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Groups",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_ErrorCode": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Initialize_Members": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Members",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_Groups": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Initialize_OperationalEpisodes": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "OperationalEpisodes",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_Members": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Read_authorized_groups": {
+          "type": "Scope",
+          "actions": {
+            "Input_reference": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@triggerBody()?['number']",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "runAfter": {}
+            },
+            "Read_invoker": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "Input_reference": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/currentuser?$select=Id",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                }
+              }
+            },
+            "Invoker": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Read_invoker')?['d']",
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "Id"
+                  ],
+                  "properties": {
+                    "Id": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_invoker": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_own": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "Invoker": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "@concat('_api/web/lists(guid''fd3adf46-f81d-4a7b-a80c-567fde0175dc'')/items?$select=Id&$filter=ParticipantaccountId eq ',string(body('Invoker')?['Id']),'&$top=2')",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                }
+              }
+            },
+            "Own_complete": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Read_own')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_own')?['d']?['results'],json('[]'))),1),empty(body('Read_own')?['d']?['__next']),empty(body('Read_own')?['@odata.nextLink']),empty(body('Read_own')?['odata.nextLink']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Own_complete_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "UNAUTHORIZED_PROFILE"
+                    },
+                    "runAfter": {}
+                  },
+                  "Own_complete_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Own_complete_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_own": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Own_match": {
+              "type": "If",
+              "expression": "@and(equals(length(body('Read_own')?['d']?['results']),1),equals(first(union(body('Read_own')?['d']?['results'],createArray(json('{}'))))?['Id'],body('Input_reference')))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Own_match_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "UNAUTHORIZED_PROFILE"
+                    },
+                    "runAfter": {}
+                  },
+                  "Own_match_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Own_match_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Own_complete": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Actor": {
+              "type": "Compose",
+              "inputs": "@body('Input_reference')",
+              "runAfter": {
+                "Own_match": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_requests": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "Actor": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'3d17485d-1dac-41f0-a1af-24e45daa4567')/items?$select=Id,SenderParticipantId,RecipientParticipantId,TargetGroupId,RequestType,Status,OperationComplete&$orderby=Id asc&$top=501",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                }
+              }
+            },
+            "requests_complete": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Read_requests')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_requests')?['d']?['results'],json('[]'))),500),empty(body('Read_requests')?['d']?['__next']),empty(body('Read_requests')?['@odata.nextLink']),empty(body('Read_requests')?['odata.nextLink']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "requests_complete_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "READ_BOUND_OR_INCOMPLETE"
+                    },
+                    "runAfter": {}
+                  },
+                  "requests_complete_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "requests_complete_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_requests": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_parse_code": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": "DATA_INTEGRITY"
+              },
+              "runAfter": {
+                "requests_complete": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Data_requests": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Read_requests')?['d']?['results']",
+                "schema": {
+                  "type": "array",
+                  "maxItems": 500,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "Id",
+                      "SenderParticipantId",
+                      "RecipientParticipantId",
+                      "TargetGroupId",
+                      "RequestType",
+                      "Status",
+                      "OperationComplete"
+                    ],
+                    "properties": {
+                      "Id": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "SenderParticipantId": {
+                        "type": "number",
+                        "minimum": 1
+                      },
+                      "RecipientParticipantId": {
+                        "type": [
+                          "number",
+                          "null"
+                        ],
+                        "minimum": 1
+                      },
+                      "TargetGroupId": {
+                        "type": [
+                          "integer",
+                          "null"
+                        ],
+                        "minimum": 1
+                      },
+                      "RequestType": {
+                        "type": "string",
+                        "enum": [
+                          "Personal",
+                          "Group"
+                        ]
+                      },
+                      "Status": {
+                        "type": "string",
+                        "enum": [
+                          "Pending",
+                          "Accepted",
+                          "Declined",
+                          "Cancelled"
+                        ]
+                      },
+                      "OperationComplete": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "requests_parse_code": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_parsed": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": ""
+              },
+              "runAfter": {
+                "Data_requests": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_ids": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Data_requests')",
+                "select": "@item()?['Id']"
+              },
+              "runAfter": {
+                "requests_parsed": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_unique": {
+              "type": "If",
+              "expression": "@equals(length(body('requests_ids')),length(union(body('requests_ids'),body('requests_ids'))))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "requests_unique_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "DATA_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "requests_unique_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "requests_unique_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "requests_ids": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_groups": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "requests_unique": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6')/items?$select=Id,Title,Purpose,ExchangeType,LanguageFocusId,CultureFocusId,Capacity,State,SourceRequestId,SetupComplete&$orderby=Id asc&$top=101",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                }
+              }
+            },
+            "groups_complete": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Read_groups')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_groups')?['d']?['results'],json('[]'))),100),empty(body('Read_groups')?['d']?['__next']),empty(body('Read_groups')?['@odata.nextLink']),empty(body('Read_groups')?['odata.nextLink']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "groups_complete_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "READ_BOUND_OR_INCOMPLETE"
+                    },
+                    "runAfter": {}
+                  },
+                  "groups_complete_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "groups_complete_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_groups": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "groups_parse_code": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": "DATA_INTEGRITY"
+              },
+              "runAfter": {
+                "groups_complete": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Raw_groups": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Read_groups')?['d']?['results']",
+                "schema": {
+                  "type": "array",
+                  "maxItems": 100,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "Id",
+                      "Title",
+                      "ExchangeType",
+                      "Capacity",
+                      "State",
+                      "SourceRequestId",
+                      "SetupComplete",
+                      "__metadata"
+                    ],
+                    "properties": {
+                      "Id": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "Title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 255
+                      },
+                      "Purpose": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 64000
+                      },
+                      "ExchangeType": {
+                        "type": "string",
+                        "enum": [
+                          "Language",
+                          "Culture",
+                          "Combined"
+                        ]
+                      },
+                      "LanguageFocusId": {
+                        "type": [
+                          "object",
+                          "null"
+                        ],
+                        "required": [
+                          "results"
+                        ],
+                        "properties": {
+                          "results": {
+                            "type": "array",
+                            "maxItems": 5000,
+                            "items": {
+                              "type": "integer",
+                              "minimum": 1
+                            }
+                          }
+                        }
+                      },
+                      "CultureFocusId": {
+                        "type": [
+                          "object",
+                          "null"
+                        ],
+                        "required": [
+                          "results"
+                        ],
+                        "properties": {
+                          "results": {
+                            "type": "array",
+                            "maxItems": 5000,
+                            "items": {
+                              "type": "integer",
+                              "minimum": 1
+                            }
+                          }
+                        }
+                      },
+                      "Capacity": {
+                        "type": "number",
+                        "minimum": 2,
+                        "maximum": 10
+                      },
+                      "State": {
+                        "type": "string",
+                        "enum": [
+                          "Open",
+                          "Closed",
+                          "Ended"
+                        ]
+                      },
+                      "SourceRequestId": {
+                        "type": "number",
+                        "minimum": 1
+                      },
+                      "SetupComplete": {
+                        "type": "boolean"
+                      },
+                      "__metadata": {
+                        "type": "object",
+                        "required": [
+                          "etag"
+                        ],
+                        "properties": {
+                          "etag": {
+                            "type": "string",
+                            "maxLength": 128,
+                            "pattern": "^(W/)?\"[0-9]+\"$"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "groups_parse_code": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Validate_group_numbers": {
+              "type": "Foreach",
+              "foreach": "@body('Raw_groups')",
+              "actions": {
+                "Whole_group_numbers": {
+                  "type": "If",
+                  "expression": "@and(equals(items('Validate_group_numbers')?['Capacity'],int(items('Validate_group_numbers')?['Capacity'])),equals(items('Validate_group_numbers')?['SourceRequestId'],int(items('Validate_group_numbers')?['SourceRequestId'])))",
+                  "actions": {},
+                  "else": {
+                    "actions": {
+                      "Whole_group_numbers_error": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ErrorCode",
+                          "value": "DATA_INTEGRITY"
+                        },
+                        "runAfter": {}
+                      },
+                      "Whole_group_numbers_stop": {
+                        "type": "Compose",
+                        "inputs": "@div(1,0)",
+                        "runAfter": {
+                          "Whole_group_numbers_error": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {}
+                }
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 1
+                }
+              },
+              "runAfter": {
+                "Raw_groups": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Data_groups": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Raw_groups')",
+                "select": {
+                  "Id": "@item()?['Id']",
+                  "Title": "@item()?['Title']",
+                  "Purpose": "@item()?['Purpose']",
+                  "ExchangeType": "@item()?['ExchangeType']",
+                  "LanguageFocusId": "@item()?['LanguageFocusId']",
+                  "CultureFocusId": "@item()?['CultureFocusId']",
+                  "Capacity": "@int(item()?['Capacity'])",
+                  "State": "@item()?['State']",
+                  "SourceRequestId": "@int(item()?['SourceRequestId'])",
+                  "SetupComplete": "@item()?['SetupComplete']",
+                  "__metadata": "@item()?['__metadata']"
+                }
+              },
+              "runAfter": {
+                "Validate_group_numbers": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "groups_parsed": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": ""
+              },
+              "runAfter": {
+                "Data_groups": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "groups_ids": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Data_groups')",
+                "select": "@item()?['Id']"
+              },
+              "runAfter": {
+                "groups_parsed": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "groups_unique": {
+              "type": "If",
+              "expression": "@equals(length(body('groups_ids')),length(union(body('groups_ids'),body('groups_ids'))))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "groups_unique_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "DATA_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "groups_unique_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "groups_unique_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "groups_ids": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_memberships": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "groups_unique": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'db611ec3-7fa3-477a-878e-effbbb195cb8')/items?$select=Id,GroupId,ParticipantId,MembershipStatus,MembershipKey,LeftAt&$orderby=Id asc&$top=2001",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                }
+              }
+            },
+            "memberships_complete": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Read_memberships')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_memberships')?['d']?['results'],json('[]'))),2000),empty(body('Read_memberships')?['d']?['__next']),empty(body('Read_memberships')?['@odata.nextLink']),empty(body('Read_memberships')?['odata.nextLink']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "memberships_complete_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "READ_BOUND_OR_INCOMPLETE"
+                    },
+                    "runAfter": {}
+                  },
+                  "memberships_complete_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "memberships_complete_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_memberships": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "memberships_parse_code": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": "DATA_INTEGRITY"
+              },
+              "runAfter": {
+                "memberships_complete": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Data_memberships": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Read_memberships')?['d']?['results']",
+                "schema": {
+                  "type": "array",
+                  "maxItems": 2000,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "Id",
+                      "GroupId",
+                      "ParticipantId",
+                      "MembershipStatus",
+                      "MembershipKey",
+                      "LeftAt"
+                    ],
+                    "properties": {
+                      "Id": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "GroupId": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "ParticipantId": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "MembershipStatus": {
+                        "type": "string",
+                        "enum": [
+                          "Active",
+                          "Left"
+                        ]
+                      },
+                      "MembershipKey": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "LeftAt": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 64000
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "memberships_parse_code": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "memberships_parsed": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": ""
+              },
+              "runAfter": {
+                "Data_memberships": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "memberships_ids": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Data_memberships')",
+                "select": "@item()?['Id']"
+              },
+              "runAfter": {
+                "memberships_parsed": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "memberships_unique": {
+              "type": "If",
+              "expression": "@equals(length(body('memberships_ids')),length(union(body('memberships_ids'),body('memberships_ids'))))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "memberships_unique_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "DATA_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "memberships_unique_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "memberships_unique_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "memberships_ids": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_profiles": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "memberships_unique": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'fd3adf46-f81d-4a7b-a80c-567fde0175dc')/items?$select=Id,Participantaccount/Title,TeachlanguagesId,LearnlanguagesId,ShareCulturesId,LearnCulturesId,TimezoneId,Learningfocus,Comments&$expand=Participantaccount&$orderby=Id asc&$top=501",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                }
+              }
+            },
+            "profiles_complete": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Read_profiles')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_profiles')?['d']?['results'],json('[]'))),500),empty(body('Read_profiles')?['d']?['__next']),empty(body('Read_profiles')?['@odata.nextLink']),empty(body('Read_profiles')?['odata.nextLink']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "profiles_complete_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "READ_BOUND_OR_INCOMPLETE"
+                    },
+                    "runAfter": {}
+                  },
+                  "profiles_complete_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "profiles_complete_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_profiles": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "profiles_parse_code": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": "DATA_INTEGRITY"
+              },
+              "runAfter": {
+                "profiles_complete": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Data_profiles": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Read_profiles')?['d']?['results']",
+                "schema": {
+                  "type": "array",
+                  "maxItems": 500,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "Id",
+                      "Participantaccount"
+                    ],
+                    "properties": {
+                      "Id": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "Participantaccount": {
+                        "type": "object",
+                        "required": [
+                          "Title"
+                        ],
+                        "properties": {
+                          "Title": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 255
+                          }
+                        }
+                      },
+                      "TeachlanguagesId": {
+                        "type": [
+                          "object",
+                          "null"
+                        ],
+                        "required": [
+                          "results"
+                        ],
+                        "properties": {
+                          "results": {
+                            "type": "array",
+                            "maxItems": 5000,
+                            "items": {
+                              "type": "integer",
+                              "minimum": 1
+                            }
+                          }
+                        }
+                      },
+                      "LearnlanguagesId": {
+                        "type": [
+                          "object",
+                          "null"
+                        ],
+                        "required": [
+                          "results"
+                        ],
+                        "properties": {
+                          "results": {
+                            "type": "array",
+                            "maxItems": 5000,
+                            "items": {
+                              "type": "integer",
+                              "minimum": 1
+                            }
+                          }
+                        }
+                      },
+                      "ShareCulturesId": {
+                        "type": [
+                          "object",
+                          "null"
+                        ],
+                        "required": [
+                          "results"
+                        ],
+                        "properties": {
+                          "results": {
+                            "type": "array",
+                            "maxItems": 5000,
+                            "items": {
+                              "type": "integer",
+                              "minimum": 1
+                            }
+                          }
+                        }
+                      },
+                      "LearnCulturesId": {
+                        "type": [
+                          "object",
+                          "null"
+                        ],
+                        "required": [
+                          "results"
+                        ],
+                        "properties": {
+                          "results": {
+                            "type": "array",
+                            "maxItems": 5000,
+                            "items": {
+                              "type": "integer",
+                              "minimum": 1
+                            }
+                          }
+                        }
+                      },
+                      "TimezoneId": {
+                        "type": [
+                          "integer",
+                          "null"
+                        ],
+                        "minimum": 1
+                      },
+                      "Learningfocus": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 64000
+                      },
+                      "Comments": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 64000
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "profiles_parse_code": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "profiles_parsed": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": ""
+              },
+              "runAfter": {
+                "Data_profiles": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "profiles_ids": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Data_profiles')",
+                "select": "@item()?['Id']"
+              },
+              "runAfter": {
+                "profiles_parsed": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "profiles_unique": {
+              "type": "If",
+              "expression": "@equals(length(body('profiles_ids')),length(union(body('profiles_ids'),body('profiles_ids'))))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "profiles_unique_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "DATA_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "profiles_unique_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "profiles_unique_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "profiles_ids": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_language": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "profiles_unique": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63')/items?$select=Id,Title&$orderby=Id asc&$top=5001",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                }
+              }
+            },
+            "language_complete": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Read_language')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_language')?['d']?['results'],json('[]'))),5000),empty(body('Read_language')?['d']?['__next']),empty(body('Read_language')?['@odata.nextLink']),empty(body('Read_language')?['odata.nextLink']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "language_complete_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "READ_BOUND_OR_INCOMPLETE"
+                    },
+                    "runAfter": {}
+                  },
+                  "language_complete_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "language_complete_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_language": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "language_parse_code": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": "DATA_INTEGRITY"
+              },
+              "runAfter": {
+                "language_complete": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Data_language": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Read_language')?['d']?['results']",
+                "schema": {
+                  "type": "array",
+                  "maxItems": 5000,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "Id",
+                      "Title"
+                    ],
+                    "properties": {
+                      "Id": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "Title": {
+                        "type": "string",
+                        "maxLength": 255
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "language_parse_code": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "language_parsed": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": ""
+              },
+              "runAfter": {
+                "Data_language": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "language_ids": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Data_language')",
+                "select": "@item()?['Id']"
+              },
+              "runAfter": {
+                "language_parsed": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "language_unique": {
+              "type": "If",
+              "expression": "@equals(length(body('language_ids')),length(union(body('language_ids'),body('language_ids'))))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "language_unique_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "DATA_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "language_unique_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "language_unique_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "language_ids": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_culture": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "language_unique": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'cf7ed5b4-2e11-4a0a-a417-6c63ed60f614')/items?$select=Id,Title&$orderby=Id asc&$top=5001",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                }
+              }
+            },
+            "culture_complete": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Read_culture')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_culture')?['d']?['results'],json('[]'))),5000),empty(body('Read_culture')?['d']?['__next']),empty(body('Read_culture')?['@odata.nextLink']),empty(body('Read_culture')?['odata.nextLink']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "culture_complete_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "READ_BOUND_OR_INCOMPLETE"
+                    },
+                    "runAfter": {}
+                  },
+                  "culture_complete_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "culture_complete_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_culture": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "culture_parse_code": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": "DATA_INTEGRITY"
+              },
+              "runAfter": {
+                "culture_complete": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Data_culture": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Read_culture')?['d']?['results']",
+                "schema": {
+                  "type": "array",
+                  "maxItems": 5000,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "Id",
+                      "Title"
+                    ],
+                    "properties": {
+                      "Id": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "Title": {
+                        "type": "string",
+                        "maxLength": 255
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "culture_parse_code": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "culture_parsed": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": ""
+              },
+              "runAfter": {
+                "Data_culture": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "culture_ids": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Data_culture')",
+                "select": "@item()?['Id']"
+              },
+              "runAfter": {
+                "culture_parsed": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "culture_unique": {
+              "type": "If",
+              "expression": "@equals(length(body('culture_ids')),length(union(body('culture_ids'),body('culture_ids'))))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "culture_unique_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "DATA_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "culture_unique_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "culture_unique_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "culture_ids": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_timezone": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "culture_unique": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'7beddfff-1881-4a82-8003-29933b836350')/items?$select=Id,Title,IANA_ID&$orderby=Id asc&$top=5001",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                }
+              }
+            },
+            "timezone_complete": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Read_timezone')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_timezone')?['d']?['results'],json('[]'))),5000),empty(body('Read_timezone')?['d']?['__next']),empty(body('Read_timezone')?['@odata.nextLink']),empty(body('Read_timezone')?['odata.nextLink']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "timezone_complete_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "READ_BOUND_OR_INCOMPLETE"
+                    },
+                    "runAfter": {}
+                  },
+                  "timezone_complete_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "timezone_complete_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_timezone": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "timezone_parse_code": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": "DATA_INTEGRITY"
+              },
+              "runAfter": {
+                "timezone_complete": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Data_timezone": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Read_timezone')?['d']?['results']",
+                "schema": {
+                  "type": "array",
+                  "maxItems": 5000,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "Id",
+                      "Title",
+                      "IANA_ID"
+                    ],
+                    "properties": {
+                      "Id": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "Title": {
+                        "type": "string",
+                        "maxLength": 255
+                      },
+                      "IANA_ID": {
+                        "type": "string",
+                        "maxLength": 255
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "timezone_parse_code": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "timezone_parsed": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": ""
+              },
+              "runAfter": {
+                "Data_timezone": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "timezone_ids": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Data_timezone')",
+                "select": "@item()?['Id']"
+              },
+              "runAfter": {
+                "timezone_parsed": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "timezone_unique": {
+              "type": "If",
+              "expression": "@equals(length(body('timezone_ids')),length(union(body('timezone_ids'),body('timezone_ids'))))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "timezone_unique_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "DATA_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "timezone_unique_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "timezone_unique_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "timezone_ids": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Validate_request_references": {
+              "type": "Foreach",
+              "foreach": "@body('Data_requests')",
+              "actions": {
+                "Whole_request_parties": {
+                  "type": "If",
+                  "expression": "@and(equals(items('Validate_request_references')?['SenderParticipantId'],int(items('Validate_request_references')?['SenderParticipantId'])),equals(coalesce(items('Validate_request_references')?['RecipientParticipantId'],0),int(coalesce(items('Validate_request_references')?['RecipientParticipantId'],0))))",
+                  "actions": {},
+                  "else": {
+                    "actions": {
+                      "Whole_request_parties_error": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ErrorCode",
+                          "value": "DATA_INTEGRITY"
+                        },
+                        "runAfter": {}
+                      },
+                      "Whole_request_parties_stop": {
+                        "type": "Compose",
+                        "inputs": "@div(1,0)",
+                        "runAfter": {
+                          "Whole_request_parties_error": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {}
+                }
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 1
+                }
+              },
+              "runAfter": {
+                "timezone_unique": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Active_rows": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Data_memberships')",
+                "where": "@equals(item()?['MembershipStatus'],'Active')"
+              },
+              "runAfter": {
+                "Validate_request_references": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Active_pairs": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Active_rows')",
+                "select": "@concat(string(item()?['GroupId']),':',string(item()?['ParticipantId']))"
+              },
+              "runAfter": {
+                "Active_rows": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Active_unique": {
+              "type": "If",
+              "expression": "@equals(length(body('Active_pairs')),length(union(body('Active_pairs'),body('Active_pairs'))))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Active_unique_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "MEMBERSHIP_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "Active_unique_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Active_unique_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Active_pairs": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Groups_sources": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Data_groups')",
+                "select": "@item()?['SourceRequestId']"
+              },
+              "runAfter": {
+                "Active_unique": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Groups_sources_unique": {
+              "type": "If",
+              "expression": "@equals(length(body('Groups_sources')),length(union(body('Groups_sources'),body('Groups_sources'))))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Groups_sources_unique_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "DATA_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "Groups_sources_unique_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Groups_sources_unique_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Groups_sources": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Each_episode": {
+              "type": "Foreach",
+              "foreach": "@body('Active_rows')",
+              "actions": {
+                "Episode_group": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Data_groups')",
+                    "where": "@equals(item()?['Id'],items('Each_episode')?['GroupId'])"
+                  },
+                  "runAfter": {}
+                },
+                "Episode_source": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Data_requests')",
+                    "where": "@and(equals(item()?['Id'],first(union(body('Episode_group'),createArray(json('{}'))))?['SourceRequestId']),equals(item()?['RequestType'],'Personal'),equals(item()?['TargetGroupId'],null),not(equals(item()?['RecipientParticipantId'],null)),not(equals(item()?['SenderParticipantId'],item()?['RecipientParticipantId'])),equals(item()?['Status'],'Accepted'),equals(item()?['OperationComplete'],true))"
+                  },
+                  "runAfter": {
+                    "Episode_group": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Episode_commit": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Data_requests')",
+                    "where": "@and(equals(items('Each_episode')?['MembershipKey'],concat('request:',string(item()?['Id']),':participant:',string(items('Each_episode')?['ParticipantId']))),equals(item()?['Status'],'Accepted'),equals(item()?['OperationComplete'],true),or(and(equals(item()?['RequestType'],'Personal'),equals(item()?['Id'],first(union(body('Episode_group'),createArray(json('{}'))))?['SourceRequestId']),or(equals(item()?['SenderParticipantId'],items('Each_episode')?['ParticipantId']),equals(item()?['RecipientParticipantId'],items('Each_episode')?['ParticipantId']))),and(equals(item()?['RequestType'],'Group'),equals(item()?['TargetGroupId'],items('Each_episode')?['GroupId']),equals(item()?['RecipientParticipantId'],null),equals(item()?['SenderParticipantId'],items('Each_episode')?['ParticipantId']))))"
+                  },
+                  "runAfter": {
+                    "Episode_source": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Episode_operational": {
+                  "type": "If",
+                  "expression": "@and(equals(length(body('Episode_group')),1),equals(first(union(body('Episode_group'),createArray(json('{}'))))?['SetupComplete'],true),empty(items('Each_episode')?['LeftAt']),equals(length(body('Episode_source')),1),equals(length(body('Episode_commit')),1))",
+                  "actions": {
+                    "Remember_episode": {
+                      "type": "AppendToArrayVariable",
+                      "inputs": {
+                        "name": "OperationalEpisodes",
+                        "value": {
+                          "groupId": "@items('Each_episode')?['GroupId']",
+                          "profileId": "@items('Each_episode')?['ParticipantId']",
+                          "membershipId": "@items('Each_episode')?['Id']"
+                        }
+                      },
+                      "runAfter": {}
+                    }
+                  },
+                  "else": {
+                    "actions": {}
+                  },
+                  "runAfter": {
+                    "Episode_commit": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 1
+                }
+              },
+              "runAfter": {
+                "Groups_sources_unique": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Own_episodes": {
+              "type": "Query",
+              "inputs": {
+                "from": "@variables('OperationalEpisodes')",
+                "where": "@equals(item()?['profileId'],outputs('Actor'))"
+              },
+              "runAfter": {
+                "Each_episode": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Own_group_ids": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Own_episodes')",
+                "select": "@item()?['groupId']"
+              },
+              "runAfter": {
+                "Own_episodes": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Own_groups": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Data_groups')",
+                "where": "@contains(body('Own_group_ids'),item()?['Id'])"
+              },
+              "runAfter": {
+                "Own_group_ids": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Each_own_group": {
+              "type": "Foreach",
+              "foreach": "@body('Own_groups')",
+              "actions": {
+                "Own_group_episode": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Own_episodes')",
+                    "where": "@equals(item()?['groupId'],items('Each_own_group')?['Id'])"
+                  },
+                  "runAfter": {}
+                },
+                "Own_group_episode_unique": {
+                  "type": "If",
+                  "expression": "@equals(length(body('Own_group_episode')),1)",
+                  "actions": {},
+                  "else": {
+                    "actions": {
+                      "Own_group_episode_unique_error": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ErrorCode",
+                          "value": "MEMBERSHIP_INTEGRITY"
+                        },
+                        "runAfter": {}
+                      },
+                      "Own_group_episode_unique_stop": {
+                        "type": "Compose",
+                        "inputs": "@div(1,0)",
+                        "runAfter": {
+                          "Own_group_episode_unique_error": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Own_group_episode": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Reset_members": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Members",
+                    "value": []
+                  },
+                  "runAfter": {
+                    "Own_group_episode_unique": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Physical_members": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Active_rows')",
+                    "where": "@equals(item()?['GroupId'],items('Each_own_group')?['Id'])"
+                  },
+                  "runAfter": {
+                    "Reset_members": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Capacity_valid": {
+                  "type": "If",
+                  "expression": "@and(lessOrEquals(length(body('Physical_members')),items('Each_own_group')?['Capacity']),lessOrEquals(items('Each_own_group')?['Capacity'],if(equals(items('Each_own_group')?['ExchangeType'],'Language'),3,10)))",
+                  "actions": {},
+                  "else": {
+                    "actions": {
+                      "Capacity_valid_error": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ErrorCode",
+                          "value": "CAPACITY_INTEGRITY"
+                        },
+                        "runAfter": {}
+                      },
+                      "Capacity_valid_stop": {
+                        "type": "Compose",
+                        "inputs": "@div(1,0)",
+                        "runAfter": {
+                          "Capacity_valid_error": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Physical_members": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Public_episodes": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@variables('OperationalEpisodes')",
+                    "where": "@equals(item()?['groupId'],items('Each_own_group')?['Id'])"
+                  },
+                  "runAfter": {
+                    "Capacity_valid": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Each_public_member": {
+                  "type": "Foreach",
+                  "foreach": "@body('Public_episodes')",
+                  "actions": {
+                    "Member_profile": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@body('Data_profiles')",
+                        "where": "@equals(item()?['Id'],items('Each_public_member')?['profileId'])"
+                      },
+                      "runAfter": {}
+                    },
+                    "Member_exists": {
+                      "type": "If",
+                      "expression": "@equals(length(body('Member_profile')),1)",
+                      "actions": {},
+                      "else": {
+                        "actions": {
+                          "Member_exists_error": {
+                            "type": "SetVariable",
+                            "inputs": {
+                              "name": "ErrorCode",
+                              "value": "PROFILE_DATA_INCOMPLETE"
+                            },
+                            "runAfter": {}
+                          },
+                          "Member_exists_stop": {
+                            "type": "Compose",
+                            "inputs": "@div(1,0)",
+                            "runAfter": {
+                              "Member_exists_error": [
+                                "Succeeded"
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Member_profile": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Member_teachLanguages_rows": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@body('Data_language')",
+                        "where": "@contains(coalesce(first(union(body('Member_profile'),createArray(json('{}'))))?['TeachlanguagesId']?['results'],json('[]')),item()?['Id'])"
+                      },
+                      "runAfter": {
+                        "Member_exists": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Member_teachLanguages_complete": {
+                      "type": "If",
+                      "expression": "@equals(length(body('Member_teachLanguages_rows')),length(union(coalesce(first(union(body('Member_profile'),createArray(json('{}'))))?['TeachlanguagesId']?['results'],json('[]')),coalesce(first(union(body('Member_profile'),createArray(json('{}'))))?['TeachlanguagesId']?['results'],json('[]')))))",
+                      "actions": {},
+                      "else": {
+                        "actions": {
+                          "Member_teachLanguages_complete_error": {
+                            "type": "SetVariable",
+                            "inputs": {
+                              "name": "ErrorCode",
+                              "value": "PROFILE_DATA_INCOMPLETE"
+                            },
+                            "runAfter": {}
+                          },
+                          "Member_teachLanguages_complete_stop": {
+                            "type": "Compose",
+                            "inputs": "@div(1,0)",
+                            "runAfter": {
+                              "Member_teachLanguages_complete_error": [
+                                "Succeeded"
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Member_teachLanguages_rows": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Member_teachLanguages": {
+                      "type": "Select",
+                      "inputs": {
+                        "from": "@body('Member_teachLanguages_rows')",
+                        "select": {
+                          "id": "@item()?['Id']",
+                          "label": "@item()?['Title']"
+                        }
+                      },
+                      "runAfter": {
+                        "Member_teachLanguages_complete": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Member_learnLanguages_rows": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@body('Data_language')",
+                        "where": "@contains(coalesce(first(union(body('Member_profile'),createArray(json('{}'))))?['LearnlanguagesId']?['results'],json('[]')),item()?['Id'])"
+                      },
+                      "runAfter": {
+                        "Member_teachLanguages": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Member_learnLanguages_complete": {
+                      "type": "If",
+                      "expression": "@equals(length(body('Member_learnLanguages_rows')),length(union(coalesce(first(union(body('Member_profile'),createArray(json('{}'))))?['LearnlanguagesId']?['results'],json('[]')),coalesce(first(union(body('Member_profile'),createArray(json('{}'))))?['LearnlanguagesId']?['results'],json('[]')))))",
+                      "actions": {},
+                      "else": {
+                        "actions": {
+                          "Member_learnLanguages_complete_error": {
+                            "type": "SetVariable",
+                            "inputs": {
+                              "name": "ErrorCode",
+                              "value": "PROFILE_DATA_INCOMPLETE"
+                            },
+                            "runAfter": {}
+                          },
+                          "Member_learnLanguages_complete_stop": {
+                            "type": "Compose",
+                            "inputs": "@div(1,0)",
+                            "runAfter": {
+                              "Member_learnLanguages_complete_error": [
+                                "Succeeded"
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Member_learnLanguages_rows": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Member_learnLanguages": {
+                      "type": "Select",
+                      "inputs": {
+                        "from": "@body('Member_learnLanguages_rows')",
+                        "select": {
+                          "id": "@item()?['Id']",
+                          "label": "@item()?['Title']"
+                        }
+                      },
+                      "runAfter": {
+                        "Member_learnLanguages_complete": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Member_shareCultures_rows": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@body('Data_culture')",
+                        "where": "@contains(coalesce(first(union(body('Member_profile'),createArray(json('{}'))))?['ShareCulturesId']?['results'],json('[]')),item()?['Id'])"
+                      },
+                      "runAfter": {
+                        "Member_learnLanguages": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Member_shareCultures_complete": {
+                      "type": "If",
+                      "expression": "@equals(length(body('Member_shareCultures_rows')),length(union(coalesce(first(union(body('Member_profile'),createArray(json('{}'))))?['ShareCulturesId']?['results'],json('[]')),coalesce(first(union(body('Member_profile'),createArray(json('{}'))))?['ShareCulturesId']?['results'],json('[]')))))",
+                      "actions": {},
+                      "else": {
+                        "actions": {
+                          "Member_shareCultures_complete_error": {
+                            "type": "SetVariable",
+                            "inputs": {
+                              "name": "ErrorCode",
+                              "value": "PROFILE_DATA_INCOMPLETE"
+                            },
+                            "runAfter": {}
+                          },
+                          "Member_shareCultures_complete_stop": {
+                            "type": "Compose",
+                            "inputs": "@div(1,0)",
+                            "runAfter": {
+                              "Member_shareCultures_complete_error": [
+                                "Succeeded"
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Member_shareCultures_rows": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Member_shareCultures": {
+                      "type": "Select",
+                      "inputs": {
+                        "from": "@body('Member_shareCultures_rows')",
+                        "select": {
+                          "id": "@item()?['Id']",
+                          "label": "@item()?['Title']"
+                        }
+                      },
+                      "runAfter": {
+                        "Member_shareCultures_complete": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Member_learnCultures_rows": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@body('Data_culture')",
+                        "where": "@contains(coalesce(first(union(body('Member_profile'),createArray(json('{}'))))?['LearnCulturesId']?['results'],json('[]')),item()?['Id'])"
+                      },
+                      "runAfter": {
+                        "Member_shareCultures": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Member_learnCultures_complete": {
+                      "type": "If",
+                      "expression": "@equals(length(body('Member_learnCultures_rows')),length(union(coalesce(first(union(body('Member_profile'),createArray(json('{}'))))?['LearnCulturesId']?['results'],json('[]')),coalesce(first(union(body('Member_profile'),createArray(json('{}'))))?['LearnCulturesId']?['results'],json('[]')))))",
+                      "actions": {},
+                      "else": {
+                        "actions": {
+                          "Member_learnCultures_complete_error": {
+                            "type": "SetVariable",
+                            "inputs": {
+                              "name": "ErrorCode",
+                              "value": "PROFILE_DATA_INCOMPLETE"
+                            },
+                            "runAfter": {}
+                          },
+                          "Member_learnCultures_complete_stop": {
+                            "type": "Compose",
+                            "inputs": "@div(1,0)",
+                            "runAfter": {
+                              "Member_learnCultures_complete_error": [
+                                "Succeeded"
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Member_learnCultures_rows": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Member_learnCultures": {
+                      "type": "Select",
+                      "inputs": {
+                        "from": "@body('Member_learnCultures_rows')",
+                        "select": {
+                          "id": "@item()?['Id']",
+                          "label": "@item()?['Title']"
+                        }
+                      },
+                      "runAfter": {
+                        "Member_learnCultures_complete": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Member_zone_rows": {
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@body('Data_timezone')",
+                        "where": "@equals(item()?['Id'],first(union(body('Member_profile'),createArray(json('{}'))))?['TimezoneId'])"
+                      },
+                      "runAfter": {
+                        "Member_learnCultures": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Member_zone_complete": {
+                      "type": "If",
+                      "expression": "@or(equals(first(union(body('Member_profile'),createArray(json('{}'))))?['TimezoneId'],null),equals(length(body('Member_zone_rows')),1))",
+                      "actions": {},
+                      "else": {
+                        "actions": {
+                          "Member_zone_complete_error": {
+                            "type": "SetVariable",
+                            "inputs": {
+                              "name": "ErrorCode",
+                              "value": "PROFILE_DATA_INCOMPLETE"
+                            },
+                            "runAfter": {}
+                          },
+                          "Member_zone_complete_stop": {
+                            "type": "Compose",
+                            "inputs": "@div(1,0)",
+                            "runAfter": {
+                              "Member_zone_complete_error": [
+                                "Succeeded"
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Member_zone_rows": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Member_display": {
+                      "type": "Compose",
+                      "inputs": {
+                        "profileId": "@first(union(body('Member_profile'),createArray(json('{}'))))?['Id']",
+                        "displayName": "@first(union(body('Member_profile'),createArray(json('{}'))))?['Participantaccount']?['Title']",
+                        "teachLanguages": "@body('Member_teachLanguages')",
+                        "learnLanguages": "@body('Member_learnLanguages')",
+                        "shareCultures": "@body('Member_shareCultures')",
+                        "learnCultures": "@body('Member_learnCultures')",
+                        "timeZone": {
+                          "id": "@first(union(body('Member_zone_rows'),createArray(json('{}'))))?['Id']",
+                          "label": "@first(union(body('Member_zone_rows'),createArray(json('{}'))))?['Title']",
+                          "ianaId": "@first(union(body('Member_zone_rows'),createArray(json('{}'))))?['IANA_ID']"
+                        },
+                        "learningFocus": "@coalesce(first(union(body('Member_profile'),createArray(json('{}'))))?['Learningfocus'],'')",
+                        "comments": "@coalesce(first(union(body('Member_profile'),createArray(json('{}'))))?['Comments'],'')"
+                      },
+                      "runAfter": {
+                        "Member_zone_complete": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Member_public": {
+                      "type": "ParseJson",
+                      "inputs": {
+                        "content": "@outputs('Member_display')",
+                        "schema": {
+                          "type": "object",
+                          "required": [
+                            "profileId",
+                            "displayName",
+                            "teachLanguages",
+                            "learnLanguages",
+                            "shareCultures",
+                            "learnCultures",
+                            "timeZone",
+                            "learningFocus",
+                            "comments"
+                          ],
+                          "properties": {
+                            "profileId": {
+                              "type": "integer",
+                              "minimum": 1
+                            },
+                            "displayName": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 255
+                            },
+                            "teachLanguages": {
+                              "type": "array",
+                              "maxItems": 5000,
+                              "items": {
+                                "type": "object",
+                                "required": [
+                                  "id",
+                                  "label"
+                                ],
+                                "properties": {
+                                  "id": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                  },
+                                  "label": {
+                                    "type": "string",
+                                    "maxLength": 255
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "learnLanguages": {
+                              "type": "array",
+                              "maxItems": 5000,
+                              "items": {
+                                "type": "object",
+                                "required": [
+                                  "id",
+                                  "label"
+                                ],
+                                "properties": {
+                                  "id": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                  },
+                                  "label": {
+                                    "type": "string",
+                                    "maxLength": 255
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "shareCultures": {
+                              "type": "array",
+                              "maxItems": 5000,
+                              "items": {
+                                "type": "object",
+                                "required": [
+                                  "id",
+                                  "label"
+                                ],
+                                "properties": {
+                                  "id": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                  },
+                                  "label": {
+                                    "type": "string",
+                                    "maxLength": 255
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "learnCultures": {
+                              "type": "array",
+                              "maxItems": 5000,
+                              "items": {
+                                "type": "object",
+                                "required": [
+                                  "id",
+                                  "label"
+                                ],
+                                "properties": {
+                                  "id": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                  },
+                                  "label": {
+                                    "type": "string",
+                                    "maxLength": 255
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "timeZone": {
+                              "type": "object",
+                              "required": [
+                                "id",
+                                "label",
+                                "ianaId"
+                              ],
+                              "properties": {
+                                "id": {
+                                  "type": [
+                                    "integer",
+                                    "null"
+                                  ],
+                                  "minimum": 1
+                                },
+                                "label": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "maxLength": 255
+                                },
+                                "ianaId": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "maxLength": 255
+                                }
+                              },
+                              "additionalProperties": false
+                            },
+                            "learningFocus": {
+                              "type": "string",
+                              "maxLength": 64000
+                            },
+                            "comments": {
+                              "type": "string",
+                              "maxLength": 64000
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "runAfter": {
+                        "Member_display": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Remember_member": {
+                      "type": "AppendToArrayVariable",
+                      "inputs": {
+                        "name": "Members",
+                        "value": "@body('Member_public')"
+                      },
+                      "runAfter": {
+                        "Member_public": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "runtimeConfiguration": {
+                    "concurrency": {
+                      "repetitions": 1
+                    }
+                  },
+                  "runAfter": {
+                    "Public_episodes": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Group_languageFocus_rows": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Data_language')",
+                    "where": "@contains(coalesce(items('Each_own_group')?['LanguageFocusId']?['results'],json('[]')),item()?['Id'])"
+                  },
+                  "runAfter": {
+                    "Each_public_member": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Group_languageFocus_complete": {
+                  "type": "If",
+                  "expression": "@equals(length(body('Group_languageFocus_rows')),length(union(coalesce(items('Each_own_group')?['LanguageFocusId']?['results'],json('[]')),coalesce(items('Each_own_group')?['LanguageFocusId']?['results'],json('[]')))))",
+                  "actions": {},
+                  "else": {
+                    "actions": {
+                      "Group_languageFocus_complete_error": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ErrorCode",
+                          "value": "GROUP_DATA_INCOMPLETE"
+                        },
+                        "runAfter": {}
+                      },
+                      "Group_languageFocus_complete_stop": {
+                        "type": "Compose",
+                        "inputs": "@div(1,0)",
+                        "runAfter": {
+                          "Group_languageFocus_complete_error": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Group_languageFocus_rows": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Group_languageFocus": {
+                  "type": "Select",
+                  "inputs": {
+                    "from": "@body('Group_languageFocus_rows')",
+                    "select": {
+                      "id": "@item()?['Id']",
+                      "label": "@item()?['Title']"
+                    }
+                  },
+                  "runAfter": {
+                    "Group_languageFocus_complete": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Group_cultureFocus_rows": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Data_culture')",
+                    "where": "@contains(coalesce(items('Each_own_group')?['CultureFocusId']?['results'],json('[]')),item()?['Id'])"
+                  },
+                  "runAfter": {
+                    "Group_languageFocus": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Group_cultureFocus_complete": {
+                  "type": "If",
+                  "expression": "@equals(length(body('Group_cultureFocus_rows')),length(union(coalesce(items('Each_own_group')?['CultureFocusId']?['results'],json('[]')),coalesce(items('Each_own_group')?['CultureFocusId']?['results'],json('[]')))))",
+                  "actions": {},
+                  "else": {
+                    "actions": {
+                      "Group_cultureFocus_complete_error": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ErrorCode",
+                          "value": "GROUP_DATA_INCOMPLETE"
+                        },
+                        "runAfter": {}
+                      },
+                      "Group_cultureFocus_complete_stop": {
+                        "type": "Compose",
+                        "inputs": "@div(1,0)",
+                        "runAfter": {
+                          "Group_cultureFocus_complete_error": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Group_cultureFocus_rows": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Group_cultureFocus": {
+                  "type": "Select",
+                  "inputs": {
+                    "from": "@body('Group_cultureFocus_rows')",
+                    "select": {
+                      "id": "@item()?['Id']",
+                      "label": "@item()?['Title']"
+                    }
+                  },
+                  "runAfter": {
+                    "Group_cultureFocus_complete": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Group_display": {
+                  "type": "Compose",
+                  "inputs": {
+                    "groupId": "@items('Each_own_group')?['Id']",
+                    "membershipId": "@first(union(body('Own_group_episode'),createArray(json('{}'))))?['membershipId']",
+                    "name": "@items('Each_own_group')?['Title']",
+                    "purpose": "@coalesce(items('Each_own_group')?['Purpose'],'')",
+                    "exchangeType": "@items('Each_own_group')?['ExchangeType']",
+                    "languageFocus": "@body('Group_languageFocus')",
+                    "cultureFocus": "@body('Group_cultureFocus')",
+                    "capacity": "@items('Each_own_group')?['Capacity']",
+                    "state": "@items('Each_own_group')?['State']",
+                    "memberCount": "@length(body('Physical_members'))",
+                    "freeSlots": "@sub(items('Each_own_group')?['Capacity'],length(body('Physical_members')))",
+                    "members": "@variables('Members')",
+                    "expectedETag": "@items('Each_own_group')?['__metadata']?['etag']"
+                  },
+                  "runAfter": {
+                    "Group_cultureFocus": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Group_public": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@outputs('Group_display')",
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "groupId",
+                        "membershipId",
+                        "name",
+                        "purpose",
+                        "exchangeType",
+                        "languageFocus",
+                        "cultureFocus",
+                        "capacity",
+                        "state",
+                        "memberCount",
+                        "freeSlots",
+                        "members",
+                        "expectedETag"
+                      ],
+                      "properties": {
+                        "groupId": {
+                          "type": "integer",
+                          "minimum": 1
+                        },
+                        "membershipId": {
+                          "type": "integer",
+                          "minimum": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 255
+                        },
+                        "purpose": {
+                          "type": "string",
+                          "maxLength": 64000
+                        },
+                        "exchangeType": {
+                          "type": "string",
+                          "enum": [
+                            "Language",
+                            "Culture",
+                            "Combined"
+                          ]
+                        },
+                        "languageFocus": {
+                          "type": "array",
+                          "maxItems": 5000,
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "id",
+                              "label"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "minimum": 1
+                              },
+                              "label": {
+                                "type": "string",
+                                "maxLength": 255
+                              }
+                            }
+                          }
+                        },
+                        "cultureFocus": {
+                          "type": "array",
+                          "maxItems": 5000,
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "id",
+                              "label"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "minimum": 1
+                              },
+                              "label": {
+                                "type": "string",
+                                "maxLength": 255
+                              }
+                            }
+                          }
+                        },
+                        "capacity": {
+                          "type": "integer",
+                          "minimum": 2,
+                          "maximum": 10
+                        },
+                        "state": {
+                          "type": "string",
+                          "enum": [
+                            "Open",
+                            "Closed",
+                            "Ended"
+                          ]
+                        },
+                        "memberCount": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 2000
+                        },
+                        "freeSlots": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 10
+                        },
+                        "members": {
+                          "type": "array",
+                          "maxItems": 500,
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "profileId",
+                              "displayName",
+                              "teachLanguages",
+                              "learnLanguages",
+                              "shareCultures",
+                              "learnCultures",
+                              "timeZone",
+                              "learningFocus",
+                              "comments"
+                            ],
+                            "properties": {
+                              "profileId": {
+                                "type": "integer",
+                                "minimum": 1
+                              },
+                              "displayName": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 255
+                              },
+                              "teachLanguages": {
+                                "type": "array",
+                                "maxItems": 5000,
+                                "items": {
+                                  "type": "object",
+                                  "required": [
+                                    "id",
+                                    "label"
+                                  ],
+                                  "properties": {
+                                    "id": {
+                                      "type": "integer",
+                                      "minimum": 1
+                                    },
+                                    "label": {
+                                      "type": "string",
+                                      "maxLength": 255
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                }
+                              },
+                              "learnLanguages": {
+                                "type": "array",
+                                "maxItems": 5000,
+                                "items": {
+                                  "type": "object",
+                                  "required": [
+                                    "id",
+                                    "label"
+                                  ],
+                                  "properties": {
+                                    "id": {
+                                      "type": "integer",
+                                      "minimum": 1
+                                    },
+                                    "label": {
+                                      "type": "string",
+                                      "maxLength": 255
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                }
+                              },
+                              "shareCultures": {
+                                "type": "array",
+                                "maxItems": 5000,
+                                "items": {
+                                  "type": "object",
+                                  "required": [
+                                    "id",
+                                    "label"
+                                  ],
+                                  "properties": {
+                                    "id": {
+                                      "type": "integer",
+                                      "minimum": 1
+                                    },
+                                    "label": {
+                                      "type": "string",
+                                      "maxLength": 255
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                }
+                              },
+                              "learnCultures": {
+                                "type": "array",
+                                "maxItems": 5000,
+                                "items": {
+                                  "type": "object",
+                                  "required": [
+                                    "id",
+                                    "label"
+                                  ],
+                                  "properties": {
+                                    "id": {
+                                      "type": "integer",
+                                      "minimum": 1
+                                    },
+                                    "label": {
+                                      "type": "string",
+                                      "maxLength": 255
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                }
+                              },
+                              "timeZone": {
+                                "type": "object",
+                                "required": [
+                                  "id",
+                                  "label",
+                                  "ianaId"
+                                ],
+                                "properties": {
+                                  "id": {
+                                    "type": [
+                                      "integer",
+                                      "null"
+                                    ],
+                                    "minimum": 1
+                                  },
+                                  "label": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "maxLength": 255
+                                  },
+                                  "ianaId": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "maxLength": 255
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
+                              "learningFocus": {
+                                "type": "string",
+                                "maxLength": 64000
+                              },
+                              "comments": {
+                                "type": "string",
+                                "maxLength": 64000
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        },
+                        "expectedETag": {
+                          "type": "string",
+                          "maxLength": 128,
+                          "pattern": "^(W/)?\"[0-9]+\"$"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "runAfter": {
+                    "Group_display": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Remember_group": {
+                  "type": "AppendToArrayVariable",
+                  "inputs": {
+                    "name": "Groups",
+                    "value": "@body('Group_public')"
+                  },
+                  "runAfter": {
+                    "Group_public": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 1
+                }
+              },
+              "runAfter": {
+                "Own_groups": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Response_bound": {
+              "type": "If",
+              "expression": "@lessOrEquals(length(string(variables('Groups'))),250000)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Response_bound_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "RESPONSE_BOUND"
+                    },
+                    "runAfter": {}
+                  },
+                  "Response_bound_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Response_bound_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Each_own_group": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_OperationalEpisodes": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Read_failure": {
+          "type": "Scope",
+          "runAfter": {
+            "Read_authorized_groups": [
+              "Failed",
+              "TimedOut"
+            ]
+          },
+          "actions": {
+            "Failure_code": {
+              "type": "If",
+              "expression": "@empty(variables('ErrorCode'))",
+              "actions": {
+                "Set_generic_failure": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ErrorCode",
+                    "value": "READ_OR_DATA_FAILED"
+                  },
+                  "runAfter": {}
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "runAfter": {}
+            },
+            "Clear_groups": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Groups",
+                "value": []
+              },
+              "runAfter": {
+                "Failure_code": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Clear_members": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Members",
+                "value": []
+              },
+              "runAfter": {
+                "Clear_groups": [
+                  "Succeeded"
+                ]
+              }
+            }
+          }
+        },
+        "Respond_to_a_Power_App_or_flow": {
+          "type": "Response",
+          "kind": "PowerApp",
+          "runAfter": {
+            "Read_failure": [
+              "Succeeded",
+              "Skipped"
+            ]
+          },
+          "inputs": {
+            "statusCode": 200,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "groupsjson": {
+                  "title": "groupsjson",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "groupstatus": {
+                  "title": "groupstatus",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "errormessage": {
+                  "title": "errormessage",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "resultcode": {
+                  "title": "resultcode",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "runreference": {
+                  "title": "runreference",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "mode": {
+                  "title": "mode",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "paging": {
+                  "title": "paging",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              }
+            },
+            "body": {
+              "groupsjson": "@if(empty(variables('ErrorCode')),string(variables('Groups')),'[]')",
+              "groupstatus": "@if(empty(variables('ErrorCode')),if(empty(variables('Groups')),'Waiting','In a group'),'')",
+              "errormessage": "@if(empty(variables('ErrorCode')),'','Groups could not be read completely. Refresh or return the result code for review.')",
+              "resultcode": "@if(empty(variables('ErrorCode')),'OK',variables('ErrorCode'))",
+              "runreference": "@workflow()?['run']?['name']",
+              "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF",
+              "paging": "NO_PAGING_COMPLETE_BOUNDED_READ"
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}
