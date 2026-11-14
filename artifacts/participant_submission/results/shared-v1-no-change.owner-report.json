@@ -1,0 +1,18 @@
+{
+  "kind": "ParticipantSubmissionValidation",
+  "schemaVersion": 1,
+  "sourceTicket": 61,
+  "packageBuildId": "issue-61-shared-consumer-v1",
+  "runReference": "08584069192652841427464544862CU18",
+  "itemId": 38,
+  "valid": true,
+  "status": "Active",
+  "statusChanged": false,
+  "result": "NO_CHANGE",
+  "sharedChildId": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+  "contractVersion": 1,
+  "rulesVersion": 1,
+  "sharedCode": "OK",
+  "sharedBuildId": "bd66271f-090e-4f5c-a890-8cb5b61173cc",
+  "sharedRunReference": "08584069192622793814733430516CU11"
+}

@@ -23,7 +23,8 @@
     "NORMALIZE": "profiles and active-catalogue ID sets; returns normalized internal profiles/catalogues",
     "PAIR": "profiles/catalogues plus leftId and rightId; returns eligible,fitType and four overlap arrays",
     "GROUP": "profiles/catalogues plus candidateId and group; caller supplies fresh committed member IDs and focusSharersAvailable evidence; returns group rules",
-    "PROFILE": "exactly one profile plus catalogues; checks content independently of availability. Known Any selection can be valid content while excluded from matching."
+    "PROFILE": "exactly one profile plus catalogues; checks content independently of availability. Known Any selection can be valid content while excluded from matching.",
+    "PAIRS": "Additive batch engine mode: profiles/catalogues + leftId; returns result.pairs eligible pair projections with profileId, exactly the existing PAIR semantics. Discovery uses one invocation for the candidate set; no authorization."
   },
   "rawProfile": {
     "required": [
@@ -93,5 +94,57 @@
   "nativeConnectionEnvelopeEvidence": "artifacts/shared_validation/results/native-sharepoint-solution.analysis.json",
   "nativeConnectionExportSha256": "ce19af2e37e7de4a9317ec4c63e8d5777beaf23a57120c99b4e38d38ce4946d4",
   "nativeSourceAdapterCases": 22,
-  "runtimePackageUnchangedBySourceAdapter": true
+  "runtimePackageUnchangedBySourceAdapter": true,
+  "batchDevelopment": {
+    "state": "SCHEMA_COLLECTOR_REPAIR_BUILT_NATIVE_RETEST_PENDING",
+    "productionFlows": 12,
+    "prospectiveBaseline": "config/batch_validation_schema.json",
+    "roles": 8,
+    "fields": 59,
+    "oldNativeEvidenceUnchanged": true,
+    "changes": [
+      "Baseline-defined role count",
+      "Plain-text Note schema checks",
+      "One-time schema collector/setup",
+      "Native-derived disabled Solution assembly",
+      "PAIRS set evaluation to avoid one native child invocation per person"
+    ],
+    "consumerTickets": [
+      7,
+      10,
+      11,
+      13,
+      14,
+      17,
+      61,
+      62,
+      63,
+      64,
+      65
+    ],
+    "solutionName": "TandemCoreBatch",
+    "solutionVersion": "1.0.0.1",
+    "packageBuildId": "bd66271f-090e-4f5c-a890-8cb5b61173cc",
+    "packageSha256": "2708aef6bdff431c6681e17aeaca44d46073b9ef83ed2bd81af2ea3124661e92",
+    "package": "artifacts/core_batch/v1.0.0.1/TandemCoreBatch-v1.zip",
+    "readableDefinitions": "artifacts/core_batch/v1.0.0.1/definitions",
+    "exactIO": "artifacts/core_batch/v1.0.0.1/flow-io.json",
+    "metrics": {
+      "actions": 93,
+      "maximumActionDepth": 7
+    },
+    "maintenanceFlows": 2,
+    "nativeStatus": "NOT_IMPORTED_NOT_TESTED",
+    "ordinaryUserAccessVerified": false,
+    "schemaCollectorRepair": {
+      "reason": "Native setup child returned INVALID_INPUT at Request_text; raw all-field payload can exceed250000 characters. Exact native Request_text error requested.",
+      "change": "Forward only baseline contract field names and nine evaluator properties; preserve exact SchemaXml, source completeness/paging and duplicate/missing checks. Surface child validation code/diagnostics/run reference and input character count.",
+      "matchingNormalizationSchemaSemantics": "UNCHANGED",
+      "nativeRetest": "PASS: corrected full8-role schema audit and repeat Apply with all Create actions owner-confirmed Skipped",
+      "receiptListIdObserved": "864dfe53-b67c-4504-9d48-ad4356b813d8",
+      "evidence": "artifacts/core_batch/v1.0.0.1/results/schema-audit.owner-confirmation.json",
+      "repeatEvidence": "artifacts/core_batch/v1.0.0.1/results/schema-repeat-apply.owner-report.json",
+      "repeatStatusEvidence": "artifacts/core_batch/v1.0.0.1/results/schema-repeat-apply.owner-confirmation.json"
+    }
+  }
 }

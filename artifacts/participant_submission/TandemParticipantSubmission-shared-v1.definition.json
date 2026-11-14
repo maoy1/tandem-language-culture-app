@@ -1,0 +1,810 @@
+{
+  "properties": {
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "When_an_item_is_created_or_modified": {
+          "recurrence": {
+            "frequency": "Minute",
+            "interval": 1
+          },
+          "evaluatedRecurrence": {
+            "frequency": "Minute",
+            "interval": 1
+          },
+          "splitOn": "@triggerOutputs()?['body/value']",
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+              "table": "fd3adf46-f81d-4a7b-a80c-567fde0175dc"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetOnUpdatedItems"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Read_current": {
+          "type": "OpenApiConnection",
+          "runAfter": {},
+          "inputs": {
+            "parameters": {
+              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+              "parameters/method": "GET",
+              "parameters/uri": "@concat('_api/web/lists(guid''fd3adf46-f81d-4a7b-a80c-567fde0175dc'')/items(',string(triggerBody()?['ID']),')','?$select=Id,ParticipantaccountId,TimezoneId,Status,TeachlanguagesId,LearnlanguagesId,ShareCulturesId,LearnCulturesId')",
+              "parameters/headers": {
+                "Accept": "application/json;odata=verbose"
+              }
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline",
+              "operationId": "HttpRequest"
+            },
+            "authentication": "@parameters('$authentication')",
+            "retryPolicy": {
+              "type": "none"
+            }
+          }
+        },
+        "Current_item": {
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@body('Read_current')?['d']",
+            "schema": {
+              "type": "object",
+              "required": [
+                "Id",
+                "ParticipantaccountId",
+                "TimezoneId",
+                "Status",
+                "__metadata",
+                "TeachlanguagesId",
+                "LearnlanguagesId",
+                "ShareCulturesId",
+                "LearnCulturesId"
+              ],
+              "properties": {
+                "Id": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "ParticipantaccountId": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "TimezoneId": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "Status": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "__metadata": {
+                  "type": "object",
+                  "required": [
+                    "etag",
+                    "type"
+                  ],
+                  "properties": {
+                    "etag": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "type": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                },
+                "TeachlanguagesId": {
+                  "type": "object",
+                  "required": [
+                    "results"
+                  ],
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1
+                      }
+                    }
+                  }
+                },
+                "LearnlanguagesId": {
+                  "type": "object",
+                  "required": [
+                    "results"
+                  ],
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1
+                      }
+                    }
+                  }
+                },
+                "ShareCulturesId": {
+                  "type": "object",
+                  "required": [
+                    "results"
+                  ],
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1
+                      }
+                    }
+                  }
+                },
+                "LearnCulturesId": {
+                  "type": "object",
+                  "required": [
+                    "results"
+                  ],
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Read_current": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Read_language": {
+          "type": "OpenApiConnection",
+          "runAfter": {
+            "Current_item": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "parameters": {
+              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+              "parameters/method": "GET",
+              "parameters/uri": "_api/web/lists(guid'3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63')/items?$select=Id,Active&$top=5000",
+              "parameters/headers": {
+                "Accept": "application/json;odata=verbose"
+              }
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline",
+              "operationId": "HttpRequest"
+            },
+            "authentication": "@parameters('$authentication')",
+            "retryPolicy": {
+              "type": "none"
+            }
+          }
+        },
+        "Parsed_language": {
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@body('Read_language')?['d']",
+            "schema": {
+              "type": "object",
+              "required": [
+                "results"
+              ],
+              "properties": {
+                "__next": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "Id",
+                      "Active"
+                    ],
+                    "properties": {
+                      "Id": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "Active": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Read_language": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Active_language": {
+          "type": "Query",
+          "runAfter": {
+            "Parsed_language": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "from": "@body('Parsed_language')?['results']",
+            "where": "@equals(item()?['Active'],true)"
+          }
+        },
+        "IDs_language": {
+          "type": "Select",
+          "runAfter": {
+            "Active_language": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "from": "@body('Active_language')",
+            "select": "@item()?['Id']"
+          }
+        },
+        "Read_culture": {
+          "type": "OpenApiConnection",
+          "runAfter": {
+            "IDs_language": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "parameters": {
+              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+              "parameters/method": "GET",
+              "parameters/uri": "_api/web/lists(guid'cf7ed5b4-2e11-4a0a-a417-6c63ed60f614')/items?$select=Id,Active&$top=5000",
+              "parameters/headers": {
+                "Accept": "application/json;odata=verbose"
+              }
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline",
+              "operationId": "HttpRequest"
+            },
+            "authentication": "@parameters('$authentication')",
+            "retryPolicy": {
+              "type": "none"
+            }
+          }
+        },
+        "Parsed_culture": {
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@body('Read_culture')?['d']",
+            "schema": {
+              "type": "object",
+              "required": [
+                "results"
+              ],
+              "properties": {
+                "__next": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "Id",
+                      "Active"
+                    ],
+                    "properties": {
+                      "Id": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "Active": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Read_culture": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Active_culture": {
+          "type": "Query",
+          "runAfter": {
+            "Parsed_culture": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "from": "@body('Parsed_culture')?['results']",
+            "where": "@equals(item()?['Active'],true)"
+          }
+        },
+        "IDs_culture": {
+          "type": "Select",
+          "runAfter": {
+            "Active_culture": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "from": "@body('Active_culture')",
+            "select": "@item()?['Id']"
+          }
+        },
+        "Read_timezone": {
+          "type": "OpenApiConnection",
+          "runAfter": {
+            "IDs_culture": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "parameters": {
+              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+              "parameters/method": "GET",
+              "parameters/uri": "_api/web/lists(guid'7beddfff-1881-4a82-8003-29933b836350')/items?$select=Id,Active&$top=5000",
+              "parameters/headers": {
+                "Accept": "application/json;odata=verbose"
+              }
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline",
+              "operationId": "HttpRequest"
+            },
+            "authentication": "@parameters('$authentication')",
+            "retryPolicy": {
+              "type": "none"
+            }
+          }
+        },
+        "Parsed_timezone": {
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@body('Read_timezone')?['d']",
+            "schema": {
+              "type": "object",
+              "required": [
+                "results"
+              ],
+              "properties": {
+                "__next": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "Id",
+                      "Active"
+                    ],
+                    "properties": {
+                      "Id": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "Active": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Read_timezone": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Active_timezone": {
+          "type": "Query",
+          "runAfter": {
+            "Parsed_timezone": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "from": "@body('Parsed_timezone')?['results']",
+            "where": "@equals(item()?['Active'],true)"
+          }
+        },
+        "IDs_timezone": {
+          "type": "Select",
+          "runAfter": {
+            "Active_timezone": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "from": "@body('Active_timezone')",
+            "select": "@item()?['Id']"
+          }
+        },
+        "Require_complete_reads": {
+          "type": "If",
+          "expression": "@and(empty(body('Parsed_language')?['__next']),empty(body('Parsed_culture')?['__next']),empty(body('Parsed_timezone')?['__next']),equals(body('Current_item')?['Id'],int(triggerBody()?['ID'])),not(equals(body('Current_item')?['__metadata']?['etag'],'*')))",
+          "actions": {},
+          "else": {
+            "actions": {
+              "Fail_incomplete_reads": {
+                "type": "Terminate",
+                "inputs": {
+                  "runStatus": "Failed",
+                  "runError": {
+                    "code": "INCOMPLETE_OR_MISMATCHED_READ",
+                    "message": "INCOMPLETE_OR_MISMATCHED_READ"
+                  }
+                },
+                "runAfter": {}
+              }
+            }
+          },
+          "runAfter": {
+            "IDs_timezone": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Status_changed": {
+          "type": "If",
+          "expression": "@not(equals(body('Current_item')?['Status'],outputs('Desired_status')))",
+          "actions": {
+            "Update_validation_status": {
+              "type": "OpenApiConnection",
+              "runAfter": {},
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "POST",
+                  "parameters/uri": "@concat('_api/web/lists(guid''fd3adf46-f81d-4a7b-a80c-567fde0175dc'')/items(',string(triggerBody()?['ID']),')')",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose",
+                    "Content-Type": "application/json;odata=verbose",
+                    "X-HTTP-Method": "MERGE",
+                    "IF-MATCH": "@body('Current_item')?['__metadata']?['etag']"
+                  },
+                  "parameters/body": {
+                    "__metadata": {
+                      "type": "@body('Current_item')?['__metadata']?['type']"
+                    },
+                    "Status": "@outputs('Desired_status')"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": "@parameters('$authentication')",
+                "retryPolicy": {
+                  "type": "none"
+                }
+              }
+            },
+            "Verify_status": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "Update_validation_status": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "@concat('_api/web/lists(guid''fd3adf46-f81d-4a7b-a80c-567fde0175dc'')/items(',string(triggerBody()?['ID']),')','?$select=Id,ParticipantaccountId,TimezoneId,Status,TeachlanguagesId,LearnlanguagesId,ShareCulturesId,LearnCulturesId')",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": "@parameters('$authentication')",
+                "retryPolicy": {
+                  "type": "none"
+                }
+              }
+            },
+            "Require_status_readback": {
+              "type": "If",
+              "expression": "@equals(body('Verify_status')?['d']?['Status'],outputs('Desired_status'))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Fail_readback": {
+                    "type": "Terminate",
+                    "inputs": {
+                      "runStatus": "Failed",
+                      "runError": {
+                        "code": "STATUS_READBACK_MISMATCH",
+                        "message": "STATUS_READBACK_MISMATCH"
+                      }
+                    },
+                    "runAfter": {}
+                  }
+                }
+              },
+              "runAfter": {
+                "Verify_status": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          },
+          "runAfter": {
+            "Desired_status": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Validation_report": {
+          "type": "Compose",
+          "inputs": {
+            "kind": "ParticipantSubmissionValidation",
+            "schemaVersion": 1,
+            "sourceTicket": 61,
+            "packageBuildId": "issue-61-shared-consumer-v1",
+            "runReference": "@workflow()?['run']?['name']",
+            "itemId": "@body('Current_item')?['Id']",
+            "valid": "@outputs('Profile_valid')",
+            "status": "@outputs('Desired_status')",
+            "statusChanged": "@not(equals(body('Current_item')?['Status'],outputs('Desired_status')))",
+            "result": "@if(equals(body('Current_item')?['Status'],outputs('Desired_status')),'NO_CHANGE','STATUS_UPDATED')",
+            "sharedChildId": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+            "contractVersion": 1,
+            "rulesVersion": 1,
+            "sharedCode": "@body('Profile_result')?['code']",
+            "sharedBuildId": "@body('Profile_result')?['packageBuildId']",
+            "sharedRunReference": "@body('Profile_result')?['runReference']"
+          },
+          "runAfter": {
+            "Status_changed": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Profile_request": {
+          "type": "Compose",
+          "inputs": {
+            "contractVersion": 1,
+            "rulesVersion": 1,
+            "mode": "PROFILE",
+            "profiles": [
+              {
+                "profileId": "@body('Current_item')?['Id']",
+                "accountKey": "@if(greater(coalesce(body('Current_item')?['ParticipantaccountId'],0),0),string(body('Current_item')?['ParticipantaccountId']),'')",
+                "status": "@body('Current_item')?['Status']",
+                "participationStatus": null,
+                "openToConnections": null,
+                "timezoneId": "@body('Current_item')?['TimezoneId']",
+                "teachIds": "@body('Current_item')?['TeachlanguagesId']?['results']",
+                "learnIds": "@body('Current_item')?['LearnlanguagesId']?['results']",
+                "shareCultureIds": "@body('Current_item')?['ShareCulturesId']?['results']",
+                "learnCultureIds": "@body('Current_item')?['LearnCulturesId']?['results']"
+              }
+            ],
+            "catalogues": {
+              "languageIds": "@body('IDs_language')",
+              "cultureIds": "@body('IDs_culture')",
+              "timezoneIds": "@body('IDs_timezone')",
+              "anyLanguageId": null
+            }
+          },
+          "runAfter": {
+            "Require_complete_reads": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Call_profile_child": {
+          "type": "Workflow",
+          "runAfter": {
+            "Profile_request": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "host": {
+              "workflowReferenceName": "e9aa88eb-a666-4df1-b088-176be7bcd00d"
+            },
+            "body": {
+              "text": "@string(outputs('Profile_request'))"
+            }
+          }
+        },
+        "Profile_result": {
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@json(body('Call_profile_child')?['resultjson'])",
+            "schema": {
+              "type": "object",
+              "required": [
+                "contractVersion",
+                "rulesVersion",
+                "success",
+                "code",
+                "kind",
+                "sourceTicket",
+                "authorizesAction",
+                "result",
+                "packageBuildId",
+                "runReference",
+                "connectors",
+                "reads",
+                "writes"
+              ],
+              "properties": {
+                "contractVersion": {
+                  "type": "integer"
+                },
+                "rulesVersion": {
+                  "type": "integer"
+                },
+                "success": {
+                  "type": "boolean"
+                },
+                "code": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string"
+                },
+                "sourceTicket": {
+                  "type": "integer"
+                },
+                "authorizesAction": {
+                  "type": "boolean"
+                },
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "valid": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "packageBuildId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "runReference": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "connectors": {
+                  "type": "integer"
+                },
+                "reads": {
+                  "type": "integer"
+                },
+                "writes": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Call_profile_child": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Require_profile_result": {
+          "type": "If",
+          "expression": "@and(equals(body('Profile_result')?['contractVersion'],1),equals(body('Profile_result')?['rulesVersion'],1),equals(body('Profile_result')?['kind'],'TandemValidateContext'),equals(body('Profile_result')?['sourceTicket'],81),equals(body('Profile_result')?['authorizesAction'],false),equals(body('Profile_result')?['connectors'],0),equals(body('Profile_result')?['reads'],0),equals(body('Profile_result')?['writes'],0),equals(body('Call_profile_child')?['resultcode'],body('Profile_result')?['code']),equals(body('Call_profile_child')?['success'],body('Profile_result')?['success']),or(and(equals(body('Profile_result')?['code'],'OK'),equals(body('Profile_result')?['success'],true),contains(body('Profile_result')?['result'],'valid')),and(equals(body('Profile_result')?['code'],'INVALID_PROFILE_DATA'),equals(body('Profile_result')?['success'],false),equals(body('Profile_result')?['result'],json('{}')))))",
+          "actions": {},
+          "else": {
+            "actions": {
+              "Fail_profile_result": {
+                "type": "Terminate",
+                "inputs": {
+                  "runStatus": "Failed",
+                  "runError": {
+                    "code": "SHARED_PROFILE_CONTRACT_FAILED",
+                    "message": "SHARED_PROFILE_CONTRACT_FAILED"
+                  }
+                },
+                "runAfter": {}
+              }
+            }
+          },
+          "runAfter": {
+            "Profile_result": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Profile_valid": {
+          "type": "Compose",
+          "inputs": "@and(equals(body('Profile_result')?['code'],'OK'),equals(body('Profile_result')?['result']?['valid'],true))",
+          "runAfter": {
+            "Require_profile_result": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Desired_status": {
+          "type": "Compose",
+          "inputs": "@if(outputs('Profile_valid'),'Active','Needs review')",
+          "runAfter": {
+            "Profile_valid": [
+              "Succeeded"
+            ]
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "connectionName": "b7e419509f0f4da89895a5ebd1f3a216",
+        "source": "Embedded",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+        "tier": "NotSpecified",
+        "apiName": "sharepointonline",
+        "isProcessSimpleApiReferenceConversionAlreadyDone": false
+      }
+    },
+    "displayName": "Tandem – Participant submission shared consumer DRAFT"
+  }
+}

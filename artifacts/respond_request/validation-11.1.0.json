@@ -1,0 +1,87 @@
+{
+  "sourceTicket": 11,
+  "version": "11.1.0",
+  "packageBuildId": "94e47272-28bc-4529-bb2f-521b90e43011",
+  "baseRef": "origin/main",
+  "baseCommit": "7eba0ba0e5739477d4259474c2cb8fb8b3e3ee94",
+  "branch": "codex/issue-11-business-response",
+  "local": {
+    "status": "PASS",
+    "command": "python -B -m pytest -q -p no:cacheprovider",
+    "testsPassed": 420,
+    "priorBaselineTests": 357,
+    "issue11Tests": 63,
+    "durationSeconds": 145.69,
+    "engine": "Emitted parent WDL against fake SharePoint CAS/unique/readback; actual generated shared-child graph for PAIR/GROUP. Native semantics not certified.",
+    "cases": [
+      "One Accepted request, one unique group, two unique initial members, Open with space/Closed full",
+      "Decline ignores unused Accept JSON, terminal history and zero group/member writes",
+      "Authenticated currentuser-to-recipient reference consistency; sender/nonrecipient/type/identity tampering fail",
+      "Synthetic IDs38/32: both learners/no sharer rejected despite successful shared transport",
+      "Culture-only and optional null timezone supported; invalid focus/capacity/Any rejected",
+      "Shared version mismatch and unavailable/null-status profiles fail",
+      "Competing Accept/Decline and Accept/Accept winners, exact stale Pending CAS",
+      "Fresh validation/current-account binding and stale post-validation profile ETags",
+      "Exact group guard, stale publication CAS, foreign token never cleared",
+      "Complete collection/paging and committed request/group/member/receipt readback failures never return success",
+      "Definite second-member rejection seals prefix; reuse one group/first member; max three sealed attempts",
+      "Failed sealed release finalized before new attempt; Left/wrong-party/source episode not revived",
+      "Unknown408/429/500/502/504 missing-result writes retain ownership and forbid takeover",
+      "Lost create response reconciles only exact immutable unique-key row",
+      "Historical completed replay after later group Ended/name change has no business edits or child calls",
+      "Completed receipt/release failure returns false; saved replay releases only exact old token",
+      "Legacy and native parent-only Solution envelopes retain Invoker, eight original inputs plus IntentId, existing child only"
+    ],
+    "postSuitePackagingCheck": "PASS: explicit LF artifact serialization; packaging test rerun separately. Native action graph unchanged."
+  },
+  "structure": {
+    "status": "PASS",
+    "actionsAcrossAllBranches": 418,
+    "maximumActionDepth": 7,
+    "limits": {
+      "actions": 500,
+      "maximumActionDepth": 8
+    },
+    "uniqueActionNames": true,
+    "siblingRunAfterAndActionReferences": "PASS",
+    "etagWildcardWrites": 0,
+    "automaticWriteRetries": 0,
+    "rollbackDeletes": 0
+  },
+  "hashes": {
+    "legacyZipSha256": "1e7fde90b095b995cf0ca7e8a5c1a81647d7f0b6525f56a61c120edda914b727",
+    "definitionSha256": "496aa9a9ca1c3e5d08ae7cbdcffe4aa9f89877e30e83510330df50644f06f048",
+    "solutionZipSha256": "c6ad3877e4ac515d718eb7df908c7af33af5d8335030f14afd6fd881bf9ab330",
+    "generatorSha256": "5d8cbaa5cb111fa24ad8f6c8453da3a273e909e57d6e7d87b3349d1449f167b6"
+  },
+  "dependencies": {
+    "sharedChildId": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+    "sharedContractVersion": 1,
+    "sharedRulesVersion": 1,
+    "sharedRuntimeDelta": "NONE",
+    "receiptList": "TandemOperationReceipts",
+    "receiptSchema": "All10 finalized parent fields used exactly; no additions. Parent tenant setup/audit NOT RUN here.",
+    "writeOwner": "OperationKey + ':' + native guid() AttemptToken; plain string, no parsing by peer writers",
+    "issue81Ledger": "docs/ISSUE_11_RESPOND_REQUEST.md; parent integration handoff, no issue edit authorized"
+  },
+  "native": {
+    "legacyImport": "NOT RUN",
+    "parentOnlySolutionImport": "NOT RUN",
+    "powerAppsBinding": "NOT RUN",
+    "trustedCallerAndPrivateAuthority": "NOT RUN",
+    "productionReceiptSetupReadback": "NOT RUN",
+    "businessAcceptDeclineParity": "NOT RUN",
+    "raceAndFaultAcceptance": "NOT RUN",
+    "crossFlowWriters": "NOT RUN",
+    "ordinaryParticipantAccess": "DEFERRED_BY_OWNER",
+    "safeNativeFaultInjectionAvailability": "UNVERIFIED; BLOCKED cases explicitly in handover"
+  },
+  "limitations": [
+    "Approved snapshot supplies trigger only; old snapshot is not a runtime-certified production export.",
+    "Inspected native manual owner Invoker probe is an envelope template, not this Power Apps business authority proof.",
+    "Profile/catalogue reads are not an atomic cross-item eligibility reservation.",
+    "No actual imported flow, tenant setting, schema, permission, app or notification channel changed.",
+    "Generated legacy child-reference import resolution and companion Solution dependency resolution remain native gates.",
+    "Parent setup/authority/cross-flow tests remain required; no ticket closure or wider-release claim."
+  ]
+}

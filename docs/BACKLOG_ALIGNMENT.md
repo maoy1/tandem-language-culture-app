@@ -334,3 +334,8 @@ prerequisites pass.
 PR #44 retains owner-confirmed synthetic language cases; it does not implement
 culture/status/open filters or authorize real-data discovery. The scope-alignment
 PR is planning only and must not close #5/#6/#7/#18 or #45–#49 automatically.
+
+
+## Owner-authorized parallel request batch — 2026-11-08
+
+PR #77 merged; #7 remains open with testing pending, queued Planned. #10/#62/#63 are the active parallel batch, separate flow branches/PRs, per explicit owner request. #39 audience/IT follow-up remains Planned. This batch is an explicit exception to one-active scheduling; it does not waive schema, connection, privacy or native-test gates. No production cutover yet.

@@ -1,0 +1,22 @@
+{
+  "sourceTicket": 81,
+  "overviewTicket": 45,
+  "source": "Owner confirmation in chat,2026-11-14 Europe/Berlin",
+  "solutionVersionContext": "1.0.0.1",
+  "expectedPackageBuildId": "bd66271f-090e-4f5c-a890-8cb5b61173cc",
+  "expectedZipSha256": "2708aef6bdff431c6681e17aeaca44d46073b9ef83ed2bd81af2ea3124661e92",
+  "modeContext": "ApplyChanges=No after corrected import",
+  "reported": {
+    "validationCode": "OK",
+    "collectionComplete": true,
+    "schemaVerified": true
+  },
+  "runReference": null,
+  "fullReportProvided": false,
+  "assessment": "OWNER_CONFIRMED_READ_ONLY_SCHEMA_PASS; exact build/run correlation not separately pasted.",
+  "remaining": [
+    "Repeat ApplyChanges=Yes and verify all Create actions Skipped",
+    "Native45-case smoke if not already run",
+    "Consumer/automatic/app acceptance and deferred ordinary-user access"
+  ]
+}

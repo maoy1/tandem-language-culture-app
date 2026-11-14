@@ -1,0 +1,240 @@
+{
+  "automatedConnectionEvidence": "Legacy Embedded source inspected; automatic Solution binding/import/execution NOT RUN",
+  "buildProvenance": {
+    "baselineFieldCount": 59,
+    "baselineRoleCount": 8,
+    "baselineSha256": "f45503c366819fbcfb0b87df3a3e19c19da576edde9c1625e90a2318df50b6b0",
+    "baselineVersion": 2,
+    "compatibilitySha256": "dfe0dcd587a5a348080dde288183ed3dff2d02d1f652f0ae23010b2e6e649c72",
+    "consumerWorkingTree": [],
+    "consumers": {
+      "TandemCancelRequest": {
+        "artifact": "artifacts/cancel_request/TandemCancelRequest-v4.definition.json",
+        "contentVersion": "1.0.0.0",
+        "indexBlob": "86a352f4d9c4361d85b9fa379ad46ce92e676437",
+        "sha256": "34184ea4f9a361bf29df941d0bb3448c0810953790c2c7bb0ce023086c9b4922",
+        "sourceBuildIds": []
+      },
+      "TandemDiscovery": {
+        "artifact": "artifacts/tandem_discovery/TandemDiscovery-shared.definition.json",
+        "contentVersion": "1.0.0.0",
+        "indexBlob": "7ad3bd5c6776c6b6f3c59bb2013251777d5356fa",
+        "sha256": "f5b21ea0464ca80149b912811bad1330ea0431473c8f285b8a38ee42e99cceb7",
+        "sourceBuildIds": [
+          "2558a81d-8736-435a-94dd-a6b0ced4aaac"
+        ]
+      },
+      "TandemLeaveGroup": {
+        "artifact": "artifacts/leave_group/TandemLeaveGroup-v1.definition.json",
+        "contentVersion": "1.0.0.0",
+        "indexBlob": "52761d5724cb06aee6550574fc545e24a275a087",
+        "sha256": "4660963198e3b91a8000193afa2a5a7107be53990f62054ea76f792de8a0ff2f",
+        "sourceBuildIds": []
+      },
+      "TandemMyGroups": {
+        "artifact": "artifacts/my_groups/TandemMyGroups-v2.definition.json",
+        "contentVersion": "1.0.0.0",
+        "indexBlob": "e2643714df22754f8242037350624a6bebf6ecaf",
+        "sha256": "440df39b310047dde6118e0c30fae9e78192bd9f52b6c9fdf5bc5c7c3031a101",
+        "sourceBuildIds": []
+      },
+      "TandemMyRequests": {
+        "artifact": "artifacts/my_requests/TandemMyRequests-v7-introduction-target.definition.json",
+        "contentVersion": "1.0.0.0",
+        "indexBlob": "732f43d1e52dd0488e62ce843c872f941b330a5d",
+        "sha256": "96c0f5c25e81c140f2b0e0c0965bcbf5880a5c9445bb1935e7b78dc75f5086a8",
+        "sourceBuildIds": []
+      },
+      "TandemParticipantSubmission": {
+        "artifact": "artifacts/participant_submission/TandemParticipantSubmission-shared-v1.solution-source.json",
+        "contentVersion": "1.0.0.0",
+        "indexBlob": "999158b41cbf080515674527de57720100cc43f0",
+        "sha256": "03c21abfbaec9a5c731c78fd69924581861df2cbb25e4e0db9700532fecff9e2",
+        "sourceBuildIds": [
+          "issue-61-shared-consumer-v1"
+        ]
+      },
+      "TandemRespondGroupJoinRequest": {
+        "artifact": "artifacts/group_response/TandemRespondGroupJoinRequest.definition.json",
+        "contentVersion": "1.0.0.0",
+        "indexBlob": "641705cafe47f7d252fcfbadd6b18f6f06dbeed0",
+        "sha256": "ac61d26d625b93c124068eeee185dc061d20e13bfcfba484c645e4cb58b3e5d2",
+        "sourceBuildIds": [
+          "ea732b74-947a-4478-a7df-92d2ff5696a1"
+        ]
+      },
+      "TandemRespondRequest": {
+        "artifact": "artifacts/respond_request/TandemRespondRequest-11.2.0.definition.json",
+        "contentVersion": "11.2.0.0",
+        "indexBlob": "8e2740337ec464ac94f0832fffbecb2fa455dab2",
+        "sha256": "479a4ae57beacb9fd5e174151565d25127246dd0d4ff40b8d46454516420d07e",
+        "sourceBuildIds": []
+      },
+      "TandemSendGroupJoinRequest": {
+        "artifact": "artifacts/group_send/TandemSendGroupJoinRequest-v1.solution-parent.json",
+        "contentVersion": "1.0.0.0",
+        "indexBlob": "c961868cff81e7b6c8175d581f132925ac779e13",
+        "sha256": "22ddfdbfb4057b71e449eb41861fedfd56ab10a4fc4e1113214de7c0d39ff95e",
+        "sourceBuildIds": [
+          "issue-17-group-send-v1"
+        ]
+      },
+      "TandemSendRequest": {
+        "artifact": "artifacts/send_request/TandemSendRequest-v4-shared.solution-parent.json",
+        "contentVersion": "1.0.0.0",
+        "indexBlob": "9804db3af911e01ed88586d32467ad86c351a578",
+        "sha256": "ae3178e974e34d54117703bdd388f1716c6a27136273aea6954963a31c6ab825",
+        "sourceBuildIds": [
+          "5a207485-1a32-4e74-9b26-8baa26fad322"
+        ]
+      },
+      "TandemUpdateGroup": {
+        "artifact": "artifacts/update_group/TandemUpdateGroup-v1.parent.json",
+        "contentVersion": "1.0.0.0",
+        "indexBlob": "f602138287943c54a5a7bf906099bce7f5f12633",
+        "sha256": "3a1798ac11460a3d6d0348ba4f6e5752cf0fd055ed0316345c6e0169d71934a2",
+        "sourceBuildIds": [
+          "55d4d4c3-958d-48a1-ac0e-a20fdea8ad1f"
+        ]
+      }
+    },
+    "contractVersion": 1,
+    "generatorCommit": "670d90a75fcc1fd706398eb8136f2e2d7bd02e1f",
+    "generatorInputs": {
+      "artifacts/shared_validation/results/request-mapping.baseline.json": "a37604570ab25bffbc6771ddcfab7cddf7476c5c91320e57eb530ed7e25a7f47",
+      "config/batch_schema_contract.json": "f189c44795dd448faaf7c8a0087b3aeed6357b264f21f8cb4e8860955b308495",
+      "config/core_batch_contract.json": "f4d62e9e0f310761e5db043151da252e69d0cf6047371cdb5106c30e6bff54fd",
+      "config/group_schema_mapping.json": "f6c24ee135caf7cd1c02b7684c669e0a434716ba3ec91930500d8fb564b1d9e1",
+      "config/shared_validation_schema.json": "1e2535a753884951d00c455cdb77c16a77495759207023689c72c5bbff70eb9b",
+      "config/tenant_schema_mapping.json": "245b11c22a28709866e01190280bb13e8a028a40a5d84c4c71ce5bdf65e6e218",
+      "scripts/power_automate/batch_schema.py": "d30eb7054c53be2cf3ebd2787af22d295d8153427d27c04eeb914baac7d981f0",
+      "scripts/power_automate/build_core_batch.py": "8a8745e2728d61f3b68888cb048ee8cd47459457d936f69cb49e505dff87deaa",
+      "scripts/power_automate/compatibility.py": "dfe0dcd587a5a348080dde288183ed3dff2d02d1f652f0ae23010b2e6e649c72",
+      "scripts/power_automate/core_solution.py": "9633dffed624a54b81b570305306507472861fc2a32eedd8f02f2b1d53bd3fbc",
+      "scripts/power_automate/discovery_flow.py": "08be55e8a7f5a8e32c2d9ef74c84f4730c0e8051ca63194fa27f9c55d6369012",
+      "scripts/power_automate/schema_audit.py": "58aa44de086261e3156e6f1c224607c02eb3bea587f4e788342599838f1d21a7",
+      "scripts/power_automate/shared_validation.py": "73658fe4ca36bbfb228f25d91789ebf3befe98e3cb85e042da5abc48f08c595c",
+      "scripts/power_automate/solution_source.py": "11b656099168b3f3574c58c18244ca812d6f35922b98d7f1760537241da260b3",
+      "tests/fixtures/compatibility_v1.json": "66d234a6fdd501c4550835eaa9ae7ecabcd2584834927d9bc99d26a0367445f8"
+    },
+    "rulesVersion": 1,
+    "sharedBuildId": "4db7f9fa-6d67-48b0-a7a6-33638d7ff4a1",
+    "sourceCommit": "f0387a71de802c6db13a5b15b4b9804318559f4a"
+  },
+  "flows": {
+    "TandemBatchSchemaSetup": {
+      "actions": 115,
+      "definitionSha256": "005277b82b182b74f2fa7d9029b2c32a61a86cfe761ec61d5987de007e1eda08",
+      "id": "382134c3-8b6d-535d-a7b4-50cfd0c48fa7",
+      "maximumActionDepth": 6,
+      "sourceTicket": 81
+    },
+    "TandemCancelRequest": {
+      "actions": 71,
+      "definitionSha256": "c9be43e824b105c6c87efaafcf204f42c4afeac90fa03ce5a5c15c4a19361792",
+      "id": "8bee0275-1c6a-54b3-9225-cf637d3047f0",
+      "maximumActionDepth": 5,
+      "sourceTicket": 63
+    },
+    "TandemCoreValidationSmoke": {
+      "actions": 8,
+      "definitionSha256": "48aa66017b8411b9178c02ec8a9f7a86f64b19fbfb4b9dffc76747fcf56bf7f9",
+      "id": "23d87bda-f7aa-5011-935d-053cf1a67f17",
+      "maximumActionDepth": 2,
+      "sourceTicket": 81
+    },
+    "TandemDiscovery": {
+      "actions": 167,
+      "definitionSha256": "6a6f892a4dc464b00b08ff526851e0b2fafb1a94d15c68b01fa09b3d22bdd4c0",
+      "id": "fd8d85eb-5af0-54a3-b05b-c8183830d4b2",
+      "maximumActionDepth": 6,
+      "sourceTicket": 7
+    },
+    "TandemLeaveGroup": {
+      "actions": 231,
+      "definitionSha256": "89eddcd45a2c7d937188d963f6df0efd0e8b8fc134a7aadf53616e73da1eaab3",
+      "id": "879a36cc-5bfe-5085-8f0e-805faad13f48",
+      "maximumActionDepth": 4,
+      "sourceTicket": 14
+    },
+    "TandemMyGroups": {
+      "actions": 185,
+      "definitionSha256": "400b864b8702b4628d14f198b543080c3a1890a13fb32ab33f470708fe7d90d5",
+      "id": "fcf94de0-e60d-5484-8565-a436b87c0e0b",
+      "maximumActionDepth": 5,
+      "sourceTicket": 64
+    },
+    "TandemMyRequests": {
+      "actions": 128,
+      "definitionSha256": "e3842c80dbadf6560bed41dc0314a9cd1973faa921d8302a277ecb081e345cf0",
+      "id": "85b7ac12-e1f5-56ce-b882-10b47218e9ad",
+      "maximumActionDepth": 4,
+      "sourceTicket": 62
+    },
+    "TandemParticipantSubmission": {
+      "actions": 29,
+      "definitionSha256": "7eb35adbcada959bb2c2ff67b5fea41cb68c6b40f1037e0f295b6424296f18e2",
+      "id": "28d287b9-5d1c-56a7-930c-e699d4d6dd4a",
+      "maximumActionDepth": 3,
+      "sourceTicket": 61
+    },
+    "TandemRespondGroupJoinRequest": {
+      "actions": 393,
+      "definitionSha256": "e1f4c031010fbbe949e0c21ad425467c702b9ec445a88eb9181dbdb6f711cf1f",
+      "id": "d53f1797-9647-5910-9bda-8a48e0fced31",
+      "maximumActionDepth": 5,
+      "sourceTicket": 65
+    },
+    "TandemRespondRequest": {
+      "actions": 296,
+      "definitionSha256": "d7934091992ef328a108c29301bb72700bb416c5105259f61b785a28f13fd34a",
+      "id": "b983e199-0544-53c2-af4d-c8bee5d3de8d",
+      "maximumActionDepth": 7,
+      "sourceTicket": 11
+    },
+    "TandemSendGroupJoinRequest": {
+      "actions": 147,
+      "definitionSha256": "47887147d866dd28b4dd02f1d82b2dd987af8a77c2a8ada7640dfbb739861421",
+      "id": "1c00da26-d2c0-583b-9fac-17cff45a35f2",
+      "maximumActionDepth": 5,
+      "sourceTicket": 17
+    },
+    "TandemSendRequest": {
+      "actions": 99,
+      "definitionSha256": "4c5cbacf75fb4e18ee678b8c4480f8cf228dca03900fa0689761fcf2043fe4a9",
+      "id": "bd284001-372a-512f-9bda-e5d2709a091d",
+      "maximumActionDepth": 4,
+      "sourceTicket": 10
+    },
+    "TandemUpdateGroup": {
+      "actions": 250,
+      "definitionSha256": "f47887d9655adcea1d4b93cadbcb8a017a04e8940c8ffa8ab861a473c4bfe693",
+      "id": "3cbdb281-0aac-562c-9183-616cf431c9c3",
+      "maximumActionDepth": 5,
+      "sourceTicket": 13
+    },
+    "TandemValidateContext": {
+      "actions": 93,
+      "definitionSha256": "a548c094b97bbb9633c0fa3977627427da54e9c9df7fbd9e8089805e5229ea30",
+      "id": "f1f91974-4124-557e-b7fe-d51e9972681d",
+      "maximumActionDepth": 7,
+      "sourceTicket": 81
+    }
+  },
+  "importState": "disabled",
+  "maintenanceFlowCount": 2,
+  "nativeResult": "NOT_IMPORTED_NOT_TESTED",
+  "ordinaryUserAccess": "Deferred by owner; not verified by owner-context tests",
+  "ordinaryUserAccessVerified": false,
+  "productionFlowCount": 12,
+  "sha256": "bd854ae74a5e0291d985aa5fadc3fb3088c8135e7c5e337148acb02e89d4c959",
+  "sharedBuildId": "4db7f9fa-6d67-48b0-a7a6-33638d7ff4a1",
+  "sharedDependencyRebinding": {
+    "fromBuild": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
+    "toBuild": "4db7f9fa-6d67-48b0-a7a6-33638d7ff4a1"
+  },
+  "solutionName": "TandemCoreBatch",
+  "solutionVersion": "1.0.0.0",
+  "sourceExportSha256": "ce19af2e37e7de4a9317ec4c63e8d5777beaf23a57120c99b4e38d38ce4946d4",
+  "sourceTicket": 81
+}

@@ -1,0 +1,29 @@
+{
+  "sourceTicket": 81,
+  "schemaVersion": 1,
+  "state": "IMPLEMENTED_SCHEMA_TARGET_NOT_APPLIED_OR_TENANT_VERIFIED",
+  "site": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+  "requestsListId": "3d17485d-1dac-41f0-a1af-24e45daa4567",
+  "introduction": {"name": "Introduction", "type": "Note", "required": false, "richText": false, "appendOnly": false, "maximumCharacters": 2000},
+  "receipts": {
+    "title": "TandemOperationReceipts",
+    "description": "Tandem bounded operation receipts; schema contract 81/1. No participant direct writes.",
+    "listId": null,
+    "fields": [
+      {"name": "OperationKey", "type": "Text", "required": true, "unique": true, "indexed": true, "maxLength": 255},
+      {"name": "IntentJson", "type": "Note", "required": true},
+      {"name": "ResultJson", "type": "Note", "required": false},
+      {"name": "Complete", "type": "Boolean", "required": false, "default": "0"},
+      {"name": "Uncertain", "type": "Boolean", "required": false, "default": "0"},
+      {"name": "Retryable", "type": "Boolean", "required": false, "default": "0"},
+      {"name": "DomainEffects", "type": "Boolean", "required": false, "default": "0"},
+      {"name": "AttemptToken", "type": "Text", "required": false, "maxLength": 255},
+      {"name": "SealedAttempts", "type": "Note", "required": false},
+      {"name": "Stage", "type": "Text", "required": false, "maxLength": 255}
+    ]
+  },
+  "scope": "One-time owner schema setup/audit; no business item writes, deletes or permission changes. Existing mismatches are reported, never silently converted.",
+  "nativeEvidence": "NOT RUN",
+  "consumerTickets": [10, 11, 13, 14, 17, 62, 63, 64, 65],
+  "email": "Excluded: approved mailbox failed REST capability probe; #49/#21 remains separate."
+}
