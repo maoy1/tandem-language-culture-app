@@ -1,0 +1,52 @@
+{
+  "sourceTicket": 81,
+  "kind": "TandemSolutionCallerProbeOwnerEvidence",
+  "evidenceForm": "Curated values from supplied action bodies; parent name/run and connection mode are not independently in those bodies",
+  "expectedParentFlow": "Tandem81CallerProbe",
+  "reportedSharePointBody": {
+    "d": {
+      "Id": 16
+    }
+  },
+  "reportedChildBody": {
+    "resultcode": "OK",
+    "success": true,
+    "resultjson": {
+      "kind": "TandemValidateContext",
+      "sourceTicket": 81,
+      "contractVersion": 1,
+      "rulesVersion": 1,
+      "packageBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
+      "sourceSha256": "dfe0dcd587a5a348080dde288183ed3dff2d02d1f652f0ae23010b2e6e649c72",
+      "runReference": "08584069483776257593504328231CU07",
+      "success": true,
+      "code": "OK",
+      "result": {
+        "profiles": [],
+        "catalogues": {
+          "concreteLanguageIds": [],
+          "cultureIds": []
+        }
+      },
+      "authorizesAction": false,
+      "diagnostics": {
+        "requestText": "Succeeded",
+        "envelope": "Succeeded",
+        "header": "Succeeded",
+        "schemaMode": "Succeeded",
+        "rulesMode": "Succeeded"
+      },
+      "connectors": 0,
+      "reads": 0,
+      "writes": 0
+    }
+  },
+  "result": "PASS_OWNER_CONTEXT_SHAREPOINT_GET_AND_SHARED_CHILD_RETURN",
+  "parentRunReference": "NOT_SUPPLIED",
+  "connectionMode": "PENDING_NATIVE_EXPORT_INSPECTION",
+  "ordinaryUserAccessVerified": false,
+  "businessConsumerParity": "NOT_RUN",
+  "parentReads": "One reported metadata GET, no business row reads",
+  "childReads": 0,
+  "writes": 0
+}

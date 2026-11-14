@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "sourceTicket": 17,
+  "state": "OWNER_APPROVED_INTRO_LIMIT_IMPLEMENTATION_AND_TENANT_MAPPING_PENDING",
+  "introduction": {
+    "optional": true,
+    "maximumCharacters": 2000,
+    "content": "plain text",
+    "enforce": [
+      "Power Apps input",
+      "server flow before any request write"
+    ],
+    "blankAllowed": true,
+    "appliesTo": "group join only; no personal-request requirement"
+  },
+  "proposedTenantField": {
+    "listRole": "requests",
+    "internalName": "Introduction",
+    "type": "Note",
+    "required": false,
+    "richText": false,
+    "appendOnly": false,
+    "mappingVerified": false,
+    "applied": false
+  },
+  "requestTypeAdapter": "Use verified persisted RequestType=Group; issue prose GroupJoin denotes operation, not a new unverified Choice value",
+  "acceptance": {
+    "emptyOrOmitted": "NOT_RUN",
+    "exact2000": "NOT_RUN",
+    "over2000": "NOT_RUN",
+    "preserveEditsOnReject": "NOT_RUN",
+    "readbackAndPlainTextRendering": "NOT_RUN"
+  },
+  "affectedTickets": [
+    17,
+    62,
+    65,
+    67,
+    81
+  ],
+  "sharedValidatorImpact": "No current engine/package change; update #81 schema baseline/mappings/contracts and relevant native evidence when field is actually introduced",
+  "notificationChannelSelected": false
+}

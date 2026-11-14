@@ -1,0 +1,32 @@
+{
+  "sourceTicket": 81,
+  "packageBuildId": "31382f7e-a0df-44a2-9fde-223a11774e67",
+  "solutionName": "TandemSharedValidation81",
+  "sourceExportSha256": "5560d8d80f78de67966160fe0276711494b76c0f176e19356d6cf32d2c4c191c",
+  "packageSha256": "cb0102c74fc669541cb30895dea065f45ce6e410204df742bd949f190bae02c0",
+  "sourceSha256": "dfe0dcd587a5a348080dde288183ed3dff2d02d1f652f0ae23010b2e6e649c72",
+  "schemaSha256": "1e2535a753884951d00c455cdb77c16a77495759207023689c72c5bbff70eb9b",
+  "generatorSha256": "b507447115fa3f1a3233af7acf12dfb5595cac7434f8ee702bf80cbf8b8131f8",
+  "flows": {
+    "TandemValidateContext": {
+      "id": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+      "actions": 84,
+      "maximumActionDepth": 7
+    },
+    "TandemValidationSmoke": {
+      "id": "6d3887f7-ea0d-4d3f-8a42-00f64ae750ba",
+      "actions": 8,
+      "maximumActionDepth": 2
+    }
+  },
+  "testCount": 44,
+  "connectors": 0,
+  "reads": 0,
+  "writes": 0,
+  "newSolutionAndNewFlowIds": true,
+  "consumerCutover": false,
+  "importState": "disabled",
+  "nativeResult": "NOT_IMPORTED_NOT_TESTED",
+  "metadataProvenance": "Supplied snapshots; no live audit certification",
+  "callerBoundary": "Pure evaluator, never authorization; existing parent Invoker retained"
+}
