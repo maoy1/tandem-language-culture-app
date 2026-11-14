@@ -322,6 +322,51 @@ def walk(block):
         yield from walk(a.get('else',{}).get('actions',{}))
 
 
+def test_emitted_variable_updates_never_reference_their_own_target():
+    actions=leave.build_actions(SOURCE,PEOPLE,GROUPS,'activation-repair')
+    for name,node in walk(actions):
+        if node['type']!='SetVariable':continue
+        inputs=node['inputs']
+        references=re.findall(r"variables\(\s*'([^']+)'\s*\)",json.dumps(inputs['value']),re.I)
+        assert inputs['name'].lower() not in [ref.lower() for ref in references],name
+
+
+@pytest.mark.parametrize('case,code',[
+    ('busy','GROUP_BUSY'),('inactive','ALREADY_LEFT'),
+    ('failed_create','OUTCOME_UNKNOWN'),('intent_conflict','INTENT_CONFLICT')])
+def test_receipt_not_ready_preserves_error_and_blocks_release(case,code):
+    s=Fake()
+    if case=='busy':s.group['WriteOwner']='other:attempt'
+    elif case=='inactive':s.members[20].update(MembershipStatus='Left',LeftAt='old')
+    elif case=='failed_create':s.faults['Create_receipt']='fail'
+    else:
+        assert execute(s).response['success']
+        receipt=next(iter(s.receipts.values()))
+        intent=json.loads(receipt['IntentJson']);intent['membershipId']=24
+        receipt['IntentJson']=json.dumps(intent)
+    n=len(s.writes)
+    r=execute(s)
+    assert not r.variables['ReceiptReady']
+    assert r.response['resultcode']==code and not r.response['success']
+    assert r.response['resultjson']=='{}'
+    assert r.action_states['Require_receipt_ready_stop']=='Failed'
+    assert r.action_states['Release_code']=='Skipped'
+    assert r.action_states['Group_release_get']=='Skipped'
+    assert r.action_states['Success_code']=='Skipped'
+    assert 'Release_group' not in tags(s)[n:]
+
+
+def test_receipt_ready_continues_through_release_for_fresh_and_replay():
+    s=Fake()
+    for replay in [False,True]:
+        r=execute(s)
+        assert r.variables['ReceiptReady']
+        assert r.action_states['Require_receipt_ready']=='Succeeded'
+        assert r.action_states['Release_code']=='Succeeded'
+        assert r.response['success'] and r.response['resultcode']=='LEFT'
+        assert r.response['replay']==replay
+
+
 def test_emitted_graph_connection_etag_action_limit_and_zero_other_writes():
     a=leave.build_actions(SOURCE,PEOPLE,GROUPS,'test-build')
     nodes=list(walk(a));assert len({n for n,_ in nodes})==len(nodes)
@@ -497,7 +542,7 @@ def test_intent_uuid_case_is_canonical_and_attempt_is_distinct_uuid():
     assert receipt['AttemptToken'].lower()!=inputs['text'].lower()
 
 
-def test_checked_in_artifact_works_by_title_after_setup_with_matching_hashes():
+def test_historical_package_integrity_and_repaired_source_work_by_title():
     path=ROOT/'artifacts/leave_group/TandemLeaveGroup-v1.zip'
     review=json.loads(path.with_suffix('.review.json').read_text())
     contract=json.loads((ROOT/'config/leave_group_flow_contract.json').read_text())
@@ -506,11 +551,17 @@ def test_checked_in_artifact_works_by_title_after_setup_with_matching_hashes():
         assert z.testzip() is None
         assert json.loads(z.read(next(n for n in z.namelist() if n.endswith('/definition.json'))))==doc
     assert hashlib.sha256(path.read_bytes()).hexdigest()==review['packageSha256']
-    assert hashlib.sha256((ROOT/'scripts/power_automate/leave_group_flow.py').read_bytes()).hexdigest()==review['generatorSha256']
+    repair=json.loads((ROOT/'artifacts/leave_group/TandemLeaveGroup-v1-activation.review.json').read_text())
+    repaired_path=ROOT/'artifacts/leave_group/TandemLeaveGroup-v1-activation.definition.json'
+    repaired=json.loads(repaired_path.read_text())
+    assert repair['historicalGeneratorSha256']==review['generatorSha256']
+    assert repair['historicalPackageSha256']==review['packageSha256']
+    assert hashlib.sha256((ROOT/'scripts/power_automate/leave_group_flow.py').read_bytes()).hexdigest()==repair['generatorSha256']
+    assert hashlib.sha256(repaired_path.read_bytes()).hexdigest()==repair['definitionSha256']
     assert contract['package']==review
     groups=json.loads((ROOT/'config/group_schema_mapping.json').read_text())
-    assert doc['properties']['definition']['actions']==leave.build_actions(SOURCE,PEOPLE,groups,review['buildId'])
-    s=Fake();r=execute(s,actions=doc['properties']['definition']['actions'])
+    assert repaired['properties']['definition']['actions']==leave.build_actions(SOURCE,PEOPLE,groups,review['buildId'])
+    s=Fake();r=execute(s,actions=repaired['properties']['definition']['actions'])
     assert r.response['success'] and review['receiptBinding']=='EXACT_TITLE'
     assert review['tenantSchemaVerified'] is False and review['receiptListId'] is None
     assert 'Configuration_verified' not in json.dumps(doc)

@@ -15,6 +15,8 @@ from .schema_audit import measure
 from .solution_source import inspect_caller_export, invoker_parent_document, walk
 from . import batch_schema
 from . import shared_validation
+from . import activation_schema
+from .activation_graph import analyze as activation_findings
 
 ROOT = Path(__file__).resolve().parents[2]
 CONTRACT = json.loads((ROOT / 'config/core_batch_contract.json').read_text())
@@ -112,6 +114,7 @@ def assemble(native_source, documents, output, include_setup=True, include_smoke
                     logical = ref.get('connection', {}).get('connectionReferenceLogicalName')
                     if logical != seed['receipt']['connectionReferenceLogicalName'] or ref.get('runtimeSource') != 'embedded':
                         raise ValueError('Unresolved automated embedded SharePoint reference')
+        pattern_repairs = activation_schema.lower(definition['actions'])
         for _, action in walk(definition['actions']):
             if name == 'TandemValidateContext' and action['type'] in ['Workflow', 'OpenApiConnection']:
                 raise ValueError('Shared validator cannot invoke connectors or other flows')
@@ -132,6 +135,9 @@ def assemble(native_source, documents, output, include_setup=True, include_smoke
                         raise ValueError('Business writes must not automatically retry')
         if name != 'TandemValidateContext':
             definition['actions'] = bind_shared_build(definition['actions'], source_build, shared_build)
+        findings = activation_findings(definition)
+        if findings:
+            raise ValueError('Activation graph rejected '+name+': '+json.dumps(findings))
         # All components use the actual native document envelope, including the
         # automated source. No legacy flow IDs/creator/migration data leak in.
         native_doc = deepcopy(seed['child'] if name in ['TandemValidateContext', 'TandemCoreValidationSmoke'] else seed['probe'])
@@ -152,7 +158,8 @@ def assemble(native_source, documents, output, include_setup=True, include_smoke
         encoded = (json.dumps(doc, indent=2) + '\n').encode()
         entries[file] = encoded
         review['flows'][name] = {'sourceTicket': expected.get(name, 81), 'id': id_,
-                                **measure(definition['actions']), 'definitionSha256': hashlib.sha256(encoded).hexdigest()}
+                                **measure(definition['actions']), 'definitionSha256': hashlib.sha256(encoded).hexdigest(),
+                                'nativePatternGuards': pattern_repairs}
     entries['solution.xml'] = ET.tostring(solution, encoding='utf-8', xml_declaration=True)
     entries['customizations.xml'] = ET.tostring(custom, encoding='utf-8', xml_declaration=True)
     output.parent.mkdir(parents=True, exist_ok=True)
