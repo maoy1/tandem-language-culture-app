@@ -657,6 +657,49 @@ Technical field proposal: optional plain-text Note column Introduction on Connec
 
 Contract evidence only: acceptance cases empty/omitted, 2,000 accepted and 2,001 rejected in both app/server are NOT RUN. #17 remains Planned, not implemented/Ready. No flow, list, data, permission or existing app changed. This clears the remaining explicit product choice for core group-join implementation; receipt-schema and Solution SharePoint/caller prerequisites still need technical verification.
 
+## #61 shared PROFILE consumer candidate — 2026-11-14
+
+[#61](https://github.com/maoy1/tandem-language-culture-app/issues/61), under
+[#45](https://github.com/maoy1/tandem-language-culture-app/issues/45): separate
+owner-authorized parallel-batch branch from origin/main. New local generator
+`participant_submission_shared.py` delegates profile normalization/content checks
+to unchanged native child e9aa88eb-a666-4df1-b088-176be7bcd00d, contract1/rules1
+PROFILE. Parent keeps trusted current reads, complete catalogue reads, changed
+Status-only ETag write/readback and no-op follow-up. No per-event schema audit,
+participation/openness/identity/selection, permission, group or membership writes.
+PROFILE receives null availability without reading/resetting those business fields.
+
+Actual legacy export SHA256 a81c0c87b262ffb5a13fe079dec4a13bcc345e763c1e57c10dd02bed57dae90c
+uses named Embedded SharePoint owner connection b7e419509f0f4da89895a5ebd1f3a216
+and `$authentication`. The readable draft preserves its trigger and references.
+Separate automated adapter resolves the existing native component
+cre46_sharepointonline_a22363a216 and emits `runtimeSource: embedded`; it never
+uses the manual Invoker adapter or Raw trigger-token expression. Core marker
+`AUTOMATED_SOURCE_VERIFIED` means **legacy automated source inspected only**.
+Native automatic Solution import/owner-resolution/execution remains **NOT RUN**;
+do not infer it from the manual probe or legacy evidence. Deployment is gated.
+
+Build issue-61-shared-consumer-v1: 29 definitions/depth3; unchanged child84/depth7.
+Readable draft, separate Solution source and hash/binding review are under
+artifacts/participant_submission. No legacy ZIP until valid final Solution
+assembly; no live flow/app replacement, readiness upgrade or issue edit.
+Existing v2 build88637754-4c91-4833-9dcf-5116d8bfb77e, item38 evidence and Live26
+remain historical/current runtime evidence, not proof for this new consumer.
+
+#81 drift assessment: no shared schema/contract/rules/null/availability/catalogue
+semantics change and no child/other consumer package edits. Existing PROFILE
+content semantics, including active Any as content and culture-only/null-zone,
+are reused; no matching occurs. Local #61 contract ledger records scope and
+native NOT RUN gates; shared QUICK3/FULL44 PASS remains bounded to its old build.
+Exact adapter/test handover is appended to docs/FLOW_61_PARTICIPANT_SUBMISSION.md.
+
+
+## #61 shared consumer native no-op PASS — 2026-11-14
+
+Owner report item38: parent08584069192652841427464544862CU18, consumerissue-61-shared-consumer-v1; shared PROFILE returns OK on batchbd66271f-090e-4f5c-a890-8cb5b61173cc, child08584069192622793814733430516CU11. valid=true, StatusActive, statusChanged=false, NO_CHANGE. Evidence artifacts/participant_submission/results/shared-v1-no-change.owner-report.json. Record bounded automatic event/read/child/no-op PASS; Status-write/readback/follow-up, broader acceptance and old-validator-off confirmation are not inferred. No source/package/semantic change; no local tests rerun for recording native evidence.
+
+Report sharedChildId still contains the legacy template annotation e9aa88eb...; exact1.0.0.1 packaged Call_profile_child target is f1f91974-4124-557e-b7fe-d51e9972681d, and actual shared build/run are captured above. Track the annotation rebind in #81 for the next packaging revision; this does not justify reimporting during the functional test. Next bounded test: with oldv2off and valid selections intact, set only Participants item38 validation Status to Needs review. Expect STATUS_UPDATED/Active/statusChanged=true then autonomous NO_CHANGE/statusChanged=false without another user edit. Return both reports; identity/selections/participation/openness must remain preserved.
+
 ## #7 shared-validator consumer — 2026-11-14
 
 [#7 TandemDiscovery](https://github.com/maoy1/tandem-language-culture-app/issues/7)

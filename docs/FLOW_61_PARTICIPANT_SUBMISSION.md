@@ -328,3 +328,150 @@ results, cleanup/report template and blocked access/fixture/harness cases.
 Issue remains open until its own acceptance passes; no tests waived or marked
 passed by merge. Earlier In progress/draft notes are chronological history.
 No invitations/messages/access changes were performed by the agent.
+
+## #61 shared-child consumer candidate — 2026-11-14
+
+[#61](https://github.com/maoy1/tandem-language-culture-app/issues/61) remains open;
+[#45](https://github.com/maoy1/tandem-language-culture-app/issues/45) is the overview.
+This appended candidate supersedes no passed test or deployed v2 artifact above.
+Build **issue-61-shared-consumer-v1**, **29 action definitions / depth3**, delegates
+PROFILE to child **e9aa88eb-a666-4df1-b088-176be7bcd00d**, contract1/rules1,
+native-passed build c79b7b64-b3ce-4de3-aa74-0ed62bca1524 (unchanged84/depth7).
+Both are below500/8. This is local implementation; native consumer parity NOT RUN.
+
+Files: `TandemParticipantSubmission-shared-v1.definition.json` is the readable
+legacy-shaped candidate; `.solution-source.json` is the separate core-packager
+input; `.review.json` records exact source/child/artifact hashes and binding gates.
+No standalone legacy ZIP is emitted: a Workflow child reference needs valid final
+Solution assembly. These JSON files must not be imported as replacement flows.
+
+### Exact automated binding and marker
+
+Inspected original local export:
+`C:\projects\small_projects\tandem-language-culture-app\artifacts\participant_submission\Tandem–Participantsubmission_20261108154030.zip`,
+SHA256 a81c0c87b262ffb5a13fe079dec4a13bcc345e763c1e57c10dd02bed57dae90c.
+Actual source is **Embedded**, connectionName **b7e419509f0f4da89895a5ebd1f3a216**,
+key **shared_sharepointonline**, standard SharePoint API. Both trigger/Get_item
+use `@parameters('$authentication')`. Legacy references and trigger are copied
+unchanged to the readable draft; working flow ID/creator metadata are omitted.
+
+`automated_solution_document` checks this separate owner source, verifies the
+reviewed native component export hash ce19af2e37e7de4a9317ec4c63e8d5777beaf23a57120c99b4e38d38ce4946d4,
+and resolves SharePoint component **cre46_sharepointonline_a22363a216**. It emits
+that logical reference with **runtimeSource: embedded**, retaining `$authentication`
+on the event/actions. It does not use invoker_parent_document, copy a manual
+runtimeSource, manufacture a token, select credentials or grant access.
+
+The current core packager requires `_connectionEvidence: AUTOMATED_SOURCE_VERIFIED`.
+Here it means **native legacy automated Embedded source inspected**, not native
+Solution automatic import/binding/execution proof. The marker is packaging input,
+removed by core assembly. Its exact limited meaning, original named connection,
+and **nativeSolutionAutomaticBinding: NOT_RUN** are retained in the review sidecar.
+Mapping an existing logical component preserves the intended owner connection
+mode; it does not prove the final Solution resolves to that exact owner connection.
+**Activation is blocked until that resolution and native automatic smoke pass.**
+No automatic flow should be converted through the manual Invoker adapter.
+
+### Input, result and write mapping
+
+Event/site/list/one-minute recurrence/splitOn/current-ID mapping remain as above.
+Fresh REST current item supplies Id, Person account lookup ID, raw lookup arrays,
+nullable TimezoneId, current Status and exact ETag. Three complete active catalogue
+ID sets are supplied to PROFILE; pagination/malformed/failed reads fail explicitly.
+Account lookup ID becomes a technical string accountKey (blank for missing account).
+Four fields map to teachIds/learnIds/shareCultureIds/learnCultureIds. Availability
+is null because PROFILE content checks do not depend on participation/openness;
+these fields are neither read nor reset. Optional zone stays null. Active Any is
+valid profile content; anyLanguageId=null here performs no matching/wildcard logic.
+Selection deduplication/content checks are child-owned, not repeated in the parent.
+
+The native Workflow body is `{text: string(Profile_request)}`. Parse resultjson;
+require contract1/rules1, expected kind/sourceTicket, zero-I/O/authorizesAction=false
+and outer resultcode/success agreement. OK/true must carry typed result.valid;
+false valid means Needs review. INVALID_PROFILE_DATA/false/empty result means
+invalid content -> Needs review (unknown/inactive IDs or absent account). Other
+errors, version mismatch, missing/malformed/contradictory response or child failure
+stop without a successful Validation_report or Status write. Success alone is
+never content validity. Shared build/run/code are added to the parent's report.
+
+Only changed Status is POST/MERGE with the current exact ETag, retries disabled;
+readback remains mandatory. HTTP412 fails closed. Same Status skips the write,
+including the follow-up event. No identity/selections/availability/Comments,
+permission, request, catalogue, group or membership mutations. No full-schema
+audit per event and no new app .Run call or feedback formula.
+
+### Local generation and verification
+
+Use the existing repository Python environment for local tools only:
+
+```powershell
+python -m scripts.power_automate.participant_submission_shared --source '<original legacy ZIP>' --native-export '<TandemSharedValidation81_1_0_0_2.zip>' --output artifacts/participant_submission/TandemParticipantSubmission-shared-v1.definition.json
+python -m pytest tests/test_participant_submission_shared.py -q -p no:cacheprovider
+```
+
+Builder refuses existing candidate output. Regenerate only this candidate after
+reviewing changes; do not overwrite deployed v2 artifacts. The native export stays
+local/untracked. Tests execute the emitted parent and delivered v2 child graphs,
+using a fake SharePoint boundary. They exercise content variants, dedup/null zone,
+invalid results, correction/follow-up no-op, preserved fields, ETag stale failure,
+failed/incomplete/malformed reads, readback mismatch, child failure/version/response
+guards, generated binding, marker scope and adapter component/hash rejection.
+This interpreter is not Power Automate or tenant binding certification.
+
+### Conditional native handover — currently blocked, not an import request
+
+Prerequisites/account: existing authorized owner/flow operator, existing working
+SharePoint owner connection, unchanged imported child, permitted isolated synthetic
+profile and a reviewed **final assembled Solution** with exact parent ID/version/hash.
+Core may remap the child to its batch ID; verify final linkage and child hash before
+testing. That final package/version is not produced by this focused branch. Existing
+manual Invoker probe proves neither automatic owner resolution nor business parity.
+No new licence/trial, permission, account or connection mode may be inferred.
+
+1. Inspect final Solution with all flows disabled. Verify this parent's automated
+   event, site/list, embedded logical component and actual resolved connection owner
+   match the legacy reference above. Record package hash/parent ID/child ID. If not
+   verifiable, record BLOCKED and leave live v2 untouched. Native import NOT RUN.
+2. Once binding is verified, preserve an export/on-state of live v2; turn off only
+   that validator before enabling this parent. Never enable both. Use a permitted
+   fixture, recording original selections/zone/account/availability/Comments/Status.
+3. Save valid language-only and culture-only edits including null zone. Match item
+   ID/current read/child run. Expect Active; only necessary Status MERGE/readback.
+   Save all four selections empty on the isolated fixture: expect Needs review.
+   Restore originals: Active. Capture sharedCode/build/run and parent report.
+4. For each Status, inspect the automatically triggered follow-up without another
+   user edit: expect NO_CHANGE, statusChanged=false, Status write skipped. Repeated
+   writes fail the no-loop case; stop candidate and restore v2's prior on-state.
+5. Unknown/inactive catalogue, missing account, failed/incomplete read, child failure
+   and stale ETag variants require an approved isolated harness. Expect content
+   rejection or explicit failed run, never a stale overwrite/success report. No
+   harness -> BLOCKED/NOT RUN; do not revoke permissions or corrupt live rows.
+6. Compare persisted profile/availability/identity/selections and unrelated fields
+   with originals. Restore all fixture values and confirm final validation. If any
+   failure, stop candidate, restore prior v2 enablement and retain the first error;
+   prior successful Status writes are not rolled back automatically.
+
+Return PASS/FAIL/BLOCKED/NOT RUN per variant, exact final package/version/hash,
+role/fixture alias/item ID, resolved owner binding evidence, parent/child run refs,
+report or first failed action/HTTP code, persisted results/preserved fields, and
+cleanup status. Ordinary-user access remains deferred. Old item38 v2 and Live26
+results retain only their original scope; new native consumer/binding tests NOT RUN.
+
+#81 drift review: shared child, schema, versions and all semantic contracts remain
+unchanged; only #61 adopts PROFILE. Local contract contains the receiving ledger;
+no GitHub issue edit, shared-child edit or other consumer artifact change in this
+branch. Do not infer a native evidence upgrade from generated source.
+
+Local result for this candidate: **45 new #61 cases PASS; full repository402 PASS**
+(pytest, 90.59s). Actual legacy export -> readable candidate and reviewed native
+component export -> automated Solution source reproduction both PASS. Independent
+measurement: parent29/depth3, unchanged child84/depth7. `git diff --check` PASS.
+Native consumer parity, automatic Solution owner-resolution/event smoke and final
+assembled package remain NOT RUN; no new legacy ZIP or runtime cutover claimed.
+
+
+## #61 shared consumer native no-op PASS — 2026-11-14
+
+Owner report item38: parent08584069192652841427464544862CU18, consumerissue-61-shared-consumer-v1; shared PROFILE returns OK on batchbd66271f-090e-4f5c-a890-8cb5b61173cc, child08584069192622793814733430516CU11. valid=true, StatusActive, statusChanged=false, NO_CHANGE. Evidence artifacts/participant_submission/results/shared-v1-no-change.owner-report.json. Record bounded automatic event/read/child/no-op PASS; Status-write/readback/follow-up, broader acceptance and old-validator-off confirmation are not inferred. No source/package/semantic change; no local tests rerun for recording native evidence.
+
+Report sharedChildId still contains the legacy template annotation e9aa88eb...; exact1.0.0.1 packaged Call_profile_child target is f1f91974-4124-557e-b7fe-d51e9972681d, and actual shared build/run are captured above. Track the annotation rebind in #81 for the next packaging revision; this does not justify reimporting during the functional test. Next bounded test: with oldv2off and valid selections intact, set only Participants item38 validation Status to Needs review. Expect STATUS_UPDATED/Active/statusChanged=true then autonomous NO_CHANGE/statusChanged=false without another user edit. Return both reports; identity/selections/participation/openness must remain preserved.
