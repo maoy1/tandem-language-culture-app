@@ -37,14 +37,17 @@ def build_actions(original,mapping,groups,build_id):
     inside.update(child_call('Normalize','NORMALIZE',"@body('Raw_profiles')",'Raw_profiles'))
     inside['Shared_Profiles']=legacy.parse("@outputs('Normalize_Result')?['profiles']",{'type':'array'},'Normalize_Result')
     inside['Shared_Catalogues']=legacy.compose("@outputs('Normalize_Result')?['catalogues']",'Shared_Profiles')
-    inside['Eligible_people']=legacy.query("@body('Shared_Profiles')","not(equals(item()?['profileId'],outputs('Actor')?['profileId']))",'Require_available_actor')
+    inside.update(child_call('Pairs','PAIRS',"@body('Shared_Profiles')",'Require_available_actor',leftId="@outputs('Actor')?['profileId']"))
+    inside['Pair_ids']=legacy.select("@outputs('Pairs_Result')?['pairs']","@item()?['profileId']",'Pairs_Result')
+    inside['Eligible_people']=legacy.query("@body('Shared_Profiles')","contains(body('Pair_ids'),item()?['profileId'])",'Pair_ids')
     del inside['Require_people_result_bound']
     projection=inside['Each_person']['actions']
     projection['Person_fit']=legacy.compose("@outputs('Pair_Result')",'Person_raw')
     projection['Result_bound']=legacy.condition("less(length(variables('People')),50)",{},
       {'Error_people_bound':legacy.setvar('ErrorCode','PEOPLE_RESULT_BOUND'),'Stop_people_bound':legacy.compose('@div(1,0)','Error_people_bound')})
     projection['Person_raw']['runAfter']=legacy.after('Result_bound')
-    person=child_call('Pair','PAIR',"@createArray(outputs('Actor'),items('Each_person'))",leftId="@outputs('Actor')?['profileId']",rightId="@items('Each_person')?['profileId']")
+    person={'Find_pair':legacy.query("@outputs('Pairs_Result')?['pairs']","equals(item()?['profileId'],items('Each_person')?['profileId'])")}
+    person['Pair_Result']=legacy.compose("@first(union(body('Find_pair'),createArray(json('{}'))))",'Find_pair')
     person['Show_person']=legacy.condition("equals(outputs('Pair_Result')?['eligible'],true)",projection,n='Pair_Result')
     inside['Each_person']=legacy.loop("@body('Eligible_people')",person,'Eligible_people')
     g=inside['Groups_exist']['actions']
@@ -91,7 +94,7 @@ def build_package(source,output):
     output.write_bytes((json.dumps(document,indent=2)+'\n').encode('utf-8'))
     review={'sourceTicket':7,'packageBuildId':build_id,**measure(actions),'writes':0,'childWorkflowReferenceName':CHILD_ID,'contractVersion':1,'rulesVersion':1,
       'definitionSha256':hashlib.sha256(output.read_bytes()).hexdigest(),'sourceExportSha256':hashlib.sha256(source.read_bytes()).hexdigest(),
-      'sharedChildSha256':hashlib.sha256((ROOT/'artifacts/shared_validation/TandemSharedValidation81-v2.child.definition.json').read_bytes()).hexdigest(),
+      'sharedChildSourceSha256':hashlib.sha256((ROOT/'scripts/power_automate/shared_validation.py').read_bytes()).hexdigest(),'requiredSharedModes':['NORMALIZE','PAIRS','GROUP'],
       'generatorSha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'connectionSource':'Invoker','ordinaryUserAccessVerified':False,'tenantResult':'NOT_RUN',
       'deployment':'PARENT_COMPONENT_FOR_FINAL_SOLUTION_ASSEMBLY','legacyZip':'NOT_APPLICABLE: Workflow calls require final Solution assembly; historical v2 ZIP unchanged'}
     output.with_suffix('.review.json').write_bytes((json.dumps(review,indent=2)+'\n').encode('utf-8'))

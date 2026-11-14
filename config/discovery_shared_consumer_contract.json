@@ -255,5 +255,11 @@
     "requestChars": 250000,
     "childResultChars": 200000,
     "sharedContractChanged": false
-  }
+  },
+  "sharedModes": [
+    "NORMALIZE",
+    "PAIRS",
+    "GROUP"
+  ],
+  "sharedPrerequisite": "New batch engine; old native v2 lacks PAIRS"
 }

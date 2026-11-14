@@ -678,3 +678,6 @@ The shared schema evaluator now accepts a baseline-defined role count and plain-
 ### #81 Discovery invocation bound
 
 Added backward-compatible PAIRS mode: one actor plus the supplied profile set returns eligible pair projections using the existing PAIR expression source. It avoids a separate native child invocation per candidate (up to 500 profiles). No matching/availability/identity rule changed; result remains internal and never grants authority. Discovery consumes this additive mode; other consumers retain their existing modes. New batch engine/native evidence remains NOT RUN; old v2 evidence is not reused. Three bulk/single parity, missing actor/null availability and structure-limit tests pass. Shared foundation before this addition passed 378 full local tests.
+
+
+#7 batch integration update: candidate matching now calls shared PAIRS once for the entire bounded profile set, preserving the existing PAIR rules; no child call inside Each_person. NORMALIZE and GROUP remain shared. This component requires the new #81 batch engine with PAIRS and is not executable against the old native-passed v2 child alone. Final Solution assembly rewires to fresh batch child ID; historical native evidence retained, new native performance/consumer tests NOT RUN. No matching semantics changed.

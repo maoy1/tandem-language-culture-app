@@ -1,5 +1,5 @@
 {
-  "name": "0ab956c1-cbb6-4da7-9e23-dbd8b4cd9ebe",
+  "name": "2558a81d-8736-435a-94dd-a6b0ced4aaac",
   "type": "Microsoft.Flow/flows",
   "properties": {
     "displayName": "TandemDiscovery shared consumer",
@@ -765,10 +765,10 @@
               "type": "Query",
               "inputs": {
                 "from": "@body('Shared_Profiles')",
-                "where": "@not(equals(item()?['profileId'],outputs('Actor')?['profileId']))"
+                "where": "@contains(body('Pair_ids'),item()?['profileId'])"
               },
               "runAfter": {
-                "Require_available_actor": [
+                "Pair_ids": [
                   "Succeeded"
                 ]
               }
@@ -777,120 +777,19 @@
               "type": "Foreach",
               "foreach": "@body('Eligible_people')",
               "actions": {
-                "Pair_Request": {
-                  "type": "Compose",
+                "Find_pair": {
+                  "type": "Query",
                   "inputs": {
-                    "contractVersion": 1,
-                    "rulesVersion": 1,
-                    "mode": "PAIR",
-                    "profiles": "@createArray(outputs('Actor'),items('Each_person'))",
-                    "catalogues": "@outputs('Raw_catalogues')",
-                    "leftId": "@outputs('Actor')?['profileId']",
-                    "rightId": "@items('Each_person')?['profileId']"
+                    "from": "@outputs('Pairs_Result')?['pairs']",
+                    "where": "@equals(item()?['profileId'],items('Each_person')?['profileId'])"
                   },
                   "runAfter": {}
                 },
-                "Pair_Bound": {
-                  "type": "If",
-                  "expression": "@lessOrEquals(length(string(outputs('Pair_Request'))),250000)",
-                  "actions": {},
-                  "else": {
-                    "actions": {
-                      "Pair_Too_large": {
-                        "type": "Compose",
-                        "inputs": "@div(1,0)",
-                        "runAfter": {}
-                      }
-                    }
-                  },
-                  "runAfter": {
-                    "Pair_Request": [
-                      "Succeeded"
-                    ]
-                  }
-                },
-                "Pair_Call": {
-                  "type": "Workflow",
-                  "inputs": {
-                    "host": {
-                      "workflowReferenceName": "e9aa88eb-a666-4df1-b088-176be7bcd00d"
-                    },
-                    "body": {
-                      "text": "@string(outputs('Pair_Request'))"
-                    }
-                  },
-                  "runAfter": {
-                    "Pair_Bound": [
-                      "Succeeded"
-                    ]
-                  }
-                },
-                "Pair_Envelope": {
-                  "type": "ParseJson",
-                  "inputs": {
-                    "content": "@json(body('Pair_Call')?['resultjson'])",
-                    "schema": {
-                      "type": "object",
-                      "required": [
-                        "success",
-                        "code",
-                        "contractVersion",
-                        "rulesVersion",
-                        "result",
-                        "authorizesAction"
-                      ],
-                      "properties": {
-                        "success": {
-                          "type": "boolean"
-                        },
-                        "code": {
-                          "type": "string"
-                        },
-                        "contractVersion": {
-                          "type": "integer"
-                        },
-                        "rulesVersion": {
-                          "type": "integer"
-                        },
-                        "result": {
-                          "type": "object"
-                        },
-                        "authorizesAction": {
-                          "type": "boolean"
-                        }
-                      }
-                    }
-                  },
-                  "runAfter": {
-                    "Pair_Call": [
-                      "Succeeded"
-                    ]
-                  }
-                },
-                "Pair_Require": {
-                  "type": "If",
-                  "expression": "@and(equals(body('Pair_Call')?['success'],true),equals(body('Pair_Call')?['resultcode'],'OK'),equals(body('Pair_Envelope')?['success'],true),equals(body('Pair_Envelope')?['code'],'OK'),equals(body('Pair_Envelope')?['contractVersion'],1),equals(body('Pair_Envelope')?['rulesVersion'],1),equals(body('Pair_Envelope')?['authorizesAction'],false))",
-                  "actions": {},
-                  "else": {
-                    "actions": {
-                      "Pair_Reject": {
-                        "type": "Compose",
-                        "inputs": "@div(1,0)",
-                        "runAfter": {}
-                      }
-                    }
-                  },
-                  "runAfter": {
-                    "Pair_Envelope": [
-                      "Succeeded"
-                    ]
-                  }
-                },
                 "Pair_Result": {
                   "type": "Compose",
-                  "inputs": "@body('Pair_Envelope')?['result']",
+                  "inputs": "@first(union(body('Find_pair'),createArray(json('{}'))))",
                   "runAfter": {
-                    "Pair_Require": [
+                    "Find_pair": [
                       "Succeeded"
                     ]
                   }
@@ -2612,6 +2511,139 @@
                   "Succeeded"
                 ]
               }
+            },
+            "Pairs_Request": {
+              "type": "Compose",
+              "inputs": {
+                "contractVersion": 1,
+                "rulesVersion": 1,
+                "mode": "PAIRS",
+                "profiles": "@body('Shared_Profiles')",
+                "catalogues": "@outputs('Raw_catalogues')",
+                "leftId": "@outputs('Actor')?['profileId']"
+              },
+              "runAfter": {
+                "Require_available_actor": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Pairs_Bound": {
+              "type": "If",
+              "expression": "@lessOrEquals(length(string(outputs('Pairs_Request'))),250000)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Pairs_Too_large": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {}
+                  }
+                }
+              },
+              "runAfter": {
+                "Pairs_Request": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Pairs_Call": {
+              "type": "Workflow",
+              "inputs": {
+                "host": {
+                  "workflowReferenceName": "e9aa88eb-a666-4df1-b088-176be7bcd00d"
+                },
+                "body": {
+                  "text": "@string(outputs('Pairs_Request'))"
+                }
+              },
+              "runAfter": {
+                "Pairs_Bound": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Pairs_Envelope": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@json(body('Pairs_Call')?['resultjson'])",
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "success",
+                    "code",
+                    "contractVersion",
+                    "rulesVersion",
+                    "result",
+                    "authorizesAction"
+                  ],
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "contractVersion": {
+                      "type": "integer"
+                    },
+                    "rulesVersion": {
+                      "type": "integer"
+                    },
+                    "result": {
+                      "type": "object"
+                    },
+                    "authorizesAction": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Pairs_Call": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Pairs_Require": {
+              "type": "If",
+              "expression": "@and(equals(body('Pairs_Call')?['success'],true),equals(body('Pairs_Call')?['resultcode'],'OK'),equals(body('Pairs_Envelope')?['success'],true),equals(body('Pairs_Envelope')?['code'],'OK'),equals(body('Pairs_Envelope')?['contractVersion'],1),equals(body('Pairs_Envelope')?['rulesVersion'],1),equals(body('Pairs_Envelope')?['authorizesAction'],false))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Pairs_Reject": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {}
+                  }
+                }
+              },
+              "runAfter": {
+                "Pairs_Envelope": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Pairs_Result": {
+              "type": "Compose",
+              "inputs": "@body('Pairs_Envelope')?['result']",
+              "runAfter": {
+                "Pairs_Require": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Pair_ids": {
+              "type": "Select",
+              "inputs": {
+                "from": "@outputs('Pairs_Result')?['pairs']",
+                "select": "@item()?['profileId']"
+              },
+              "runAfter": {
+                "Pairs_Result": [
+                  "Succeeded"
+                ]
+              }
             }
           },
           "runAfter": {
@@ -2638,7 +2670,7 @@
             "kind": "TandemDiscovery",
             "schemaVersion": 1,
             "sourceTicket": 7,
-            "packageBuildId": "0ab956c1-cbb6-4da7-9e23-dbd8b4cd9ebe",
+            "packageBuildId": "2558a81d-8736-435a-94dd-a6b0ced4aaac",
             "rulesVersion": 1,
             "runReference": "@workflow()?['run']?['name']",
             "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF",

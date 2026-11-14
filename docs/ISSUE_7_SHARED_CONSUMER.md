@@ -186,3 +186,6 @@ Discovery consumer cases). The expanded emitted-parent/real-child suite passes;
 NOT RUN; ordinary-user access is not verified. Final packaging-only newline/hash
 normalization is covered by the focused rerun before commit (46 cases, including
 the additional exact generator-receipt fingerprint regression).
+
+
+#7 batch integration update: candidate matching now calls shared PAIRS once for the entire bounded profile set, preserving the existing PAIR rules; no child call inside Each_person. NORMALIZE and GROUP remain shared. This component requires the new #81 batch engine with PAIRS and is not executable against the old native-passed v2 child alone. Final Solution assembly rewires to fresh batch child ID; historical native evidence retained, new native performance/consumer tests NOT RUN. No matching semantics changed.

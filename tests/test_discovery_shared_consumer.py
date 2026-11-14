@@ -8,7 +8,9 @@ from scripts.power_automate.schema_audit import measure
 from test_discovery_flow import Fake, PEOPLE, GROUPS, source, profile
 from test_shared_validation import ChildRunner, NoIO
 
-CHILD=json.loads((consumer.ROOT/'artifacts/shared_validation/TandemSharedValidation81-v2.child.definition.json').read_text())
+from scripts.power_automate import shared_validation as shared
+BASELINE=json.loads((consumer.ROOT/'config/shared_validation_schema.json').read_text())
+CHILD=shared.definition_actions(BASELINE,'batch-test-build','rules-hash')
 
 
 class Backend:
@@ -46,7 +48,7 @@ def test_populated_people_real_child_projection_and_optional_zone():
     assert rows[0]['fitType']=='Language'
     assert rows[0]['profile']['timeZone']=={'id':None,'label':None,'ianaId':None}
     assert rows[0]['profile']['comments']=='Approved comments'
-    assert [c['mode'] for c in b.calls]==['NORMALIZE','PAIR','PAIR']
+    assert [c['mode'] for c in b.calls]==['NORMALIZE','PAIRS']
     assert not any(s in json.dumps(r.response) for s in ['PRIVATE_','accountKey','Claims','trusted-'])
 
 
@@ -102,12 +104,13 @@ def test_incomplete_read_returns_no_partial_results(role):
 @pytest.mark.parametrize('fault',['version','failed','malformed','code','eligibleFalse'])
 def test_child_failure_and_success_does_not_imply_eligibility(fault):
     def alter(response,request):
-        if request['mode']!='PAIR':return
+        if request['mode']!='PAIRS':return
         v=json.loads(response['resultjson'])
         if fault=='version':v['rulesVersion']=2
         if fault=='failed':response['success']=False
         if fault=='code':response['resultcode']='INVALID_INPUT'
-        if fault=='eligibleFalse':v['result']['eligible']=False
+        if fault=='eligibleFalse':
+            for pair in v['result']['pairs']:pair['eligible']=False
         response['resultjson']='broken' if fault=='malformed' else json.dumps(v)
     r,b=execute(alter=alter)
     if fault=='eligibleFalse':assert r.response['resultcode']=='OK' and r.response['candidatesjson']=='[]'
@@ -171,7 +174,8 @@ def test_committed_artifact_metrics_and_child_fingerprint():
     # Native envelope differs from synthetic input; structure and exact deployed
     # child graph fingerprint remain independently checked.
     assert measure(doc['properties']['definition']['actions'])=={k:review[k] for k in ['actions','maximumActionDepth']}
-    assert hashlib.sha256((consumer.ROOT/'artifacts/shared_validation/TandemSharedValidation81-v2.child.definition.json').read_bytes()).hexdigest()==review['sharedChildSha256']
+    assert hashlib.sha256((consumer.ROOT/'scripts/power_automate/shared_validation.py').read_bytes()).hexdigest()==review['sharedChildSourceSha256']
+    assert review['requiredSharedModes']==['NORMALIZE','PAIRS','GROUP']
 
 @pytest.mark.parametrize('kind',['profiles','renderedPeople','childRequest'])
 def test_search_and_child_request_budgets_never_return_partial_arrays(kind):
@@ -184,11 +188,11 @@ def test_search_and_child_request_budgets_never_return_partial_arrays(kind):
     if kind in ['profiles','childRequest']:assert not b.calls
 
 
-def test_child_failure_after_first_person_hides_partial_results():
+def test_bulk_child_failure_returns_no_partial_results():
     def alter(response,request):
-        if request['mode']=='PAIR' and request['rightId']==3:response['success']=False
+        if request['mode']=='PAIRS':response['success']=False
     r,b=execute(alter=alter)
-    assert len(r.variables['People'])==1
+    assert len(r.variables['People'])==0
     assert r.response['resultcode']!='OK' and r.response['candidatesjson']==r.response['groupsjson']=='[]'
 
 
@@ -205,3 +209,11 @@ def test_component_generator_receipt_fingerprint():
     import hashlib
     review=json.loads((consumer.ROOT/'artifacts/tandem_discovery/TandemDiscovery-shared.definition.review.json').read_text())
     assert hashlib.sha256(Path(consumer.__file__).read_bytes()).hexdigest()==review['generatorSha256']
+
+
+def test_candidate_set_uses_one_bulk_pair_child_call():
+    s=Fake();s.profiles=s.profiles[:2]+[profile(i,teach=[1]) for i in range(3,35)]
+    runner,backend=execute(s)
+    assert runner.response['resultcode']=='OK'
+    assert [c['mode'] for c in backend.calls]==['NORMALIZE','PAIRS']
+    assert [p['profileId'] for p in json.loads(runner.response['candidatesjson'])]==[2]
