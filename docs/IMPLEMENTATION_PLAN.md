@@ -745,6 +745,10 @@ Technical field proposal: optional plain-text Note column Introduction on Connec
 Contract evidence only: acceptance cases empty/omitted, 2,000 accepted and 2,001 rejected in both app/server are NOT RUN. #17 remains Planned, not implemented/Ready. No flow, list, data, permission or existing app changed. This clears the remaining explicit product choice for core group-join implementation; receipt-schema and Solution SharePoint/caller prerequisites still need technical verification.
 
 
+## #63 shared consumer v4 — 2026-11-14
+
+[#63 TandemCancelRequest](https://github.com/maoy1/tandem-language-culture-app/issues/63) implements the authorized parallel batch consumer refactor from cancel v3/PR #79 plus origin/main #81. Build d70520a1-e760-45ee-ab57-f211a490cbb2, ZIP SHA256 e5818c0ac14d27ceeb7f87297993fc191ef1e5102c804c3377ebdcf7b4f4fe68; 71 actions/depth5 (was138/5), one CAS/retries none. No per-click schema audit or unused NORMALIZE/compatibility call. #81 schema verification is explicit deployment/maintenance; caller/sender authority, typed coherent rows, exact Pending ETag CAS, deterministic winner/history, same cancel replay and unknown outcome readback remain. No shared child/common changes or shared rule/schema/IO impact; draft #81 ledger and exact owner/synthetic handover in docs/ISSUE_63_SHARED_CONSUMER.md. Parent assembles Solution; legacy ZIP is only owner-preview packaging. Native consumer/Power Apps/write tests NOT RUN; ordinary access deferred/not verified. v3 and #81 native history retained; no issue closure/readiness/push/deployment or GitHub edits.
+
 ## #62 v7 shared NORMALIZE reader — local build, native parent NOT RUN
 
 [#62 TandemMyRequests](https://github.com/maoy1/tandem-language-culture-app/issues/62), PR [#80](https://github.com/maoy1/tandem-language-culture-app/pull/80), under overview [#45](https://github.com/maoy1/tandem-language-culture-app/issues/45). Owner explicitly authorizes parallel 12-flow batch for this work; no lifecycle/issue edits made. Merged origin/main #81 baseline, retaining #62 v6 owner empty-history evidence and main's subsequent child/Invoker proof history.

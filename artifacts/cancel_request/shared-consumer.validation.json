@@ -1,0 +1,31 @@
+{
+  "sourceTicket": 63,
+  "buildId": "d70520a1-e760-45ee-ab57-f211a490cbb2",
+  "packageSha256": "e5818c0ac14d27ceeb7f87297993fc191ef1e5102c804c3377ebdcf7b4f4fe68",
+  "generatorSha256": "1a12802291b99389c3fc4cfeab3abaefbe167d68d2491c8e0f9c07b16435d108",
+  "sourceSha256": "01ded0145e5cecd4af70b9b664def8950070066f5a4fce7dc6ad66d3f699c7b1",
+  "fullSuite": {
+    "result": "PASS",
+    "passed": 479,
+    "command": "python -X utf8 -m pytest -q --tb=short -p no:cacheprovider"
+  },
+  "finalArtifactFocusedSuite": {
+    "result": "PASS",
+    "passed": 122,
+    "command": "python -X utf8 -m pytest tests/test_cancel_request_flow.py -q --tb=short -p no:cacheprovider"
+  },
+  "metrics": {
+    "actions": 71,
+    "maximumActionDepth": 5
+  },
+  "writeDefinitions": 1,
+  "maxWritesPerInvocation": 1,
+  "writeRetries": "none",
+  "sharedCallsPerInvocation": 0,
+  "artifactChecks": "PASS: ZIP/readable/generated graph, source trigger, package/generator/contract hashes, sibling runAfter and global expression references, unchanged v3 artifacts",
+  "nativeConsumer": "NOT RUN",
+  "solutionAssembly": "PARENT_PENDING",
+  "ordinaryParticipantAccess": "DEFERRED_NOT_VERIFIED",
+  "sharedSourceEdited": false,
+  "schemaContractImpact": "No schema/rule/IO change; per-click audit removed in favor of mandatory deployment/maintenance verification; see docs/ISSUE_63_SHARED_CONSUMER.md"
+}
