@@ -16,7 +16,8 @@ PEOPLE = json.loads((shared.ROOT / 'config/tenant_schema_mapping.json').read_tex
 GROUPS = json.loads((shared.ROOT / 'config/group_schema_mapping.json').read_text())
 ROLES = {**{k: v['listId'] for k, v in PEOPLE['lists'].items()},
          **{k: v['listId'] for k, v in GROUPS['lists'].items()},
-         'requests': '3d17485d-1dac-41f0-a1af-24e45daa4567'}
+         'requests': '3d17485d-1dac-41f0-a1af-24e45daa4567',
+         'receipts': 'f0000000-0000-4000-8000-000000000081'}
 TITLES = {'participants': 'Participants', 'language': 'Language catalogue', 'culture': 'Culture catalogue',
           'timezone': 'Time zone catalogue', 'groups': 'Groups', 'members': 'Group Members',
           'requests': 'Connection Requests', 'receipts': 'TandemOperationReceipts'}
@@ -79,7 +80,15 @@ class Database:
         self.before_write = None
 
     def insert(self, role, fields):
-        row = {**deepcopy(fields), 'Id': max([r['Id'] for r in self.tables[role]], default=0) + 1}
+        defaults = {'requests': {'RecipientParticipantId': None, 'TargetGroupId': None,
+                    'WinningOperationKey': None, 'OperationComplete': False, 'Introduction': None},
+                    'groups': {'Purpose': None, 'WriteOwner': None, 'SetupComplete': False,
+                               'LanguageFocusId': {'results': []}, 'CultureFocusId': {'results': []}},
+                    'members': {'LeftAt': None},
+                    'receipts': {'Complete': False, 'Uncertain': False, 'Retryable': False, 'DomainEffects': False,
+                                 'ResultJson': None, 'AttemptToken': None, 'SealedAttempts': None, 'Stage': None}}
+        row = {**deepcopy(defaults.get(role, {})), **deepcopy(fields),
+               'Id': max([r['Id'] for r in self.tables[role]], default=0) + 1}
         row.setdefault('Created', '2026-11-14T12:00:00Z')
         row['__metadata'] = {'etag': '"1"', 'type': TYPES.get(role, 'SP.Data.CatalogueListItem')}
         self.tables[role].append(row)
@@ -126,7 +135,10 @@ class Connection:
                 row = next((r for r in rows if r['Id'] == params['id']), None)
                 if row is None: return self.response({}, 404)
                 return {'statusCode': 200, 'body': connector_row(row)}
-            return {'statusCode': 200, 'body': {'value': [connector_row(r) for r in rows]}}
+            rows = [row for row in rows if predicate(params.get('$filter', ''), row)]
+            top = int(params.get('$top', 5000))
+            return {'statusCode': 200, 'body': {'value': [connector_row(r) for r in rows[:top]],
+                **({'@odata.nextLink': 'fixture-next-page'} if len(rows) > top else {})}}
         if '/currentuser' in uri.lower(): return self.response({'Id': self.actor * 101})
         query = {k: v[0] for k, v in parse_qs(urlsplit(uri).query).items()}
         def selected(value):
@@ -157,6 +169,7 @@ class Connection:
         assert method in ['POST', 'PATCH', 'MERGE'], method
         patch = deepcopy(params['parameters/body'])
         if isinstance(patch, str): patch = json.loads(patch)
+        if '__metadata' in patch: assert patch['__metadata']['type'] == TYPES.get(role, 'SP.Data.CatalogueListItem'), 'Wrong native item entity type'
         patch.pop('__metadata', None)
         if self.db.before_write:
             hook, self.db.before_write = self.db.before_write, None
@@ -177,12 +190,17 @@ class Connection:
                 return self.response({'error': {'innerError': {'errors': ['-2130575169', 'Microsoft.SharePoint.SPDuplicateValuesFoundException']}}}, 502)
             row = self.db.insert(role, patch)
         self.db.log.append({'role': role, 'id': row['Id'], 'patch': patch})
-        return self.response(row, 502 if fault == 'after' else (204 if match else 201))
+        if fault == 'after': return self.response({'error': 'simulated lost success response'}, 502)
+        if match: return {'statusCode': 204, 'body': None}
+        return self.response(row, 201)
 
 
 class ParentRunner(ChildRunner):
     def extra_functions(self, context):
-        return {'guid': lambda: str(uuid4()), 'utcNow': lambda: '2026-11-14T12:00:00Z',
+        def utc_now(format=None):
+            assert format in [None, 'yyyy-MM-ddTHH:mm:ssZ'], 'Unsupported fixture date format'
+            return '2026-11-14T12:00:00Z'
+        return {'guid': lambda: str(uuid4()), 'utcNow': utc_now,
                 'split': lambda value, separator: value.split(separator), 'join': lambda values, separator: separator.join(values),
                 'startsWith': lambda value, prefix: value.startswith(prefix), 'endsWith': lambda value, suffix: value.endswith(suffix),
                 'skip': lambda values, count: values[count:], 'take': lambda values, count: values[:count],
@@ -210,6 +228,12 @@ class ParentRunner(ChildRunner):
             if action['type'] == 'Workflow':
                 action['type'] = 'OpenApiConnection'
                 action['inputs'] = {'parameters': {'_workflow': action['inputs']}}
+            elif action['type'] in ['IncrementVariable', 'DecrementVariable']:
+                inputs = action['inputs']; amount = inputs.get('value', 1)
+                operand = amount[1:] if isinstance(amount, str) and amount.startswith('@') else json.dumps(amount)
+                op = 'add' if action['type'] == 'IncrementVariable' else 'sub'
+                action['type'] = 'SetVariable'
+                action['inputs'] = {'name': inputs['name'], 'value': '@' + op + "(variables('" + inputs['name'] + "')," + operand + ')'}
         return super().run(actions, ctx)
 
 
@@ -217,7 +241,8 @@ def seed():
     db = Database()
     for i, teach, learn in [(1, [1], [2]), (2, [2], [1]), (3, [], [1]), (4, [2], [])]:
         db.insert('participants', {'ParticipantaccountId': i * 101,
-            'Participantaccount': {'Id': i * 101, 'Claims': 'trusted-' + str(i), 'DisplayName': 'Person ' + str(i), 'Email': 'PRIVATE_EMAIL'},
+            'Participantaccount': {'Id': i * 101, 'Claims': 'trusted-' + str(i), 'DisplayName': 'Person ' + str(i),
+                                   'Title': 'Person ' + str(i), 'Email': 'PRIVATE_EMAIL'},
             'Status': 'Active', 'ParticipationStatus': 'Active', 'OpenToConnections': True,
             'TeachlanguagesId': {'results': teach}, 'LearnlanguagesId': {'results': learn},
             'ShareCulturesId': {'results': []}, 'LearnCulturesId': {'results': []},

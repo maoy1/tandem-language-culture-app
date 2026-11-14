@@ -1633,3 +1633,10 @@ Default v7 build `2c9d2814-dcfb-4951-8abe-955b9067863b`, SHA256 `9edaa4b8f3561d3
 ## #81 batch foundation local checkpoint — 2026-11-14
 
 21 focused schema/Solution tests PASS: additive dry/apply/repeat, permission rejection, unrelated list/mismatch/nonempty receipt refusal, incomplete reads, shared eight-role schema comparison, note/plain-text drift, complete twelve-flow assembly, fresh linked IDs/disabled import and missing/extra/credential/dependency rejection. Generator-only proof; final actual-consumer assembly and all new native tests NOT RUN. Prior v2 QUICK3/FULL44 and source inspection remain scoped to their original versions. Full current regression is running separately; no new full count inferred.
+
+
+## #81 coordinated core batch local verification — 2026-11-14
+
+Solution TandemCoreBatch1.0.0.0; shared build 4db7f9fa-6d67-48b0-a7a6-33638d7ff4a1; ZIP SHA256 bd854ae74a5e0291d985aa5fadc3fb3088c8135e7c5e337148acb02e89d4c959. Combined checkout: **1,385 tests PASS / zero failures** (270.31s), with TANDEM_CORE_ZIP executing packaged business graphs. A final setup-report-only build-ID correction was followed by **54 affected packaging/schema/interoperability tests PASS** (42.27s), including nine actual ZIP E2E cases. The final actual packaged shared child separately passes **45/45 smoke cases** locally. Exact commands/context: artifacts/core_batch/validation.json. These are local test models, not native execution.
+
+All14 definitions measured:12production+2ownerhelpers; max393actions/depth7 against500/8. CRC, exact component/child references, disabled import, inspected connection envelope, build pins and readable IO/definitions verified. Native import/schema setup/repeat/automatic binding/business writes/app/ordinary-user access remain NOT RUN or deferred. Email sender capability remains blocked outside the12-flow scope. No tenant changes were made. Old native results are not transferred to this new batch.
