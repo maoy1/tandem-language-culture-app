@@ -17,7 +17,7 @@ from . import discovery_flow as d
 from .schema_audit import ALL, measure
 
 ROOT = Path(__file__).resolve().parents[2]
-MODES = ['SCHEMA', 'NORMALIZE', 'PAIR', 'GROUP', 'PROFILE']
+MODES = ['SCHEMA', 'NORMALIZE', 'PAIR', 'PAIRS', 'GROUP', 'PROFILE']
 CONTRACT_VERSION = 1
 
 
@@ -49,9 +49,11 @@ def metadata_actions(baseline):
     The operator/parent supplies completed native snapshots. This function does
     not collect them and cannot certify their provenance or freshness.
     """
+    role_bound = len(baseline['roles'])
     list_schema = {'type': 'object', 'required': ['role', 'Id', 'BaseTemplate', 'Fields', 'complete'],
                    'properties': {'role': {'type': 'string'}, 'Id': {'type': 'string'},
                     'BaseTemplate': {'type': 'integer'}, 'complete': {'type': 'boolean'},
+                    'Title': {'type': 'string'},
                     'ValidationFormula': {'type': ['string', 'null']},
                     'Fields': {'type': 'array', 'maxItems': 500, 'items': {'type': 'object',
                         'required': ['InternalName', 'TypeAsString', 'Required', 'Indexed',
@@ -61,19 +63,22 @@ def metadata_actions(baseline):
                             'SchemaXml': {'type': ['string', 'null']},
                             'DefaultValue': {'type': ['string', 'boolean', 'null']}}}}}}
     a = {'Parse_metadata': d.parse("@body('Envelope')?['metadata']", {'type': 'object',
-         'required': ['lists'], 'properties': {'lists': {'type': 'array', 'maxItems': 7, 'items': list_schema}}}),
+         'required': ['lists'], 'properties': {'lists': {'type': 'array', 'maxItems': role_bound, 'items': list_schema}}}),
          'Schema_baseline': d.compose(baseline, 'Parse_metadata')}
     # Full audit by default. A caller may explicitly select just relevant roles;
     # report distinguishes scoped validation from an all-schema audit.
     a['Requested_roles'] = d.parse("@coalesce(body('Envelope')?['schemaRoles'],outputs('Schema_baseline')?['roles'])",
-        {'type': 'array', 'minItems': 1, 'maxItems': 7, 'items': {'type': 'string', 'enum': baseline['roles']}}, 'Schema_baseline')
+        {'type': 'array', 'minItems': 1, 'maxItems': role_bound, 'items': {'type': 'string', 'enum': baseline['roles']}}, 'Schema_baseline')
     a['Expected_lists'] = d.query("@outputs('Schema_baseline')?['lists']", "contains(body('Requested_roles'),item()?['role'])", 'Requested_roles')
     inner = {'Find_metadata_list': d.query("@body('Parse_metadata')?['lists']",
          "equals(item()?['role'],items('Each_schema_list')?['role'])"),
          'Metadata_list': d.compose("@first(union(body('Find_metadata_list'),createArray(json('{}'))))", 'Find_metadata_list'),
          'Metadata_field_names': {'type': 'Select', 'inputs': {'from': "@coalesce(outputs('Metadata_list')?['Fields'],json('[]'))",
              'select': "@item()?['InternalName']"}, 'runAfter': d.after('Metadata_list')}}
-    good_list = "and(equals(length(body('Find_metadata_list')),1),equals(toLower(coalesce(outputs('Metadata_list')?['Id'],'')),items('Each_schema_list')?['listId']),equals(outputs('Metadata_list')?['BaseTemplate'],100),equals(outputs('Metadata_list')?['complete'],true),equals(length(body('Metadata_field_names')),length(union(body('Metadata_field_names'),body('Metadata_field_names')))))"
+    # Existing production lists remain pinned by GUID. Newly provisioned receipt
+    # storage is addressed by its exact unique title until native ID readback.
+    identity = "if(equals(items('Each_schema_list')?['listId'],null),and(not(empty(outputs('Metadata_list')?['Id'])),equals(outputs('Metadata_list')?['Title'],items('Each_schema_list')?['listTitle'])),equals(toLower(coalesce(outputs('Metadata_list')?['Id'],'')),items('Each_schema_list')?['listId']))"
+    good_list = "and(equals(length(body('Find_metadata_list')),1)," + identity + ",equals(outputs('Metadata_list')?['BaseTemplate'],100),equals(outputs('Metadata_list')?['complete'],true),equals(length(body('Metadata_field_names')),length(union(body('Metadata_field_names'),body('Metadata_field_names')))))"
     expected = "items('Each_schema_field')"
     xml = "xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml']))"
     attr = lambda key: "string(xpath(" + xml + ",'string(/Field/@" + key + ")'))"
@@ -92,6 +97,7 @@ def metadata_actions(baseline):
     default = "toLower(string(coalesce(item()?['DefaultValue'],'')))"
     default = "if(equals(item()?['TypeAsString'],'Boolean'),if(contains(createArray('1','true')," + default + "),'1',if(contains(createArray('0','false')," + default + "),'0'," + default + ")),string(coalesce(item()?['DefaultValue'],'')))"
     terms.append("or(not(" + expected + "?['checkDefault']),equals(" + default + ',' + expected + "?['default']))")
+    terms.append("or(not(equals(" + expected + "?['plainText'],true)),and(not(equals(toLower(" + attr('RichText') + "),'true')),not(equals(toLower(" + attr('AppendOnly') + "),'true'))))")
     fields = {'Matching_field': d.query("@outputs('Metadata_list')?['Fields']", 'and(' + ','.join(terms) + ')')}
     fields['Field_matches'] = d.condition("equals(length(body('Matching_field')),1)", {},
         {'Append_field_difference': {'type': 'AppendToArrayVariable', 'inputs': {'name': 'Differences', 'value': {
@@ -111,7 +117,7 @@ def metadata_actions(baseline):
          'runtimeConfiguration': {'concurrency': {'repetitions': 1}}, 'runAfter': d.after('Expected_lists')}
     valid = "and(empty(variables('Differences')),equals(length(body('Expected_lists')),length(body('Requested_roles'))))"
     a.update(finish('@if(' + valid + ",'OK','SCHEMA_MISMATCH')", {'schemaMatches': '@' + valid,
-        'checkedRoles': "@body('Requested_roles')", 'allSchema': "@equals(length(body('Requested_roles')),7)",
+        'checkedRoles': "@body('Requested_roles')", 'allSchema': "@equals(length(body('Requested_roles'))," + str(role_bound) + ")",
         'differences': "@variables('Differences')", 'provenanceVerified': False,
         'note': 'Compares supplied snapshots only; collector owns current complete authenticated reads.'}, 'Schema', 'Each_schema_list'))
     return a
@@ -151,6 +157,17 @@ def rule_actions():
         finish('OK', rules.pair_expression_projection("first(body('Find_left'))", "first(body('Find_right'))"), 'Pair'),
         {'Pair_missing': setvar('Code', 'PROFILE_NOT_FOUND')}, 'Find_right')
     branches['Evaluate_pair'] = d.condition("equals(body('Envelope')?['mode'],'PAIR')", pair, {}, 'Return_normalization')
+    # Discovery evaluates the candidate set in one child invocation, rather
+    # than paying a native child-run boundary for every candidate profile.
+    pairs = {'Parse_pairs_actor': d.parse("@body('Envelope')?['leftId']", {'type': 'integer', 'minimum': 1}),
+        'Find_pairs_actor': d.query("@body('Normalize_Profiles')", "equals(item()?['profileId'],body('Parse_pairs_actor'))", 'Parse_pairs_actor')}
+    projection = {'profileId': "@item()?['profileId']", **rules.pair_expression_projection("first(body('Find_pairs_actor'))", 'item()')}
+    calculate = {'Select_pair_results': d.select("@body('Normalize_Profiles')", projection),
+        'Eligible_pair_results': d.query("@body('Select_pair_results')", "equals(item()?['eligible'],true)", 'Select_pair_results')}
+    calculate.update(finish('OK', {'pairs': "@body('Eligible_pair_results')"}, 'Pairs', 'Eligible_pair_results'))
+    pairs['Pairs_actor_exists'] = d.condition("equals(length(body('Find_pairs_actor')),1)", calculate,
+        {'Pairs_actor_missing': setvar('Code', 'PROFILE_NOT_FOUND')}, 'Find_pairs_actor')
+    branches['Evaluate_pairs'] = d.condition("equals(body('Envelope')?['mode'],'PAIRS')", pairs, {}, 'Evaluate_pair')
     group = {'Parse_group': d.parse("@body('Envelope')?['group']", rules.group_schema()),
         'Parse_candidate': d.parse("@body('Envelope')?['candidateId']", {'type': 'integer', 'minimum': 1}, 'Parse_group'),
         'Find_members': d.query("@body('Normalize_Profiles')", "contains(body('Parse_group')?['memberProfileIds'],item()?['profileId'])", 'Parse_candidate'),
@@ -159,7 +176,7 @@ def rule_actions():
     groupcalc.update(finish('OK', "@outputs('Group_Result')", 'Group_done', 'Group_Result'))
     group['Candidate_exists'] = d.condition("equals(length(body('Find_candidate')),1)", groupcalc,
         {'Candidate_missing': setvar('Code', 'PROFILE_NOT_FOUND')}, 'Find_candidate')
-    branches['Evaluate_group'] = d.condition("equals(body('Envelope')?['mode'],'GROUP')", group, {}, 'Evaluate_pair')
+    branches['Evaluate_group'] = d.condition("equals(body('Envelope')?['mode'],'GROUP')", group, {}, 'Evaluate_pairs')
     # Content validation is independent of participation/validation status.
     profile = {'Single_profile': d.condition("equals(length(body('Normalize_Profiles')),1)",
         finish('OK', {'valid': "@or(not(empty(first(body('Normalize_Parse_profiles'))?['teachIds'])),not(empty(first(body('Normalize_Parse_profiles'))?['learnIds'])),not(empty(first(body('Normalize_Parse_profiles'))?['shareCultureIds'])),not(empty(first(body('Normalize_Parse_profiles'))?['learnCultureIds'])))"}, 'Profile'),
@@ -183,10 +200,10 @@ def definition_actions(baseline, build_id, source_hash):
              'Envelope': d.parse("@json(body('Request_text')?['value'])", {'type': 'object',
              'required': ['contractVersion', 'rulesVersion', 'mode'], 'properties': {
                  'contractVersion': {'type': 'integer'}, 'rulesVersion': {'type': 'integer'}, 'mode': {'type': 'string'}}}, 'Request_text')}
-    stage['Header_code'] = d.compose("@if(and(equals(body('Envelope')?['contractVersion'],1),equals(body('Envelope')?['rulesVersion'],1)),if(contains(createArray('SCHEMA','NORMALIZE','PAIR','GROUP','PROFILE'),body('Envelope')?['mode']),'READY','UNSUPPORTED_MODE'),'VERSION_MISMATCH')", 'Envelope')
+    stage['Header_code'] = d.compose("@if(and(equals(body('Envelope')?['contractVersion'],1),equals(body('Envelope')?['rulesVersion'],1)),if(contains(createArray('SCHEMA','NORMALIZE','PAIR','PAIRS','GROUP','PROFILE'),body('Envelope')?['mode']),'READY','UNSUPPORTED_MODE'),'VERSION_MISMATCH')", 'Envelope')
     stage['Set_header_error'] = setvar('Code', "@if(equals(outputs('Header_code'),'READY'),'INVALID_INPUT',outputs('Header_code'))", 'Header_code')
     stage['Schema_mode'] = d.condition("and(equals(outputs('Header_code'),'READY'),equals(body('Envelope')?['mode'],'SCHEMA'))", metadata_actions(baseline), {}, 'Set_header_error')
-    stage['Rules_mode'] = d.condition("and(equals(outputs('Header_code'),'READY'),contains(createArray('NORMALIZE','PAIR','GROUP','PROFILE'),body('Envelope')?['mode']))", rule_actions(), {}, 'Schema_mode')
+    stage['Rules_mode'] = d.condition("and(equals(outputs('Header_code'),'READY'),contains(createArray('NORMALIZE','PAIR','PAIRS','GROUP','PROFILE'),body('Envelope')?['mode']))", rule_actions(), {}, 'Schema_mode')
     a['Evaluate'] = {'type': 'Scope', 'actions': stage, 'runAfter': d.after(previous)}
     succeeded = "equals(actions('Evaluate')?['status'],'Succeeded')"
     a['Result_size'] = d.compose("@length(string(variables('Result')))")
@@ -399,6 +416,8 @@ def verify_baseline_sources(baseline):
     paths = {'participantCatalogue': ROOT / 'config/tenant_schema_mapping.json',
              'groupMembers': ROOT / 'config/group_schema_mapping.json',
              'requests': ROOT / 'artifacts/shared_validation/results/request-mapping.baseline.json'}
+    if 'batchExtensions' in baseline['sourceMappingHashes']:
+        paths['batchExtensions'] = ROOT / 'config/batch_schema_contract.json'
     for name, path in paths.items():
         if mapping_digest(path) != baseline['sourceMappingHashes'][name]:
             raise ValueError('Schema mapping drift: update #81 baseline/evidence for ' + name)
@@ -416,10 +435,11 @@ def synthetic_metadata(baseline):
             if f.get('choices') is not None:
                 xml.set('FillInChoice', 'FALSE'); choices = ET.SubElement(xml, 'CHOICES')
                 for value in f['choices']: ET.SubElement(choices, 'CHOICE').text = value
+            if f.get('plainText'): xml.set('RichText', 'FALSE'); xml.set('AppendOnly', 'FALSE')
             fields.append({'InternalName': f['name'], 'TypeAsString': f['type'], 'Required': f['required'],
                 'Indexed': f['indexed'], 'EnforceUniqueValues': f['unique'], 'Hidden': False, 'ReadOnlyField': False,
                 'DefaultValue': f['default'] if f['checkDefault'] else None, 'SchemaXml': ET.tostring(xml, encoding='unicode')})
-        lists.append({'role': spec['role'], 'Id': spec['listId'], 'BaseTemplate': 100, 'complete': True,
+        lists.append({'role': spec['role'], 'Id': spec['listId'] or 'synthetic-new-list-id', 'Title': spec.get('listTitle', ''), 'BaseTemplate': 100, 'complete': True,
             'Fields': fields, 'ValidationFormula': spec.get('validationFormula')})
     return {'lists': lists}
 

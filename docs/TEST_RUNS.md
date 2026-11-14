@@ -1629,3 +1629,7 @@ Default v7 build `2c9d2814-dcfb-4951-8abe-955b9067863b`, SHA256 `9edaa4b8f3561d3
 6. Return final manifest/consumer version/hash, schema audit result, account ROLE, native run references, sanitized outputs and per-case PASS/FAIL/BLOCKED/NOT RUN. No new native/ordinary-user access PASS inferred. Cleanup remains preview-flow-only; no production/source/schema/fixture deletion by reader. Current local evidence is artifacts/my_requests/v7.validation.json.
 
 #62 follow-up final local evidence: **485 full-suite PASS / 128 reader cases**, 52.50s. Default and Introduction-target128/depth4, six GETs/one actual emitted child/zero writes; strict hash and exact configurable build checks PASS on this branch's unchanged main-based shared source. New foundation old4d16/new7365 drift remains a parent-owned merge/regeneration prerequisite, not waived. Validation records prior v7 history separately; native/schema/privacy still NOT RUN.
+
+## #81 batch foundation local checkpoint — 2026-11-14
+
+21 focused schema/Solution tests PASS: additive dry/apply/repeat, permission rejection, unrelated list/mismatch/nonempty receipt refusal, incomplete reads, shared eight-role schema comparison, note/plain-text drift, complete twelve-flow assembly, fresh linked IDs/disabled import and missing/extra/credential/dependency rejection. Generator-only proof; final actual-consumer assembly and all new native tests NOT RUN. Prior v2 QUICK3/FULL44 and source inspection remain scoped to their original versions. Full current regression is running separately; no new full count inferred.

@@ -49,6 +49,7 @@ class Runner:
                     'sub':lambda a,b:a-b,'createArray':lambda *v:list(v),'add':lambda a,b:a+b,'div':lambda a,b:a//b,'mod':lambda a,b:a%b,
                     'actions':lambda n:{'status':getattr(self,'action_states',{}).get(n,'Skipped')},
                     'triggerBody':lambda:context.get('triggerBody',{})}
+                funcs.update(getattr(self,'extra_functions',lambda context:{})(context))
                 result=funcs[t](*args)
             while at<len(tokens) and tokens[at]=='?':
                 at+=1;assert tokens[at]=='[';at+=1;key=value();assert tokens[at]==']';at+=1
