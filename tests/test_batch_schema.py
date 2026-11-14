@@ -6,6 +6,7 @@ import pytest
 from scripts.power_automate import batch_schema as setup
 from scripts.power_automate.schema_audit import measure
 from test_shared_validation import ChildRunner
+from core_native_backend import ParentRunner
 from scripts.power_automate import shared_validation as shared
 import json
 
@@ -58,12 +59,12 @@ class Tenant:
                                       'Description': self.description, 'BaseTemplate': 100, 'ItemCount': self.rows}] if self.exists else []})
 
 
-class AuditRunner(ChildRunner):
+class AuditRunner(ParentRunner):
     def run(self, actions, ctx=None):
         if 'Call_schema_validator' in actions:
             action = actions['Call_schema_validator']
             payload = self.inputs(action['inputs']['body'], ctx)
-            child = ChildRunner(self.server)
+            child = ParentRunner(self.server)
             child.run(shared.definition_actions(setup.baseline(), 'synthetic-build', 'rules-hash'),
                       {'items': {}, 'triggerBody': payload})
             self.outputs['Call_schema_validator'] = child.response
@@ -149,3 +150,54 @@ def test_batch_schema_extensions_are_checked_by_the_one_shared_child(change):
     assert report['result']['allSchema'] and len(report['result']['checkedRoles']) == 8
     assert report['result']['schemaMatches'] == (change is None)
     shared.verify_baseline_sources(baseline)
+
+
+def test_native_size_bound_rejects_full_raw_metadata_but_compact_collector_passes():
+    server = Tenant(True)
+    noise = [dict(native_field({'name': 'System' + str(i), 'type': 'Text'}),
+                  Hidden=True, ReadOnlyField=True, SchemaXml='<Field Description="' + 'x' * 3000 + '"/>')
+             for i in range(40)]
+    for role in server.metadata:
+        for field in role['Fields']:
+            field['__metadata'] = {'uri': 'https://sharepoint.test/' + 'x' * 4000}
+        role['Fields'].extend(deepcopy(noise))
+    for fields in [server.fields, server.intro]:
+        for field in fields: field['__metadata'] = {'uri': 'https://sharepoint.test/' + 'x' * 4000}
+        fields.extend(deepcopy(noise))
+    raw = json.dumps({'contractVersion': 1, 'rulesVersion': 1, 'mode': 'SCHEMA',
+                      'metadata': {'lists': server.metadata}})
+    assert len(raw) > 250000
+    old_child = ParentRunner(server)
+    old_child.run(shared.definition_actions(setup.baseline(), 'synthetic-build', 'rules-hash'),
+                  {'items': {}, 'triggerBody': {'text': raw}})
+    old_report = json.loads(old_child.response['resultjson'])
+    assert old_report['code'] == 'INVALID_INPUT' and old_report['diagnostics']['requestText'] == 'Failed'
+    report, runner = execute(server)
+    assert report['schemaVerified'] and report['validationCode'] == 'OK', report
+    assert report['requestCharacters'] < 250000
+    snapshots = runner.outputs['Schema_request']['metadata']['lists']
+    assert sum(len(row['Fields']) for row in snapshots) == 59
+    assert all('__metadata' not in field for row in snapshots for field in row['Fields'])
+    assert not server.writes
+
+
+@pytest.mark.parametrize('change', ['missing', 'duplicate', 'wrong-type'])
+def test_compact_collection_retains_missing_duplicate_and_mismatch_failures(change):
+    server = Tenant(True)
+    fields = next(row for row in server.metadata if row['role'] == 'participants')['Fields']
+    if change == 'missing': fields.pop(0)
+    if change == 'duplicate': fields.append(deepcopy(fields[0]))
+    if change == 'wrong-type': fields[0]['TypeAsString'] = 'Number'
+    report, _ = execute(server)
+    assert not report['schemaVerified'] and report['validationCode'] == 'SCHEMA_MISMATCH', report
+    assert report['schemaResult']['differences'] and not server.writes
+
+
+def test_oversized_required_field_is_not_silently_truncated_and_failure_is_visible():
+    server = Tenant(True)
+    next(row for row in server.metadata if row['role'] == 'participants')['Fields'][0]['SchemaXml'] = '<Field Description="' + 'x' * 260000 + '"/>'
+    report, _ = execute(server)
+    assert not report['schemaVerified'] and report['collectionComplete']
+    assert report['validationCode'] == 'INVALID_INPUT'
+    assert report['validationDiagnostics']['requestText'] == 'Failed'
+    assert report['requestCharacters'] > 250000 and not server.writes

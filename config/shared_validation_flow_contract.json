@@ -135,6 +135,13 @@
     },
     "maintenanceFlows": 2,
     "nativeStatus": "NOT_IMPORTED_NOT_TESTED",
-    "ordinaryUserAccessVerified": false
+    "ordinaryUserAccessVerified": false,
+    "schemaCollectorRepair": {
+      "reason": "Native setup child returned INVALID_INPUT at Request_text; raw all-field payload can exceed250000 characters. Exact native Request_text error requested.",
+      "change": "Forward only baseline contract field names and nine evaluator properties; preserve exact SchemaXml, source completeness/paging and duplicate/missing checks. Surface child validation code/diagnostics/run reference and input character count.",
+      "matchingNormalizationSchemaSemantics": "UNCHANGED",
+      "nativeRetest": "NOT_RUN",
+      "receiptListIdObserved": "864dfe53-b67c-4504-9d48-ad4356b813d8"
+    }
   }
 }

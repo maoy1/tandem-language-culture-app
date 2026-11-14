@@ -117,6 +117,10 @@ def actions(build_id):
         'applyRequested': "@equals(triggerBody()?['boolean'],true)", 'runReference': "@workflow()?['run']?['name']",
         'schemaVerified': "@and(equals(actions('Schema_extensions_ready')?['status'],'Succeeded'),equals(body('Parse_schema_result')?['code'],'OK'),equals(body('Parse_schema_result')?['result']?['schemaMatches'],true),equals(body('Parse_schema_result')?['result']?['allSchema'],true))",
         'schemaResult': "@body('Parse_schema_result')?['result']",
+        'validationCode': "@body('Parse_schema_result')?['code']",
+        'validationDiagnostics': "@body('Parse_schema_result')?['diagnostics']",
+        'validationRunReference': "@body('Parse_schema_result')?['runReference']",
+        'requestCharacters': "@length(string(outputs('Schema_request')))",
         'collectionComplete': "@and(equals(actions('Each_schema_metadata')?['status'],'Succeeded'),equals(length(variables('SchemaSnapshots')),8),empty(body('Incomplete_schema_snapshots')))",
         'differences': "@variables('Differences')", 'rowWrites': 0, 'deletes': 0, 'permissionChanges': 0,
         'receiptList': "@outputs('Receipt_list')", 'scope': 'Additive schema only; no automatic conversions or rollback. Dry run by default.'})
@@ -154,17 +158,26 @@ def baseline():
 def audit_actions():
     """Collect metadata once; all comparison rules live in the shared child."""
     specs = baseline()['lists']
-    targets = [{'role': s['role'], 'base': "_api/web/lists(guid'" + s['listId'] + "')" if s['listId'] else
+    targets = [{'role': s['role'], 'fieldNames': [f['name'] for f in s['fields']], 'base': "_api/web/lists(guid'" + s['listId'] + "')" if s['listId'] else
                 "_api/web/lists/getbytitle('" + s['listTitle'] + "')"} for s in specs]
     a = {'Schema_targets': d.compose(targets)}
     loop = {'Read_schema_list': request("@concat(items('Each_schema_metadata')?['base'],'?$select=Id,Title,BaseTemplate,ValidationFormula')")}
     loop['Read_schema_fields'] = request("@concat(items('Each_schema_metadata')?['base'],'/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,DefaultValue,Hidden,ReadOnlyField,SchemaXml&$top=500')", 'Read_schema_list')
+    # Keep the full-read completeness check, but send only contract fields and
+    # evaluator properties. SharePoint adds large hidden/system fields and
+    # per-field __metadata that the schema evaluator neither needs nor checks.
+    loop['Contract_schema_fields'] = d.query("@body('Read_schema_fields')?['d']?['results']",
+        "contains(items('Each_schema_metadata')?['fieldNames'],item()?['InternalName'])", 'Read_schema_fields')
+    properties = ['InternalName', 'TypeAsString', 'Required', 'EnforceUniqueValues',
+                  'Indexed', 'DefaultValue', 'Hidden', 'ReadOnlyField', 'SchemaXml']
+    loop['Schema_field_projection'] = d.select("@body('Contract_schema_fields')",
+        {key: "@item()?['" + key + "']" for key in properties}, 'Contract_schema_fields')
     loop['Record_schema_snapshot'] = {'type': 'AppendToArrayVariable', 'inputs': {'name': 'SchemaSnapshots', 'value': {
         'role': "@items('Each_schema_metadata')?['role']", 'Id': "@body('Read_schema_list')?['d']?['Id']",
         'Title': "@body('Read_schema_list')?['d']?['Title']", 'BaseTemplate': "@body('Read_schema_list')?['d']?['BaseTemplate']",
         'ValidationFormula': "@body('Read_schema_list')?['d']?['ValidationFormula']",
-        'Fields': "@body('Read_schema_fields')?['d']?['results']", 'complete': '@' + complete('Read_schema_fields')}},
-        'runAfter': d.after('Read_schema_fields')}
+        'Fields': "@body('Schema_field_projection')", 'complete': '@' + complete('Read_schema_fields')}},
+        'runAfter': d.after('Schema_field_projection')}
     a['Each_schema_metadata'] = d.loop("@outputs('Schema_targets')", loop, 'Schema_targets')
     a['Incomplete_schema_snapshots'] = d.query("@variables('SchemaSnapshots')", "not(equals(item()?['complete'],true))", 'Each_schema_metadata')
     a['Schema_request'] = d.compose({'contractVersion': 1, 'rulesVersion': 1, 'mode': 'SCHEMA',
