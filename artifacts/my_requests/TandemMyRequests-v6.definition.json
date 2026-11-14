@@ -1,0 +1,3063 @@
+{
+  "name": "7a2c420a-799f-4067-b1f2-2b21ca791812",
+  "id": "/providers/Microsoft.Flow/flows/7a2c420a-799f-4067-b1f2-2b21ca791812",
+  "type": "Microsoft.Flow/flows",
+  "properties": {
+    "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
+    "displayName": "TandemMyRequests v6",
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "number": {
+                  "description": "Please enter a number",
+                  "title": "NumParticipantIdber",
+                  "type": "number",
+                  "x-ms-content-hint": "NUMBER",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "required": [
+                "number"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Initialize_ErrorCode": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ErrorCode",
+                "type": "string",
+                "value": ""
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "Initialize_Requests": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Requests",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_ErrorCode": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Initialize_OperationalGroups": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "OperationalGroups",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_Requests": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Read_authorized_requests": {
+          "type": "Scope",
+          "actions": {
+            "Input_reference": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@triggerBody()?['number']",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "runAfter": {}
+            },
+            "Read_invoker": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "Input_reference": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/currentuser?$select=Id",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "Invoker": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Read_invoker')?['d']",
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "Id"
+                  ],
+                  "properties": {
+                    "Id": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_invoker": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Metadata_stage": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": "REQUEST_SCHEMA_UNVERIFIED"
+              },
+              "runAfter": {
+                "Invoker": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_requests_list": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "Metadata_stage": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'3d17485d-1dac-41f0-a1af-24e45daa4567')?$select=Id,BaseTemplate",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "requests_list_verified": {
+              "type": "If",
+              "expression": "@and(equals(toLower(body('Read_requests_list')?['d']?['Id']),'3d17485d-1dac-41f0-a1af-24e45daa4567'),equals(body('Read_requests_list')?['d']?['BaseTemplate'],100))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "requests_list_verified_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "requests_list_verified_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "requests_list_verified_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_requests_list": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_requests_fields": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "requests_list_verified": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'3d17485d-1dac-41f0-a1af-24e45daa4567')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,Hidden,ReadOnlyField,SchemaXml&$top=501",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "requests_metadata_complete": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Read_requests_fields')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_requests_fields')?['d']?['results'],json('[]'))),500),empty(body('Read_requests_fields')?['d']?['__next']),empty(body('Read_requests_fields')?['@odata.nextLink']),empty(body('Read_requests_fields')?['odata.nextLink']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "requests_metadata_complete_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "requests_metadata_complete_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "requests_metadata_complete_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_requests_fields": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_field_SenderParticipantId": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_requests_fields')?['d']?['results']",
+                "where": "@and(equals(item()?['InternalName'],'SenderParticipantId'),equals(item()?['TypeAsString'],'Number'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@Decimals)')),'0'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
+              },
+              "runAfter": {
+                "requests_metadata_complete": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_field_SenderParticipantId_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('requests_field_SenderParticipantId')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "requests_field_SenderParticipantId_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "requests_field_SenderParticipantId_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "requests_field_SenderParticipantId_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "requests_field_SenderParticipantId": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_field_RecipientParticipantId": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_requests_fields')?['d']?['results']",
+                "where": "@and(equals(item()?['InternalName'],'RecipientParticipantId'),equals(item()?['TypeAsString'],'Number'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@Decimals)')),'0'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
+              },
+              "runAfter": {
+                "requests_field_SenderParticipantId_gate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_field_RecipientParticipantId_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('requests_field_RecipientParticipantId')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "requests_field_RecipientParticipantId_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "requests_field_RecipientParticipantId_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "requests_field_RecipientParticipantId_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "requests_field_RecipientParticipantId": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_field_TargetGroup": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_requests_fields')?['d']?['results']",
+                "where": "@and(equals(item()?['InternalName'],'TargetGroup'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(toLower(replace(replace(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@List)')),'{',''),'}','')),'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
+              },
+              "runAfter": {
+                "requests_field_RecipientParticipantId_gate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_field_TargetGroup_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('requests_field_TargetGroup')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "requests_field_TargetGroup_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "requests_field_TargetGroup_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "requests_field_TargetGroup_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "requests_field_TargetGroup": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_field_RequestType": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_requests_fields')?['d']?['results']",
+                "where": "@and(equals(item()?['InternalName'],'RequestType'),equals(item()?['TypeAsString'],'Choice'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(length(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()')),2),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Personal'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Group'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
+              },
+              "runAfter": {
+                "requests_field_TargetGroup_gate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_field_RequestType_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('requests_field_RequestType')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "requests_field_RequestType_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "requests_field_RequestType_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "requests_field_RequestType_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "requests_field_RequestType": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_field_Status": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_requests_fields')?['d']?['results']",
+                "where": "@and(equals(item()?['InternalName'],'Status'),equals(item()?['TypeAsString'],'Choice'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(length(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()')),4),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Pending'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Accepted'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Declined'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Cancelled'),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
+              },
+              "runAfter": {
+                "requests_field_RequestType_gate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_field_Status_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('requests_field_Status')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "requests_field_Status_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "requests_field_Status_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "requests_field_Status_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "requests_field_Status": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_field_SendOperationKey": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_requests_fields')?['d']?['results']",
+                "where": "@and(equals(item()?['InternalName'],'SendOperationKey'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],true),equals(item()?['Indexed'],true),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
+              },
+              "runAfter": {
+                "requests_field_Status_gate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_field_SendOperationKey_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('requests_field_SendOperationKey')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "requests_field_SendOperationKey_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "requests_field_SendOperationKey_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "requests_field_SendOperationKey_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "requests_field_SendOperationKey": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_field_ConnectionKey": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_requests_fields')?['d']?['results']",
+                "where": "@and(equals(item()?['InternalName'],'ConnectionKey'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],true),equals(item()?['Indexed'],true),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
+              },
+              "runAfter": {
+                "requests_field_SendOperationKey_gate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_field_ConnectionKey_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('requests_field_ConnectionKey')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "requests_field_ConnectionKey_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "requests_field_ConnectionKey_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "requests_field_ConnectionKey_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "requests_field_ConnectionKey": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_field_WinningOperationKey": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_requests_fields')?['d']?['results']",
+                "where": "@and(equals(item()?['InternalName'],'WinningOperationKey'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
+              },
+              "runAfter": {
+                "requests_field_ConnectionKey_gate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_field_WinningOperationKey_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('requests_field_WinningOperationKey')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "requests_field_WinningOperationKey_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "requests_field_WinningOperationKey_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "requests_field_WinningOperationKey_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "requests_field_WinningOperationKey": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_field_OperationComplete": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_requests_fields')?['d']?['results']",
+                "where": "@and(equals(item()?['InternalName'],'OperationComplete'),equals(item()?['TypeAsString'],'Boolean'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Hidden'],false),equals(item()?['ReadOnlyField'],false))"
+              },
+              "runAfter": {
+                "requests_field_WinningOperationKey_gate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_field_OperationComplete_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('requests_field_OperationComplete')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "requests_field_OperationComplete_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "requests_field_OperationComplete_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "requests_field_OperationComplete_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "requests_field_OperationComplete": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_profiles_list": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "requests_field_OperationComplete_gate": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'fd3adf46-f81d-4a7b-a80c-567fde0175dc')?$select=Id,BaseTemplate",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "profiles_list_verified": {
+              "type": "If",
+              "expression": "@and(equals(toLower(body('Read_profiles_list')?['d']?['Id']),'fd3adf46-f81d-4a7b-a80c-567fde0175dc'),equals(body('Read_profiles_list')?['d']?['BaseTemplate'],100))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "profiles_list_verified_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "profiles_list_verified_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "profiles_list_verified_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_profiles_list": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_profiles_fields": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "profiles_list_verified": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'fd3adf46-f81d-4a7b-a80c-567fde0175dc')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,Hidden,ReadOnlyField,SchemaXml&$top=501",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "profiles_metadata_complete": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Read_profiles_fields')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_profiles_fields')?['d']?['results'],json('[]'))),500),empty(body('Read_profiles_fields')?['d']?['__next']),empty(body('Read_profiles_fields')?['@odata.nextLink']),empty(body('Read_profiles_fields')?['odata.nextLink']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "profiles_metadata_complete_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "profiles_metadata_complete_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "profiles_metadata_complete_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_profiles_fields": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "profiles_field_Participantaccount": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_profiles_fields')?['d']?['results']",
+                "where": "@and(equals(item()?['InternalName'],'Participantaccount'),equals(item()?['TypeAsString'],'User'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],true),equals(item()?['Indexed'],true))"
+              },
+              "runAfter": {
+                "profiles_metadata_complete": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "profiles_field_Participantaccount_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('profiles_field_Participantaccount')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "profiles_field_Participantaccount_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "profiles_field_Participantaccount_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "profiles_field_Participantaccount_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "profiles_field_Participantaccount": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_groups_list": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "profiles_field_Participantaccount_gate": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6')?$select=Id,BaseTemplate",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "groups_list_verified": {
+              "type": "If",
+              "expression": "@and(equals(toLower(body('Read_groups_list')?['d']?['Id']),'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'),equals(body('Read_groups_list')?['d']?['BaseTemplate'],100))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "groups_list_verified_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "groups_list_verified_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "groups_list_verified_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_groups_list": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_groups_fields": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "groups_list_verified": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,Hidden,ReadOnlyField,SchemaXml&$top=501",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "groups_metadata_complete": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Read_groups_fields')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_groups_fields')?['d']?['results'],json('[]'))),500),empty(body('Read_groups_fields')?['d']?['__next']),empty(body('Read_groups_fields')?['@odata.nextLink']),empty(body('Read_groups_fields')?['odata.nextLink']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "groups_metadata_complete_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "groups_metadata_complete_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "groups_metadata_complete_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_groups_fields": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "groups_field_Capacity": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_groups_fields')?['d']?['results']",
+                "where": "@and(equals(item()?['InternalName'],'Capacity'),equals(item()?['TypeAsString'],'Number'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],false))"
+              },
+              "runAfter": {
+                "groups_metadata_complete": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "groups_field_Capacity_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('groups_field_Capacity')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "groups_field_Capacity_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "groups_field_Capacity_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "groups_field_Capacity_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "groups_field_Capacity": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "groups_field_State": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_groups_fields')?['d']?['results']",
+                "where": "@and(equals(item()?['InternalName'],'State'),equals(item()?['TypeAsString'],'Choice'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],false),equals(length(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()')),3),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Open'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Closed'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Ended'))"
+              },
+              "runAfter": {
+                "groups_field_Capacity_gate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "groups_field_State_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('groups_field_State')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "groups_field_State_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "groups_field_State_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "groups_field_State_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "groups_field_State": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "groups_field_SourceRequestId": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_groups_fields')?['d']?['results']",
+                "where": "@and(equals(item()?['InternalName'],'SourceRequestId'),equals(item()?['TypeAsString'],'Number'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],true),equals(item()?['Indexed'],true))"
+              },
+              "runAfter": {
+                "groups_field_State_gate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "groups_field_SourceRequestId_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('groups_field_SourceRequestId')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "groups_field_SourceRequestId_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "groups_field_SourceRequestId_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "groups_field_SourceRequestId_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "groups_field_SourceRequestId": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "groups_field_SetupComplete": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_groups_fields')?['d']?['results']",
+                "where": "@and(equals(item()?['InternalName'],'SetupComplete'),equals(item()?['TypeAsString'],'Boolean'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],false))"
+              },
+              "runAfter": {
+                "groups_field_SourceRequestId_gate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "groups_field_SetupComplete_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('groups_field_SetupComplete')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "groups_field_SetupComplete_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "groups_field_SetupComplete_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "groups_field_SetupComplete_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "groups_field_SetupComplete": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "groups_field_WriteOwner": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_groups_fields')?['d']?['results']",
+                "where": "@and(equals(item()?['InternalName'],'WriteOwner'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],false))"
+              },
+              "runAfter": {
+                "groups_field_SetupComplete_gate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "groups_field_WriteOwner_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('groups_field_WriteOwner')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "groups_field_WriteOwner_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "groups_field_WriteOwner_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "groups_field_WriteOwner_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "groups_field_WriteOwner": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_memberships_list": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "groups_field_WriteOwner_gate": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'db611ec3-7fa3-477a-878e-effbbb195cb8')?$select=Id,BaseTemplate",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "memberships_list_verified": {
+              "type": "If",
+              "expression": "@and(equals(toLower(body('Read_memberships_list')?['d']?['Id']),'db611ec3-7fa3-477a-878e-effbbb195cb8'),equals(body('Read_memberships_list')?['d']?['BaseTemplate'],100))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "memberships_list_verified_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "memberships_list_verified_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "memberships_list_verified_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_memberships_list": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_memberships_fields": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "memberships_list_verified": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'db611ec3-7fa3-477a-878e-effbbb195cb8')/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,Hidden,ReadOnlyField,SchemaXml&$top=501",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "memberships_metadata_complete": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Read_memberships_fields')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_memberships_fields')?['d']?['results'],json('[]'))),500),empty(body('Read_memberships_fields')?['d']?['__next']),empty(body('Read_memberships_fields')?['@odata.nextLink']),empty(body('Read_memberships_fields')?['odata.nextLink']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "memberships_metadata_complete_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "memberships_metadata_complete_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "memberships_metadata_complete_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_memberships_fields": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "memberships_field_Group": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_memberships_fields')?['d']?['results']",
+                "where": "@and(equals(item()?['InternalName'],'Group'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],true),equals(toLower(replace(replace(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@List)')),'{',''),'}','')),'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'))"
+              },
+              "runAfter": {
+                "memberships_metadata_complete": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "memberships_field_Group_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('memberships_field_Group')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "memberships_field_Group_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "memberships_field_Group_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "memberships_field_Group_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "memberships_field_Group": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "memberships_field_Participant": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_memberships_fields')?['d']?['results']",
+                "where": "@and(equals(item()?['InternalName'],'Participant'),equals(item()?['TypeAsString'],'Lookup'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],true),equals(toLower(replace(replace(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@List)')),'{',''),'}','')),'fd3adf46-f81d-4a7b-a80c-567fde0175dc'))"
+              },
+              "runAfter": {
+                "memberships_field_Group_gate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "memberships_field_Participant_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('memberships_field_Participant')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "memberships_field_Participant_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "memberships_field_Participant_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "memberships_field_Participant_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "memberships_field_Participant": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "memberships_field_MembershipStatus": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_memberships_fields')?['d']?['results']",
+                "where": "@and(equals(item()?['InternalName'],'MembershipStatus'),equals(item()?['TypeAsString'],'Choice'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],false),equals(length(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()')),2),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Active'),contains(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'/Field/CHOICES/CHOICE/text()'),'Left'))"
+              },
+              "runAfter": {
+                "memberships_field_Participant_gate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "memberships_field_MembershipStatus_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('memberships_field_MembershipStatus')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "memberships_field_MembershipStatus_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "memberships_field_MembershipStatus_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "memberships_field_MembershipStatus_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "memberships_field_MembershipStatus": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "memberships_field_LeftAt": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_memberships_fields')?['d']?['results']",
+                "where": "@and(equals(item()?['InternalName'],'LeftAt'),equals(item()?['TypeAsString'],'DateTime'),equals(item()?['Required'],false),equals(item()?['EnforceUniqueValues'],false),equals(item()?['Indexed'],false))"
+              },
+              "runAfter": {
+                "memberships_field_MembershipStatus_gate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "memberships_field_LeftAt_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('memberships_field_LeftAt')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "memberships_field_LeftAt_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "memberships_field_LeftAt_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "memberships_field_LeftAt_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "memberships_field_LeftAt": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "memberships_field_MembershipKey": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Read_memberships_fields')?['d']?['results']",
+                "where": "@and(equals(item()?['InternalName'],'MembershipKey'),equals(item()?['TypeAsString'],'Text'),equals(item()?['Required'],true),equals(item()?['EnforceUniqueValues'],true),equals(item()?['Indexed'],true))"
+              },
+              "runAfter": {
+                "memberships_field_LeftAt_gate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "memberships_field_MembershipKey_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('memberships_field_MembershipKey')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "memberships_field_MembershipKey_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "REQUEST_SCHEMA_UNVERIFIED"
+                    },
+                    "runAfter": {}
+                  },
+                  "memberships_field_MembershipKey_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "memberships_field_MembershipKey_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "memberships_field_MembershipKey": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Metadata_verified": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": ""
+              },
+              "runAfter": {
+                "memberships_field_MembershipKey_gate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_own": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "Metadata_verified": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "@concat('_api/web/lists(guid''fd3adf46-f81d-4a7b-a80c-567fde0175dc'')/items?$select=Id&$filter=ParticipantaccountId eq ',string(body('Invoker')?['Id']),'&$top=2')",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "Own_complete": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Read_own')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_own')?['d']?['results'],json('[]'))),1),empty(body('Read_own')?['d']?['__next']),empty(body('Read_own')?['@odata.nextLink']),empty(body('Read_own')?['odata.nextLink']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Own_complete_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "UNAUTHORIZED_PROFILE"
+                    },
+                    "runAfter": {}
+                  },
+                  "Own_complete_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Own_complete_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_own": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Own_match": {
+              "type": "If",
+              "expression": "@and(equals(length(body('Read_own')?['d']?['results']),1),equals(first(union(body('Read_own')?['d']?['results'],createArray(json('{}'))))?['Id'],triggerBody()?['number']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Own_match_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "UNAUTHORIZED_PROFILE"
+                    },
+                    "runAfter": {}
+                  },
+                  "Own_match_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Own_match_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Own_complete": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Actor": {
+              "type": "Compose",
+              "inputs": "@triggerBody()?['number']",
+              "runAfter": {
+                "Own_match": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_requests": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "Actor": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'3d17485d-1dac-41f0-a1af-24e45daa4567')/items?$select=Id,Created,SenderParticipantId,RecipientParticipantId,TargetGroupId,RequestType,Status,SendOperationKey,ConnectionKey,WinningOperationKey,OperationComplete&$orderby=Created desc,ID desc&$top=501",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "requests_complete": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Read_requests')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_requests')?['d']?['results'],json('[]'))),500),empty(body('Read_requests')?['d']?['__next']),empty(body('Read_requests')?['@odata.nextLink']),empty(body('Read_requests')?['odata.nextLink']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "requests_complete_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "READ_BOUND_OR_INCOMPLETE"
+                    },
+                    "runAfter": {}
+                  },
+                  "requests_complete_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "requests_complete_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_requests": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_parse_code": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": "REQUEST_DATA_INCOMPLETE"
+              },
+              "runAfter": {
+                "requests_complete": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Raw_requests": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Read_requests')?['d']?['results']",
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "Id",
+                      "Created",
+                      "SenderParticipantId",
+                      "RecipientParticipantId",
+                      "TargetGroupId",
+                      "RequestType",
+                      "Status",
+                      "SendOperationKey",
+                      "ConnectionKey",
+                      "WinningOperationKey",
+                      "OperationComplete"
+                    ],
+                    "properties": {
+                      "Id": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "Created": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "SenderParticipantId": {
+                        "type": "number",
+                        "minimum": 1
+                      },
+                      "RecipientParticipantId": {
+                        "type": [
+                          "number",
+                          "null"
+                        ],
+                        "minimum": 1
+                      },
+                      "TargetGroupId": {
+                        "type": [
+                          "integer",
+                          "null"
+                        ],
+                        "minimum": 1
+                      },
+                      "RequestType": {
+                        "type": "string",
+                        "enum": [
+                          "Personal",
+                          "Group"
+                        ]
+                      },
+                      "Status": {
+                        "type": "string",
+                        "enum": [
+                          "Pending",
+                          "Accepted",
+                          "Declined",
+                          "Cancelled"
+                        ]
+                      },
+                      "SendOperationKey": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "ConnectionKey": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "WinningOperationKey": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "OperationComplete": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "requests_parse_code": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Validate_number_references": {
+              "type": "Foreach",
+              "foreach": "@body('Raw_requests')",
+              "actions": {
+                "Whole_number_references": {
+                  "type": "If",
+                  "expression": "@and(equals(items('Validate_number_references')?['SenderParticipantId'],int(items('Validate_number_references')?['SenderParticipantId'])),equals(coalesce(items('Validate_number_references')?['RecipientParticipantId'],0),int(coalesce(items('Validate_number_references')?['RecipientParticipantId'],0))))",
+                  "actions": {},
+                  "else": {
+                    "actions": {
+                      "Whole_number_references_error": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ErrorCode",
+                          "value": "REQUEST_DATA_INCOMPLETE"
+                        },
+                        "runAfter": {}
+                      },
+                      "Whole_number_references_stop": {
+                        "type": "Compose",
+                        "inputs": "@div(1,0)",
+                        "runAfter": {
+                          "Whole_number_references_error": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {}
+                }
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 1
+                }
+              },
+              "runAfter": {
+                "Raw_requests": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Data_requests": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Raw_requests')",
+                "select": {
+                  "Id": "@item()?['Id']",
+                  "Created": "@item()?['Created']",
+                  "SenderParticipantId": "@int(item()?['SenderParticipantId'])",
+                  "RecipientParticipantId": "@if(equals(item()?['RecipientParticipantId'],null),null,int(coalesce(item()?['RecipientParticipantId'],0)))",
+                  "TargetGroupId": "@item()?['TargetGroupId']",
+                  "RequestType": "@item()?['RequestType']",
+                  "Status": "@item()?['Status']",
+                  "SendOperationKey": "@item()?['SendOperationKey']",
+                  "ConnectionKey": "@item()?['ConnectionKey']",
+                  "WinningOperationKey": "@item()?['WinningOperationKey']",
+                  "OperationComplete": "@item()?['OperationComplete']"
+                }
+              },
+              "runAfter": {
+                "Validate_number_references": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_parsed": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": ""
+              },
+              "runAfter": {
+                "Data_requests": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_ids": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Raw_requests')",
+                "select": "@item()?['Id']"
+              },
+              "runAfter": {
+                "requests_parsed": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_unique": {
+              "type": "If",
+              "expression": "@equals(length(body('requests_ids')),length(union(body('requests_ids'),body('requests_ids'))))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "requests_unique_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "DATA_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "requests_unique_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "requests_unique_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "requests_ids": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_profiles": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "requests_unique": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'fd3adf46-f81d-4a7b-a80c-567fde0175dc')/items?$select=Id,Status,ParticipationStatus,OpenToConnections&$orderby=Id asc&$top=501",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "profiles_complete": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Read_profiles')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_profiles')?['d']?['results'],json('[]'))),500),empty(body('Read_profiles')?['d']?['__next']),empty(body('Read_profiles')?['@odata.nextLink']),empty(body('Read_profiles')?['odata.nextLink']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "profiles_complete_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "READ_BOUND_OR_INCOMPLETE"
+                    },
+                    "runAfter": {}
+                  },
+                  "profiles_complete_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "profiles_complete_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_profiles": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "profiles_parse_code": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": "DATA_INTEGRITY"
+              },
+              "runAfter": {
+                "profiles_complete": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Data_profiles": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Read_profiles')?['d']?['results']",
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "Id",
+                      "Status",
+                      "ParticipationStatus",
+                      "OpenToConnections"
+                    ],
+                    "properties": {
+                      "Id": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "Status": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "ParticipationStatus": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "enum": [
+                          "Active",
+                          "Paused",
+                          "Inactive",
+                          null
+                        ]
+                      },
+                      "OpenToConnections": {
+                        "type": [
+                          "boolean",
+                          "null"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "profiles_parse_code": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "profiles_parsed": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": ""
+              },
+              "runAfter": {
+                "Data_profiles": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "profiles_ids": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Data_profiles')",
+                "select": "@item()?['Id']"
+              },
+              "runAfter": {
+                "profiles_parsed": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "profiles_unique": {
+              "type": "If",
+              "expression": "@equals(length(body('profiles_ids')),length(union(body('profiles_ids'),body('profiles_ids'))))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "profiles_unique_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "DATA_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "profiles_unique_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "profiles_unique_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "profiles_ids": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_groups": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "profiles_unique": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'4bf1b37f-edce-40c5-8fa0-36543a2d0cd6')/items?$select=Id,SourceRequestId,SetupComplete,State,Capacity,WriteOwner&$orderby=Id asc&$top=101",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "groups_complete": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Read_groups')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_groups')?['d']?['results'],json('[]'))),100),empty(body('Read_groups')?['d']?['__next']),empty(body('Read_groups')?['@odata.nextLink']),empty(body('Read_groups')?['odata.nextLink']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "groups_complete_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "READ_BOUND_OR_INCOMPLETE"
+                    },
+                    "runAfter": {}
+                  },
+                  "groups_complete_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "groups_complete_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_groups": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "groups_parse_code": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": "DATA_INTEGRITY"
+              },
+              "runAfter": {
+                "groups_complete": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Data_groups": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Read_groups')?['d']?['results']",
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "Id",
+                      "SourceRequestId",
+                      "SetupComplete",
+                      "State",
+                      "Capacity",
+                      "WriteOwner"
+                    ],
+                    "properties": {
+                      "Id": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "SourceRequestId": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "SetupComplete": {
+                        "type": "boolean"
+                      },
+                      "State": {
+                        "type": "string",
+                        "enum": [
+                          "Open",
+                          "Closed",
+                          "Ended"
+                        ]
+                      },
+                      "Capacity": {
+                        "type": "integer",
+                        "minimum": 2,
+                        "maximum": 10
+                      },
+                      "WriteOwner": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "groups_parse_code": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "groups_parsed": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": ""
+              },
+              "runAfter": {
+                "Data_groups": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "groups_ids": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Data_groups')",
+                "select": "@item()?['Id']"
+              },
+              "runAfter": {
+                "groups_parsed": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "groups_unique": {
+              "type": "If",
+              "expression": "@equals(length(body('groups_ids')),length(union(body('groups_ids'),body('groups_ids'))))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "groups_unique_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "DATA_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "groups_unique_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "groups_unique_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "groups_ids": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_memberships": {
+              "type": "OpenApiConnection",
+              "runAfter": {
+                "groups_unique": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists(guid'db611ec3-7fa3-477a-878e-effbbb195cb8')/items?$select=Id,GroupId,ParticipantId,MembershipStatus,MembershipKey,LeftAt&$orderby=Id asc&$top=2001",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "memberships_complete": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Read_memberships')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Read_memberships')?['d']?['results'],json('[]'))),2000),empty(body('Read_memberships')?['d']?['__next']),empty(body('Read_memberships')?['@odata.nextLink']),empty(body('Read_memberships')?['odata.nextLink']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "memberships_complete_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "READ_BOUND_OR_INCOMPLETE"
+                    },
+                    "runAfter": {}
+                  },
+                  "memberships_complete_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "memberships_complete_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_memberships": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "memberships_parse_code": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": "DATA_INTEGRITY"
+              },
+              "runAfter": {
+                "memberships_complete": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Data_memberships": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Read_memberships')?['d']?['results']",
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "Id",
+                      "GroupId",
+                      "ParticipantId",
+                      "MembershipStatus",
+                      "MembershipKey",
+                      "LeftAt"
+                    ],
+                    "properties": {
+                      "Id": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "GroupId": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "ParticipantId": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "MembershipStatus": {
+                        "type": "string",
+                        "enum": [
+                          "Active",
+                          "Left"
+                        ]
+                      },
+                      "MembershipKey": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "LeftAt": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "memberships_parse_code": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "memberships_parsed": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ErrorCode",
+                "value": ""
+              },
+              "runAfter": {
+                "Data_memberships": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "memberships_ids": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Data_memberships')",
+                "select": "@item()?['Id']"
+              },
+              "runAfter": {
+                "memberships_parsed": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "memberships_unique": {
+              "type": "If",
+              "expression": "@equals(length(body('memberships_ids')),length(union(body('memberships_ids'),body('memberships_ids'))))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "memberships_unique_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "DATA_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "memberships_unique_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "memberships_unique_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "memberships_ids": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_unique_SendOperationKey": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Data_requests')",
+                "select": "@item()?['SendOperationKey']"
+              },
+              "runAfter": {
+                "memberships_unique": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_unique_SendOperationKey_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('requests_unique_SendOperationKey')),length(union(body('requests_unique_SendOperationKey'),body('requests_unique_SendOperationKey'))))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "requests_unique_SendOperationKey_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "DATA_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "requests_unique_SendOperationKey_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "requests_unique_SendOperationKey_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "requests_unique_SendOperationKey": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_unique_ConnectionKey": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Data_requests')",
+                "select": "@item()?['ConnectionKey']"
+              },
+              "runAfter": {
+                "requests_unique_SendOperationKey_gate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "requests_unique_ConnectionKey_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('requests_unique_ConnectionKey')),length(union(body('requests_unique_ConnectionKey'),body('requests_unique_ConnectionKey'))))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "requests_unique_ConnectionKey_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "DATA_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "requests_unique_ConnectionKey_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "requests_unique_ConnectionKey_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "requests_unique_ConnectionKey": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "groups_unique_SourceRequestId": {
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Data_groups')",
+                "select": "@item()?['SourceRequestId']"
+              },
+              "runAfter": {
+                "requests_unique_ConnectionKey_gate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "groups_unique_SourceRequestId_gate": {
+              "type": "If",
+              "expression": "@equals(length(body('groups_unique_SourceRequestId')),length(union(body('groups_unique_SourceRequestId'),body('groups_unique_SourceRequestId'))))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "groups_unique_SourceRequestId_gate_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "DATA_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "groups_unique_SourceRequestId_gate_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "groups_unique_SourceRequestId_gate_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "groups_unique_SourceRequestId": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Actor_profile": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Data_profiles')",
+                "where": "@equals(item()?['Id'],outputs('Actor'))"
+              },
+              "runAfter": {
+                "groups_unique_SourceRequestId_gate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Actor_exists": {
+              "type": "If",
+              "expression": "@equals(length(body('Actor_profile')),1)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Actor_exists_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "DATA_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "Actor_exists_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Actor_exists_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Actor_profile": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Validate_requests": {
+              "type": "Foreach",
+              "foreach": "@body('Data_requests')",
+              "actions": {
+                "Request_integrity": {
+                  "type": "If",
+                  "expression": "@and(or(and(equals(items('Validate_requests')?['RequestType'],'Personal'),not(equals(items('Validate_requests')?['RecipientParticipantId'],null)),equals(items('Validate_requests')?['TargetGroupId'],null),not(equals(items('Validate_requests')?['SenderParticipantId'],items('Validate_requests')?['RecipientParticipantId']))),and(equals(items('Validate_requests')?['RequestType'],'Group'),equals(items('Validate_requests')?['RecipientParticipantId'],null),not(equals(items('Validate_requests')?['TargetGroupId'],null)))),not(empty(trim(items('Validate_requests')?['SendOperationKey']))),equals(items('Validate_requests')?['ConnectionKey'],if(or(equals(items('Validate_requests')?['Status'],'Pending'),and(equals(items('Validate_requests')?['Status'],'Accepted'),equals(items('Validate_requests')?['OperationComplete'],false))),if(equals(items('Validate_requests')?['RequestType'],'Personal'),concat('open:person:',string(if(less(items('Validate_requests')?['SenderParticipantId'],coalesce(items('Validate_requests')?['RecipientParticipantId'],0)),items('Validate_requests')?['SenderParticipantId'],coalesce(items('Validate_requests')?['RecipientParticipantId'],0))),':',string(if(less(items('Validate_requests')?['SenderParticipantId'],coalesce(items('Validate_requests')?['RecipientParticipantId'],0)),coalesce(items('Validate_requests')?['RecipientParticipantId'],0),items('Validate_requests')?['SenderParticipantId']))),concat('open:group:',string(items('Validate_requests')?['TargetGroupId']),':participant:',string(items('Validate_requests')?['SenderParticipantId']))),concat('history:request:',string(items('Validate_requests')?['Id'])))),if(equals(items('Validate_requests')?['Status'],'Pending'),and(equals(items('Validate_requests')?['OperationComplete'],false),empty(items('Validate_requests')?['WinningOperationKey'])),and(not(empty(trim(coalesce(items('Validate_requests')?['WinningOperationKey'],'')))),or(equals(items('Validate_requests')?['Status'],'Accepted'),equals(items('Validate_requests')?['OperationComplete'],true)))))",
+                  "actions": {},
+                  "else": {
+                    "actions": {
+                      "Request_integrity_error": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ErrorCode",
+                          "value": "REQUEST_DATA_INCOMPLETE"
+                        },
+                        "runAfter": {}
+                      },
+                      "Request_integrity_stop": {
+                        "type": "Compose",
+                        "inputs": "@div(1,0)",
+                        "runAfter": {
+                          "Request_integrity_error": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {}
+                }
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 1
+                }
+              },
+              "runAfter": {
+                "Actor_exists": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Own_active_episodes": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Data_memberships')",
+                "where": "@and(equals(item()?['ParticipantId'],outputs('Actor')),equals(item()?['MembershipStatus'],'Active'))"
+              },
+              "runAfter": {
+                "Validate_requests": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Each_own_episode": {
+              "type": "Foreach",
+              "foreach": "@body('Own_active_episodes')",
+              "actions": {
+                "Episode_group": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Data_groups')",
+                    "where": "@equals(item()?['Id'],items('Each_own_episode')?['GroupId'])"
+                  },
+                  "runAfter": {}
+                },
+                "Episode_source": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Data_requests')",
+                    "where": "@and(equals(item()?['Id'],first(union(body('Episode_group'),createArray(json('{}'))))?['SourceRequestId']),equals(item()?['RequestType'],'Personal'),equals(item()?['Status'],'Accepted'),equals(item()?['OperationComplete'],true))"
+                  },
+                  "runAfter": {
+                    "Episode_group": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Episode_commit": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Data_requests')",
+                    "where": "@and(equals(items('Each_own_episode')?['MembershipKey'],concat('request:',string(item()?['Id']),':participant:',string(outputs('Actor')))),equals(item()?['Status'],'Accepted'),equals(item()?['OperationComplete'],true),or(and(equals(item()?['RequestType'],'Personal'),equals(item()?['Id'],first(union(body('Episode_group'),createArray(json('{}'))))?['SourceRequestId']),or(equals(item()?['SenderParticipantId'],outputs('Actor')),equals(item()?['RecipientParticipantId'],outputs('Actor')))),and(equals(item()?['RequestType'],'Group'),equals(item()?['TargetGroupId'],items('Each_own_episode')?['GroupId']),equals(item()?['SenderParticipantId'],outputs('Actor')))))"
+                  },
+                  "runAfter": {
+                    "Episode_source": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Episode_duplicates": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Data_memberships')",
+                    "where": "@and(equals(item()?['GroupId'],items('Each_own_episode')?['GroupId']),equals(item()?['ParticipantId'],outputs('Actor')),equals(item()?['MembershipStatus'],'Active'))"
+                  },
+                  "runAfter": {
+                    "Episode_commit": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Episode_unique": {
+                  "type": "If",
+                  "expression": "@equals(length(body('Episode_duplicates')),1)",
+                  "actions": {},
+                  "else": {
+                    "actions": {
+                      "Episode_unique_error": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ErrorCode",
+                          "value": "MEMBERSHIP_INTEGRITY"
+                        },
+                        "runAfter": {}
+                      },
+                      "Episode_unique_stop": {
+                        "type": "Compose",
+                        "inputs": "@div(1,0)",
+                        "runAfter": {
+                          "Episode_unique_error": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Episode_duplicates": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Episode_operational": {
+                  "type": "If",
+                  "expression": "@and(equals(length(body('Episode_group')),1),equals(first(union(body('Episode_group'),createArray(json('{}'))))?['SetupComplete'],true),not(equals(first(union(body('Episode_group'),createArray(json('{}'))))?['State'],'Ended')),empty(items('Each_own_episode')?['LeftAt']),equals(length(body('Episode_source')),1),equals(length(body('Episode_commit')),1))",
+                  "actions": {
+                    "Remember_operational_group": {
+                      "type": "AppendToArrayVariable",
+                      "inputs": {
+                        "name": "OperationalGroups",
+                        "value": "@items('Each_own_episode')?['GroupId']"
+                      },
+                      "runAfter": {}
+                    }
+                  },
+                  "else": {
+                    "actions": {}
+                  },
+                  "runAfter": {
+                    "Episode_unique": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 1
+                }
+              },
+              "runAfter": {
+                "Own_active_episodes": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Audience_requests": {
+              "type": "Query",
+              "inputs": {
+                "from": "@body('Data_requests')",
+                "where": "@or(equals(item()?['SenderParticipantId'],outputs('Actor')),and(equals(item()?['RequestType'],'Personal'),equals(item()?['RecipientParticipantId'],outputs('Actor'))),and(equals(item()?['RequestType'],'Group'),contains(variables('OperationalGroups'),item()?['TargetGroupId'])))"
+              },
+              "runAfter": {
+                "Each_own_episode": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Each_visible_request": {
+              "type": "Foreach",
+              "foreach": "@body('Audience_requests')",
+              "actions": {
+                "Request_sender": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Data_profiles')",
+                    "where": "@equals(item()?['Id'],items('Each_visible_request')?['SenderParticipantId'])"
+                  },
+                  "runAfter": {}
+                },
+                "Request_recipient": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Data_profiles')",
+                    "where": "@equals(item()?['Id'],items('Each_visible_request')?['RecipientParticipantId'])"
+                  },
+                  "runAfter": {
+                    "Request_sender": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Request_group": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Data_groups')",
+                    "where": "@equals(item()?['Id'],items('Each_visible_request')?['TargetGroupId'])"
+                  },
+                  "runAfter": {
+                    "Request_recipient": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Request_active_members": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Data_memberships')",
+                    "where": "@and(equals(item()?['GroupId'],items('Each_visible_request')?['TargetGroupId']),equals(item()?['MembershipStatus'],'Active'))"
+                  },
+                  "runAfter": {
+                    "Request_group": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Request_available": {
+                  "type": "Compose",
+                  "inputs": "@and(and(equals(first(union(body('Request_sender'),createArray(json('{}'))))?['Status'],'Active'),equals(first(union(body('Request_sender'),createArray(json('{}'))))?['ParticipationStatus'],'Active'),equals(first(union(body('Request_sender'),createArray(json('{}'))))?['OpenToConnections'],true)),if(equals(items('Each_visible_request')?['RequestType'],'Personal'),and(equals(length(body('Request_recipient')),1),and(equals(first(union(body('Request_recipient'),createArray(json('{}'))))?['Status'],'Active'),equals(first(union(body('Request_recipient'),createArray(json('{}'))))?['ParticipationStatus'],'Active'),equals(first(union(body('Request_recipient'),createArray(json('{}'))))?['OpenToConnections'],true))),and(equals(length(body('Request_group')),1),equals(first(union(body('Request_group'),createArray(json('{}'))))?['SetupComplete'],true),equals(first(union(body('Request_group'),createArray(json('{}'))))?['State'],'Open'),empty(first(union(body('Request_group'),createArray(json('{}'))))?['WriteOwner']),less(length(body('Request_active_members')),coalesce(first(union(body('Request_group'),createArray(json('{}'))))?['Capacity'],0)))))",
+                  "runAfter": {
+                    "Request_active_members": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Visible_parties_exist": {
+                  "type": "If",
+                  "expression": "@and(equals(length(body('Request_sender')),1),if(equals(items('Each_visible_request')?['RequestType'],'Personal'),equals(length(body('Request_recipient')),1),equals(length(body('Request_group')),1)))",
+                  "actions": {},
+                  "else": {
+                    "actions": {
+                      "Visible_parties_exist_error": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ErrorCode",
+                          "value": "REQUEST_DATA_INCOMPLETE"
+                        },
+                        "runAfter": {}
+                      },
+                      "Visible_parties_exist_stop": {
+                        "type": "Compose",
+                        "inputs": "@div(1,0)",
+                        "runAfter": {
+                          "Visible_parties_exist_error": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Request_available": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Append_public_request": {
+                  "type": "AppendToArrayVariable",
+                  "inputs": {
+                    "name": "Requests",
+                    "value": {
+                      "requestId": "@items('Each_visible_request')?['Id']",
+                      "created": "@items('Each_visible_request')?['Created']",
+                      "senderParticipantId": "@items('Each_visible_request')?['SenderParticipantId']",
+                      "recipientParticipantId": "@items('Each_visible_request')?['RecipientParticipantId']",
+                      "targetGroupId": "@items('Each_visible_request')?['TargetGroupId']",
+                      "requestType": "@items('Each_visible_request')?['RequestType']",
+                      "status": "@items('Each_visible_request')?['Status']",
+                      "direction": "@if(equals(items('Each_visible_request')?['SenderParticipantId'],outputs('Actor')),'Sent','Received')",
+                      "processing": "@and(equals(items('Each_visible_request')?['Status'],'Accepted'),equals(items('Each_visible_request')?['OperationComplete'],false))",
+                      "completed": "@items('Each_visible_request')?['OperationComplete']",
+                      "availability": "@if(equals(items('Each_visible_request')?['Status'],'Pending'),if(outputs('Request_available'),'Available','UnavailablePending'),'NotApplicable')",
+                      "actions": {
+                        "cancel": "@and(equals(items('Each_visible_request')?['SenderParticipantId'],outputs('Actor')),equals(items('Each_visible_request')?['Status'],'Pending'))",
+                        "decline": "@and(and(not(equals(items('Each_visible_request')?['SenderParticipantId'],outputs('Actor'))),or(and(equals(items('Each_visible_request')?['RequestType'],'Personal'),equals(items('Each_visible_request')?['RecipientParticipantId'],outputs('Actor'))),and(equals(items('Each_visible_request')?['RequestType'],'Group'),contains(variables('OperationalGroups'),items('Each_visible_request')?['TargetGroupId'])))),equals(items('Each_visible_request')?['Status'],'Pending'))",
+                        "accept": "@and(and(not(equals(items('Each_visible_request')?['SenderParticipantId'],outputs('Actor'))),or(and(equals(items('Each_visible_request')?['RequestType'],'Personal'),equals(items('Each_visible_request')?['RecipientParticipantId'],outputs('Actor'))),and(equals(items('Each_visible_request')?['RequestType'],'Group'),contains(variables('OperationalGroups'),items('Each_visible_request')?['TargetGroupId'])))),equals(items('Each_visible_request')?['Status'],'Pending'),outputs('Request_available'),and(equals(first(union(body('Actor_profile'),createArray(json('{}'))))?['Status'],'Active'),equals(first(union(body('Actor_profile'),createArray(json('{}'))))?['ParticipationStatus'],'Active'),equals(first(union(body('Actor_profile'),createArray(json('{}'))))?['OpenToConnections'],true)))"
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Visible_parties_exist": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 1
+                }
+              },
+              "runAfter": {
+                "Audience_requests": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Response_bound": {
+              "type": "If",
+              "expression": "@lessOrEquals(length(string(variables('Requests'))),250000)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Response_bound_error": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ErrorCode",
+                      "value": "RESPONSE_BOUND"
+                    },
+                    "runAfter": {}
+                  },
+                  "Response_bound_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Response_bound_error": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Each_visible_request": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_OperationalGroups": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Read_failure": {
+          "type": "Scope",
+          "runAfter": {
+            "Read_authorized_requests": [
+              "Failed",
+              "TimedOut"
+            ]
+          },
+          "actions": {
+            "Failure_code": {
+              "type": "If",
+              "expression": "@empty(variables('ErrorCode'))",
+              "actions": {
+                "Set_generic_failure": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ErrorCode",
+                    "value": "READ_OR_DATA_FAILED"
+                  },
+                  "runAfter": {}
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "runAfter": {}
+            },
+            "Clear_partial_results": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Requests",
+                "value": []
+              },
+              "runAfter": {
+                "Failure_code": [
+                  "Succeeded"
+                ]
+              }
+            }
+          }
+        },
+        "Respond_to_a_Power_App_or_flow": {
+          "type": "Response",
+          "kind": "PowerApp",
+          "runAfter": {
+            "Read_failure": [
+              "Succeeded",
+              "Skipped"
+            ]
+          },
+          "inputs": {
+            "statusCode": 200,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "requestsjson": {
+                  "title": "requestsjson",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "errormessage": {
+                  "title": "errormessage",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "resultcode": {
+                  "title": "resultcode",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "runreference": {
+                  "title": "runreference",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "mode": {
+                  "title": "mode",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "paging": {
+                  "title": "paging",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              }
+            },
+            "body": {
+              "requestsjson": "@if(empty(variables('ErrorCode')),string(variables('Requests')),'[]')",
+              "errormessage": "@if(empty(variables('ErrorCode')),'','Requests could not be read completely. Refresh or return the result code for review.')",
+              "resultcode": "@if(empty(variables('ErrorCode')),'OK',variables('ErrorCode'))",
+              "runreference": "@workflow()?['run']?['name']",
+              "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF",
+              "paging": "NO_PAGING_COMPLETE_BOUNDED_READ"
+            }
+          }
+        }
+      }
+    },
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "connectionName": "IMPORT_SELECT_EXISTING_SHAREPOINT_CONNECTION",
+        "source": "Invoker",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+        "tier": "NotSpecified",
+        "apiName": "sharepointonline",
+        "isProcessSimpleApiReferenceConversionAlreadyDone": false
+      }
+    },
+    "flowFailureAlertSubscribed": false,
+    "isManaged": false
+  }
+}

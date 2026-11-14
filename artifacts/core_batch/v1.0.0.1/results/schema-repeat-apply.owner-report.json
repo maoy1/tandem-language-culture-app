@@ -1,0 +1,54 @@
+{
+  "kind": "TandemBatchSchema",
+  "sourceTicket": 81,
+  "packageBuildId": "bd66271f-090e-4f5c-a890-8cb5b61173cc",
+  "applyRequested": true,
+  "runReference": "08584069211508254579686294345CU13",
+  "schemaVerified": true,
+  "schemaResult": {
+    "schemaMatches": true,
+    "checkedRoles": [
+      "participants",
+      "language",
+      "culture",
+      "timezone",
+      "groups",
+      "members",
+      "requests",
+      "receipts"
+    ],
+    "allSchema": true,
+    "differences": [],
+    "provenanceVerified": false,
+    "note": "Compares supplied snapshots only; collector owns current complete authenticated reads."
+  },
+  "validationCode": "OK",
+  "validationDiagnostics": {
+    "requestText": "Succeeded",
+    "envelope": "Succeeded",
+    "header": "Succeeded",
+    "schemaMode": "Succeeded",
+    "rulesMode": "Succeeded"
+  },
+  "validationRunReference": "08584069211275890958307283979CU25",
+  "requestCharacters": 41372,
+  "collectionComplete": true,
+  "differences": [],
+  "rowWrites": 0,
+  "deletes": 0,
+  "permissionChanges": 0,
+  "receiptList": {
+    "__metadata": {
+      "id": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg/_api/Web/Lists(guid'864dfe53-b67c-4504-9d48-ad4356b813d8')",
+      "uri": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg/_api/Web/Lists(guid'864dfe53-b67c-4504-9d48-ad4356b813d8')",
+      "etag": "\"11\"",
+      "type": "SP.List"
+    },
+    "BaseTemplate": 100,
+    "Description": "Tandem bounded operation receipts; schema contract 81/1. No participant direct writes.",
+    "Id": "864dfe53-b67c-4504-9d48-ad4356b813d8",
+    "ItemCount": 0,
+    "Title": "TandemOperationReceipts"
+  },
+  "scope": "Additive schema only; no automatic conversions or rollback. Dry run by default."
+}
