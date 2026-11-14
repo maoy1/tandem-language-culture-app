@@ -391,7 +391,9 @@ class Builder:
             'ListItemEntityTypeFullName': {'type': 'string', 'minLength': 1}}))
         self.receipt_read('Find_receipt')
         self.branch('Existing_intent', 'equals(length(' + rows('Find_receipt') + '),1)', self.existing, self.fresh)
-        self.gate('Require_receipt_ready', "variables('ReceiptReady')", "@variables('Code')")
+        # Preserve the preceding failure Code without a self-referencing SetVariable.
+        self.add('Require_receipt_ready', d.condition("variables('ReceiptReady')", {}, {
+            'Require_receipt_ready_stop': d.compose('@div(1,0)')}))
         self.target['Require_receipt_ready']['runAfter'] = {'Existing_intent': ['Succeeded', 'Failed', 'TimedOut']}
         self.set('Release_code', 'Code', 'RELEASE_PENDING')
         self.item('Group_release', 'groups', "body('Input')?['number_1']", GROUP)

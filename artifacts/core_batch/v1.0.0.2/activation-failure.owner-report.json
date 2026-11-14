@@ -1,0 +1,39 @@
+{
+  "sourceTicket": 81,
+  "evidence": "Owner screenshot during bulk activation; flow mapping confirmed separately for circular dependency",
+  "sourceSolutionVersion": "1.0.0.1",
+  "sourceBuildId": "bd66271f-090e-4f5c-a890-8cb5b61173cc",
+  "sourceZipSha256": "2708aef6bdff431c6681e17aeaca44d46073b9ef83ed2bd81af2ea3124661e92",
+  "errors": [
+    {
+      "code": "ActionSchemaNotSupported",
+      "actions": [
+        "Before_row",
+        "Input",
+        "Raw_groups"
+      ],
+      "message": "ParseJson schema contains pattern or patternProperties with OpenApiConnection present",
+      "affectedFlows": [
+        "TandemCancelRequest",
+        "TandemLeaveGroup",
+        "TandemMyGroups",
+        "TandemRespondRequest",
+        "TandemRespondGroupJoinRequest"
+      ]
+    },
+    {
+      "code": "InvalidTemplate",
+      "flow": "TandemRespondGroupJoinRequest",
+      "message": "Circular dependency detected in template language expressions",
+      "flowId": "d53f1797-9647-5910-9bda-8a48e0fced31"
+    },
+    {
+      "code": "WorkflowRunActionInputsInvalidProperty",
+      "flow": "TandemLeaveGroup",
+      "action": "Require_receipt_ready_code",
+      "message": "Self reference is not supported when updating variable Code"
+    }
+  ],
+  "oldLocalRegressionResult": "1390 PASS did not test native activation constraints; this gap is now covered by assembly gates and adversarial equivalence tests",
+  "repairNativeActivation": "NOT RUN"
+}
