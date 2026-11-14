@@ -1,0 +1,25 @@
+{
+  "buildId": "30ff0d83-3895-4a0e-89c2-939b360fc5e7",
+  "packageSha256": "252c97b0ac33c6094f928efb72a86d13742ec543cc7e2edca178a6245959c7cb",
+  "command": "primaryRepo/.venv/Scripts/python.exe -X utf8 -m pytest -q --tb=short",
+  "cwd": "dedicated #63 worktree",
+  "fullSuitePassed": 340,
+  "newGraphTests": 98,
+  "actions": 138,
+  "maximumActionDepth": 5,
+  "globalActionNamesUnique": true,
+  "native": "NOT RUN",
+  "privacyOrdinaryUser": "NOT VERIFIED",
+  "sharedTestsEdited": false,
+  "artifactChecks": [
+    "ZIP/readable equality",
+    "generated graph equality",
+    "actual trigger exact equality",
+    "original success/message schema exact equality",
+    "package/generator hashes",
+    "contract/runtime metadata equality",
+    "global action uniqueness, count/depth, runAfter/reference validation",
+    "no raw export in worktree"
+  ],
+  "regressions": "Observed Number metadata after explicit Recipient Optional setup passes personal/group; unmodified incomplete tenant schema blocked; old Lookup names/types rejected; incorrect/missing XML Decimals rejected; whole float refs pass with canonical live keys; fractional refs fail closed."
+}

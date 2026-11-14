@@ -1,0 +1,24 @@
+{
+  "sourceTicket": 7,
+  "packageBuildId": "2558a81d-8736-435a-94dd-a6b0ced4aaac",
+  "actions": 167,
+  "maximumActionDepth": 6,
+  "writes": 0,
+  "childWorkflowReferenceName": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+  "contractVersion": 1,
+  "rulesVersion": 1,
+  "definitionSha256": "f5b21ea0464ca80149b912811bad1330ea0431473c8f285b8a38ee42e99cceb7",
+  "sourceExportSha256": "7b4dc1e5df96769615088d897cf86030a2622a47dc7db56a414dbe75f41085a9",
+  "sharedChildSourceSha256": "73658fe4ca36bbfb228f25d91789ebf3befe98e3cb85e042da5abc48f08c595c",
+  "requiredSharedModes": [
+    "NORMALIZE",
+    "PAIRS",
+    "GROUP"
+  ],
+  "generatorSha256": "f27e72d18a1eeb96fd46d7a6ac5adb615f7142c1913b29323a69431f0494cf95",
+  "connectionSource": "Invoker",
+  "ordinaryUserAccessVerified": false,
+  "tenantResult": "NOT_RUN",
+  "deployment": "PARENT_COMPONENT_FOR_FINAL_SOLUTION_ASSEMBLY",
+  "legacyZip": "NOT_APPLICABLE: Workflow calls require final Solution assembly; historical v2 ZIP unchanged"
+}

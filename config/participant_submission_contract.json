@@ -77,5 +77,71 @@
     "exactPublishTime": null
   },
   "testHandover": "https://github.com/maoy1/tandem-language-culture-app/issues/61",
-  "acceptanceDecision": "Owner requests merge and Ready for testing rather than personally completing full acceptance. Issue stays open; remaining cases not waived/passed."
+  "acceptanceDecision": "Owner requests merge and Ready for testing rather than personally completing full acceptance. Issue stays open; remaining cases not waived/passed.",
+  "sharedConsumerCandidate": {
+    "sourceTicket": 61,
+    "build": "issue-61-shared-consumer-v1",
+    "state": "NATIVE_EVENT_READS_PROFILE_INVOCATION_NOOP_PASS_STATUS_WRITE_PENDING",
+    "generator": "scripts/power_automate/participant_submission_shared.py",
+    "definition": "artifacts/participant_submission/TandemParticipantSubmission-shared-v1.definition.json",
+    "solutionSource": "artifacts/participant_submission/TandemParticipantSubmission-shared-v1.solution-source.json",
+    "review": "artifacts/participant_submission/TandemParticipantSubmission-shared-v1.review.json",
+    "childId": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+    "childBuild": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
+    "contractVersion": 1,
+    "rulesVersion": 1,
+    "mode": "PROFILE",
+    "input": "Trusted latest REST item and complete active catalogue ID sets; technical account key from current Person lookup ID; availability null because irrelevant to PROFILE; current Status retained",
+    "output": "OK/success=true requires typed result.valid; INVALID_PROFILE_DATA/success=false/empty result maps to Needs review; other errors, malformed output, version or outer/inner disagreement fail without Status write",
+    "anyLanguage": "All active IDs, including any existing Any item, are valid PROFILE content. anyLanguageId=null; no matching or wildcard evaluation occurs in this consumer",
+    "binding": {
+      "legacySource": "Embedded",
+      "legacyConnectionName": "b7e419509f0f4da89895a5ebd1f3a216",
+      "authentication": "@parameters('$authentication')",
+      "solutionRuntimeSource": "embedded",
+      "solutionLogicalReference": "cre46_sharepointonline_a22363a216",
+      "marker": "AUTOMATED_SOURCE_VERIFIED",
+      "markerScope": "Legacy native automated Embedded source verified only; no native automatic Solution proof",
+      "nativeSolutionAutomaticBinding": "PASS_OWNER_EVENT_READS_SHARED_PROFILE_NOOP; Status-write binding pending",
+      "deploymentGate": "Verify existing owner connection resolution in assembled Solution and automatic event smoke before replacing live v2; never use manual Invoker adapter"
+    },
+    "metrics": {
+      "actionDefinitions": 29,
+      "maximumNesting": 3
+    },
+    "preserved": "Read current/event reference, exact ETag Status-only changed update, no retry on conflict, readback and follow-up no-op. No participation/openness/identity/selection, permission, group or membership writes",
+    "packaging": "Readable legacy-shaped draft and separate core-packager source only; no standalone legacy ZIP while final Solution assembly/binding remains unverified",
+    "driftReview81": {
+      "schemaRulesOrSharedContractChanged": false,
+      "sharedChildEdited": false,
+      "otherConsumerPackagesChanged": false,
+      "impact": "Only #61 consumes existing contract1/rules1 PROFILE. No schema, catalogue, normalization, null-handling, availability, compatibility, capacity or commit rule change. Closed #9/#12/#66 and current native #81 QUICK3/FULL44 evidence retained",
+      "regressions": "tests/test_participant_submission_shared.py executes emitted parent and unchanged delivered v2 child; full local suite recorded in FLOW_61 guide",
+      "nativeConsumerParity": "PARTIAL_PASS_VALID_ALREADY_ACTIVE_NOOP_ONLY",
+      "nativeSolutionBinding": "OWNER_EVENT_READS_CHILD_NOOP_PASS_STATUS_WRITE_PENDING",
+      "sharedNativeQuickAndFull": "PASS_PREVIOUS_BUILD_UNCHANGED",
+      "githubEdits": "Not performed by explicit owner instruction; local #61 ledger is the review handoff to #81/core batch"
+    },
+    "nativeCoreBatch": {
+      "solutionVersion": "1.0.0.1",
+      "sharedBuildId": "bd66271f-090e-4f5c-a890-8cb5b61173cc",
+      "parentRun": "08584069192652841427464544862CU18",
+      "childRun": "08584069192622793814733430516CU11",
+      "evidence": "artifacts/participant_submission/results/shared-v1-no-change.owner-report.json",
+      "passed": [
+        "Event-driven current-item/catalogue reads",
+        "Shared PROFILE returns OK on expected batch build",
+        "Valid item38 already Active -> NO_CHANGE/statusChanged=false"
+      ],
+      "pending": [
+        "Status correction/write/readback and autonomous no-op follow-up",
+        "Other content/catalogue/creation/failure/conflict variants",
+        "Independent old-validator-off confirmation",
+        "Ordinary-participant access"
+      ],
+      "reportedLegacyChildAnnotation": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+      "actualPackagedWorkflowTarget": "f1f91974-4124-557e-b7fe-d51e9972681d",
+      "annotationAssessment": "Known core-assembler metadata omission: Workflow target rebound correctly, Compose sharedChildId annotation retains template ID. Track #81 next-package metadata fix; no additional import requested for this no-op test."
+    }
+  }
 }
