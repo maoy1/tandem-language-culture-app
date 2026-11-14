@@ -649,3 +649,16 @@ Owner chose **2,000 characters** for the optional plain-text group-join introduc
 Technical field proposal: optional plain-text Note column Introduction on Connection Requests, rich text/append disabled; actual column/settings are NOT verified or applied. SharePoint field mapping/setup and the flow/API/app mapping remain #17 work. All schema changes must update #81 baseline/audit/contract and affected consumers (#62/#65/#67), with existing native evidence retained by version. #81 has no Introduction persistence/parser today, so this planning decision does not change its current five-mode rule engine/package. Add actual schema coverage when the field is introduced.
 
 Contract evidence only: acceptance cases empty/omitted, 2,000 accepted and 2,001 rejected in both app/server are NOT RUN. #17 remains Planned, not implemented/Ready. No flow, list, data, permission or existing app changed. This clears the remaining explicit product choice for core group-join implementation; receipt-schema and Solution SharePoint/caller prerequisites still need technical verification.
+
+## #7 shared-consumer batch component — 2026-11-14
+
+[#7 TandemDiscovery](https://github.com/maoy1/tandem-language-culture-app/issues/7):
+local readable parent built on a separate branch for the authorized parallel
+12-flow batch. Next integration step is final Solution assembly with the observed
+Invoker envelope and existing #81 child; no legacy linked-flow import is implied.
+164 actions/depth6, no writes, shared versions1/1 unchanged. See
+[ISSUE_7_SHARED_CONSUMER.md](ISSUE_7_SHARED_CONSUMER.md) for versioned fixtures,
+checks, #81 drift/no-impact ledger and exact connection/IO contract. Native
+consumer parity/projection/load NOT RUN; ordinary access deferred/#42-blocked.
+Preserve prior native/closed evidence and working flow/app. No ticket/label edit,
+readiness upgrade or deployment is performed by this local component change.
