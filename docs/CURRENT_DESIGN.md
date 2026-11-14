@@ -657,6 +657,23 @@ Technical field proposal: optional plain-text Note column Introduction on Connec
 
 Contract evidence only: acceptance cases empty/omitted, 2,000 accepted and 2,001 rejected in both app/server are NOT RUN. #17 remains Planned, not implemented/Ready. No flow, list, data, permission or existing app changed. This clears the remaining explicit product choice for core group-join implementation; receipt-schema and Solution SharePoint/caller prerequisites still need technical verification.
 
+## #7 shared-validator consumer — 2026-11-14
+
+[#7 TandemDiscovery](https://github.com/maoy1/tandem-language-culture-app/issues/7)
+now has a separate local parent component using actual NORMALIZE/PAIR/GROUP
+Workflow calls to #81 contract1/rules1. Build
+`0ab956c1-cbb6-4da7-9e23-dbd8b4cd9ebe`, 164 actions/depth6, zero writes.
+Authenticated own-profile/current commitment gates, approved public projection,
+optional zone/culture-only/candidates-only behavior and bounded reads remain.
+Per-click metadata audit is replaced by typed current commit-row evidence;
+full schema verification remains deployment/change maintenance. Shared semantics,
+versions and other packages unchanged: #81 no-impact ledger, exact IO/connection,
+assembly prerequisites and NOT RUN handover are in
+[ISSUE_7_SHARED_CONSUMER.md](ISSUE_7_SHARED_CONSUMER.md).
+Final batch Solution assembly/import/native consumer proof remains pending;
+legacy evidence/closed tickets are preserved, ordinary access is not verified.
+The owner explicitly authorized the parallel 12-flow batch for this implementation.
+
 
 ## #63 shared consumer v4 — 2026-11-14
 
@@ -719,6 +736,8 @@ The shared schema evaluator now accepts a baseline-defined role count and plain-
 
 Added backward-compatible PAIRS mode: one actor plus the supplied profile set returns eligible pair projections using the existing PAIR expression source. It avoids a separate native child invocation per candidate (up to 500 profiles). No matching/availability/identity rule changed; result remains internal and never grants authority. Discovery consumes this additive mode; other consumers retain their existing modes. New batch engine/native evidence remains NOT RUN; old v2 evidence is not reused. Three bulk/single parity, missing actor/null availability and structure-limit tests pass. Shared foundation before this addition passed 378 full local tests.
 
+
+#7 batch integration update: candidate matching now calls shared PAIRS once for the entire bounded profile set, preserving the existing PAIR rules; no child call inside Each_person. NORMALIZE and GROUP remain shared. This component requires the new #81 batch engine with PAIRS and is not executable against the old native-passed v2 child alone. Final Solution assembly rewires to fresh batch child ID; historical native evidence retained, new native performance/consumer tests NOT RUN. No matching semantics changed.
 
 ### #81 assembly and test handover refinement
 
