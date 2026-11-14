@@ -1,0 +1,118 @@
+{
+  "sourceTicket": 13,
+  "packageBuildId": "55d4d4c3-958d-48a1-ac0e-a20fdea8ad1f",
+  "branch": "codex/issue-13-update-group",
+  "base": "origin/main 7eba0ba",
+  "state": "LOCAL_IMPLEMENTATION_TESTS_PASS_NATIVE_INTEGRATION_PENDING",
+  "tests": {
+    "updateGroup": {
+      "passed": 116,
+      "failed": 0,
+      "command": "python3.13 -m pytest tests/test_update_group_flow.py -q -p no:cacheprovider --tb=short",
+      "seconds": 8.06
+    },
+    "fullRepository": {
+      "passed": 473,
+      "failed": 0,
+      "command": "python3.13 -m pytest tests -q -p no:cacheprovider --tb=short",
+      "seconds": 80.74
+    }
+  },
+  "metrics": {
+    "actions": 250,
+    "maximumActionDepth": 5,
+    "maximumActions": 500,
+    "maximumDepth": 8,
+    "result": "PASS"
+  },
+  "artifactIntegrity": "PASS: archive CRC, full parent equality, ZIP/parent/generator SHA256, sample JSON and complete IO",
+  "receiptResolution": {
+    "default": "EXACT_UNIQUE_TITLE",
+    "uri": "_api/web/lists/getbytitle('TandemOperationReceipts')",
+    "guidPin": "OPTIONAL",
+    "oneImport": "PASS_LOCAL_SAME_ACTION_GRAPH_ABSENT_THEN_PRESENT_WITHOUT_REGENERATION",
+    "runtimeMetadata": "Id,Title,BaseTemplate,ListItemEntityTypeFullName; current receipt rows; fail closed missing/malformed; no tenant schema certification",
+    "enablement": "Parent Setup Apply+Audit before enabling business flows; no post-setup rebuild/reimport requirement"
+  },
+  "localCases": {
+    "allowed_states_Ended_final": "PASS",
+    "type_focus_arbitrary_input_rejection": "PASS",
+    "integer_type_bounds_title255_purpose2000_emptyNote": "PASS",
+    "physical_active_including_provisional_paused_count": "PASS",
+    "own_profile_spoof_nonmember_provisional_denial": "PASS",
+    "current_operational_members_Paused_Inactive_opennessFalse_authorized": "PASS",
+    "later_join_episode_authority": "PASS",
+    "fresh_membership_and_count_under_claim": "PASS",
+    "stale_expected_revision_and_busy_foreign_token": "PASS",
+    "immutable_receipt_changed_payload_conflict": "PASS",
+    "unique_receipt_and_group_claim_races": "PASS",
+    "historical_replay_preserves_later_edit_and_foreign_owner": "PASS",
+    "lost_success_readback_all_mutation_stages": "PASS",
+    "unknown_postedit_readback_retains_owner_no_repeat": "PASS",
+    "known_no_domain_rejection_safe_settlement": "PASS",
+    "completed_receipt_release_recovery_only": "PASS",
+    "one_import_title_missing_then_available_same_parent": "PASS",
+    "optional_guid_pin_metadata_mismatch": "PASS",
+    "full_parent_document_IO_package_no_overwrite": "PASS"
+  },
+  "authorityBoundary": "Operational current Active membership/source/episode is authority; no actor ParticipationStatus/OpenToConnections/Discovery availability guard; profile changes do not mutate memberships.",
+  "driftReview81": {
+    "sharedFilesCompared": [
+      "scripts/power_automate/shared_validation.py",
+      "scripts/power_automate/solution_source.py",
+      "scripts/power_automate/coordination.py",
+      "scripts/power_automate/compatibility.py",
+      "config/shared_validation_schema.json",
+      "config/shared_validation_flow_contract.json",
+      "config/tenant_schema_mapping.json",
+      "config/group_schema_mapping.json",
+      "config/coordination_contract.json"
+    ],
+    "result": "PASS_UNCHANGED_FROM_HEAD",
+    "sharedSchemaRulesNormalizationVersionsBuild": "NO_CHANGE",
+    "operationGuardsOnly": true,
+    "receiptTargetSha256": "f189c44795dd448faaf7c8a0087b3aeed6357b264f21f8cb4e8860955b308495",
+    "parentSetupOwnedBy": 81,
+    "technicalMappings": [
+      "Purpose2000 plain API bound only",
+      "Standard built-in receipt Title receives OperationKey; no new custom field/setting",
+      "Default exact unique title resolution with optional actual GUID pin"
+    ],
+    "nativeResults": "NOT RUN",
+    "parentIssueLedgerUpdate": "PENDING_PARENT; no issue writes from this branch"
+  },
+  "documentationPrefixPreservation": "PASS: exact preexisting HEAD bytes retained; #13 append only",
+  "issue10": {
+    "state": "PASS_UNCHANGED_REF",
+    "branchRefReadOnly": "fd3e8d01dba9f3120d5a2b098081d3657b37ebc9",
+    "primaryCheckoutAccessed": false,
+    "branchOrCommitWrites": 0
+  },
+  "native": {
+    "schemaApplyAudit": "PENDING_PARENT / NOT RUN",
+    "SolutionImportCallerAuthority": "NOT RUN",
+    "actualGroupWritesCapacityStateRacesFaults": "NOT RUN",
+    "minimalAppBinding": "NOT RUN",
+    "ordinaryParticipantAccess": "DEFERRED / NOT RUN"
+  },
+  "pendingIntegration": [
+    "Parent assembles/imports one Solution using complete #13 parent IO and inspected Invoker binding",
+    "Parent Setup Apply+Audit verifies exact unique title/custom fields/standard Title/native access before enablement",
+    "Enable/test same imported flow; optional GUID pin only if deliberately wanted",
+    "Native authority/write/replay/race/fault/app acceptance and all-writer coordination",
+    "Parent #81/#13 ledger/issue updates; keep scoped acceptance open"
+  ],
+  "schemaWrites": 0,
+  "permissionChanges": 0,
+  "pushes": 0,
+  "issueWrites": 0,
+  "sha256": {
+    "scripts/power_automate/update_group_flow.py": "9e2a6a799266228371b607cb716c80d6a1c7f026025c27f6aade466f688cbee3",
+    "tests/test_update_group_flow.py": "3e8f47661dd91ae13c5ddd87cc4841c18ac4ffdc538dd36d1140500db7cb0591",
+    "config/update_group_flow_contract.json": "53ccc52de8ec31aa9c1a7d854f43ff0128c6db147288b0d7d23c0e3622bb94c3",
+    "artifacts/update_group/TandemUpdateGroup-v1.parent.json": "3a1798ac11460a3d6d0348ba4f6e5752cf0fd055ed0316345c6e0169d71934a2",
+    "artifacts/update_group/TandemUpdateGroup-v1.review.json": "19b76dca8346fc34e71ccb19c30b55158bdfd40ac13678e0b8e8206b66014141",
+    "artifacts/update_group/TandemUpdateGroup-v1.zip": "593f01560f346d65d56d6d4f6c3549773956c6dbc4638fa49efec511bff5afa4",
+    "artifacts/update_group/HANDOVER.md": "855eddc5cdce8c352354cff3c68b033d4d8b52355601b6e1a3a285dc8c130af4"
+  }
+}

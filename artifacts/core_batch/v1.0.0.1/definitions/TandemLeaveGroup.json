@@ -1,0 +1,4717 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "cre46_sharepointonline_a22363a216"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "number",
+                "number_1",
+                "number_2",
+                "text"
+              ],
+              "properties": {
+                "number": {
+                  "type": "number",
+                  "title": "ParticipantId",
+                  "x-ms-content-hint": "NUMBER",
+                  "x-ms-dynamically-added": true
+                },
+                "number_1": {
+                  "type": "number",
+                  "title": "GroupId",
+                  "x-ms-content-hint": "NUMBER",
+                  "x-ms-dynamically-added": true
+                },
+                "number_2": {
+                  "type": "number",
+                  "title": "MembershipId",
+                  "x-ms-content-hint": "NUMBER",
+                  "x-ms-dynamically-added": true
+                },
+                "text": {
+                  "type": "string",
+                  "title": "IntentId",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "Initialize_Code": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Code",
+                "type": "string",
+                "value": "READ_OR_DATA_FAILED"
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "Initialize_SavedResult": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "SavedResult",
+                "type": "object",
+                "value": {}
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_Code": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Initialize_ReleaseToken": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ReleaseToken",
+                "type": "string",
+                "value": ""
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_SavedResult": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Initialize_Replay": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Replay",
+                "type": "boolean",
+                "value": false
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_ReleaseToken": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Initialize_WriteAttempted": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "WriteAttempted",
+                "type": "boolean",
+                "value": false
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_Replay": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Initialize_ReceiptReady": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ReceiptReady",
+                "type": "boolean",
+                "value": false
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_WriteAttempted": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Initialize_ReleaseProved": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ReleaseProved",
+                "type": "boolean",
+                "value": false
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_ReceiptReady": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Leave_work": {
+          "type": "Scope",
+          "actions": {
+            "Input_code": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Code",
+                "value": "INVALID_INPUT"
+              },
+              "runAfter": {}
+            },
+            "Input": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@triggerBody()",
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "number",
+                    "number_1",
+                    "number_2",
+                    "text"
+                  ],
+                  "properties": {
+                    "number": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "number_1": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "number_2": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 36,
+                      "maxLength": 36,
+                      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "runAfter": {
+                "Input_code": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_code": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Code",
+                "value": "READ_OR_DATA_FAILED"
+              },
+              "runAfter": {
+                "Input": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Read_invoker": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/currentuser?$select=Id",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                },
+                "retryPolicy": {
+                  "type": "none"
+                }
+              },
+              "runAfter": {
+                "Read_code": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Invoker": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Read_invoker')?['d']",
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "Id"
+                  ],
+                  "properties": {
+                    "Id": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Read_invoker": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Own_profile": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "@concat('_api/web/lists(guid''fd3adf46-f81d-4a7b-a80c-567fde0175dc'')/items?$filter=',concat('ParticipantaccountId eq ',string(body('Invoker')?['Id'])),'&$top=2')",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                },
+                "retryPolicy": {
+                  "type": "none"
+                }
+              },
+              "runAfter": {
+                "Invoker": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Own_profile_bound": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Own_profile')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Own_profile')?['d']?['results'],json('[]'))),1),empty(body('Own_profile')?['d']?['__next']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Own_profile_bound_code": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Code",
+                      "value": "INCOMPLETE_READ"
+                    },
+                    "runAfter": {}
+                  },
+                  "Own_profile_bound_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Own_profile_bound_code": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Own_profile": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Actor_matches": {
+              "type": "If",
+              "expression": "@and(equals(length(body('Own_profile')?['d']?['results']),1),equals(first(body('Own_profile')?['d']?['results'])?['Id'],body('Input')?['number']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Actor_matches_code": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Code",
+                      "value": "UNAUTHORIZED"
+                    },
+                    "runAfter": {}
+                  },
+                  "Actor_matches_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Actor_matches_code": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Own_profile_bound": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Member_initial_get": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "@concat('_api/web/lists(guid''db611ec3-7fa3-477a-878e-effbbb195cb8'')/items(',string(body('Input')?['number_2']),')')",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                },
+                "retryPolicy": {
+                  "type": "none"
+                }
+              },
+              "runAfter": {
+                "Actor_matches": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Member_initial": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Member_initial_get')?['d']",
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "Id",
+                    "GroupId",
+                    "ParticipantId",
+                    "MembershipStatus",
+                    "MembershipKey",
+                    "JoinedAt",
+                    "LeftAt",
+                    "__metadata"
+                  ],
+                  "properties": {
+                    "Id": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "GroupId": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "ParticipantId": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "MembershipStatus": {
+                      "type": "string",
+                      "enum": [
+                        "Active",
+                        "Left"
+                      ]
+                    },
+                    "MembershipKey": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "JoinedAt": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "LeftAt": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "__metadata": {
+                      "type": "object",
+                      "required": [
+                        "etag",
+                        "type"
+                      ],
+                      "properties": {
+                        "etag": {
+                          "type": "string",
+                          "pattern": "^\"[0-9]+\"$"
+                        },
+                        "type": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Member_initial_get": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Own_episode": {
+              "type": "If",
+              "expression": "@and(equals(body('Member_initial')?['ParticipantId'],body('Input')?['number']),equals(body('Member_initial')?['GroupId'],body('Input')?['number_1']),equals(body('Member_initial')?['Id'],body('Input')?['number_2']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Own_episode_code": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Code",
+                      "value": "NOT_MEMBER"
+                    },
+                    "runAfter": {}
+                  },
+                  "Own_episode_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Own_episode_code": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Member_initial": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Group_initial_get": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "@concat('_api/web/lists(guid''4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'')/items(',string(body('Input')?['number_1']),')')",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                },
+                "retryPolicy": {
+                  "type": "none"
+                }
+              },
+              "runAfter": {
+                "Own_episode": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Group_initial": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Group_initial_get')?['d']",
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "Id",
+                    "Capacity",
+                    "State",
+                    "SetupComplete",
+                    "SourceRequestId",
+                    "WriteOwner",
+                    "__metadata"
+                  ],
+                  "properties": {
+                    "Id": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "Capacity": {
+                      "type": "number",
+                      "minimum": 2,
+                      "maximum": 10
+                    },
+                    "State": {
+                      "type": "string",
+                      "enum": [
+                        "Open",
+                        "Closed",
+                        "Ended"
+                      ]
+                    },
+                    "SetupComplete": {
+                      "type": "boolean"
+                    },
+                    "SourceRequestId": {
+                      "type": "number",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "WriteOwner": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 255
+                    },
+                    "__metadata": {
+                      "type": "object",
+                      "required": [
+                        "etag",
+                        "type"
+                      ],
+                      "properties": {
+                        "etag": {
+                          "type": "string",
+                          "pattern": "^\"[0-9]+\"$"
+                        },
+                        "type": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Group_initial_get": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Group_identity": {
+              "type": "If",
+              "expression": "@and(equals(body('Group_initial')?['Id'],body('Input')?['number_1']),equals(body('Group_initial')?['Capacity'],int(body('Group_initial')?['Capacity'])))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Group_identity_code": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Code",
+                      "value": "GROUP_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "Group_identity_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Group_identity_code": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Group_initial": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Initial_group_ready": {
+              "type": "If",
+              "expression": "@and(equals(body('Group_initial')?['SetupComplete'],true),equals(body('Group_initial')?['SourceRequestId'],int(body('Group_initial')?['SourceRequestId'])))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Initial_group_ready_code": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Code",
+                      "value": "PROVISIONAL_MEMBERSHIP"
+                    },
+                    "runAfter": {}
+                  },
+                  "Initial_group_ready_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Initial_group_ready_code": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Group_identity": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Initial_key_parts": {
+              "type": "Compose",
+              "inputs": "@split(body('Member_initial')?['MembershipKey'],':')",
+              "runAfter": {
+                "Initial_group_ready": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Initial_key_shape": {
+              "type": "If",
+              "expression": "@equals(length(outputs('Initial_key_parts')),4)",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Initial_key_shape_code": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Code",
+                      "value": "MEMBERSHIP_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "Initial_key_shape_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Initial_key_shape_code": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Initial_key_parts": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Initial_request_id": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@int(outputs('Initial_key_parts')?[1])",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 2147483647
+                }
+              },
+              "runAfter": {
+                "Initial_key_shape": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Initial_key_canonical": {
+              "type": "If",
+              "expression": "@equals(body('Member_initial')?['MembershipKey'],concat('request:',string(body('Initial_request_id')),':participant:',string(body('Input')?['number'])))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Initial_key_canonical_code": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Code",
+                      "value": "MEMBERSHIP_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "Initial_key_canonical_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Initial_key_canonical_code": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Initial_request_id": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Initial_source_get": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "@concat('_api/web/lists(guid''3d17485d-1dac-41f0-a1af-24e45daa4567'')/items(',string(int(body('Group_initial')?['SourceRequestId'])),')')",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                },
+                "retryPolicy": {
+                  "type": "none"
+                }
+              },
+              "runAfter": {
+                "Initial_key_canonical": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Initial_source": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Initial_source_get')?['d']",
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "Id",
+                    "Status",
+                    "OperationComplete",
+                    "RequestType",
+                    "SenderParticipantId",
+                    "RecipientParticipantId",
+                    "TargetGroupId"
+                  ],
+                  "properties": {
+                    "Id": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "Status": {
+                      "type": "string"
+                    },
+                    "OperationComplete": {
+                      "type": "boolean"
+                    },
+                    "RequestType": {
+                      "type": "string",
+                      "enum": [
+                        "Personal",
+                        "Group"
+                      ]
+                    },
+                    "SenderParticipantId": {
+                      "type": "number",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "RecipientParticipantId": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "TargetGroupId": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Initial_source_get": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Initial_request_get": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "@concat('_api/web/lists(guid''3d17485d-1dac-41f0-a1af-24e45daa4567'')/items(',string(body('Initial_request_id')),')')",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                },
+                "retryPolicy": {
+                  "type": "none"
+                }
+              },
+              "runAfter": {
+                "Initial_source": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Initial_request": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Initial_request_get')?['d']",
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "Id",
+                    "Status",
+                    "OperationComplete",
+                    "RequestType",
+                    "SenderParticipantId",
+                    "RecipientParticipantId",
+                    "TargetGroupId"
+                  ],
+                  "properties": {
+                    "Id": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "Status": {
+                      "type": "string"
+                    },
+                    "OperationComplete": {
+                      "type": "boolean"
+                    },
+                    "RequestType": {
+                      "type": "string",
+                      "enum": [
+                        "Personal",
+                        "Group"
+                      ]
+                    },
+                    "SenderParticipantId": {
+                      "type": "number",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "RecipientParticipantId": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "TargetGroupId": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Initial_request_get": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Initial_commit": {
+              "type": "If",
+              "expression": "@and(equals(body('Group_initial')?['SetupComplete'],true),equals(body('Initial_source')?['Id'],body('Group_initial')?['SourceRequestId']),equals(body('Initial_source')?['RequestType'],'Personal'),equals(body('Initial_source')?['TargetGroupId'],null),greater(coalesce(body('Initial_source')?['RecipientParticipantId'],0),0),not(equals(body('Initial_source')?['SenderParticipantId'],body('Initial_source')?['RecipientParticipantId'])),equals(body('Initial_source')?['Status'],'Accepted'),equals(body('Initial_source')?['OperationComplete'],true),equals(body('Initial_request')?['Id'],body('Initial_request_id')),equals(body('Initial_request')?['Status'],'Accepted'),equals(body('Initial_request')?['OperationComplete'],true),or(and(equals(body('Initial_request')?['RequestType'],'Personal'),equals(body('Initial_request')?['Id'],body('Group_initial')?['SourceRequestId']),equals(body('Initial_request')?['TargetGroupId'],null),or(equals(body('Initial_request')?['SenderParticipantId'],body('Input')?['number']),equals(body('Initial_request')?['RecipientParticipantId'],body('Input')?['number']))),and(equals(body('Initial_request')?['RequestType'],'Group'),equals(body('Initial_request')?['TargetGroupId'],body('Group_initial')?['Id']),equals(body('Initial_request')?['SenderParticipantId'],body('Input')?['number']),equals(body('Initial_request')?['RecipientParticipantId'],null))))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Initial_commit_code": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Code",
+                      "value": "PROVISIONAL_MEMBERSHIP"
+                    },
+                    "runAfter": {}
+                  },
+                  "Initial_commit_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Initial_commit_code": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Initial_request": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Operation_key": {
+              "type": "Compose",
+              "inputs": "@concat('leave:',string(body('Input')?['number']),':',toLower(body('Input')?['text']))",
+              "runAfter": {
+                "Initial_commit": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Intent": {
+              "type": "Compose",
+              "inputs": {
+                "kind": "LeaveGroup",
+                "version": 1,
+                "actorId": "@body('Input')?['number']",
+                "groupId": "@body('Input')?['number_1']",
+                "membershipId": "@body('Input')?['number_2']"
+              },
+              "runAfter": {
+                "Operation_key": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Receipt_type": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')?$select=Id,Title,ListItemEntityTypeFullName",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                },
+                "retryPolicy": {
+                  "type": "none"
+                }
+              },
+              "runAfter": {
+                "Intent": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Receipt_metadata": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Receipt_type')?['d']",
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "Id",
+                    "Title",
+                    "ListItemEntityTypeFullName"
+                  ],
+                  "properties": {
+                    "Id": {
+                      "type": "string",
+                      "minLength": 36,
+                      "maxLength": 36,
+                      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+                    },
+                    "Title": {
+                      "type": "string",
+                      "enum": [
+                        "TandemOperationReceipts"
+                      ]
+                    },
+                    "ListItemEntityTypeFullName": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Receipt_type": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Find_receipt": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items?$filter=',concat('OperationKey eq ''',outputs('Operation_key'),''''),'&$top=2')",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                },
+                "retryPolicy": {
+                  "type": "none"
+                }
+              },
+              "runAfter": {
+                "Receipt_metadata": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Find_receipt_bound": {
+              "type": "If",
+              "expression": "@and(not(equals(body('Find_receipt')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Find_receipt')?['d']?['results'],json('[]'))),1),empty(body('Find_receipt')?['d']?['__next']))",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Find_receipt_bound_code": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Code",
+                      "value": "INCOMPLETE_READ"
+                    },
+                    "runAfter": {}
+                  },
+                  "Find_receipt_bound_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Find_receipt_bound_code": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Find_receipt": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Existing_intent": {
+              "type": "If",
+              "expression": "@equals(length(body('Find_receipt')?['d']?['results']),1)",
+              "actions": {
+                "Existing_receipt_one": {
+                  "type": "If",
+                  "expression": "@equals(length(body('Find_receipt')?['d']?['results']),1)",
+                  "actions": {},
+                  "else": {
+                    "actions": {
+                      "Existing_receipt_one_code": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "Code",
+                          "value": "OUTCOME_UNKNOWN"
+                        },
+                        "runAfter": {}
+                      },
+                      "Existing_receipt_one_stop": {
+                        "type": "Compose",
+                        "inputs": "@div(1,0)",
+                        "runAfter": {
+                          "Existing_receipt_one_code": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {}
+                },
+                "Existing_receipt": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@first(body('Find_receipt')?['d']?['results'])",
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "Id",
+                        "OperationKey",
+                        "IntentJson",
+                        "ResultJson",
+                        "Complete",
+                        "AttemptToken",
+                        "Uncertain",
+                        "Retryable",
+                        "DomainEffects",
+                        "Stage",
+                        "__metadata"
+                      ],
+                      "properties": {
+                        "Id": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        },
+                        "OperationKey": {
+                          "type": "string"
+                        },
+                        "IntentJson": {
+                          "type": "string"
+                        },
+                        "ResultJson": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "Complete": {
+                          "type": "boolean"
+                        },
+                        "AttemptToken": {
+                          "type": "string",
+                          "minLength": 36,
+                          "maxLength": 36,
+                          "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+                        },
+                        "Uncertain": {
+                          "type": "boolean"
+                        },
+                        "Retryable": {
+                          "type": "boolean"
+                        },
+                        "DomainEffects": {
+                          "type": "boolean"
+                        },
+                        "Stage": {
+                          "type": "string"
+                        },
+                        "__metadata": {
+                          "type": "object",
+                          "required": [
+                            "etag",
+                            "type"
+                          ],
+                          "properties": {
+                            "etag": {
+                              "type": "string",
+                              "pattern": "^\"[0-9]+\"$"
+                            },
+                            "type": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Existing_receipt_one": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Existing_receipt_intent": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@body('Existing_receipt')?['IntentJson']",
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "kind",
+                        "version",
+                        "actorId",
+                        "groupId",
+                        "membershipId"
+                      ],
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "LeaveGroup"
+                          ]
+                        },
+                        "version": {
+                          "type": "integer",
+                          "enum": [
+                            1
+                          ]
+                        },
+                        "actorId": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        },
+                        "groupId": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        },
+                        "membershipId": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Existing_receipt": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Existing_receipt_matches": {
+                  "type": "If",
+                  "expression": "@and(equals(body('Existing_receipt')?['OperationKey'],outputs('Operation_key')),equals(body('Existing_receipt_intent'),outputs('Intent')))",
+                  "actions": {},
+                  "else": {
+                    "actions": {
+                      "Existing_receipt_matches_code": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "Code",
+                          "value": "INTENT_CONFLICT"
+                        },
+                        "runAfter": {}
+                      },
+                      "Existing_receipt_matches_stop": {
+                        "type": "Compose",
+                        "inputs": "@div(1,0)",
+                        "runAfter": {
+                          "Existing_receipt_matches_code": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Existing_receipt_intent": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Existing_complete": {
+                  "type": "If",
+                  "expression": "@and(equals(body('Existing_receipt')?['Complete'],true),equals(body('Existing_receipt')?['DomainEffects'],true),equals(body('Existing_receipt')?['Uncertain'],false),equals(body('Existing_receipt')?['Stage'],'Complete'),equals(body('Existing_receipt')?['Retryable'],false))",
+                  "actions": {},
+                  "else": {
+                    "actions": {
+                      "Existing_complete_code": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "Code",
+                          "value": "OUTCOME_UNKNOWN"
+                        },
+                        "runAfter": {}
+                      },
+                      "Existing_complete_stop": {
+                        "type": "Compose",
+                        "inputs": "@div(1,0)",
+                        "runAfter": {
+                          "Existing_complete_code": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Existing_receipt_matches": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Saved_result": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@body('Existing_receipt')?['ResultJson']",
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "kind",
+                        "operationkey",
+                        "groupid",
+                        "membershipid",
+                        "status",
+                        "leftat",
+                        "membercount",
+                        "freeslots",
+                        "groupstate"
+                      ],
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "LeaveGroup"
+                          ]
+                        },
+                        "operationkey": {
+                          "type": "string"
+                        },
+                        "groupid": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        },
+                        "membershipid": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "Left"
+                          ]
+                        },
+                        "leftat": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "membercount": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 2000
+                        },
+                        "freeslots": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 10
+                        },
+                        "groupstate": {
+                          "type": "string",
+                          "enum": [
+                            "Open",
+                            "Closed",
+                            "Ended"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "runAfter": {
+                    "Existing_complete": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Saved_result_binding": {
+                  "type": "If",
+                  "expression": "@and(equals(body('Saved_result')?['operationkey'],outputs('Operation_key')),equals(body('Saved_result')?['groupid'],body('Input')?['number_1']),equals(body('Saved_result')?['membershipid'],body('Input')?['number_2']),equals(body('Member_initial')?['MembershipStatus'],'Left'),equals(body('Member_initial')?['LeftAt'],body('Saved_result')?['leftat']))",
+                  "actions": {},
+                  "else": {
+                    "actions": {
+                      "Saved_result_binding_code": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "Code",
+                          "value": "RECEIPT_INTEGRITY"
+                        },
+                        "runAfter": {}
+                      },
+                      "Saved_result_binding_stop": {
+                        "type": "Compose",
+                        "inputs": "@div(1,0)",
+                        "runAfter": {
+                          "Saved_result_binding_code": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Saved_result": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Use_saved_result": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "SavedResult",
+                    "value": "@body('Saved_result')"
+                  },
+                  "runAfter": {
+                    "Saved_result_binding": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Use_old_token": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ReleaseToken",
+                    "value": "@concat(outputs('Operation_key'),':',body('Existing_receipt')?['AttemptToken'])"
+                  },
+                  "runAfter": {
+                    "Use_saved_result": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Mark_replay": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Replay",
+                    "value": true
+                  },
+                  "runAfter": {
+                    "Use_old_token": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Existing_ready": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ReceiptReady",
+                    "value": true
+                  },
+                  "runAfter": {
+                    "Mark_replay": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "New_active": {
+                    "type": "If",
+                    "expression": "@and(equals(body('Member_initial')?['MembershipStatus'],'Active'),empty(body('Member_initial')?['LeftAt']))",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "New_active_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "ALREADY_LEFT"
+                          },
+                          "runAfter": {}
+                        },
+                        "New_active_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "New_active_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {}
+                  },
+                  "Attempt_uuid": {
+                    "type": "Compose",
+                    "inputs": "@guid()",
+                    "runAfter": {
+                      "New_active": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Owner_token": {
+                    "type": "Compose",
+                    "inputs": "@concat(outputs('Operation_key'),':',outputs('Attempt_uuid'))",
+                    "runAfter": {
+                      "Attempt_uuid": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Owner_token_bound": {
+                    "type": "If",
+                    "expression": "@lessOrEquals(length(outputs('Owner_token')),255)",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Owner_token_bound_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "INVALID_INPUT"
+                          },
+                          "runAfter": {}
+                        },
+                        "Owner_token_bound_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Owner_token_bound_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Owner_token": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Create_receipt_code": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Code",
+                      "value": "OUTCOME_UNKNOWN"
+                    },
+                    "runAfter": {
+                      "Owner_token_bound": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Create_receipt_mark": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "WriteAttempted",
+                      "value": true
+                    },
+                    "runAfter": {
+                      "Create_receipt_code": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Create_receipt": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                        "parameters/method": "POST",
+                        "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/items",
+                        "parameters/headers": {
+                          "Accept": "application/json;odata=verbose",
+                          "Content-Type": "application/json;odata=verbose"
+                        },
+                        "parameters/body": {
+                          "__metadata": {
+                            "type": "@body('Receipt_metadata')?['ListItemEntityTypeFullName']"
+                          },
+                          "OperationKey": "@outputs('Operation_key')",
+                          "IntentJson": "@string(outputs('Intent'))",
+                          "Complete": false,
+                          "Uncertain": false,
+                          "Retryable": false,
+                          "DomainEffects": false,
+                          "AttemptToken": "@outputs('Attempt_uuid')",
+                          "SealedAttempts": "[]",
+                          "Stage": "Running"
+                        }
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "HttpRequest"
+                      },
+                      "authentication": {
+                        "type": "Raw",
+                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                      },
+                      "retryPolicy": {
+                        "type": "none"
+                      }
+                    },
+                    "runAfter": {
+                      "Create_receipt_mark": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Created_readback": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                        "parameters/method": "GET",
+                        "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items?$filter=',concat('OperationKey eq ''',outputs('Operation_key'),''''),'&$top=2')",
+                        "parameters/headers": {
+                          "Accept": "application/json;odata=verbose"
+                        }
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "HttpRequest"
+                      },
+                      "authentication": {
+                        "type": "Raw",
+                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                      },
+                      "retryPolicy": {
+                        "type": "none"
+                      }
+                    },
+                    "runAfter": {
+                      "Create_receipt": [
+                        "Succeeded",
+                        "Failed",
+                        "TimedOut"
+                      ]
+                    }
+                  },
+                  "Created_readback_bound": {
+                    "type": "If",
+                    "expression": "@and(not(equals(body('Created_readback')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Created_readback')?['d']?['results'],json('[]'))),1),empty(body('Created_readback')?['d']?['__next']))",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Created_readback_bound_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "INCOMPLETE_READ"
+                          },
+                          "runAfter": {}
+                        },
+                        "Created_readback_bound_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Created_readback_bound_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Created_readback": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Owned_receipt_one": {
+                    "type": "If",
+                    "expression": "@equals(length(body('Created_readback')?['d']?['results']),1)",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Owned_receipt_one_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "OUTCOME_UNKNOWN"
+                          },
+                          "runAfter": {}
+                        },
+                        "Owned_receipt_one_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Owned_receipt_one_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Created_readback_bound": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Owned_receipt": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@first(body('Created_readback')?['d']?['results'])",
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "Id",
+                          "OperationKey",
+                          "IntentJson",
+                          "ResultJson",
+                          "Complete",
+                          "AttemptToken",
+                          "Uncertain",
+                          "Retryable",
+                          "DomainEffects",
+                          "Stage",
+                          "__metadata"
+                        ],
+                        "properties": {
+                          "Id": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "OperationKey": {
+                            "type": "string"
+                          },
+                          "IntentJson": {
+                            "type": "string"
+                          },
+                          "ResultJson": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "Complete": {
+                            "type": "boolean"
+                          },
+                          "AttemptToken": {
+                            "type": "string",
+                            "minLength": 36,
+                            "maxLength": 36,
+                            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+                          },
+                          "Uncertain": {
+                            "type": "boolean"
+                          },
+                          "Retryable": {
+                            "type": "boolean"
+                          },
+                          "DomainEffects": {
+                            "type": "boolean"
+                          },
+                          "Stage": {
+                            "type": "string"
+                          },
+                          "__metadata": {
+                            "type": "object",
+                            "required": [
+                              "etag",
+                              "type"
+                            ],
+                            "properties": {
+                              "etag": {
+                                "type": "string",
+                                "pattern": "^\"[0-9]+\"$"
+                              },
+                              "type": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Owned_receipt_one": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Owned_receipt_intent": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@body('Owned_receipt')?['IntentJson']",
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "kind",
+                          "version",
+                          "actorId",
+                          "groupId",
+                          "membershipId"
+                        ],
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "LeaveGroup"
+                            ]
+                          },
+                          "version": {
+                            "type": "integer",
+                            "enum": [
+                              1
+                            ]
+                          },
+                          "actorId": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "groupId": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "membershipId": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Owned_receipt": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Owned_receipt_matches": {
+                    "type": "If",
+                    "expression": "@and(equals(body('Owned_receipt')?['OperationKey'],outputs('Operation_key')),equals(body('Owned_receipt_intent'),outputs('Intent')))",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Owned_receipt_matches_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "INTENT_CONFLICT"
+                          },
+                          "runAfter": {}
+                        },
+                        "Owned_receipt_matches_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Owned_receipt_matches_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Owned_receipt_intent": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Own_attempt": {
+                    "type": "If",
+                    "expression": "@and(equals(body('Owned_receipt')?['AttemptToken'],outputs('Attempt_uuid')),equals(body('Owned_receipt')?['Complete'],false),equals(body('Owned_receipt')?['Uncertain'],false),equals(body('Owned_receipt')?['DomainEffects'],false),equals(body('Owned_receipt')?['Stage'],'Running'))",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Own_attempt_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "OUTCOME_UNKNOWN"
+                          },
+                          "runAfter": {}
+                        },
+                        "Own_attempt_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Own_attempt_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Owned_receipt_matches": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Group_claim_get": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                        "parameters/method": "GET",
+                        "parameters/uri": "@concat('_api/web/lists(guid''4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'')/items(',string(body('Input')?['number_1']),')')",
+                        "parameters/headers": {
+                          "Accept": "application/json;odata=verbose"
+                        }
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "HttpRequest"
+                      },
+                      "authentication": {
+                        "type": "Raw",
+                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                      },
+                      "retryPolicy": {
+                        "type": "none"
+                      }
+                    },
+                    "runAfter": {
+                      "Own_attempt": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Group_claim": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@body('Group_claim_get')?['d']",
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "Id",
+                          "Capacity",
+                          "State",
+                          "SetupComplete",
+                          "SourceRequestId",
+                          "WriteOwner",
+                          "__metadata"
+                        ],
+                        "properties": {
+                          "Id": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "Capacity": {
+                            "type": "number",
+                            "minimum": 2,
+                            "maximum": 10
+                          },
+                          "State": {
+                            "type": "string",
+                            "enum": [
+                              "Open",
+                              "Closed",
+                              "Ended"
+                            ]
+                          },
+                          "SetupComplete": {
+                            "type": "boolean"
+                          },
+                          "SourceRequestId": {
+                            "type": "number",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "WriteOwner": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "maxLength": 255
+                          },
+                          "__metadata": {
+                            "type": "object",
+                            "required": [
+                              "etag",
+                              "type"
+                            ],
+                            "properties": {
+                              "etag": {
+                                "type": "string",
+                                "pattern": "^\"[0-9]+\"$"
+                              },
+                              "type": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Group_claim_get": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Claim_group_identity": {
+                    "type": "If",
+                    "expression": "@and(equals(body('Group_claim')?['Id'],body('Group_initial')?['Id']),equals(body('Group_claim')?['Capacity'],int(body('Group_claim')?['Capacity'])))",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Claim_group_identity_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "GROUP_INTEGRITY"
+                          },
+                          "runAfter": {}
+                        },
+                        "Claim_group_identity_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Claim_group_identity_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Group_claim": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Group_available": {
+                    "type": "If",
+                    "expression": "@empty(body('Group_claim')?['WriteOwner'])",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Group_available_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "GROUP_BUSY"
+                          },
+                          "runAfter": {}
+                        },
+                        "Group_available_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Group_available_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Claim_group_identity": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Claim_group_code": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Code",
+                      "value": "OUTCOME_UNKNOWN"
+                    },
+                    "runAfter": {
+                      "Group_available": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Claim_group_mark": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "WriteAttempted",
+                      "value": true
+                    },
+                    "runAfter": {
+                      "Claim_group_code": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Claim_group": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                        "parameters/method": "POST",
+                        "parameters/uri": "@concat('_api/web/lists(guid''4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'')/items(',string(body('Group_claim')?['Id']),')')",
+                        "parameters/headers": {
+                          "Accept": "application/json;odata=verbose",
+                          "Content-Type": "application/json;odata=verbose",
+                          "X-HTTP-Method": "MERGE",
+                          "IF-MATCH": "@body('Group_claim')?['__metadata']?['etag']"
+                        },
+                        "parameters/body": {
+                          "__metadata": {
+                            "type": "@body('Group_claim')?['__metadata']?['type']"
+                          },
+                          "WriteOwner": "@outputs('Owner_token')"
+                        }
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "HttpRequest"
+                      },
+                      "authentication": {
+                        "type": "Raw",
+                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                      },
+                      "retryPolicy": {
+                        "type": "none"
+                      }
+                    },
+                    "runAfter": {
+                      "Claim_group_mark": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Group_live_get": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                        "parameters/method": "GET",
+                        "parameters/uri": "@concat('_api/web/lists(guid''4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'')/items(',string(body('Input')?['number_1']),')')",
+                        "parameters/headers": {
+                          "Accept": "application/json;odata=verbose"
+                        }
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "HttpRequest"
+                      },
+                      "authentication": {
+                        "type": "Raw",
+                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                      },
+                      "retryPolicy": {
+                        "type": "none"
+                      }
+                    },
+                    "runAfter": {
+                      "Claim_group": [
+                        "Succeeded",
+                        "Failed",
+                        "TimedOut"
+                      ]
+                    }
+                  },
+                  "Group_live": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@body('Group_live_get')?['d']",
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "Id",
+                          "Capacity",
+                          "State",
+                          "SetupComplete",
+                          "SourceRequestId",
+                          "WriteOwner",
+                          "__metadata"
+                        ],
+                        "properties": {
+                          "Id": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "Capacity": {
+                            "type": "number",
+                            "minimum": 2,
+                            "maximum": 10
+                          },
+                          "State": {
+                            "type": "string",
+                            "enum": [
+                              "Open",
+                              "Closed",
+                              "Ended"
+                            ]
+                          },
+                          "SetupComplete": {
+                            "type": "boolean"
+                          },
+                          "SourceRequestId": {
+                            "type": "number",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "WriteOwner": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "maxLength": 255
+                          },
+                          "__metadata": {
+                            "type": "object",
+                            "required": [
+                              "etag",
+                              "type"
+                            ],
+                            "properties": {
+                              "etag": {
+                                "type": "string",
+                                "pattern": "^\"[0-9]+\"$"
+                              },
+                              "type": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Group_live_get": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Claim_proved": {
+                    "type": "If",
+                    "expression": "@and(equals(body('Group_live')?['Id'],body('Group_claim')?['Id']),equals(body('Group_live')?['Capacity'],body('Group_claim')?['Capacity']),equals(body('Group_live')?['State'],body('Group_claim')?['State']),equals(body('Group_live')?['SourceRequestId'],body('Group_claim')?['SourceRequestId']),equals(body('Group_live')?['SetupComplete'],body('Group_claim')?['SetupComplete']),equals(body('Group_live')?['WriteOwner'],outputs('Owner_token')))",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Claim_proved_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "GROUP_BUSY_OR_UNKNOWN"
+                          },
+                          "runAfter": {}
+                        },
+                        "Claim_proved_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Claim_proved_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Group_live": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Member_live_get": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                        "parameters/method": "GET",
+                        "parameters/uri": "@concat('_api/web/lists(guid''db611ec3-7fa3-477a-878e-effbbb195cb8'')/items(',string(body('Input')?['number_2']),')')",
+                        "parameters/headers": {
+                          "Accept": "application/json;odata=verbose"
+                        }
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "HttpRequest"
+                      },
+                      "authentication": {
+                        "type": "Raw",
+                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                      },
+                      "retryPolicy": {
+                        "type": "none"
+                      }
+                    },
+                    "runAfter": {
+                      "Claim_proved": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Member_live": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@body('Member_live_get')?['d']",
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "Id",
+                          "GroupId",
+                          "ParticipantId",
+                          "MembershipStatus",
+                          "MembershipKey",
+                          "JoinedAt",
+                          "LeftAt",
+                          "__metadata"
+                        ],
+                        "properties": {
+                          "Id": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "GroupId": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "ParticipantId": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "MembershipStatus": {
+                            "type": "string",
+                            "enum": [
+                              "Active",
+                              "Left"
+                            ]
+                          },
+                          "MembershipKey": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "JoinedAt": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "LeftAt": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "__metadata": {
+                            "type": "object",
+                            "required": [
+                              "etag",
+                              "type"
+                            ],
+                            "properties": {
+                              "etag": {
+                                "type": "string",
+                                "pattern": "^\"[0-9]+\"$"
+                              },
+                              "type": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Member_live_get": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Live_member": {
+                    "type": "If",
+                    "expression": "@and(and(equals(body('Member_live')?['Id'],body('Member_initial')?['Id']),equals(body('Member_live')?['GroupId'],body('Member_initial')?['GroupId']),equals(body('Member_live')?['ParticipantId'],body('Member_initial')?['ParticipantId']),equals(body('Member_live')?['MembershipKey'],body('Member_initial')?['MembershipKey']),equals(body('Member_live')?['JoinedAt'],body('Member_initial')?['JoinedAt'])),equals(body('Member_live')?['MembershipStatus'],'Active'),empty(body('Member_live')?['LeftAt']))",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Live_member_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "MEMBERSHIP_CHANGED"
+                          },
+                          "runAfter": {}
+                        },
+                        "Live_member_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Live_member_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Member_live": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Live_group_ready": {
+                    "type": "If",
+                    "expression": "@and(equals(body('Group_live')?['SetupComplete'],true),equals(body('Group_live')?['SourceRequestId'],int(body('Group_live')?['SourceRequestId'])))",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Live_group_ready_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "PROVISIONAL_MEMBERSHIP"
+                          },
+                          "runAfter": {}
+                        },
+                        "Live_group_ready_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Live_group_ready_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Live_member": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Live_key_parts": {
+                    "type": "Compose",
+                    "inputs": "@split(body('Member_live')?['MembershipKey'],':')",
+                    "runAfter": {
+                      "Live_group_ready": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Live_key_shape": {
+                    "type": "If",
+                    "expression": "@equals(length(outputs('Live_key_parts')),4)",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Live_key_shape_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "MEMBERSHIP_INTEGRITY"
+                          },
+                          "runAfter": {}
+                        },
+                        "Live_key_shape_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Live_key_shape_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Live_key_parts": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Live_request_id": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@int(outputs('Live_key_parts')?[1])",
+                      "schema": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 2147483647
+                      }
+                    },
+                    "runAfter": {
+                      "Live_key_shape": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Live_key_canonical": {
+                    "type": "If",
+                    "expression": "@equals(body('Member_live')?['MembershipKey'],concat('request:',string(body('Live_request_id')),':participant:',string(body('Input')?['number'])))",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Live_key_canonical_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "MEMBERSHIP_INTEGRITY"
+                          },
+                          "runAfter": {}
+                        },
+                        "Live_key_canonical_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Live_key_canonical_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Live_request_id": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Live_source_get": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                        "parameters/method": "GET",
+                        "parameters/uri": "@concat('_api/web/lists(guid''3d17485d-1dac-41f0-a1af-24e45daa4567'')/items(',string(int(body('Group_live')?['SourceRequestId'])),')')",
+                        "parameters/headers": {
+                          "Accept": "application/json;odata=verbose"
+                        }
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "HttpRequest"
+                      },
+                      "authentication": {
+                        "type": "Raw",
+                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                      },
+                      "retryPolicy": {
+                        "type": "none"
+                      }
+                    },
+                    "runAfter": {
+                      "Live_key_canonical": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Live_source": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@body('Live_source_get')?['d']",
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "Id",
+                          "Status",
+                          "OperationComplete",
+                          "RequestType",
+                          "SenderParticipantId",
+                          "RecipientParticipantId",
+                          "TargetGroupId"
+                        ],
+                        "properties": {
+                          "Id": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "Status": {
+                            "type": "string"
+                          },
+                          "OperationComplete": {
+                            "type": "boolean"
+                          },
+                          "RequestType": {
+                            "type": "string",
+                            "enum": [
+                              "Personal",
+                              "Group"
+                            ]
+                          },
+                          "SenderParticipantId": {
+                            "type": "number",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "RecipientParticipantId": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "TargetGroupId": {
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Live_source_get": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Live_request_get": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                        "parameters/method": "GET",
+                        "parameters/uri": "@concat('_api/web/lists(guid''3d17485d-1dac-41f0-a1af-24e45daa4567'')/items(',string(body('Live_request_id')),')')",
+                        "parameters/headers": {
+                          "Accept": "application/json;odata=verbose"
+                        }
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "HttpRequest"
+                      },
+                      "authentication": {
+                        "type": "Raw",
+                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                      },
+                      "retryPolicy": {
+                        "type": "none"
+                      }
+                    },
+                    "runAfter": {
+                      "Live_source": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Live_request": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@body('Live_request_get')?['d']",
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "Id",
+                          "Status",
+                          "OperationComplete",
+                          "RequestType",
+                          "SenderParticipantId",
+                          "RecipientParticipantId",
+                          "TargetGroupId"
+                        ],
+                        "properties": {
+                          "Id": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "Status": {
+                            "type": "string"
+                          },
+                          "OperationComplete": {
+                            "type": "boolean"
+                          },
+                          "RequestType": {
+                            "type": "string",
+                            "enum": [
+                              "Personal",
+                              "Group"
+                            ]
+                          },
+                          "SenderParticipantId": {
+                            "type": "number",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "RecipientParticipantId": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "TargetGroupId": {
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Live_request_get": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Live_commit": {
+                    "type": "If",
+                    "expression": "@and(equals(body('Group_live')?['SetupComplete'],true),equals(body('Live_source')?['Id'],body('Group_live')?['SourceRequestId']),equals(body('Live_source')?['RequestType'],'Personal'),equals(body('Live_source')?['TargetGroupId'],null),greater(coalesce(body('Live_source')?['RecipientParticipantId'],0),0),not(equals(body('Live_source')?['SenderParticipantId'],body('Live_source')?['RecipientParticipantId'])),equals(body('Live_source')?['Status'],'Accepted'),equals(body('Live_source')?['OperationComplete'],true),equals(body('Live_request')?['Id'],body('Live_request_id')),equals(body('Live_request')?['Status'],'Accepted'),equals(body('Live_request')?['OperationComplete'],true),or(and(equals(body('Live_request')?['RequestType'],'Personal'),equals(body('Live_request')?['Id'],body('Group_live')?['SourceRequestId']),equals(body('Live_request')?['TargetGroupId'],null),or(equals(body('Live_request')?['SenderParticipantId'],body('Input')?['number']),equals(body('Live_request')?['RecipientParticipantId'],body('Input')?['number']))),and(equals(body('Live_request')?['RequestType'],'Group'),equals(body('Live_request')?['TargetGroupId'],body('Group_live')?['Id']),equals(body('Live_request')?['SenderParticipantId'],body('Input')?['number']),equals(body('Live_request')?['RecipientParticipantId'],null))))",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Live_commit_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "PROVISIONAL_MEMBERSHIP"
+                          },
+                          "runAfter": {}
+                        },
+                        "Live_commit_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Live_commit_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Live_request": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Before_members": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                        "parameters/method": "GET",
+                        "parameters/uri": "@concat('_api/web/lists(guid''db611ec3-7fa3-477a-878e-effbbb195cb8'')/items?$filter=',concat('GroupId eq ',string(body('Input')?['number_1'])),'&$top=2001')",
+                        "parameters/headers": {
+                          "Accept": "application/json;odata=verbose"
+                        }
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "HttpRequest"
+                      },
+                      "authentication": {
+                        "type": "Raw",
+                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                      },
+                      "retryPolicy": {
+                        "type": "none"
+                      }
+                    },
+                    "runAfter": {
+                      "Live_commit": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Before_members_bound": {
+                    "type": "If",
+                    "expression": "@and(not(equals(body('Before_members')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Before_members')?['d']?['results'],json('[]'))),2000),empty(body('Before_members')?['d']?['__next']))",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Before_members_bound_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "INCOMPLETE_READ"
+                          },
+                          "runAfter": {}
+                        },
+                        "Before_members_bound_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Before_members_bound_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Before_members": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Before_members_rows": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@body('Before_members')?['d']?['results']",
+                      "schema": {
+                        "type": "array",
+                        "maxItems": 2000,
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "Id",
+                            "GroupId",
+                            "ParticipantId",
+                            "MembershipStatus",
+                            "MembershipKey",
+                            "JoinedAt",
+                            "LeftAt",
+                            "__metadata"
+                          ],
+                          "properties": {
+                            "Id": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 2147483647
+                            },
+                            "GroupId": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 2147483647
+                            },
+                            "ParticipantId": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 2147483647
+                            },
+                            "MembershipStatus": {
+                              "type": "string",
+                              "enum": [
+                                "Active",
+                                "Left"
+                              ]
+                            },
+                            "MembershipKey": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "JoinedAt": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "LeftAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "__metadata": {
+                              "type": "object",
+                              "required": [
+                                "etag",
+                                "type"
+                              ],
+                              "properties": {
+                                "etag": {
+                                  "type": "string",
+                                  "pattern": "^\"[0-9]+\"$"
+                                },
+                                "type": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Before_members_bound": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Before_members_active": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@body('Before_members')?['d']?['results']",
+                      "where": "@equals(item()?['MembershipStatus'],'Active')"
+                    },
+                    "runAfter": {
+                      "Before_members_rows": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Before_members_own": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@body('Before_members_active')",
+                      "where": "@equals(item()?['ParticipantId'],body('Input')?['number'])"
+                    },
+                    "runAfter": {
+                      "Before_members_active": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Before_members_foreign": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@body('Before_members')?['d']?['results']",
+                      "where": "@not(equals(item()?['GroupId'],body('Input')?['number_1']))"
+                    },
+                    "runAfter": {
+                      "Before_members_own": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Before_members_group": {
+                    "type": "If",
+                    "expression": "@equals(length(body('Before_members_foreign')),0)",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Before_members_group_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "MEMBERSHIP_INTEGRITY"
+                          },
+                          "runAfter": {}
+                        },
+                        "Before_members_group_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Before_members_group_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Before_members_foreign": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "One_active_episode": {
+                    "type": "If",
+                    "expression": "@and(equals(length(body('Before_members_own')),1),equals(first(body('Before_members_own'))?['Id'],body('Input')?['number_2']))",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "One_active_episode_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "MEMBERSHIP_INTEGRITY"
+                          },
+                          "runAfter": {}
+                        },
+                        "One_active_episode_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "One_active_episode_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Before_members_group": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Left_at": {
+                    "type": "Compose",
+                    "inputs": "@utcNow('yyyy-MM-ddTHH:mm:ssZ')",
+                    "runAfter": {
+                      "One_active_episode": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Leave_CAS_code": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Code",
+                      "value": "OUTCOME_UNKNOWN"
+                    },
+                    "runAfter": {
+                      "Left_at": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Leave_CAS_mark": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "WriteAttempted",
+                      "value": true
+                    },
+                    "runAfter": {
+                      "Leave_CAS_code": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Leave_CAS": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                        "parameters/method": "POST",
+                        "parameters/uri": "@concat('_api/web/lists(guid''db611ec3-7fa3-477a-878e-effbbb195cb8'')/items(',string(body('Member_live')?['Id']),')')",
+                        "parameters/headers": {
+                          "Accept": "application/json;odata=verbose",
+                          "Content-Type": "application/json;odata=verbose",
+                          "X-HTTP-Method": "MERGE",
+                          "IF-MATCH": "@body('Member_live')?['__metadata']?['etag']"
+                        },
+                        "parameters/body": {
+                          "__metadata": {
+                            "type": "@body('Member_live')?['__metadata']?['type']"
+                          },
+                          "MembershipStatus": "Left",
+                          "LeftAt": "@outputs('Left_at')"
+                        }
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "HttpRequest"
+                      },
+                      "authentication": {
+                        "type": "Raw",
+                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                      },
+                      "retryPolicy": {
+                        "type": "none"
+                      }
+                    },
+                    "runAfter": {
+                      "Leave_CAS_mark": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Member_after_get": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                        "parameters/method": "GET",
+                        "parameters/uri": "@concat('_api/web/lists(guid''db611ec3-7fa3-477a-878e-effbbb195cb8'')/items(',string(body('Input')?['number_2']),')')",
+                        "parameters/headers": {
+                          "Accept": "application/json;odata=verbose"
+                        }
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "HttpRequest"
+                      },
+                      "authentication": {
+                        "type": "Raw",
+                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                      },
+                      "retryPolicy": {
+                        "type": "none"
+                      }
+                    },
+                    "runAfter": {
+                      "Leave_CAS": [
+                        "Succeeded",
+                        "Failed",
+                        "TimedOut"
+                      ]
+                    }
+                  },
+                  "Member_after": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@body('Member_after_get')?['d']",
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "Id",
+                          "GroupId",
+                          "ParticipantId",
+                          "MembershipStatus",
+                          "MembershipKey",
+                          "JoinedAt",
+                          "LeftAt",
+                          "__metadata"
+                        ],
+                        "properties": {
+                          "Id": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "GroupId": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "ParticipantId": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "MembershipStatus": {
+                            "type": "string",
+                            "enum": [
+                              "Active",
+                              "Left"
+                            ]
+                          },
+                          "MembershipKey": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "JoinedAt": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "LeftAt": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "__metadata": {
+                            "type": "object",
+                            "required": [
+                              "etag",
+                              "type"
+                            ],
+                            "properties": {
+                              "etag": {
+                                "type": "string",
+                                "pattern": "^\"[0-9]+\"$"
+                              },
+                              "type": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Member_after_get": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Leave_proved": {
+                    "type": "If",
+                    "expression": "@and(and(equals(body('Member_after')?['Id'],body('Member_initial')?['Id']),equals(body('Member_after')?['GroupId'],body('Member_initial')?['GroupId']),equals(body('Member_after')?['ParticipantId'],body('Member_initial')?['ParticipantId']),equals(body('Member_after')?['MembershipKey'],body('Member_initial')?['MembershipKey']),equals(body('Member_after')?['JoinedAt'],body('Member_initial')?['JoinedAt'])),equals(body('Member_after')?['MembershipStatus'],'Left'),equals(body('Member_after')?['LeftAt'],outputs('Left_at')))",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Leave_proved_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "OUTCOME_UNKNOWN"
+                          },
+                          "runAfter": {}
+                        },
+                        "Leave_proved_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Leave_proved_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Member_after": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Group_after_get": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                        "parameters/method": "GET",
+                        "parameters/uri": "@concat('_api/web/lists(guid''4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'')/items(',string(body('Input')?['number_1']),')')",
+                        "parameters/headers": {
+                          "Accept": "application/json;odata=verbose"
+                        }
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "HttpRequest"
+                      },
+                      "authentication": {
+                        "type": "Raw",
+                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                      },
+                      "retryPolicy": {
+                        "type": "none"
+                      }
+                    },
+                    "runAfter": {
+                      "Leave_proved": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Group_after": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@body('Group_after_get')?['d']",
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "Id",
+                          "Capacity",
+                          "State",
+                          "SetupComplete",
+                          "SourceRequestId",
+                          "WriteOwner",
+                          "__metadata"
+                        ],
+                        "properties": {
+                          "Id": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "Capacity": {
+                            "type": "number",
+                            "minimum": 2,
+                            "maximum": 10
+                          },
+                          "State": {
+                            "type": "string",
+                            "enum": [
+                              "Open",
+                              "Closed",
+                              "Ended"
+                            ]
+                          },
+                          "SetupComplete": {
+                            "type": "boolean"
+                          },
+                          "SourceRequestId": {
+                            "type": "number",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "WriteOwner": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "maxLength": 255
+                          },
+                          "__metadata": {
+                            "type": "object",
+                            "required": [
+                              "etag",
+                              "type"
+                            ],
+                            "properties": {
+                              "etag": {
+                                "type": "string",
+                                "pattern": "^\"[0-9]+\"$"
+                              },
+                              "type": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Group_after_get": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Group_unchanged": {
+                    "type": "If",
+                    "expression": "@and(equals(body('Group_after')?['Id'],body('Group_live')?['Id']),equals(body('Group_after')?['Capacity'],body('Group_live')?['Capacity']),equals(body('Group_after')?['State'],body('Group_live')?['State']),equals(body('Group_after')?['SourceRequestId'],body('Group_live')?['SourceRequestId']),equals(body('Group_after')?['SetupComplete'],body('Group_live')?['SetupComplete']),equals(body('Group_after')?['WriteOwner'],outputs('Owner_token')))",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Group_unchanged_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "OUTCOME_UNKNOWN"
+                          },
+                          "runAfter": {}
+                        },
+                        "Group_unchanged_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Group_unchanged_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Group_after": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "After_members": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                        "parameters/method": "GET",
+                        "parameters/uri": "@concat('_api/web/lists(guid''db611ec3-7fa3-477a-878e-effbbb195cb8'')/items?$filter=',concat('GroupId eq ',string(body('Input')?['number_1'])),'&$top=2001')",
+                        "parameters/headers": {
+                          "Accept": "application/json;odata=verbose"
+                        }
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "HttpRequest"
+                      },
+                      "authentication": {
+                        "type": "Raw",
+                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                      },
+                      "retryPolicy": {
+                        "type": "none"
+                      }
+                    },
+                    "runAfter": {
+                      "Group_unchanged": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "After_members_bound": {
+                    "type": "If",
+                    "expression": "@and(not(equals(body('After_members')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('After_members')?['d']?['results'],json('[]'))),2000),empty(body('After_members')?['d']?['__next']))",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "After_members_bound_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "INCOMPLETE_READ"
+                          },
+                          "runAfter": {}
+                        },
+                        "After_members_bound_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "After_members_bound_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "After_members": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "After_members_rows": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@body('After_members')?['d']?['results']",
+                      "schema": {
+                        "type": "array",
+                        "maxItems": 2000,
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "Id",
+                            "GroupId",
+                            "ParticipantId",
+                            "MembershipStatus",
+                            "MembershipKey",
+                            "JoinedAt",
+                            "LeftAt",
+                            "__metadata"
+                          ],
+                          "properties": {
+                            "Id": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 2147483647
+                            },
+                            "GroupId": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 2147483647
+                            },
+                            "ParticipantId": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 2147483647
+                            },
+                            "MembershipStatus": {
+                              "type": "string",
+                              "enum": [
+                                "Active",
+                                "Left"
+                              ]
+                            },
+                            "MembershipKey": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "JoinedAt": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "LeftAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "__metadata": {
+                              "type": "object",
+                              "required": [
+                                "etag",
+                                "type"
+                              ],
+                              "properties": {
+                                "etag": {
+                                  "type": "string",
+                                  "pattern": "^\"[0-9]+\"$"
+                                },
+                                "type": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "After_members_bound": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "After_members_active": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@body('After_members')?['d']?['results']",
+                      "where": "@equals(item()?['MembershipStatus'],'Active')"
+                    },
+                    "runAfter": {
+                      "After_members_rows": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "After_members_own": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@body('After_members_active')",
+                      "where": "@equals(item()?['ParticipantId'],body('Input')?['number'])"
+                    },
+                    "runAfter": {
+                      "After_members_active": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "After_members_foreign": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@body('After_members')?['d']?['results']",
+                      "where": "@not(equals(item()?['GroupId'],body('Input')?['number_1']))"
+                    },
+                    "runAfter": {
+                      "After_members_own": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "After_members_group": {
+                    "type": "If",
+                    "expression": "@equals(length(body('After_members_foreign')),0)",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "After_members_group_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "MEMBERSHIP_INTEGRITY"
+                          },
+                          "runAfter": {}
+                        },
+                        "After_members_group_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "After_members_group_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "After_members_foreign": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Count_proved": {
+                    "type": "If",
+                    "expression": "@and(equals(length(body('After_members_active')),sub(length(body('Before_members_active')),1)),equals(length(body('After_members_own')),0))",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Count_proved_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "OUTCOME_UNKNOWN"
+                          },
+                          "runAfter": {}
+                        },
+                        "Count_proved_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Count_proved_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "After_members_group": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "New_result": {
+                    "type": "Compose",
+                    "inputs": {
+                      "kind": "LeaveGroup",
+                      "operationkey": "@outputs('Operation_key')",
+                      "groupid": "@body('Input')?['number_1']",
+                      "membershipid": "@body('Input')?['number_2']",
+                      "status": "Left",
+                      "leftat": "@outputs('Left_at')",
+                      "groupstate": "@body('Group_after')?['State']",
+                      "membercount": "@length(body('After_members_active'))",
+                      "freeslots": "@if(greater(length(body('After_members_active')),int(body('Group_after')?['Capacity'])),0,sub(int(body('Group_after')?['Capacity']),length(body('After_members_active'))))"
+                    },
+                    "runAfter": {
+                      "Count_proved": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Set_new_result": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "SavedResult",
+                      "value": "@outputs('New_result')"
+                    },
+                    "runAfter": {
+                      "New_result": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Complete_receipt_code": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Code",
+                      "value": "OUTCOME_UNKNOWN"
+                    },
+                    "runAfter": {
+                      "Set_new_result": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Complete_receipt_mark": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "WriteAttempted",
+                      "value": true
+                    },
+                    "runAfter": {
+                      "Complete_receipt_code": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Complete_receipt": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                        "parameters/method": "POST",
+                        "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(body('Owned_receipt')?['Id']),')')",
+                        "parameters/headers": {
+                          "Accept": "application/json;odata=verbose",
+                          "Content-Type": "application/json;odata=verbose",
+                          "X-HTTP-Method": "MERGE",
+                          "IF-MATCH": "@body('Owned_receipt')?['__metadata']?['etag']"
+                        },
+                        "parameters/body": {
+                          "__metadata": {
+                            "type": "@body('Owned_receipt')?['__metadata']?['type']"
+                          },
+                          "Complete": true,
+                          "ResultJson": "@string(outputs('New_result'))",
+                          "DomainEffects": true,
+                          "Stage": "Complete",
+                          "Uncertain": false,
+                          "Retryable": false
+                        }
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "HttpRequest"
+                      },
+                      "authentication": {
+                        "type": "Raw",
+                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                      },
+                      "retryPolicy": {
+                        "type": "none"
+                      }
+                    },
+                    "runAfter": {
+                      "Complete_receipt_mark": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Completed_readback": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                        "parameters/method": "GET",
+                        "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items?$filter=',concat('OperationKey eq ''',outputs('Operation_key'),''''),'&$top=2')",
+                        "parameters/headers": {
+                          "Accept": "application/json;odata=verbose"
+                        }
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "HttpRequest"
+                      },
+                      "authentication": {
+                        "type": "Raw",
+                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                      },
+                      "retryPolicy": {
+                        "type": "none"
+                      }
+                    },
+                    "runAfter": {
+                      "Complete_receipt": [
+                        "Succeeded",
+                        "Failed",
+                        "TimedOut"
+                      ]
+                    }
+                  },
+                  "Completed_readback_bound": {
+                    "type": "If",
+                    "expression": "@and(not(equals(body('Completed_readback')?['d']?['results'],null)),lessOrEquals(length(coalesce(body('Completed_readback')?['d']?['results'],json('[]'))),1),empty(body('Completed_readback')?['d']?['__next']))",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Completed_readback_bound_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "INCOMPLETE_READ"
+                          },
+                          "runAfter": {}
+                        },
+                        "Completed_readback_bound_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Completed_readback_bound_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Completed_readback": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Completed_receipt_one": {
+                    "type": "If",
+                    "expression": "@equals(length(body('Completed_readback')?['d']?['results']),1)",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Completed_receipt_one_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "OUTCOME_UNKNOWN"
+                          },
+                          "runAfter": {}
+                        },
+                        "Completed_receipt_one_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Completed_receipt_one_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Completed_readback_bound": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Completed_receipt": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@first(body('Completed_readback')?['d']?['results'])",
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "Id",
+                          "OperationKey",
+                          "IntentJson",
+                          "ResultJson",
+                          "Complete",
+                          "AttemptToken",
+                          "Uncertain",
+                          "Retryable",
+                          "DomainEffects",
+                          "Stage",
+                          "__metadata"
+                        ],
+                        "properties": {
+                          "Id": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "OperationKey": {
+                            "type": "string"
+                          },
+                          "IntentJson": {
+                            "type": "string"
+                          },
+                          "ResultJson": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "Complete": {
+                            "type": "boolean"
+                          },
+                          "AttemptToken": {
+                            "type": "string",
+                            "minLength": 36,
+                            "maxLength": 36,
+                            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+                          },
+                          "Uncertain": {
+                            "type": "boolean"
+                          },
+                          "Retryable": {
+                            "type": "boolean"
+                          },
+                          "DomainEffects": {
+                            "type": "boolean"
+                          },
+                          "Stage": {
+                            "type": "string"
+                          },
+                          "__metadata": {
+                            "type": "object",
+                            "required": [
+                              "etag",
+                              "type"
+                            ],
+                            "properties": {
+                              "etag": {
+                                "type": "string",
+                                "pattern": "^\"[0-9]+\"$"
+                              },
+                              "type": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Completed_receipt_one": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Completed_receipt_intent": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@body('Completed_receipt')?['IntentJson']",
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "kind",
+                          "version",
+                          "actorId",
+                          "groupId",
+                          "membershipId"
+                        ],
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "LeaveGroup"
+                            ]
+                          },
+                          "version": {
+                            "type": "integer",
+                            "enum": [
+                              1
+                            ]
+                          },
+                          "actorId": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "groupId": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "membershipId": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Completed_receipt": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Completed_receipt_matches": {
+                    "type": "If",
+                    "expression": "@and(equals(body('Completed_receipt')?['OperationKey'],outputs('Operation_key')),equals(body('Completed_receipt_intent'),outputs('Intent')))",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Completed_receipt_matches_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "INTENT_CONFLICT"
+                          },
+                          "runAfter": {}
+                        },
+                        "Completed_receipt_matches_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Completed_receipt_matches_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Completed_receipt_intent": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Completed_result": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@body('Completed_receipt')?['ResultJson']",
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "kind",
+                          "operationkey",
+                          "groupid",
+                          "membershipid",
+                          "status",
+                          "leftat",
+                          "membercount",
+                          "freeslots",
+                          "groupstate"
+                        ],
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "LeaveGroup"
+                            ]
+                          },
+                          "operationkey": {
+                            "type": "string"
+                          },
+                          "groupid": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "membershipid": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "Left"
+                            ]
+                          },
+                          "leftat": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "membercount": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 2000
+                          },
+                          "freeslots": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 10
+                          },
+                          "groupstate": {
+                            "type": "string",
+                            "enum": [
+                              "Open",
+                              "Closed",
+                              "Ended"
+                            ]
+                          }
+                        },
+                        "additionalProperties": false
+                      }
+                    },
+                    "runAfter": {
+                      "Completed_receipt_matches": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Completion_proved": {
+                    "type": "If",
+                    "expression": "@and(equals(body('Completed_receipt')?['Complete'],true),equals(body('Completed_receipt')?['DomainEffects'],true),equals(body('Completed_receipt')?['Stage'],'Complete'),equals(body('Completed_receipt')?['AttemptToken'],outputs('Attempt_uuid')),equals(body('Completed_receipt')?['Uncertain'],false),equals(body('Completed_result'),outputs('New_result')))",
+                    "actions": {},
+                    "else": {
+                      "actions": {
+                        "Completion_proved_code": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Code",
+                            "value": "OUTCOME_UNKNOWN"
+                          },
+                          "runAfter": {}
+                        },
+                        "Completion_proved_stop": {
+                          "type": "Compose",
+                          "inputs": "@div(1,0)",
+                          "runAfter": {
+                            "Completion_proved_code": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Completed_result": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Release_new_token": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ReleaseToken",
+                      "value": "@outputs('Owner_token')"
+                    },
+                    "runAfter": {
+                      "Completion_proved": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "New_ready": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ReceiptReady",
+                      "value": true
+                    },
+                    "runAfter": {
+                      "Release_new_token": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Find_receipt_bound": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Require_receipt_ready": {
+              "type": "If",
+              "expression": "@variables('ReceiptReady')",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Require_receipt_ready_code": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Code",
+                      "value": "@variables('Code')"
+                    },
+                    "runAfter": {}
+                  },
+                  "Require_receipt_ready_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Require_receipt_ready_code": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Existing_intent": [
+                  "Succeeded",
+                  "Failed",
+                  "TimedOut"
+                ]
+              }
+            },
+            "Release_code": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Code",
+                "value": "RELEASE_PENDING"
+              },
+              "runAfter": {
+                "Require_receipt_ready": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Group_release_get": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "@concat('_api/web/lists(guid''4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'')/items(',string(body('Input')?['number_1']),')')",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                },
+                "retryPolicy": {
+                  "type": "none"
+                }
+              },
+              "runAfter": {
+                "Release_code": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Group_release": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Group_release_get')?['d']",
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "Id",
+                    "Capacity",
+                    "State",
+                    "SetupComplete",
+                    "SourceRequestId",
+                    "WriteOwner",
+                    "__metadata"
+                  ],
+                  "properties": {
+                    "Id": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "Capacity": {
+                      "type": "number",
+                      "minimum": 2,
+                      "maximum": 10
+                    },
+                    "State": {
+                      "type": "string",
+                      "enum": [
+                        "Open",
+                        "Closed",
+                        "Ended"
+                      ]
+                    },
+                    "SetupComplete": {
+                      "type": "boolean"
+                    },
+                    "SourceRequestId": {
+                      "type": "number",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "WriteOwner": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 255
+                    },
+                    "__metadata": {
+                      "type": "object",
+                      "required": [
+                        "etag",
+                        "type"
+                      ],
+                      "properties": {
+                        "etag": {
+                          "type": "string",
+                          "pattern": "^\"[0-9]+\"$"
+                        },
+                        "type": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Group_release_get": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Release_identity": {
+              "type": "If",
+              "expression": "@equals(body('Group_release')?['Id'],body('Input')?['number_1'])",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Release_identity_code": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Code",
+                      "value": "GROUP_INTEGRITY"
+                    },
+                    "runAfter": {}
+                  },
+                  "Release_identity_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Release_identity_code": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Group_release": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Release_matching_old_token": {
+              "type": "If",
+              "expression": "@equals(body('Group_release')?['WriteOwner'],variables('ReleaseToken'))",
+              "actions": {
+                "Release_group_code": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Code",
+                    "value": "RELEASE_PENDING"
+                  },
+                  "runAfter": {}
+                },
+                "Release_group_mark": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "WriteAttempted",
+                    "value": true
+                  },
+                  "runAfter": {
+                    "Release_group_code": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Release_group": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "POST",
+                      "parameters/uri": "@concat('_api/web/lists(guid''4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'')/items(',string(body('Group_release')?['Id']),')')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=verbose",
+                        "Content-Type": "application/json;odata=verbose",
+                        "X-HTTP-Method": "MERGE",
+                        "IF-MATCH": "@body('Group_release')?['__metadata']?['etag']"
+                      },
+                      "parameters/body": {
+                        "__metadata": {
+                          "type": "@body('Group_release')?['__metadata']?['type']"
+                        },
+                        "WriteOwner": ""
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "authentication": {
+                      "type": "Raw",
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                    },
+                    "retryPolicy": {
+                      "type": "none"
+                    }
+                  },
+                  "runAfter": {
+                    "Release_group_mark": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Group_released_get": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "@concat('_api/web/lists(guid''4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'')/items(',string(body('Input')?['number_1']),')')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=verbose"
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "authentication": {
+                      "type": "Raw",
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                    },
+                    "retryPolicy": {
+                      "type": "none"
+                    }
+                  },
+                  "runAfter": {
+                    "Release_group": [
+                      "Succeeded",
+                      "Failed",
+                      "TimedOut"
+                    ]
+                  }
+                },
+                "Group_released": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@body('Group_released_get')?['d']",
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "Id",
+                        "Capacity",
+                        "State",
+                        "SetupComplete",
+                        "SourceRequestId",
+                        "WriteOwner",
+                        "__metadata"
+                      ],
+                      "properties": {
+                        "Id": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        },
+                        "Capacity": {
+                          "type": "number",
+                          "minimum": 2,
+                          "maximum": 10
+                        },
+                        "State": {
+                          "type": "string",
+                          "enum": [
+                            "Open",
+                            "Closed",
+                            "Ended"
+                          ]
+                        },
+                        "SetupComplete": {
+                          "type": "boolean"
+                        },
+                        "SourceRequestId": {
+                          "type": "number",
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        },
+                        "WriteOwner": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "maxLength": 255
+                        },
+                        "__metadata": {
+                          "type": "object",
+                          "required": [
+                            "etag",
+                            "type"
+                          ],
+                          "properties": {
+                            "etag": {
+                              "type": "string",
+                              "pattern": "^\"[0-9]+\"$"
+                            },
+                            "type": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Group_released_get": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Release_proved": {
+                  "type": "If",
+                  "expression": "@and(equals(body('Group_released')?['Id'],body('Input')?['number_1']),not(equals(body('Group_released')?['WriteOwner'],variables('ReleaseToken'))))",
+                  "actions": {},
+                  "else": {
+                    "actions": {
+                      "Release_proved_code": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "Code",
+                          "value": "RELEASE_PENDING"
+                        },
+                        "runAfter": {}
+                      },
+                      "Release_proved_stop": {
+                        "type": "Compose",
+                        "inputs": "@div(1,0)",
+                        "runAfter": {
+                          "Release_proved_code": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Group_released": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Release_verified": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ReleaseProved",
+                    "value": true
+                  },
+                  "runAfter": {
+                    "Release_proved": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "Old_token_absent": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ReleaseProved",
+                      "value": true
+                    },
+                    "runAfter": {}
+                  }
+                }
+              },
+              "runAfter": {
+                "Release_identity": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Require_release_proved": {
+              "type": "If",
+              "expression": "@variables('ReleaseProved')",
+              "actions": {},
+              "else": {
+                "actions": {
+                  "Require_release_proved_code": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Code",
+                      "value": "RELEASE_PENDING"
+                    },
+                    "runAfter": {}
+                  },
+                  "Require_release_proved_stop": {
+                    "type": "Compose",
+                    "inputs": "@div(1,0)",
+                    "runAfter": {
+                      "Require_release_proved_code": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Release_matching_old_token": [
+                  "Succeeded",
+                  "Failed",
+                  "TimedOut"
+                ]
+              }
+            },
+            "Success_code": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Code",
+                "value": "LEFT"
+              },
+              "runAfter": {
+                "Require_release_proved": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_ReleaseProved": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Respond_to_a_Power_App_or_flow": {
+          "type": "Response",
+          "kind": "PowerApp",
+          "inputs": {
+            "statusCode": 200,
+            "schema": {
+              "type": "object",
+              "required": [
+                "success",
+                "resultcode",
+                "message",
+                "resultjson",
+                "replay",
+                "writeattempted",
+                "outcomeunknown",
+                "runreference",
+                "buildid",
+                "mode"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "title": "success",
+                  "x-ms-dynamically-added": true,
+                  "x-ms-content-hint": "BOOLEAN"
+                },
+                "resultcode": {
+                  "type": "string",
+                  "title": "resultcode",
+                  "x-ms-dynamically-added": true,
+                  "x-ms-content-hint": "TEXT"
+                },
+                "message": {
+                  "type": "string",
+                  "title": "message",
+                  "x-ms-dynamically-added": true,
+                  "x-ms-content-hint": "TEXT"
+                },
+                "resultjson": {
+                  "type": "string",
+                  "title": "resultjson",
+                  "x-ms-dynamically-added": true,
+                  "x-ms-content-hint": "TEXT"
+                },
+                "replay": {
+                  "type": "boolean",
+                  "title": "replay",
+                  "x-ms-dynamically-added": true,
+                  "x-ms-content-hint": "BOOLEAN"
+                },
+                "writeattempted": {
+                  "type": "boolean",
+                  "title": "writeattempted",
+                  "x-ms-dynamically-added": true,
+                  "x-ms-content-hint": "BOOLEAN"
+                },
+                "outcomeunknown": {
+                  "type": "boolean",
+                  "title": "outcomeunknown",
+                  "x-ms-dynamically-added": true,
+                  "x-ms-content-hint": "BOOLEAN"
+                },
+                "runreference": {
+                  "type": "string",
+                  "title": "runreference",
+                  "x-ms-dynamically-added": true,
+                  "x-ms-content-hint": "TEXT"
+                },
+                "buildid": {
+                  "type": "string",
+                  "title": "buildid",
+                  "x-ms-dynamically-added": true,
+                  "x-ms-content-hint": "TEXT"
+                },
+                "mode": {
+                  "type": "string",
+                  "title": "mode",
+                  "x-ms-dynamically-added": true,
+                  "x-ms-content-hint": "TEXT"
+                }
+              }
+            },
+            "body": {
+              "success": "@equals(variables('Code'),'LEFT')",
+              "resultcode": "@variables('Code')",
+              "message": "@if(equals(variables('Code'),'LEFT'),'You have left this group. Refresh your groups.','The leave could not be confirmed. Refresh and retain the same intent for retry.')",
+              "resultjson": "@if(equals(variables('Code'),'LEFT'),string(variables('SavedResult')),'{}')",
+              "replay": "@and(equals(variables('Code'),'LEFT'),variables('Replay'))",
+              "writeattempted": "@variables('WriteAttempted')",
+              "outcomeunknown": "@and(not(equals(variables('Code'),'LEFT')),variables('WriteAttempted'))",
+              "runreference": "@workflow()?['run']?['name']",
+              "buildid": "ffc7d090-7f7f-4f9b-bc8d-bb255b69c56d",
+              "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF"
+            }
+          },
+          "runAfter": {
+            "Leave_work": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

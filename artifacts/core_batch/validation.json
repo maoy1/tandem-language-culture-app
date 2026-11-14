@@ -1,0 +1,55 @@
+{
+  "sourceTicket": 81,
+  "overviewTicket": 45,
+  "date": "2026-11-14",
+  "solutionName": "TandemCoreBatch",
+  "solutionVersion": "1.0.0.0",
+  "packageBuildId": "4db7f9fa-6d67-48b0-a7a6-33638d7ff4a1",
+  "sha256": "bd854ae74a5e0291d985aa5fadc3fb3088c8135e7c5e337148acb02e89d4c959",
+  "state": "BUILT_LOCAL_CHECKS_PASS_NATIVE_NOT_RUN",
+  "productionFlows": 12,
+  "disposableOwnerHelpers": 2,
+  "importState": "DISABLED",
+  "tests": {
+    "combinedRegression": {
+      "passed": 1385,
+      "failed": 0,
+      "seconds": 270.31,
+      "command": "python -X utf8 -m pytest tests -q -p no:cacheprovider --tb=short",
+      "context": "Combined checkout, TANDEM_CORE_ZIP set. Before setup report build-ID correction; business definitions unchanged by that correction."
+    },
+    "finalAffectedRegression": {
+      "passed": 54,
+      "failed": 0,
+      "seconds": 42.27,
+      "command": "python -X utf8 -m pytest tests/test_core_solution.py tests/test_build_core_batch.py tests/test_batch_schema.py tests/test_core_business_integration.py tests/test_core_business_integration_artifacts.py -q -p no:cacheprovider --tb=short",
+      "context": "After final metadata correction; TANDEM_CORE_ZIP points to this exact SHA256; nine packaged business-graph E2E cases."
+    },
+    "actualPackagedSharedSmoke": {
+      "passed": 45,
+      "failed": 0,
+      "execution": "LOCAL_MODEL_NOT_TENANT",
+      "evidence": "local-packaged-smoke.json"
+    }
+  },
+  "limits": {
+    "maximumAllowedActions": 500,
+    "maximumAllowedDepth": 8,
+    "maximumObservedActions": 393,
+    "maximumObservedDepth": 7,
+    "result": "PASS"
+  },
+  "native": {
+    "import": "NOT_RUN",
+    "schemaSetupAuditAndRepeat": "NOT_RUN",
+    "businessFlowAcceptance": "NOT_RUN",
+    "automaticSolutionBinding": "NOT_RUN",
+    "minimalAppBindings": "NOT_RUN",
+    "ordinaryParticipantAccessPrivacy": "DEFERRED_NOT_VERIFIED",
+    "email": "BLOCKED_MAILBOX_REST_PROBE_OUTSIDE_CORE_BATCH"
+  },
+  "productionScope": "One maintained pure shared validator plus eleven named business flows. No tenant writes/deployment or runtime certification from local tests. Existing native evidence retains its old build.",
+  "review": "TandemCoreBatch-v1.review.json",
+  "exactIO": "flow-io.json",
+  "readableDefinitions": "definitions/"
+}
