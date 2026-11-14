@@ -570,3 +570,12 @@ Owner direction is tracked by [#81 TandemValidateContext](https://github.com/mao
 Implementation has not started. Allowed invocation, deployment/import mechanism, tenant entitlements, caller propagation and latency must be verified before depending on child flows/Solutions or removing repeated checks. No paid/external fallback is approved. Existing working packages are unchanged. #81 contains unchecked capability, schema, rule-parity, version-drift and consumer-proof acceptance; consumer cutovers remain in their own Flow branches/PRs. Ordinary-user proof remains deferred, not waived.
 
 Mandatory change rule: every schema/mapping/catalogue/rule/normalization/availability/capacity/commit/public-contract change updates #81 ledger, shared implementation/contract, design/plan, affected consumer issues/packages and relevant regressions/evidence, or records a concrete no-impact assessment. Old native evidence is retained with its version and affected new behavior stays NOT RUN until retested. AGENTS.md makes this a required review item until automated drift validation exists. Preserve completed #9/#12/#66 history and unresolved #10 replay/Pending-row tests.
+
+
+## #17 optional group-join introduction length accepted
+
+Owner chose **2,000 characters** for the optional plain-text group-join introduction, enforced in both app and flow. Empty/omitted remains allowed; 2,001 characters must be rejected before a request write, preserving user edits in the app. This does not add a personal-request introduction requirement or select a notification channel.
+
+Technical field proposal: optional plain-text Note column Introduction on Connection Requests, rich text/append disabled; actual column/settings are NOT verified or applied. SharePoint field mapping/setup and the flow/API/app mapping remain #17 work. All schema changes must update #81 baseline/audit/contract and affected consumers (#62/#65/#67), with existing native evidence retained by version. #81 has no Introduction persistence/parser today, so this planning decision does not change its current five-mode rule engine/package. Add actual schema coverage when the field is introduced.
+
+Contract evidence only: acceptance cases empty/omitted, 2,000 accepted and 2,001 rejected in both app/server are NOT RUN. #17 remains Planned, not implemented/Ready. No flow, list, data, permission or existing app changed. This clears the remaining explicit product choice for core group-join implementation; receipt-schema and Solution SharePoint/caller prerequisites still need technical verification.
