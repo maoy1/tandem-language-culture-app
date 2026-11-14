@@ -100,7 +100,7 @@ class Fake:
             72:{'Id':72,'Status':'Accepted','OperationComplete':False,'RequestType':'Group',
                 'SenderParticipantId':9,'RecipientParticipantId':None,'TargetGroupId':10}}
         self.receipts={}; self.calls=[]; self.writes=[]; self.faults={}; self.paged=None
-        self.read_fail=None; self.after_leave=False; self.after_complete=False; self.tamper_after=None
+        self.receipts_available=True; self.receipt_meta_overrides={}; self.read_fail=None; self.after_leave=False; self.after_complete=False; self.tamper_after=None
 
     def request(self,p):
         uri=p['parameters/uri']; method=p['parameters/method']; self.calls.append(deepcopy(p))
@@ -109,9 +109,10 @@ class Fake:
             return out({'error':'PRIVATE_BACKEND'},503)
         if '/currentuser' in uri: return out({'d':{'Id':103}})
         if 'ParticipantaccountId eq' in uri: return out({'d':{'results':self.actor_rows}})
-        role=next(k for k,id_ in [('groups',GROUPS['lists']['groups']['listId']),
+        role='receipts' if "getbytitle('TandemOperationReceipts')" in uri else next(k for k,id_ in [('groups',GROUPS['lists']['groups']['listId']),
             ('members',GROUPS['lists']['members']['listId']),('requests',leave.REQUESTS),
             ('receipts',RECEIPT_ID)] if id_ in uri)
+        if role=='receipts' and not self.receipts_available:return out({'error':'PRIVATE_MISSING_LIST'},404)
         data={'groups':{10:self.group},'members':self.members,'requests':self.requests,'receipts':self.receipts}[role]
         m=re.search(r'/items\((\d+)\)',uri)
         if method=='POST':
@@ -154,7 +155,7 @@ class Fake:
             result={'d':{'results':values}}
             if self.paged==role: result['d']['__next']='PRIVATE_NEXT'
             return out(result)
-        return out({'d':{'Id':RECEIPT_ID,'ListItemEntityTypeFullName':'SP.Data.ReceiptsListItem'}})
+        return out({'d':{'Id':RECEIPT_ID,'Title':leave.RECEIPT_TITLE,'ListItemEntityTypeFullName':'SP.Data.ReceiptsListItem',**self.receipt_meta_overrides}})
 
 
 def execute(server=None, inputs=None, actions=None, groups=None):
@@ -305,10 +306,13 @@ def test_post_leave_readback_must_prove_exact_episode_and_timestamp(change):
     assert not next(iter(s.receipts.values()))['Complete'] and s.group['WriteOwner']
 
 
-def test_missing_receipt_setup_is_blocked_before_reads_and_writes():
+def test_same_graph_fails_closed_before_setup_then_works_after_setup_without_rebuild():
     groups=deepcopy(GROUPS);groups['lists'].pop('receipts')
-    s=Fake();r=execute(s,groups=groups)
-    assert r.response['resultcode']=='CONFIGURATION_REQUIRED' and not s.calls
+    actions=leave.build_actions(SOURCE,PEOPLE,groups,'one-import')
+    s=Fake();s.receipts_available=False;r=execute(s,actions=actions)
+    assert not r.response['success'] and not s.writes
+    s.receipts_available=True;r=execute(s,actions=actions)
+    assert r.response['success'] and tags(s).count('Leave_CAS')==1
 
 
 def walk(block):
@@ -493,7 +497,7 @@ def test_intent_uuid_case_is_canonical_and_attempt_is_distinct_uuid():
     assert receipt['AttemptToken'].lower()!=inputs['text'].lower()
 
 
-def test_checked_in_artifact_is_exact_blocked_preview_with_matching_hashes():
+def test_checked_in_artifact_works_by_title_after_setup_with_matching_hashes():
     path=ROOT/'artifacts/leave_group/TandemLeaveGroup-v1.zip'
     review=json.loads(path.with_suffix('.review.json').read_text())
     contract=json.loads((ROOT/'config/leave_group_flow_contract.json').read_text())
@@ -507,7 +511,10 @@ def test_checked_in_artifact_is_exact_blocked_preview_with_matching_hashes():
     groups=json.loads((ROOT/'config/group_schema_mapping.json').read_text())
     assert doc['properties']['definition']['actions']==leave.build_actions(SOURCE,PEOPLE,groups,review['buildId'])
     s=Fake();r=execute(s,actions=doc['properties']['definition']['actions'])
-    assert r.response['resultcode']=='CONFIGURATION_REQUIRED' and not s.calls
+    assert r.response['success'] and review['receiptBinding']=='EXACT_TITLE'
+    assert review['tenantSchemaVerified'] is False and review['receiptListId'] is None
+    assert 'Configuration_verified' not in json.dumps(doc)
+    assert '00000000-0000-0000-0000-000000000000' not in json.dumps(doc)
 
 
 @pytest.mark.parametrize('participation',['Paused','Inactive'])
@@ -519,3 +526,38 @@ def test_group_membership_authority_is_independent_of_personal_availability(part
     assert r.response['success'] and s.actor_rows==before
     assert all('ParticipationStatus' not in p['parameters/uri'] and 'OpenToConnections' not in p['parameters/uri'] for p in s.calls)
     assert all(PEOPLE['lists']['participants']['listId'] not in p['parameters/uri'] for _,p in s.writes)
+
+
+@pytest.mark.parametrize('binding',[None,{'listId':None},{'schemaVerified':False}])
+def test_unpinned_bindings_use_only_approved_exact_title_without_schema_claim(binding):
+    groups=deepcopy(GROUPS)
+    if binding is None:groups['lists'].pop('receipts')
+    else:groups['lists']['receipts']=binding
+    s=Fake();r=execute(s,groups=groups)
+    assert r.response['success']
+    assert all("getbytitle('TandemOperationReceipts')" in p['parameters/uri'] for p in s.calls if 'OperationKey eq' in p['parameters/uri'])
+
+
+@pytest.mark.parametrize('overrides',[{'Title':'OtherReceipts'},{'Id':'bad-id'},{'ListItemEntityTypeFullName':''}])
+def test_bad_receipt_metadata_fails_before_any_write_in_title_mode(overrides):
+    groups=deepcopy(GROUPS);groups['lists'].pop('receipts')
+    s=Fake();s.receipt_meta_overrides=overrides;r=execute(s,groups=groups)
+    assert not r.response['success'] and not s.writes
+
+
+def test_pinned_guid_mismatch_fails_before_any_write():
+    s=Fake();s.receipt_meta_overrides={'Id':'25252525-2525-4525-8525-252525252525'}
+    assert not execute(s).response['success'] and not s.writes
+
+
+@pytest.mark.parametrize('guid',['bad-id','00000000-0000-0000-0000-000000000000',PEOPLE['lists']['participants']['listId']])
+def test_bad_explicit_guid_never_silently_falls_back_to_title(guid):
+    groups=deepcopy(GROUPS);groups['lists']['receipts']={'listId':guid}
+    with pytest.raises(ValueError):leave.build_actions(SOURCE,PEOPLE,groups,'x')
+
+
+def test_complete_receipt_replay_also_requires_live_receipt_metadata():
+    groups=deepcopy(GROUPS);groups['lists'].pop('receipts')
+    s=Fake();assert execute(s,groups=groups).response['success'];n=len(s.writes)
+    s.receipt_meta_overrides={'Title':'OtherReceipts'}
+    assert not execute(s,groups=groups).response['success'] and len(s.writes)==n

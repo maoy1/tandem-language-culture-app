@@ -15,7 +15,8 @@ from .solution_source import RAW_INVOKER
 
 ROOT = Path(__file__).resolve().parents[2]
 NAME = 'TandemLeaveGroup'
-VERSION = '14.1.0'
+VERSION = '14.1.1'
+RECEIPT_TITLE = 'TandemOperationReceipts'
 SITE = 'https://reedelsevier.sharepoint.com/sites/OG-TandemOrg'
 REQUESTS = '3d17485d-1dac-41f0-a1af-24e45daa4567'
 API = '/providers/Microsoft.PowerApps/apis/shared_sharepointonline'
@@ -134,20 +135,23 @@ class Builder:
         self.site, self.auth = source_adapter(source, people)
         self.build_id = str(build_id)
         self.binding = groups.get('lists', {}).get('receipts', {})
-        # Parent injects the actual verified list; never use a title as an identity.
-        self.ready = self.binding.get('schemaVerified') is True
-        try:
-            self.receipt_id = str(UUID(self.binding.get('listId', '')))
-        except (ValueError, TypeError, AttributeError):
-            self.receipt_id = '00000000-0000-0000-0000-000000000000'
-            self.ready = False
+        # Target selection is not tenant schema verification. Parent Setup+Audit
+        # must pass before enabling business flows; the same import works after setup.
+        pinned = self.binding.get('listId')
+        self.receipt_id = str(UUID(pinned)) if pinned is not None else None
+        if self.receipt_id == '00000000-0000-0000-0000-000000000000':
+            raise ValueError('Zero GUID is not a receipt binding')
         ids = {'people': people['lists']['participants']['listId'],
                'groups': groups['lists']['groups']['listId'],
                'members': groups['lists']['members']['listId'],
-               'requests': REQUESTS, 'receipts': self.receipt_id}
+               'requests': REQUESTS}
+        if self.receipt_id:
+            ids['receipts'] = self.receipt_id
         self.base = {k: "_api/web/lists(guid'" + str(UUID(v)) + "')" for k, v in ids.items()}
-        if len(set(ids.values())) != len(ids):
+        if len(set(self.base.values())) != len(ids):
             raise ValueError('Receipt/domain list identities must be distinct')
+        if self.receipt_id is None:
+            self.base['receipts'] = "_api/web/lists/getbytitle('" + RECEIPT_TITLE + "')"
         self.target = {}
         self.previous = None
 
@@ -293,10 +297,6 @@ class Builder:
         self.compose('Attempt_uuid', '@guid()')
         self.compose('Owner_token', "@concat(outputs('Operation_key'),':',outputs('Attempt_uuid'))")
         self.gate('Owner_token_bound', "lessOrEquals(length(outputs('Owner_token')),255)", 'INVALID_INPUT')
-        self.http('Receipt_type', self.base['receipts'] + '?$select=Id,ListItemEntityTypeFullName')
-        self.parse('Receipt_metadata', "@body('Receipt_type')?['d']", obj({
-            'Id': {'type': 'string', 'enum': [self.receipt_id]},
-            'ListItemEntityTypeFullName': {'type': 'string', 'minLength': 1}}))
         self.set('Create_receipt_code', 'Code', 'OUTCOME_UNKNOWN')
         self.set('Create_receipt_mark', 'WriteAttempted', True)
         self.http('Create_receipt', self.base['receipts'] + '/items', 'POST', {
@@ -367,7 +367,6 @@ class Builder:
     def work(self):
         self.set('Input_code', 'Code', 'INVALID_INPUT')
         self.parse('Input', '@triggerBody()', {**obj(INPUTS), 'additionalProperties': False})
-        self.gate('Configuration_verified', str(self.ready).lower(), 'CONFIGURATION_REQUIRED')
         self.set('Read_code', 'Code', 'READ_OR_DATA_FAILED')
         self.http('Read_invoker', '_api/web/currentuser?$select=Id')
         self.parse('Invoker', "@body('Read_invoker')?['d']", obj({'Id': INT}))
@@ -385,6 +384,11 @@ class Builder:
         self.compose('Operation_key', "@concat('leave:',string(body('Input')?['number']),':',toLower(body('Input')?['text']))")
         self.compose('Intent', {'kind': 'LeaveGroup', 'version': 1, 'actorId': "@body('Input')?['number']",
             'groupId': "@body('Input')?['number_1']", 'membershipId': "@body('Input')?['number_2']"})
+        self.http('Receipt_type', self.base['receipts'] + '?$select=Id,Title,ListItemEntityTypeFullName')
+        self.parse('Receipt_metadata', "@body('Receipt_type')?['d']", obj({
+            'Id': {**GUID, **({'enum': [self.receipt_id]} if self.receipt_id else {})},
+            'Title': {'type': 'string', 'enum': [RECEIPT_TITLE]},
+            'ListItemEntityTypeFullName': {'type': 'string', 'minLength': 1}}))
         self.receipt_read('Find_receipt')
         self.branch('Existing_intent', 'equals(length(' + rows('Find_receipt') + '),1)', self.existing, self.fresh)
         self.gate('Require_receipt_ready', "variables('ReceiptReady')", "@variables('Code')")
@@ -457,7 +461,7 @@ def build_package(source, output, *, groups=None, build_id=None):
     ref['connectionName'] = 'IMPORT_SELECT_EXISTING_SHAREPOINT_CONNECTION'
     doc['properties']['connectionReferences'] = {'shared_sharepointonline': ref}
     entries['manifest.json']['details'].update(displayName=NAME + ' ' + VERSION,
-        description='Issue 14 owner preview; parent verified receipt binding required. Create as new.')
+        description='Issue 14 owner preview; Exact receipt title or pinned GUID; parent Setup+Audit before enabling. Create as new.')
     for res in entries['manifest.json']['resources'].values():
         if res['type'] == 'Microsoft.Flow/flows':
             res['details']['displayName'] = NAME + ' ' + VERSION
@@ -470,7 +474,9 @@ def build_package(source, output, *, groups=None, build_id=None):
         'generatorSha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         'packageSha256': hashlib.sha256(output.read_bytes()).hexdigest(),
         'connectionSource': 'Invoker', 'rawAuthenticationPreserved': True, 'ownerFallback': False,
-        'schemaBindingVerified': b.ready, 'receiptListId': b.receipt_id,
+        'tenantSchemaVerified': False, 'receiptBinding': 'GUID' if b.receipt_id else 'EXACT_TITLE',
+        'receiptListId': b.receipt_id, 'receiptListTitle': RECEIPT_TITLE,
+        'enablementPrerequisite': 'Parent Setup Apply + complete Audit PASS before enabling business flows; no rebuild required',
         'sharedCalls': 0, 'writeRetries': 'none', 'domainWrite': 'Only own Active membership -> Left/LeftAt',
         'guardToken': 'OperationKey + colon + attempt UUID <=255; opaque across writers',
         'solutionAssembly': 'PARENT_PENDING', 'native': 'NOT RUN', 'ordinaryUserAccess': 'DEFERRED_NOT_VERIFIED'}
@@ -483,7 +489,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--source', type=Path, default=ROOT / 'artifacts/tandem_discovery/TandemDiscovery-v2.definition.json')
     p.add_argument('--output', type=Path, default=ROOT / 'artifacts/leave_group/TandemLeaveGroup-v1.zip')
-    p.add_argument('--groups', type=Path, help='Parent verified mapping including lists.receipts listId/schemaVerified')
+    p.add_argument('--groups', type=Path, help='Optional pinned groups mapping including lists.receipts.listId; default is exact title')
     args = p.parse_args()
     print(json.dumps(build_package(args.source, args.output,
         groups=json.loads(args.groups.read_text()) if args.groups else None), indent=2))

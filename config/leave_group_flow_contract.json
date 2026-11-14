@@ -1,30 +1,33 @@
 {
   "sourceTicket": 14,
-  "version": "14.1.0",
+  "version": "14.1.1",
   "state": "OWNER_PREVIEW_GENERATED_NATIVE_NOT_RUN",
   "flowName": "TandemLeaveGroup",
   "builder": {
     "module": "scripts/power_automate/leave_group_flow.py",
     "api": "build_actions(source, people, groups, build_id); trigger(source); build_package(source, output, groups=None, build_id=None)",
     "source": "Observed legacy Get_item participant list binding, standard shared_sharepointonline Invoker, exact native Raw expression and site; Get_item operation is not reused.",
-    "receiptBinding": "groups['lists']['receipts'] = {'listId': '<actual verified GUID>', 'schemaVerified': True}",
-    "default": "No receipt binding; Configuration_verified is false and invocation returns CONFIGURATION_REQUIRED before any read/write. Zero GUID is an unreachable placeholder, not a tenant list."
+    "receiptBinding": "Optional groups['lists']['receipts']['listId'] pins an actual nonzero GUID. Absent/null uses exact approved title TandemOperationReceipts. schemaVerified input never certifies tenant settings.",
+    "default": "_api/web/lists/getbytitle('TandemOperationReceipts'); no generation-time blocker or zero GUID. Import once, parent Setup Apply + complete Audit PASS, then enable/test the same business definition. Live metadata/current-row reads fail closed if missing/malformed."
   },
   "package": {
     "sourceTicket": 14,
-    "version": "14.1.0",
-    "buildId": "4ad78357-d0de-4920-88e1-e998ad529a6b",
-    "flowId": "cfc4160a-232e-40d3-908d-99d618cf7cf7",
-    "actions": 234,
+    "version": "14.1.1",
+    "buildId": "ffc7d090-7f7f-4f9b-bc8d-bb255b69c56d",
+    "flowId": "730f583b-fc3a-4ac4-8f37-2b07a37d0015",
+    "actions": 231,
     "maximumActionDepth": 4,
     "sourceSha256": "e1e0b8f560ecb2769535c4f02edacfb2e5cf92a40ac8db38b64eb41e30c98e93",
-    "generatorSha256": "e6e8e74a42cdab9f7ead08b817d4c176a504e8fc9d09dd329cdb261e47441e27",
-    "packageSha256": "0d8f4f688b1b410200d7f692f014ad01d4bf10643783a41ee0a1eab7de038b1f",
+    "generatorSha256": "79750cb3c0ff02e879274997f1f3b84018442ce3e6a06d1e81d376b724582af6",
+    "packageSha256": "dd87c748a9a6fcd9b0d4bca5946797d7d394f9121c9b15e9cbc0cbb5959b8c27",
     "connectionSource": "Invoker",
     "rawAuthenticationPreserved": true,
     "ownerFallback": false,
-    "schemaBindingVerified": false,
-    "receiptListId": "00000000-0000-0000-0000-000000000000",
+    "tenantSchemaVerified": false,
+    "receiptBinding": "EXACT_TITLE",
+    "receiptListId": null,
+    "receiptListTitle": "TandemOperationReceipts",
+    "enablementPrerequisite": "Parent Setup Apply + complete Audit PASS before enabling business flows; no rebuild required",
     "sharedCalls": 0,
     "writeRetries": "none",
     "domainWrite": "Only own Active membership -> Left/LeftAt",
@@ -101,8 +104,8 @@
       }
     ],
     "mapping": "Existing config/tenant_schema_mapping.json and config/group_schema_mapping.json; source requests GUID 3d17485d-1dac-41f0-a1af-24e45daa4567",
-    "requirements": "Exact internal names/types/requiredness/unique OperationKey/index, plain non-append/non-rich IntentJson/ResultJson/SealedAttempts; existing membership key unique/indexed and group WriteOwner Text<=255. Fresh trusted complete schema verification before binding schemaVerified=true; native Invoker read/edit rights and controlled writers remain access prerequisites. Generic-list Title must accept omitted value (optional/default); parent must verify this before enabling writes, since the proposal does not specify Title. No assumption of a usable default is a runtime proof.",
-    "native": "NOT RUN; proposed receipt listId is null; this task did not apply or verify tenant schema"
+    "requirements": "Exact internal names/types/requiredness/unique OperationKey/index, plain non-append/non-rich IntentJson/ResultJson/SealedAttempts; existing membership key unique/indexed and group WriteOwner Text<=255. Fresh trusted complete schema verification before enabling business flows; native Invoker read/edit rights and controlled writers remain access prerequisites. Generic-list Title must accept omitted value (optional/default); parent must verify this before enabling writes, since the proposal does not specify Title. No assumption of a usable default is a runtime proof.",
+    "native": "NOT RUN. Parent verifies unique exact-title list/all fields before enabling; native ID may be recorded later without rebuilding the default graph."
   },
   "inputs": {
     "order": [
@@ -183,7 +186,7 @@
   },
   "outputs": {
     "success": "Boolean; true only LEFT after Complete receipt and old token absence proved",
-    "resultcode": "Text: LEFT | ALREADY_LEFT | UNAUTHORIZED | NOT_MEMBER | PROVISIONAL_MEMBERSHIP | MEMBERSHIP_INTEGRITY | MEMBERSHIP_CHANGED | GROUP_INTEGRITY | INTENT_CONFLICT | RECEIPT_INTEGRITY | GROUP_BUSY | GROUP_BUSY_OR_UNKNOWN | OUTCOME_UNKNOWN | RELEASE_PENDING | INCOMPLETE_READ | CONFIGURATION_REQUIRED | INVALID_INPUT | READ_OR_DATA_FAILED",
+    "resultcode": "Text: LEFT | ALREADY_LEFT | UNAUTHORIZED | NOT_MEMBER | PROVISIONAL_MEMBERSHIP | MEMBERSHIP_INTEGRITY | MEMBERSHIP_CHANGED | GROUP_INTEGRITY | INTENT_CONFLICT | RECEIPT_INTEGRITY | GROUP_BUSY | GROUP_BUSY_OR_UNKNOWN | OUTCOME_UNKNOWN | RELEASE_PENDING | INCOMPLETE_READ | INVALID_INPUT | READ_OR_DATA_FAILED",
     "message": "Constant sanitized Text",
     "resultjson": "Text JSON object below only on success; otherwise {}",
     "replay": "Boolean; saved completed receipt used and success proved",
@@ -208,5 +211,5 @@
   "native": "NOT RUN",
   "ordinaryAccess": "DEFERRED_NOT_VERIFIED",
   "solutionAssembly": "PARENT_PENDING",
-  "drift": "New consumer only. Receipt proposal adopted from parent, not applied. #81 parent must bind/audit proposed role/fields and update its ledger/baseline before native dependent writes; no shared evaluator or other flow modules edited here. See docs/ISSUE_14_LEAVE_GROUP.md."
+  "drift": "14.1.1 receipt addressing: approved exact unique Title default until native ID readback, optional actual GUID pin. Selection is not schema verification. One import then parent Setup+Audit then enable; no GUID-dependent rebuild. Public IO/authority/counts/CAS/receipt/recovery unchanged. Parent owns shared baseline/setup/issue ledger; shared modules unchanged."
 }

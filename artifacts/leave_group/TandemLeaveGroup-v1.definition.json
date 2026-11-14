@@ -1,10 +1,10 @@
 {
-  "name": "cfc4160a-232e-40d3-908d-99d618cf7cf7",
-  "id": "/providers/Microsoft.Flow/flows/cfc4160a-232e-40d3-908d-99d618cf7cf7",
+  "name": "730f583b-fc3a-4ac4-8f37-2b07a37d0015",
+  "id": "/providers/Microsoft.Flow/flows/730f583b-fc3a-4ac4-8f37-2b07a37d0015",
   "type": "Microsoft.Flow/flows",
   "properties": {
     "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
-    "displayName": "TandemLeaveGroup 14.1.0",
+    "displayName": "TandemLeaveGroup 14.1.1",
     "definition": {
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
@@ -232,37 +232,6 @@
                 ]
               }
             },
-            "Configuration_verified": {
-              "type": "If",
-              "expression": "@false",
-              "actions": {},
-              "else": {
-                "actions": {
-                  "Configuration_verified_code": {
-                    "type": "SetVariable",
-                    "inputs": {
-                      "name": "Code",
-                      "value": "CONFIGURATION_REQUIRED"
-                    },
-                    "runAfter": {}
-                  },
-                  "Configuration_verified_stop": {
-                    "type": "Compose",
-                    "inputs": "@div(1,0)",
-                    "runAfter": {
-                      "Configuration_verified_code": [
-                        "Succeeded"
-                      ]
-                    }
-                  }
-                }
-              },
-              "runAfter": {
-                "Input": [
-                  "Succeeded"
-                ]
-              }
-            },
             "Read_code": {
               "type": "SetVariable",
               "inputs": {
@@ -270,7 +239,7 @@
                 "value": "READ_OR_DATA_FAILED"
               },
               "runAfter": {
-                "Configuration_verified": [
+                "Input": [
                   "Succeeded"
                 ]
               }
@@ -1050,13 +1019,13 @@
                 ]
               }
             },
-            "Find_receipt": {
+            "Receipt_type": {
               "type": "OpenApiConnection",
               "inputs": {
                 "parameters": {
                   "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
                   "parameters/method": "GET",
-                  "parameters/uri": "@concat('_api/web/lists(guid''00000000-0000-0000-0000-000000000000'')/items?$filter=',concat('OperationKey eq ''',outputs('Operation_key'),''''),'&$top=2')",
+                  "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')?$select=Id,Title,ListItemEntityTypeFullName",
                   "parameters/headers": {
                     "Accept": "application/json;odata=verbose"
                   }
@@ -1076,6 +1045,73 @@
               },
               "runAfter": {
                 "Intent": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Receipt_metadata": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Receipt_type')?['d']",
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "Id",
+                    "Title",
+                    "ListItemEntityTypeFullName"
+                  ],
+                  "properties": {
+                    "Id": {
+                      "type": "string",
+                      "minLength": 36,
+                      "maxLength": 36,
+                      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+                    },
+                    "Title": {
+                      "type": "string",
+                      "enum": [
+                        "TandemOperationReceipts"
+                      ]
+                    },
+                    "ListItemEntityTypeFullName": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Receipt_type": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Find_receipt": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "parameters/method": "GET",
+                  "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items?$filter=',concat('OperationKey eq ''',outputs('Operation_key'),''''),'&$top=2')",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                },
+                "retryPolicy": {
+                  "type": "none"
+                }
+              },
+              "runAfter": {
+                "Receipt_metadata": [
                   "Succeeded"
                 ]
               }
@@ -1571,66 +1607,6 @@
                       ]
                     }
                   },
-                  "Receipt_type": {
-                    "type": "OpenApiConnection",
-                    "inputs": {
-                      "parameters": {
-                        "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                        "parameters/method": "GET",
-                        "parameters/uri": "_api/web/lists(guid'00000000-0000-0000-0000-000000000000')?$select=Id,ListItemEntityTypeFullName",
-                        "parameters/headers": {
-                          "Accept": "application/json;odata=verbose"
-                        }
-                      },
-                      "host": {
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                        "connectionName": "shared_sharepointonline",
-                        "operationId": "HttpRequest"
-                      },
-                      "authentication": {
-                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                        "type": "Raw"
-                      },
-                      "retryPolicy": {
-                        "type": "none"
-                      }
-                    },
-                    "runAfter": {
-                      "Owner_token_bound": [
-                        "Succeeded"
-                      ]
-                    }
-                  },
-                  "Receipt_metadata": {
-                    "type": "ParseJson",
-                    "inputs": {
-                      "content": "@body('Receipt_type')?['d']",
-                      "schema": {
-                        "type": "object",
-                        "required": [
-                          "Id",
-                          "ListItemEntityTypeFullName"
-                        ],
-                        "properties": {
-                          "Id": {
-                            "type": "string",
-                            "enum": [
-                              "00000000-0000-0000-0000-000000000000"
-                            ]
-                          },
-                          "ListItemEntityTypeFullName": {
-                            "type": "string",
-                            "minLength": 1
-                          }
-                        }
-                      }
-                    },
-                    "runAfter": {
-                      "Receipt_type": [
-                        "Succeeded"
-                      ]
-                    }
-                  },
                   "Create_receipt_code": {
                     "type": "SetVariable",
                     "inputs": {
@@ -1638,7 +1614,7 @@
                       "value": "OUTCOME_UNKNOWN"
                     },
                     "runAfter": {
-                      "Receipt_metadata": [
+                      "Owner_token_bound": [
                         "Succeeded"
                       ]
                     }
@@ -1661,7 +1637,7 @@
                       "parameters": {
                         "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
                         "parameters/method": "POST",
-                        "parameters/uri": "_api/web/lists(guid'00000000-0000-0000-0000-000000000000')/items",
+                        "parameters/uri": "_api/web/lists/getbytitle('TandemOperationReceipts')/items",
                         "parameters/headers": {
                           "Accept": "application/json;odata=verbose",
                           "Content-Type": "application/json;odata=verbose"
@@ -1706,7 +1682,7 @@
                       "parameters": {
                         "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
                         "parameters/method": "GET",
-                        "parameters/uri": "@concat('_api/web/lists(guid''00000000-0000-0000-0000-000000000000'')/items?$filter=',concat('OperationKey eq ''',outputs('Operation_key'),''''),'&$top=2')",
+                        "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items?$filter=',concat('OperationKey eq ''',outputs('Operation_key'),''''),'&$top=2')",
                         "parameters/headers": {
                           "Accept": "application/json;odata=verbose"
                         }
@@ -3723,7 +3699,7 @@
                       "parameters": {
                         "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
                         "parameters/method": "POST",
-                        "parameters/uri": "@concat('_api/web/lists(guid''00000000-0000-0000-0000-000000000000'')/items(',string(body('Owned_receipt')?['Id']),')')",
+                        "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(body('Owned_receipt')?['Id']),')')",
                         "parameters/headers": {
                           "Accept": "application/json;odata=verbose",
                           "Content-Type": "application/json;odata=verbose",
@@ -3767,7 +3743,7 @@
                       "parameters": {
                         "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
                         "parameters/method": "GET",
-                        "parameters/uri": "@concat('_api/web/lists(guid''00000000-0000-0000-0000-000000000000'')/items?$filter=',concat('OperationKey eq ''',outputs('Operation_key'),''''),'&$top=2')",
+                        "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items?$filter=',concat('OperationKey eq ''',outputs('Operation_key'),''''),'&$top=2')",
                         "parameters/headers": {
                           "Accept": "application/json;odata=verbose"
                         }
@@ -4714,7 +4690,7 @@
               "writeattempted": "@variables('WriteAttempted')",
               "outcomeunknown": "@and(not(equals(variables('Code'),'LEFT')),variables('WriteAttempted'))",
               "runreference": "@workflow()?['run']?['name']",
-              "buildid": "4ad78357-d0de-4920-88e1-e998ad529a6b",
+              "buildid": "ffc7d090-7f7f-4f9b-bc8d-bb255b69c56d",
               "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF"
             }
           },
