@@ -5,15 +5,15 @@ import hashlib
 import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from uuid import uuid4
 from zipfile import ZIP_DEFLATED, ZipFile
 
 from .build_import_probe import build_package as envelope
-from .discovery_flow import after, cat, complete, compose, condition, parse, query, setvar
-from .schema_audit import ALL, FIELD_SELECT, measure, wdl_string
+from .discovery_flow import after, cat, complete, compose, condition, parse, setvar
+from .schema_audit import ALL, measure
+from .solution_source import RAW_INVOKER
 
 ROOT = Path(__file__).resolve().parents[2]
-NAME = 'TandemCancelRequest v3'
+NAME = 'TandemCancelRequest v4'
 REQUESTS = '3d17485d-1dac-41f0-a1af-24e45daa4567'
 API = '/providers/Microsoft.PowerApps/apis/shared_sharepointonline'
 MODE = 'OWNER_PREVIEW_PENDING_ACCESS_PROOF'
@@ -42,12 +42,17 @@ def source_adapter(original, mapping):
             yield from walk(action.get('else', {}).get('actions', {}))
     candidates = [a for a in walk(p['definition']['actions'])
                   if a.get('type') == 'OpenApiConnection' and
-                  a['inputs'].get('parameters', {}).get('table', '').strip('{}').lower()
-                  == mapping['lists']['participants']['listId']]
+                  (a['inputs'].get('parameters', {}).get('table', '').strip('{}').lower()
+                   == mapping['lists']['participants']['listId'] or
+                   a['inputs'].get('parameters', {}).get('parameters/uri', '').startswith(
+                       "@concat('_api/web/lists(guid''" + mapping['lists']['participants']['listId'] + "'')/items?"))]
     if not candidates:
         raise ValueError('Missing participant source mapping')
     source = candidates[0]['inputs']
-    if source['authentication'].get('type') != 'Raw':
+    if (source['host'].get('apiId') != API or
+            source['host'].get('connectionName') != 'shared_sharepointonline'):
+        raise ValueError('Unexpected source connector or connection binding')
+    if source['authentication'] != {'type': 'Raw', 'value': RAW_INVOKER}:
         raise ValueError('Source Raw Invoker authentication required')
     return source['parameters']['dataset'], deepcopy(source['authentication'])
 
@@ -92,7 +97,6 @@ def row_expr(name, field):
 def build_actions(original, mapping, groups):
     site, auth = source_adapter(original, mapping)
     people = mapping['lists']['participants']['listId']
-    group = groups['lists']['groups']['listId']
 
     def base(id_):
         return "_api/web/lists(guid'" + id_ + "')"
@@ -118,45 +122,6 @@ def build_actions(original, mapping, groups):
                 prefix + '_state': setvar('CurrentStatus', state, prefix + '_code'),
                 prefix + '_complete': setvar('Complete', done, prefix + '_state'),
                 prefix + '_replay': setvar('Replay', replay, prefix + '_complete')}
-
-    def metadata(prefix, id_, fields, previous):
-        a = {prefix + '_guard': setvar('ErrorCode', 'REQUEST_SCHEMA_UNVERIFIED', previous),
-             prefix + '_read': http(base(id_) + '/fields?$select=' + FIELD_SELECT + '&$top=501', prefix + '_guard')}
-        prev = prefix + '_bound'
-        a[prev] = gate(prev, complete(prefix + '_read', 500), 'REQUEST_SCHEMA_UNVERIFIED', prefix + '_read')
-        for field, spec in fields.items():
-            find = prefix + '_' + field
-            tests = ["equals(item()?['InternalName']," + wdl_string(field) + ')',
-                     "equals(item()?['TypeAsString']," + wdl_string(spec['type']) + ')',
-                     "equals(item()?['Required']," + str(spec['required']).lower() + ')',
-                     "equals(item()?['Hidden'],false)", "equals(item()?['ReadOnlyField'],false)"]
-            if spec.get('unique'):
-                tests += ["equals(item()?['EnforceUniqueValues'],true)", "equals(item()?['Indexed'],true)"]
-            a[find] = query("@body('" + prefix + "_read')?['d']?['results']", 'and(' + ','.join(tests) + ')', prev)
-            check = find + '_one'
-            a[check] = gate(check, f"equals(length(body('{find}')),1)", 'REQUEST_SCHEMA_UNVERIFIED', find)
-            prev = check
-            xml = f"xml(first(body('{find}'))?['SchemaXml'])"
-            if 'decimals' in spec:
-                check = find + '_decimals'
-                a[check] = gate(check, f"equals(string(xpath({xml},'string(/Field/@Decimals)')),'{spec['decimals']}')", 'REQUEST_SCHEMA_UNVERIFIED', prev)
-                prev = check
-            if spec.get('target'):
-                target = f"replace(replace(toLower(string(xpath({xml},'string(/Field/@List)'))),'{{',''),'}}','')"
-                check = find + '_target'
-                a[check] = gate(check, f"equals({target},'{spec['target']}')", 'REQUEST_SCHEMA_UNVERIFIED', prev)
-                prev = check
-            if spec.get('choices'):
-                choices = f"xpath({xml},'/Field/CHOICES/CHOICE/text()')"
-                expected = 'createArray(' + ','.join(wdl_string(c) for c in spec['choices']) + ')'
-                tests = [f'equals(length({choices}),{len(spec["choices"])})',
-                         f'equals(length(intersection({choices},{expected})),{len(spec["choices"])})',
-                         f"or(empty(string(xpath({xml},'string(/Field/@FillInChoice)'))),equals(toLower(string(xpath({xml},'string(/Field/@FillInChoice)'))),'false'))"]
-                check = find + '_choices'
-                a[check] = gate(check, 'and(' + ','.join(tests) + ')', 'REQUEST_SCHEMA_UNVERIFIED', prev)
-                prev = check
-        a[prefix + '_verified'] = setvar('ErrorCode', '', prev)
-        return a, prefix + '_verified'
 
     def validate_row(prefix, read, previous):
         a = {prefix + '_parse_guard': setvar('ErrorCode', 'REQUEST_INTEGRITY', previous),
@@ -202,17 +167,15 @@ def build_actions(original, mapping, groups):
          'Validated_input': setvar('ErrorCode', '', 'Input'),
          'Read_invoker': http('_api/web/currentuser?$select=Id', 'Validated_input'),
          'Invoker': parse("@body('Read_invoker')?['d']", {'type': 'object', 'required': ['Id'], 'properties': {'Id': integer}}, 'Read_invoker')}
-    m, prev = metadata('People_schema', people, {'Participantaccount': {'type': 'User', 'required': True, 'unique': True}}, 'Invoker')
-    b.update(m)
     own = cat(base(people) + '/items?$select=Id&$filter=ParticipantaccountId eq ', "@string(body('Invoker')?['Id'])", '&$top=2')
-    b['Resolve_actor'] = http(own, prev)
+    b['Resolve_actor'] = http(own, 'Invoker')
     b['Require_actor_count'] = gate('Require_actor_count', complete('Resolve_actor', 1), 'UNAUTHORIZED', 'Resolve_actor')
     b['Require_actor_count']['expression'] = '@and(' + complete('Resolve_actor', 1) + ",equals(length(coalesce(body('Resolve_actor')?['d']?['results'],json('[]'))),1))"
     b['Actor'] = compose("@first(body('Resolve_actor')?['d']?['results'])", 'Require_actor_count')
     b['Require_actor_reference'] = gate('Require_actor_reference', "equals(outputs('Actor')?['Id'],body('Input')?['number'])", 'UNAUTHORIZED', 'Actor')
-    m, prev = metadata('Request_schema', REQUESTS, expected_fields(people, group), 'Require_actor_reference')
-    b.update(m)
-    b['Read_list_type'] = http(base(REQUESTS) + '?$select=Id,ListItemEntityTypeFullName', prev)
+    # #81 owns deployment/maintenance schema verification.
+    # No profile/catalogue content: NORMALIZE/PAIR/GROUP are unnecessary.
+    b['Read_list_type'] = http(base(REQUESTS) + '?$select=Id,ListItemEntityTypeFullName', 'Require_actor_reference')
     b['Require_list_type'] = parse("@body('Read_list_type')?['d']", {'type': 'object', 'required': ['ListItemEntityTypeFullName'], 'properties': {'ListItemEntityTypeFullName': {'type': 'string', 'minLength': 1}}}, 'Read_list_type')
     uri = cat(base(REQUESTS) + '/items(', "@string(body('Input')?['number_1'])", ')?$select=Id,SenderParticipantId,RecipientParticipantId,TargetGroupId,RequestType,Status,SendOperationKey,ConnectionKey,WinningOperationKey,OperationComplete')
     b['Read_request'] = http(uri, 'Require_list_type')
@@ -298,7 +261,7 @@ def build_package(source, output):
     ref = deepcopy(original['properties']['connectionReferences']['shared_sharepointonline'])
     ref['connectionName'] = 'IMPORT_SELECT_EXISTING_SHAREPOINT_CONNECTION'
     doc['properties']['connectionReferences'] = {'shared_sharepointonline': ref}
-    entries['manifest.json']['details'].update(displayName=NAME, description='Issue 63 Invoker-only owner preview; Pending-only exact-ETag cancellation. Create as new; metadata gates required.')
+    entries['manifest.json']['details'].update(displayName=NAME, description='Issue 63 Invoker-only owner preview; Pending-only exact-ETag cancellation. Create as new; deployment schema verification required; no per-click schema audit.')
     for item in entries['manifest.json']['resources'].values():
         if item['type'] == 'Microsoft.Flow/flows':
             item['details']['displayName'] = NAME
@@ -313,9 +276,11 @@ def build_package(source, output):
               'sourceTriggerPreserved': preserve, 'triggerDelta': 'none' if preserve else 'Fresh PowerAppV2 ParticipantId number + RequestId number_1; original Discovery input replaced.',
               'connectionSource': 'Invoker', 'rawAuthenticationPreserved': True, 'ownerCredentialFallback': False,
               'globalActionNamesUnique': True, 'writeActionDefinitions': 1, 'maximumWritesPerInvocation': 1,
-              'writeRetries': 'none', 'requestMapping': 'PROPOSED_NOT_TENANT_VERIFIED_RUNTIME_GATED',
+              'writeRetries': 'none', 'requestMapping': 'DEPLOYMENT_SCHEMA_VERIFICATION_REQUIRED_NO_PER_CLICK_AUDIT',
               'operationKey': 'cancel:{trustedParticipantId}:request:{requestId}', 'receipt': 'Atomic immutable terminal request row; no new receipt list.',
               'limits': {'actions': 500, 'depth': 8}, 'mode': MODE,
+              'sharedValidation': {'ticket': 81, 'callsPerInvocation': 0, 'reason': 'No profile normalization or compatibility needed; schema audit is deployment/maintenance only.'},
+              'solutionAssembly': 'PARENT_BATCH_NOT_ASSEMBLED_HERE',
               'tenantResult': 'NOT_IMPORTED_NOT_TESTED', 'ordinaryUserAccessVerified': False}
     output.with_suffix('.definition.json').write_bytes((json.dumps(doc, indent=2) + '\n').encode('utf-8'))
     output.with_suffix('.review.json').write_bytes((json.dumps(review, indent=2) + '\n').encode('utf-8'))
@@ -324,8 +289,8 @@ def build_package(source, output):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--source', type=Path, default=ROOT / 'artifacts/tandem_discovery/TandemDiscovery-v2.definition.json')
-    parser.add_argument('--output', type=Path, default=ROOT / 'artifacts/cancel_request/TandemCancelRequest-v3.zip')
+    parser.add_argument('--source', type=Path, default=ROOT / 'artifacts/cancel_request/TandemCancelRequest-v3.definition.json')
+    parser.add_argument('--output', type=Path, default=ROOT / 'artifacts/cancel_request/TandemCancelRequest-v4.zip')
     args = parser.parse_args()
     print(json.dumps(build_package(args.source, args.output), indent=2))
 

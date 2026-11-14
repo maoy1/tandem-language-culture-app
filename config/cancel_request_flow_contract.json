@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "sourceTicket": 63,
-  "flowName": "TandemCancelRequest v3",
+  "flowName": "TandemCancelRequest v4",
   "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF",
   "state": "OWNER_PREVIEW_PACKAGE_LOCAL_GRAPH_TESTED_NATIVE_NOT_RUN",
   "input": {
@@ -24,20 +24,20 @@
     "connection": "shared_sharepointonline",
     "source": "Invoker",
     "authentication": "Original Raw expression preserved; no fallback.",
-    "caller": "GET _api/web/currentuser?$select=Id, then required unique indexed Participantaccount User match by ParticipantaccountId; exactly one complete bounded own-profile row.",
+    "caller": "GET currentuser Id using Invoker, then exactly one bounded complete own-profile result filtered by ParticipantaccountId. Schema uniqueness/settings verified during deployment, not per click.",
     "authorization": "Supplied ParticipantId must match own resolved participant; request sender must match before any terminal result is returned or write attempted.",
     "availabilityGate": false
   },
   "sourceExport": {
     "sha256": "082a12ceeb9c47f94abdbba59898028e34776f61cbc26209de69c2e23a7191c8",
     "committed": false,
-    "purpose": "Trigger and source site/authentication/connection metadata only; old implementation is replaced, not certified.",
+    "purpose": "Historical original trigger evidence. v4 uses checked-in cancel v3 definition as primary source; trigger/auth preserved.",
     "filename": "TandemCancelRequest_20261108220416.zip"
   },
-  "baselineFallback": "Checked-in artifacts/tandem_discovery/TandemDiscovery-v2.definition.json suffices; emits fresh documented two-number PowerAppV2 trigger when original export is absent.",
+  "baselineFallback": "CLI default is checked-in cancel v3 definition. Discovery source remains supported with an explicit fresh-trigger delta.",
   "mapping": {
     "requestsListId": "3d17485d-1dac-41f0-a1af-24e45daa4567",
-    "status": "NUMBER_REFERENCES_OBSERVED_CUSTOM_FIELDS_MISSING_RECIPIENT_OPTIONAL_SETUP_PENDING",
+    "status": "DEPLOYMENT_VERIFICATION_REQUIRED; historical schema PASS recorded in issue #63, current tenant not rechecked here",
     "participantsListId": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
     "groupsListId": "4bf1b37f-edce-40c5-8fa0-36543a2d0cd6",
     "fields": {
@@ -93,9 +93,9 @@
         "required": false
       }
     },
-    "gates": "Exact internal names/types/Required; not hidden/read-only. SenderParticipantId and RecipientParticipantId are existing Number columns with XML Decimals=0, not lookups. Row values must be positive mathematically whole Numbers (recipient may be null for Group), checked by equals(value,int(value)); normalize integers before live-key string construction. Id/TargetGroupId retain integer validation. Both send/live keys required unique indexed; TargetGroup lookup exact Groups GUID; choices exact/count/no fill-in; Participantaccount required unique indexed User; complete bounded reads only.",
+    "gates": "Deployment/maintenance: compare exact expected fields with trusted complete current metadata using #81 SCHEMA. Per operation: typed exact request snapshot, coherent parties/state/keys, sender authority, exact numeric ETag, unchanged immutable readback. No fields audit or duplicate profile normalization.",
     "operationCompleteRequiredExpectation": false,
-    "mismatch": "REQUEST_SCHEMA_UNVERIFIED; do not guess/rename/autocreate/backfill. Parent #10 shared metadata preflight supplies evidence; no extra audit package.",
+    "mismatch": "Stop deployment on schema mismatch; no auto-create/backfill. v4 does not detect metadata-only drift per click. REQUEST_SCHEMA_UNVERIFIED is a reserved legacy code, not emitted by a v4 metadata gate.",
     "observedPreflight": {
       "packageBuildId": "f7fd078d-740a-4d68-a8fe-31ca2abc9e54",
       "runReference": "08584074297422149453962972460CU27",
@@ -130,8 +130,6 @@
     }
   },
   "reads": {
-    "fieldBoundPerList": 500,
-    "fieldFetchTop": 501,
     "actorFetchTop": 2,
     "actorExpectedExactly": 1,
     "paging": "Reject __next/noncomplete/overbound arrays; never partial success.",
@@ -189,6 +187,31 @@
   },
   "legacy": "Missing/malformed/incomplete keys, parties, ETag, status or marker -> REQUEST_INTEGRITY; preserve row unchanged. Blank/whitespace send key rejected. Canonical send UUID issuance remains Send scope, not guessed for #17 by cancellation.",
   "package": {
+    "zip": "artifacts/cancel_request/TandemCancelRequest-v4.zip",
+    "buildId": "d70520a1-e760-45ee-ab57-f211a490cbb2",
+    "sha256": "e5818c0ac14d27ceeb7f87297993fc191ef1e5102c804c3377ebdcf7b4f4fe68",
+    "import": "Legacy Create as new owner preview; parent assembles Solution using inspected #81 native Invoker seed. This ZIP has no child dependency. Never overwrite working flow.",
+    "actions": 71,
+    "maximumActionDepth": 5,
+    "globalActionNamesUnique": true
+  },
+  "validation": {
+    "nativeImportRun": "NOT RUN",
+    "ordinaryUserAccess": "DEFERRED_NOT_VERIFIED",
+    "graphResults": "See artifacts/cancel_request/shared-consumer.validation.json",
+    "limits": {
+      "actions": 500,
+      "maximumActionDepth": 8
+    }
+  },
+  "integration": [
+    "Only #63 changed under the authorized parallel batch; no shared child/common module changes.",
+    "Fresh deployment schema verification and existing Invoker rights required before native writes; historical issue #63 preflight PASS is retained, not rerun.",
+    "Parent owns Solution assembly; legacy ZIP/readable graph do not certify Solution Power Apps invocation.",
+    "Minimal call: TandemCancelRequestV4.Run(varOwnParticipantId, ThisItem.ID); refresh inbox/history after every outcome and retain RequestId for retry.",
+    "Owner/synthetic preview only; ordinary participant tests deferred. Existing native v3 evidence never transfers automatically to v4."
+  ],
+  "priorPackage": {
     "zip": "artifacts/cancel_request/TandemCancelRequest-v3.zip",
     "buildId": "30ff0d83-3895-4a0e-89c2-939b360fc5e7",
     "sha256": "252c97b0ac33c6094f928efb72a86d13742ec543cc7e2edca178a6245959c7cb",
@@ -197,22 +220,11 @@
     "maximumActionDepth": 5,
     "globalActionNamesUnique": true
   },
-  "validation": {
-    "newGraphCases": 98,
-    "fullSuitePassed": 340,
-    "tenantImportRun": "NOT RUN",
-    "privacyOrdinaryUser": "NOT VERIFIED",
-    "limits": {
-      "actions": 500,
-      "maximumActionDepth": 8
-    }
-  },
-  "integration": [
-    "Separate #63 branch/PR; handover inline in issue #63; shared batch tracking in PR #78.",
-    "Compare #10 shared schema preflight with every expected Required/type/nullable/choice/lookup/unique/index setting; mapping disagreement blocks native cancellation. No schema changes from this package.",
-    "Owner imports fresh package and checks Run-only Invoker configuration without permission/licence/connector changes.",
-    "Minimal app call: TandemCancelRequestV3.Run(varOwnParticipantId, ThisItem.ID); refresh inbox/history after every outcome. Button enablement is convenience only; flow reauthorizes.",
-    "Original ordinary-user caller/access boundary #23/#42 remains unverified/deferred; no public rollout.",
-    "Preserve existing SenderParticipantId/RecipientParticipantId Number columns and IDs; do not rename/convert or add duplicate participant lookups. Six missing custom fields and Recipient Optional are owner setup, followed by corrected preflight; runtime NOT VERIFIED."
-  ]
+  "sharedValidation": {
+    "ticket": 81,
+    "callsPerInvocation": 0,
+    "reason": "No profile normalization or compatibility needed; schema audit is deployment/maintenance only.",
+    "schema": "#81 SCHEMA is explicit deployment/maintenance work with trusted complete snapshots; no per-click call.",
+    "normalization": "No profile content or catalogue needed. int of validated whole numeric participant references for deterministic operation keys is an operation guard, not duplicated profile normalization."
+  }
 }

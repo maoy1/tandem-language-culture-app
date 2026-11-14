@@ -15,7 +15,8 @@ from scripts.power_automate import cancel_request_flow as cancel
 ROOT = cancel.ROOT
 PEOPLE = json.loads((ROOT / 'config/tenant_schema_mapping.json').read_text(encoding='utf-8'))
 GROUPS = json.loads((ROOT / 'config/group_schema_mapping.json').read_text(encoding='utf-8'))
-SOURCE = json.loads((ROOT / 'artifacts/tandem_discovery/TandemDiscovery-v2.definition.json').read_text(encoding='utf-8'))
+SOURCE = json.loads((ROOT / 'artifacts/cancel_request/TandemCancelRequest-v3.definition.json').read_text(encoding='utf-8'))
+V3_ACTIONS = SOURCE['properties']['definition']['actions']
 
 
 class CancelRunner(FlowRunner):
@@ -207,9 +208,10 @@ def test_invalid_inputs_never_read(inputs):
 
 
 @pytest.mark.parametrize('page', ['requests','people','actor'])
-def test_incomplete_reads_fail_closed(page):
-    s = Fake(); s.page = page; r = execute(s)
+def test_historical_v3_incomplete_reads_fail_closed(page):
+    s = Fake(); s.page = page; r = execute(s, actions=V3_ACTIONS)
     assert r.response['resultcode'] in ['REQUEST_SCHEMA_UNVERIFIED','UNAUTHORIZED'] and not s.writes
+
 
 
 @pytest.mark.parametrize('field,prop,value', [
@@ -219,13 +221,14 @@ def test_incomplete_reads_fail_closed(page):
     ('OperationComplete','TypeAsString','Text'), ('RequestType','Hidden',True), ('TargetGroup','SchemaXml','<Field List="wrong"/>'),
     ('Status','SchemaXml','<Field><CHOICES><CHOICE>Pending</CHOICE></CHOICES></Field>'),
     ('RequestType','SchemaXml','<Field FillInChoice="TRUE"><CHOICES><CHOICE>Personal</CHOICE><CHOICE>Group</CHOICE></CHOICES></Field>')])
-def test_shared_schema_mismatch_blocks_mapping(field,prop,value):
+def test_historical_v3_shared_schema_mismatch_blocks_mapping(field,prop,value):
     s = Fake(); next(f for f in s.fields if f['InternalName'] == field)[prop] = value
-    r = execute(s); assert r.response['resultcode'] == 'REQUEST_SCHEMA_UNVERIFIED' and not s.writes and s.read_count == 0
+    r = execute(s, actions=V3_ACTIONS); assert r.response['resultcode'] == 'REQUEST_SCHEMA_UNVERIFIED' and not s.writes and s.read_count == 0
+
 
 
 @pytest.mark.parametrize('variant', ['missing','duplicate','overflow','actorUnique','actorRequired','nullable'])
-def test_schema_missing_duplicate_overbound_and_identity_settings(variant):
+def test_historical_v3_schema_missing_duplicate_overbound_and_identity_settings(variant):
     s = Fake()
     if variant == 'missing': s.fields.pop()
     if variant == 'duplicate': s.fields.append(deepcopy(s.fields[0]))
@@ -233,7 +236,8 @@ def test_schema_missing_duplicate_overbound_and_identity_settings(variant):
     if variant == 'actorUnique': s.people_fields[0]['EnforceUniqueValues'] = False
     if variant == 'actorRequired': s.people_fields[0]['Required'] = False
     if variant == 'nullable': s.fields[1]['Required'] = True
-    r = execute(s); assert r.response['resultcode'] == 'REQUEST_SCHEMA_UNVERIFIED' and not s.writes
+    r = execute(s, actions=V3_ACTIONS); assert r.response['resultcode'] == 'REQUEST_SCHEMA_UNVERIFIED' and not s.writes
+
 
 
 @pytest.mark.parametrize('update', [
@@ -309,10 +313,11 @@ def test_missing_historical_data_never_fabricates_receipt(key):
 
 
 @pytest.mark.parametrize('xml', ['not xml','<Field FillInChoice="unknown"><CHOICES><CHOICE>Personal</CHOICE><CHOICE>Group</CHOICE></CHOICES></Field>'])
-def test_invalid_schema_xml_is_unverified(xml):
+def test_historical_v3_invalid_schema_xml_is_unverified(xml):
     s=Fake(); next(f for f in s.fields if f['InternalName']=='RequestType')['SchemaXml']=xml
-    r=execute(s)
+    r=execute(s, actions=V3_ACTIONS)
     assert r.response['resultcode']=='REQUEST_SCHEMA_UNVERIFIED' and not s.writes
+
 
 
 def test_same_cancel_wins_before_our_cas_and_changed_revision_is_reread():
@@ -368,33 +373,36 @@ def test_observed_number_metadata_passes_after_explicit_recipient_optional_setup
     assert execute(s).response['success'] and len(s.writes)==1
 
 
-def test_actual_pre_setup_metadata_is_still_blocked_without_writes():
+def test_historical_v3_actual_pre_setup_metadata_is_still_blocked_without_writes():
     s=Fake()
     s.fields=deepcopy(OBSERVED_NUMBER_FIELDS)+[f for f in s.fields if f['InternalName']=='Status']
-    r=execute(s)
+    r=execute(s, actions=V3_ACTIONS)
     assert r.response['resultcode']=='REQUEST_SCHEMA_UNVERIFIED' and not s.writes and s.read_count==0
+
 
 
 @pytest.mark.parametrize('field', ['SenderParticipantId','RecipientParticipantId'])
 @pytest.mark.parametrize('old_name', [False,True])
-def test_former_lookup_sender_recipient_metadata_is_rejected(field,old_name):
+def test_historical_v3_former_lookup_sender_recipient_metadata_is_rejected(field,old_name):
     s=Fake(); f=next(f for f in s.fields if f['InternalName']==field)
     f.update(TypeAsString='Lookup',SchemaXml='<Field Type="Lookup" List="{'+PEOPLE['lists']['participants']['listId']+'}"/>')
     if old_name: f['InternalName']=field.removesuffix('Id')
-    r=execute(s)
+    r=execute(s, actions=V3_ACTIONS)
     assert r.response['resultcode']=='REQUEST_SCHEMA_UNVERIFIED' and not s.writes
+
 
 
 @pytest.mark.parametrize('field', ['SenderParticipantId','RecipientParticipantId'])
 @pytest.mark.parametrize('decimals', ['2','Auto',None])
-def test_number_metadata_wrong_or_missing_decimals_fails_closed(field,decimals):
+def test_historical_v3_number_metadata_wrong_or_missing_decimals_fails_closed(field,decimals):
     s=Fake(); f=next(f for f in s.fields if f['InternalName']==field)
     xml=ET.fromstring(f['SchemaXml'])
     if decimals is None: xml.attrib.pop('Decimals')
     else: xml.set('Decimals',decimals)
     f['SchemaXml']=ET.tostring(xml,encoding='unicode')
-    r=execute(s)
+    r=execute(s, actions=V3_ACTIONS)
     assert r.response['resultcode']=='REQUEST_SCHEMA_UNVERIFIED' and not s.writes
+
 
 
 @pytest.mark.parametrize('kind', ['Personal','Group'])
@@ -411,3 +419,59 @@ def test_fractional_number_refs_never_cancel(field,value):
     s=Fake(); s.row[field]=value; r=execute(s)
     assert not r.response['success'] and not s.writes
     assert r.response['resultcode'] in ['UNAUTHORIZED','REQUEST_INTEGRITY']
+
+
+def test_v4_has_no_schema_audit_or_unnecessary_shared_evaluation():
+    s=Fake(); r=execute(s)
+    nodes=list(walk(cancel.build_actions(SOURCE,PEOPLE,GROUPS)))
+    assert r.response['success']
+    assert not any('/fields?' in uri for method,uri in s.calls)
+    assert not any(a['type']=='Workflow' for _,a in nodes)
+    assert not any(n[-1].startswith(('People_schema','Request_schema')) for n,_ in nodes)
+    assert len(s.calls)==6  # current user, own profile, entity type, request, CAS, readback
+    assert not any('catalog' in uri.lower() for _,uri in s.calls)
+
+
+@pytest.mark.parametrize('kind',['Personal','Group'])
+@pytest.mark.parametrize('mode',[None,'502','timeout','duplicate502','412pending','readbackFail','commit502'])
+def test_v4_emitted_graph_matches_v3_business_outcomes(kind,mode):
+    old=Fake(kind); new=Fake(kind); old.mode=new.mode=mode
+    assert execute(old,actions=V3_ACTIONS).response==execute(new).response
+    assert old.row==new.row and old.writes==new.writes
+
+
+@pytest.mark.parametrize('status,done',[('Pending',False),('Accepted',False),('Accepted',True),('Declined',True),('Cancelled',True)])
+def test_v4_sender_authority_precedes_any_terminal_disclosure(status,done):
+    s=Fake()
+    if status!='Pending': s.settled(status,complete=done)
+    s.row['SenderParticipantId']=99
+    r=execute(s)
+    assert r.response['resultcode']=='UNAUTHORIZED'
+    assert r.response['currentstatus']=='' and not r.response['operationcomplete']
+    assert not r.response['replay'] and not s.writes
+
+
+def test_v4_packaged_graph_trigger_hash_and_business_execution():
+    import hashlib
+    path=ROOT/'artifacts/cancel_request/TandemCancelRequest-v4.zip'
+    review=json.loads(path.with_suffix('.review.json').read_text())
+    doc=json.loads(path.with_suffix('.definition.json').read_text())
+    with ZipFile(path) as z:
+        assert z.testzip() is None
+        assert json.loads(z.read(next(n for n in z.namelist() if n.endswith('/definition.json'))))==doc
+    assert hashlib.sha256(path.read_bytes()).hexdigest()==review['packageSha256']
+    assert doc['properties']['definition']['triggers']==SOURCE['properties']['definition']['triggers']
+    assert doc['properties']['definition']['actions']==cancel.build_actions(SOURCE,PEOPLE,GROUPS)
+    assert execute(actions=doc['properties']['definition']['actions']).response['success']
+    assert review['sharedValidation']['callsPerInvocation']==0
+    assert review['solutionAssembly']=='PARENT_BATCH_NOT_ASSEMBLED_HERE'
+
+
+@pytest.mark.parametrize('change',['raw','api','binding'])
+def test_v4_rejects_source_authentication_or_connector_drift(change):
+    source=deepcopy(SOURCE)
+    action=source['properties']['definition']['actions']['Cancel_work']['actions']['Resolve_actor']['inputs']
+    if change=='raw': action['authentication']['value']='owner-token'
+    elif change=='api': action['host']['apiId']='unverified'
+    else: action['host']['connectionName']='unbound'
+    with pytest.raises(ValueError): cancel.build_actions(source,PEOPLE,GROUPS)
