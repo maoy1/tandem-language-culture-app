@@ -744,6 +744,37 @@ Technical field proposal: optional plain-text Note column Introduction on Connec
 
 Contract evidence only: acceptance cases empty/omitted, 2,000 accepted and 2,001 rejected in both app/server are NOT RUN. #17 remains Planned, not implemented/Ready. No flow, list, data, permission or existing app changed. This clears the remaining explicit product choice for core group-join implementation; receipt-schema and Solution SharePoint/caller prerequisites still need technical verification.
 
+
+## #65 group-join response parent — 2026-11-14
+
+[#65 TandemRespondGroupJoinRequest](https://github.com/maoy1/tandem-language-culture-app/issues/65)
+has an isolated local parent on origin/main, build 040a6af8-ab91-4e09-b891-b638d96178ba,
+449 definitions/depth5. Current operational Active membership is authority;
+actor Paused/openness does not revoke it. Accept separately uses NORMALIZE/GROUP,
+fresh requester/focus/profile context and all physical Active counts under the
+same #47 group guard; Pending exact-ETag first terminal competes with cancellation.
+One immutable episode, no Left reactivation or group state changes. Receipt result/
+Complete precedes matching-token release; definite sealed retry is bounded and
+unknown/partial outcomes cannot report success or use timed takeover. The exact
+parent/schema/connection/IO and #81 justified no-impact ledger, prerequisites and
+versioned NOT RUN handover are in [ISSUE_65_GROUP_RESPONSE.md](ISSUE_65_GROUP_RESPONSE.md).
+One-time receipt/schema setup, final Solution assembly/import and native caller/
+business/load proof remain pending; ordinary-user access is deferred/#42-blocked.
+No #7/#11/shared helper/evidence/issue/working-flow edits or readiness upgrade.
+
+
+## #65 shared finalization refactor — 2026-11-14
+
+[#65 TandemRespondGroupJoinRequest](https://github.com/maoy1/tandem-language-culture-app/issues/65)
+refined build `ea732b74-947a-4478-a7df-92d2ff5696a1`: **393 actions/depth5**, 107 action headroom.
+Normal Accept/Decline, rejection and positive committed recovery share completion;
+completed/sealed operations share final matching-token release. Prior sealed-token
+release stays before retry claim. Fresh CAS/authority/commit/uniqueness checks and
+#81 NORMALIZE/GROUP contract1/rules1 remain; no schema/public IO/shared-runtime
+change or extra flow/helper. Historical 449/415 evidence remains versioned, not
+transferred to this build. See ISSUE_65_GROUP_RESPONSE.md for new validation,
+source-action alias mapping and remaining NOT RUN tenant/access/performance gates.
+
 ## #17 parallel-batch sender handoff — 2026-11-14
 
 [#17](https://github.com/maoy1/tandem-language-culture-app/issues/17) only, under
