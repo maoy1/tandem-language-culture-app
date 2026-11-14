@@ -79,5 +79,7 @@
   "schemaChanges": 0,
   "circularDependencyFlow": "TandemRespondGroupJoinRequest",
   "ownerEvidence": "Owner identified the circular error in group response, then confirmed all five repaired flows can activate on the replacement package.",
-  "nativeActivationEvidence": "native-activation.owner-confirmation.json"
+  "nativeActivationEvidence": "native-activation.owner-confirmation.json",
+  "nativeSmoke": "PASS_OWNER_SUPPLIED_REPORT",
+  "nativeSmokeEvidence": "native-smoke.owner-report.json"
 }

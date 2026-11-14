@@ -86,7 +86,15 @@
   "interfacesEqualPreviousVersion": true,
   "nativeImport": "NOT RUN",
   "nativeActivation": "PASS_OWNER_CONFIRMED_FIVE_REPAIRED_FLOWS",
-  "nativeSmoke": "NOT RUN",
+  "nativeSmoke": {
+    "result": "PASS_OWNER_SUPPLIED_REPORT",
+    "runReference": "08584069116914099944267310876cU14",
+    "testCount": 45,
+    "completedCount": 45,
+    "allPassed": true,
+    "evidence": "native-smoke.owner-report.json",
+    "scope": "Synthetic shared-validation smoke only; no business I/O or ordinary-participant access proof"
+  },
   "ordinaryParticipantAccess": "DEFERRED",
   "schemaChanges": 0,
   "nativeActivationEvidence": "native-activation.owner-confirmation.json"
