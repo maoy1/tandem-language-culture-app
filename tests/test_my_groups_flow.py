@@ -368,7 +368,7 @@ def test_weak_native_group_revision_is_allowed_only_as_expected_etag():
 
 
 def test_delivered_artifact_hash_source_and_real_graph_match_contract():
-    path=flow.ROOT/'artifacts/my_groups/TandemMyGroups-v1.definition.json'
+    path=flow.ROOT/'artifacts/my_groups/TandemMyGroups-v2.definition.json'
     review=json.loads(path.with_suffix('.review.json').read_text())
     assert review['definitionSha256']==hashlib.sha256(path.read_bytes()).hexdigest()
     assert review['generatorSha256']==hashlib.sha256(Path(flow.__file__).read_bytes()).hexdigest()
@@ -377,3 +377,16 @@ def test_delivered_artifact_hash_source_and_real_graph_match_contract():
     server=Fake();server.populate();before=deepcopy(server.data)
     result=execute(server,actions=graph)
     assert result.response['resultcode']=='OK' and len(public(result))==1 and server.data==before
+
+
+def test_group_membership_id_is_only_callers_exact_committed_episode():
+    server=Fake();server.populate();server.populate(11,101,3)
+    for m,identifier in zip(server.data['memberships'],[641001,641002,642001,642002]):m['Id']=identifier
+    server.data['memberships'].insert(0,membership(649900,10,1,90,status='Left',left='2026-01-01'))
+    before=deepcopy(server.data);result=execute(server);rows=public(result)
+    assert result.response['resultcode']=='OK'
+    assert {row['groupId']:row['membershipId'] for row in rows}=={10:641001,11:642001}
+    assert all(type(row['membershipId']) is int and row['membershipId']>0 for row in rows)
+    assert all('membershipId' not in member for row in rows for member in row['members'])
+    assert not any(str(identifier) in json.dumps(result.response) for identifier in [641002,642002,649900])
+    assert server.data==before

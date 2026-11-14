@@ -1,18 +1,18 @@
 {
   "sourceTicket": 64,
-  "version": "v1",
-  "packageBuildId": "9222dc1c-bbec-48a6-8366-056d5897b7d7",
-  "definitionSha256": "a63d21b6b3a44b61b669c3e9c5a6ad10b1f9dc3144655e95350a5656040ab1e3",
+  "version": "v2",
+  "packageBuildId": "31fbef9c-81bc-4409-bf9f-2f25b4c0e6a1",
+  "definitionSha256": "440df39b310047dde6118e0c30fae9e78192bd9f52b6c9fdf5bc5c7c3031a101",
   "base": "origin/main 7eba0ba0e5739477d4259474c2cb8fb8b3e3ee94",
   "branch": "codex/issue-64-my-groups",
   "stackedOn62": false,
-  "fullWorktreeSuite": 465,
-  "ownReaderCases": 108,
+  "fullWorktreeSuite": 466,
+  "ownReaderCases": 109,
   "testsResult": "PASS",
-  "elapsedSeconds": 83.53,
+  "elapsedSeconds": 25.53,
   "command": "C:/projects/small_projects/tandem-language-culture-app/.venv/Scripts/python.exe -X utf8 -m pytest -q --disable-warnings --maxfail=2",
   "structure": {
-    "actions": 181,
+    "actions": 185,
     "maximumActionDepth": 5
   },
   "connectorReadDefinitions": 9,
@@ -31,5 +31,17 @@
   "worktreeManagement": "Git-registered isolated worktree created after app create_worktree rejected registered paths. App attach operation 4dd499ed-457c-49ab-87ae-07958fb87717 failed: checkout exists but is not a managed worktree. Git branch isolation intact; no desktop attachment claimed.",
   "issueEdits": 0,
   "deployments": 0,
-  "pushed": false
+  "pushed": false,
+  "previousV1": {
+    "version": "v1",
+    "packageBuildId": "9222dc1c-bbec-48a6-8366-056d5897b7d7",
+    "definitionSha256": "a63d21b6b3a44b61b669c3e9c5a6ad10b1f9dc3144655e95350a5656040ab1e3",
+    "fullWorktreeSuite": 465,
+    "ownReaderCases": 108,
+    "sourceCommit": "1070eb3; v1 artifacts unchanged"
+  },
+  "integrationFix": "Public own-group membershipId positive integer from exact actor-bound committed episode; own episode uniqueness gate. No other-member/Left/history/provisional membership IDs public. MyGroups input unchanged. #14 number_2 consumes reference and still verifies authority/freshness.",
+  "newRegression": "ONE new emitted-graph test: two current own groups plus earlier Left history; exact own IDs match, no other/history IDs or member-array membershipId leak, zero mutation.",
+  "nativeMembershipIdLeaveBinding": "NOT RUN; receiving #14 still owns server-side actor/episode/stale-intent checks",
+  "onlyTicket64Changed": true
 }

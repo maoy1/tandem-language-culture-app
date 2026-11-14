@@ -14,7 +14,7 @@ from .schema_audit import measure
 from .solution_source import inspect_caller_export, invoker_parent_document, RAW_INVOKER, walk
 
 ROOT = Path(__file__).resolve().parents[2]
-NAME = 'TandemMyGroups v1'
+NAME = 'TandemMyGroups v2'
 REQUESTS = '3d17485d-1dac-41f0-a1af-24e45daa4567'
 BOUNDS = {'requests': 500, 'groups': 100, 'memberships': 2000, 'profiles': 500,
           'language': 5000, 'culture': 5000, 'timezone': 5000, 'responseChars': 250000}
@@ -97,7 +97,7 @@ def public_profile_schema():
 def public_group_schema():
     label = {'type': 'object', 'additionalProperties': False, 'required': ['id', 'label'],
              'properties': {'id': integer(), 'label': text(maximum=255)}}
-    return {**obj({'groupId': integer(), 'name': {'type': 'string', 'minLength': 1, 'maxLength': 255},
+    return {**obj({'groupId': integer(), 'membershipId': integer(), 'name': {'type': 'string', 'minLength': 1, 'maxLength': 255},
         'purpose': text(), 'exchangeType': choice('Language', 'Culture', 'Combined'),
         'languageFocus': array(label, 5000), 'cultureFocus': array(label, 5000),
         'capacity': {'type': 'integer', 'minimum': 2, 'maximum': 10}, 'state': choice('Open', 'Closed', 'Ended'),
@@ -203,13 +203,16 @@ def build_actions(source, people, groups, build_id):
     joined = f"and(equals(item()?['RequestType'],'Group'),equals(item()?['TargetGroupId'],{m}?['GroupId']),equals(item()?['RecipientParticipantId'],null),equals(item()?['SenderParticipantId'],{m}?['ParticipantId']))"
     episode['Episode_commit'] = query("@body('Data_requests')", f"and(equals({m}?['MembershipKey'],concat('request:',string(item()?['Id']),':participant:',string({m}?['ParticipantId']))),equals(item()?['Status'],'Accepted'),equals(item()?['OperationComplete'],true),or({personal},{joined}))", 'Episode_source')
     episode['Episode_operational'] = branch(f"and(equals(length(body('Episode_group')),1),equals({g}?['SetupComplete'],true),empty({m}?['LeftAt']),equals(length(body('Episode_source')),1),equals(length(body('Episode_commit')),1))",
-        {'Remember_episode': append('OperationalEpisodes', {'groupId': '@' + m + "?['GroupId']", 'profileId': '@' + m + "?['ParticipantId']"})}, n='Episode_commit')
+        {'Remember_episode': append('OperationalEpisodes', {'groupId': '@' + m + "?['GroupId']", 'profileId': '@' + m + "?['ParticipantId']", 'membershipId': '@' + m + "?['Id']"})}, n='Episode_commit')
     s['Each_episode'] = loop("@body('Active_rows')", episode, 'Groups_sources_unique')
     s['Own_episodes'] = query("@variables('OperationalEpisodes')", "equals(item()?['profileId'],outputs('Actor'))", 'Each_episode')
     s['Own_group_ids'] = select("@body('Own_episodes')", "@item()?['groupId']", 'Own_episodes')
     s['Own_groups'] = query("@body('Data_groups')", "contains(body('Own_group_ids'),item()?['Id'])", 'Own_group_ids')
     group = "items('Each_own_group')"
-    displayed = {'Reset_members': setvar('Members', []),
+    displayed = {
+        'Own_group_episode': query("@body('Own_episodes')", f"equals(item()?['groupId'],{group}?['Id'])"),
+        'Own_group_episode_unique': gate('Own_group_episode_unique', "equals(length(body('Own_group_episode')),1)", 'MEMBERSHIP_INTEGRITY', 'Own_group_episode'),
+        'Reset_members': setvar('Members', [], 'Own_group_episode_unique'),
         'Physical_members': query("@body('Active_rows')", f"equals(item()?['GroupId'],{group}?['Id'])", 'Reset_members')}
     displayed['Capacity_valid'] = gate('Capacity_valid', f"and(lessOrEquals(length(body('Physical_members')),{group}?['Capacity']),lessOrEquals({group}?['Capacity'],if(equals({group}?['ExchangeType'],'Language'),3,10)))", 'CAPACITY_INTEGRITY', 'Physical_members')
     displayed['Public_episodes'] = query("@variables('OperationalEpisodes')", f"equals(item()?['groupId'],{group}?['Id'])", 'Capacity_valid')
@@ -241,7 +244,8 @@ def build_actions(source, people, groups, build_id):
         check = 'Group_' + label + '_complete'
         displayed[check] = gate(check, f"equals(length(body('{q}')),length(union({ids},{ids})))", 'GROUP_DATA_INCOMPLETE', q)
         displayed[out] = select("@body('" + q + "')", {'id': "@item()?['Id']", 'label': "@item()?['Title']"}, check);prev = out
-    displayed['Group_display'] = compose({'groupId': '@' + group + "?['Id']", 'name': '@' + group + "?['Title']",
+    displayed['Group_display'] = compose({'groupId': '@' + group + "?['Id']",
+        'membershipId': '@' + first('Own_group_episode') + "?['membershipId']", 'name': '@' + group + "?['Title']",
         'purpose': '@coalesce(' + group + "?['Purpose'],'')", 'exchangeType': '@' + group + "?['ExchangeType']",
         'languageFocus': "@body('Group_languageFocus')", 'cultureFocus': "@body('Group_cultureFocus')",
         'capacity': '@' + group + "?['Capacity']", 'state': '@' + group + "?['State']",
@@ -281,7 +285,7 @@ def build_parent(solution_source, output):
     document['properties']['displayName'] = NAME
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(document, indent=2) + '\n', encoding='utf-8', newline='\n')
-    review = {'sourceTicket': 64, 'packageBuildId': build_id, **measure(actions), 'bounds': BOUNDS,
+    review = {'sourceTicket': 64, 'version': 'v2', 'packageBuildId': build_id, **measure(actions), 'bounds': BOUNDS,
         'writes': 0, 'connectorReadDefinitions': sum(a['type']=='OpenApiConnection' for _, a in walk(actions)),
         'workflowCalls': 0, 'sharedChildRequired': False, 'schemaAuditPerClick': False,
         'nativeStatus': 'NOT_IMPORTED_NOT_TESTED', 'ordinaryUserAccessVerified': False,

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "sourceTicket": 64,
-  "flowName": "TandemMyGroups v1",
-  "version": "v1",
+  "flowName": "TandemMyGroups v2",
+  "version": "v2",
   "state": "LOCAL_BUILD_NATIVE_NOT_RUN",
   "branch": "codex/issue-64-my-groups",
   "base": "origin/main 7eba0ba0e5739477d4259474c2cb8fb8b3e3ee94; no #62 ancestry/dependency",
@@ -37,6 +37,7 @@
     "type": "object",
     "required": [
       "groupId",
+      "membershipId",
       "name",
       "purpose",
       "exchangeType",
@@ -51,6 +52,10 @@
     ],
     "properties": {
       "groupId": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "membershipId": {
         "type": "integer",
         "minimum": 1
       },
@@ -304,7 +309,7 @@
     },
     "additionalProperties": false
   },
-  "projection": "Explicit #46 MVP_FIELD_CONTRACT allowlist. Group Id/Title/Purpose/ExchangeType/LanguageFocus/CultureFocus/Capacity/State -> groupId/name/purpose/exchangeType/languageFocus/cultureFocus/capacity/state; physical counts -> memberCount/freeSlots; Members use approved person schema. Account Title only -> displayName; no email/Claims/raw Person, audit, validation/migration/availability fields or source/episode/processing/write-owner keys. Group expectedETag is the only row revision/control marker, limited to quoted integer or weak quoted integer; not authority. Group/membership/profile raw objects never serialized.",
+  "projection": "Explicit #46 MVP_FIELD_CONTRACT allowlist. Group Id/Title/Purpose/ExchangeType/LanguageFocus/CultureFocus/Capacity/State -> groupId/name/purpose/exchangeType/languageFocus/cultureFocus/capacity/state; physical counts -> memberCount/freeSlots; Members use approved person schema. Account Title only -> displayName; no email/Claims/raw Person, audit, validation/migration/availability fields or source/episode/processing/write-owner keys. Group expectedETag is the only row revision/control marker, limited to quoted integer or weak quoted integer; not authority. Group/membership/profile raw objects never serialized. Own-group membershipId is the positive system Id of ONLY the caller's exact operational committed episode, selected by current group from Own_episodes. Other members' membership IDs and Left/provisional episode IDs are never public. This necessary Leave intent reference is not authority.",
   "membershipAuthority": "Filter MembershipStatus=Active rows; empty LeftAt, group SetupComplete true, exactly one Accepted+OperationComplete Personal source linked by SourceRequestId, exact MembershipKey request:<id>:participant:<member> bound to an Accepted+OperationComplete episode. Personal episode must be the group source and participant one of its parties. Group episode must target exact group with sender=member and recipient=null. Duplicate Active group/participant episodes fail, never choose first. No leader.",
   "currentAndHistory": "Left/nonempty LeftAt/uncommitted/provisional/mismatched/missing-source groups do not grant own current audience. Own committed Active links in Open/Closed/Ended remain visible; Ended preserved by explicit owner #64 direction. Paused/Inactive/closed-to-connections or validation status never erases committed memberships. No rejoin, reopen, state mutation or notifications. Waiting/In a group derived from returned current groups, not raw membership count.",
   "capacity": "memberCount counts ALL physical MembershipStatus=Active rows for each returned group, including provisional, paused and nonempty LeftAt anomalies; public members include only committed operational empty-LeftAt episodes. Left excluded from count. Capacity/SourceRequestId are existing Number columns: reject fractional values and normalize integral native numbers before count/key/projection. Language capacity 2-3; Culture/Combined 2-10. Overfull -> CAPACITY_INTEGRITY/[]; no negative slots, silent clamp or slot release.",
@@ -351,10 +356,10 @@
   "failure": "Failure anywhere clears Groups and Members, returns groupsjson=[]/groupstatus empty and sanitized fixed error code/message. No backend text, partial private data, success-as-empty or false Waiting.",
   "packaging": "READABLE_NATIVE_SOLUTION_PARENT; integrator assigns new workflow identity/root and packages existing SharePoint reference; no legacy ZIP or native certification",
   "nativeStatus": "NOT_IMPORTED_NOT_TESTED; ordinary participant access deferred; prior #12/#66/#81 evidence is not #64 runtime proof",
-  "drift81NoImpact": "New #64 consumer only; existing mapped fields/types and accepted commitment/capacity/display semantics. Explicit owner refinement includes Ended own groups. No shared schema/normalization/compatibility/interface/source/package or catalogue activity semantics changed; no discovery gate reused. Child runtime and pending target receipts unaffected. No issue edits per owner scope; append this consumer assessment to parent ledger during integration.",
-  "packageBuildId": "9222dc1c-bbec-48a6-8366-056d5897b7d7",
-  "definitionSha256": "a63d21b6b3a44b61b669c3e9c5a6ad10b1f9dc3144655e95350a5656040ab1e3",
-  "actions": 181,
+  "drift81NoImpact": "New #64 consumer only; existing mapped fields/types and accepted commitment/capacity/display semantics. Explicit owner refinement includes Ended own groups. No shared schema/normalization/compatibility/interface/source/package or catalogue activity semantics changed; no discovery gate reused. Child runtime and pending target receipts unaffected. No issue edits per owner scope; append this consumer assessment to parent ledger during integration. v2 adds only caller-own membership system Id as an opaque Leave intent reference; no shared/schema/eligibility/commit/capacity change. #14 retains server-side authority/freshness checks. No #62 change.",
+  "packageBuildId": "31fbef9c-81bc-4409-bf9f-2f25b4c0e6a1",
+  "definitionSha256": "440df39b310047dde6118e0c30fae9e78192bd9f52b6c9fdf5bc5c7c3031a101",
+  "actions": 185,
   "maximumActionDepth": 5,
   "connectorReadDefinitions": 9,
   "writes": 0,
@@ -363,5 +368,14 @@
     "Parent assigns NEW #64 workflow/root and builds enclosing Solution package with standard SharePoint reference; never overwrite CallerProbe or working flows.",
     "Import/connection selection/owner-synthetic native test and Power Apps refresh/rebind remain unavoidable, NOT RUN. Stop dependent work for actual tenant prerequisite mismatch; no paid fallback.",
     "Owner-only/synthetic current/source/episode fixtures; ordinary-user access testing remains deferred. No automatic fixture/reset/migration writes by reader."
-  ]
+  ],
+  "leaveEpisodeReference": {
+    "field": "membershipId",
+    "type": "positive integer",
+    "source": "raw membership.Id retained internally in OperationalEpisodes; Own_episodes is already actor-filtered, then Own_group_episode filters current group and requires exactly one row before public projection.",
+    "consumer": "#14 TandemLeaveGroup input number_2; bind stale Leave intent to the exact episode.",
+    "authorization": "Reference only. #14 must still resolve current Invoker actor and verify exact own/group episode, current authority and freshness; a saved ID does not grant access or revive an old episode.",
+    "inputChange": "NONE: MyGroups still accepts only ownParticipantId number.",
+    "publicMembers": "Approved profile fields only; no membershipId added to members array or other-member payload."
+  }
 }
