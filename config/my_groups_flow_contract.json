@@ -1,0 +1,381 @@
+{
+  "schemaVersion": 1,
+  "sourceTicket": 64,
+  "flowName": "TandemMyGroups v2",
+  "version": "v2",
+  "state": "LOCAL_BUILD_NATIVE_NOT_RUN",
+  "branch": "codex/issue-64-my-groups",
+  "base": "origin/main 7eba0ba0e5739477d4259474c2cb8fb8b3e3ee94; no #62 ancestry/dependency",
+  "interface": {
+    "builder": "build_actions(source, people, groups, build_id) -> FULL actions; build_trigger() -> PowerAppV2 number trigger; build_source(inspected_seed, people) -> validated source context; build_parent(native_solution_source, output) -> readable native-envelope parent/review",
+    "input": {
+      "number": "Required ParticipantId number; strict positive integer at runtime, equality to Invoker-resolved unique own ParticipantaccountId row mandatory. Supplied reference is never actor authority."
+    },
+    "outputs": {
+      "groupsjson": "JSON string: complete approved own-group array; [] on every failure.",
+      "groupstatus": "Waiting iff zero committed own current groups; In a group iff >0; EMPTY on failure, never false Waiting.",
+      "errormessage": "Empty on OK; fixed sanitized message on failure.",
+      "resultcode": [
+        "OK",
+        "UNAUTHORIZED_PROFILE",
+        "READ_BOUND_OR_INCOMPLETE",
+        "DATA_INTEGRITY",
+        "MEMBERSHIP_INTEGRITY",
+        "CAPACITY_INTEGRITY",
+        "PROFILE_DATA_INCOMPLETE",
+        "GROUP_DATA_INCOMPLETE",
+        "RESPONSE_BOUND",
+        "READ_OR_DATA_FAILED"
+      ],
+      "runreference": "Native run name for support, never raw connector diagnostics.",
+      "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF",
+      "paging": "NO_PAGING_COMPLETE_BOUNDED_READ"
+    },
+    "minimalAppBinding": "Set(myGroupsResult,TandemMyGroups.Run(currentOwnParticipantId)); parse groupsjson and groupstatus only when resultcode=OK; otherwise clear prior groups and display sanitized message. Refresh after controls/Leave outcome. Full UI #68; real app binding NOT RUN."
+  },
+  "publicGroupSchema": {
+    "type": "object",
+    "required": [
+      "groupId",
+      "membershipId",
+      "name",
+      "purpose",
+      "exchangeType",
+      "languageFocus",
+      "cultureFocus",
+      "capacity",
+      "state",
+      "memberCount",
+      "freeSlots",
+      "members",
+      "expectedETag"
+    ],
+    "properties": {
+      "groupId": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "membershipId": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "name": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255
+      },
+      "purpose": {
+        "type": "string",
+        "maxLength": 64000
+      },
+      "exchangeType": {
+        "type": "string",
+        "enum": [
+          "Language",
+          "Culture",
+          "Combined"
+        ]
+      },
+      "languageFocus": {
+        "type": "array",
+        "maxItems": 5000,
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "label"
+          ],
+          "properties": {
+            "id": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "label": {
+              "type": "string",
+              "maxLength": 255
+            }
+          }
+        }
+      },
+      "cultureFocus": {
+        "type": "array",
+        "maxItems": 5000,
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "label"
+          ],
+          "properties": {
+            "id": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "label": {
+              "type": "string",
+              "maxLength": 255
+            }
+          }
+        }
+      },
+      "capacity": {
+        "type": "integer",
+        "minimum": 2,
+        "maximum": 10
+      },
+      "state": {
+        "type": "string",
+        "enum": [
+          "Open",
+          "Closed",
+          "Ended"
+        ]
+      },
+      "memberCount": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 2000
+      },
+      "freeSlots": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 10
+      },
+      "members": {
+        "type": "array",
+        "maxItems": 500,
+        "items": {
+          "type": "object",
+          "required": [
+            "profileId",
+            "displayName",
+            "teachLanguages",
+            "learnLanguages",
+            "shareCultures",
+            "learnCultures",
+            "timeZone",
+            "learningFocus",
+            "comments"
+          ],
+          "properties": {
+            "profileId": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "displayName": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 255
+            },
+            "teachLanguages": {
+              "type": "array",
+              "maxItems": 5000,
+              "items": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "label"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "label": {
+                    "type": "string",
+                    "maxLength": 255
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "learnLanguages": {
+              "type": "array",
+              "maxItems": 5000,
+              "items": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "label"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "label": {
+                    "type": "string",
+                    "maxLength": 255
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "shareCultures": {
+              "type": "array",
+              "maxItems": 5000,
+              "items": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "label"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "label": {
+                    "type": "string",
+                    "maxLength": 255
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "learnCultures": {
+              "type": "array",
+              "maxItems": 5000,
+              "items": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "label"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "label": {
+                    "type": "string",
+                    "maxLength": 255
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "timeZone": {
+              "type": "object",
+              "required": [
+                "id",
+                "label",
+                "ianaId"
+              ],
+              "properties": {
+                "id": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 1
+                },
+                "label": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 255
+                },
+                "ianaId": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 255
+                }
+              },
+              "additionalProperties": false
+            },
+            "learningFocus": {
+              "type": "string",
+              "maxLength": 64000
+            },
+            "comments": {
+              "type": "string",
+              "maxLength": 64000
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "expectedETag": {
+        "type": "string",
+        "maxLength": 128,
+        "pattern": "^(W/)?\"[0-9]+\"$"
+      }
+    },
+    "additionalProperties": false
+  },
+  "projection": "Explicit #46 MVP_FIELD_CONTRACT allowlist. Group Id/Title/Purpose/ExchangeType/LanguageFocus/CultureFocus/Capacity/State -> groupId/name/purpose/exchangeType/languageFocus/cultureFocus/capacity/state; physical counts -> memberCount/freeSlots; Members use approved person schema. Account Title only -> displayName; no email/Claims/raw Person, audit, validation/migration/availability fields or source/episode/processing/write-owner keys. Group expectedETag is the only row revision/control marker, limited to quoted integer or weak quoted integer; not authority. Group/membership/profile raw objects never serialized. Own-group membershipId is the positive system Id of ONLY the caller's exact operational committed episode, selected by current group from Own_episodes. Other members' membership IDs and Left/provisional episode IDs are never public. This necessary Leave intent reference is not authority.",
+  "membershipAuthority": "Filter MembershipStatus=Active rows; empty LeftAt, group SetupComplete true, exactly one Accepted+OperationComplete Personal source linked by SourceRequestId, exact MembershipKey request:<id>:participant:<member> bound to an Accepted+OperationComplete episode. Personal episode must be the group source and participant one of its parties. Group episode must target exact group with sender=member and recipient=null. Duplicate Active group/participant episodes fail, never choose first. No leader.",
+  "currentAndHistory": "Left/nonempty LeftAt/uncommitted/provisional/mismatched/missing-source groups do not grant own current audience. Own committed Active links in Open/Closed/Ended remain visible; Ended preserved by explicit owner #64 direction. Paused/Inactive/closed-to-connections or validation status never erases committed memberships. No rejoin, reopen, state mutation or notifications. Waiting/In a group derived from returned current groups, not raw membership count.",
+  "capacity": "memberCount counts ALL physical MembershipStatus=Active rows for each returned group, including provisional, paused and nonempty LeftAt anomalies; public members include only committed operational empty-LeftAt episodes. Left excluded from count. Capacity/SourceRequestId are existing Number columns: reject fractional values and normalize integral native numbers before count/key/projection. Language capacity 2-3; Culture/Combined 2-10. Overfull -> CAPACITY_INTEGRITY/[]; no negative slots, silent clamp or slot release.",
+  "profileDisplayAdapter": "Direct typed display projection, not discovery or compatibility. Resolve complete catalogue labels including inactive/history labels; deduplicate repeated lookup IDs for display only. Missing referenced label/profile/zone fails closed. Optional null/omitted selections/timezone/text allowed. Explicit profile fields are Id, Participantaccount/Title, four lookup Id/results sets, TimezoneId, Learningfocus, Comments; do not read eligibility/status/account-claims fields.",
+  "sharedChild": {
+    "required": false,
+    "calls": 0,
+    "failureCase": "NOT_APPLICABLE; no Workflow action or resultjson dependency exists. Incomplete/read/projection failure coverage remains mandatory.",
+    "reason": "No profile eligibility or reusable rule normalization required for current/history approved display. Calling active-catalogue discovery normalization would risk suppressing historical/paused members. No duplicate shared compatibility engine or eligibility rules added."
+  },
+  "connections": {
+    "runtimeSource": "invoker",
+    "connector": "standard shared_sharepointonline only",
+    "operation": "HttpRequest GET only",
+    "site": "Inspected native seed dataset preserved",
+    "authentication": "Exact inspected native Raw Invoker token expression; no owner/Embedded fallback",
+    "logicalReference": "cre46_sharepointonline_a22363a216",
+    "nativeSeedSha256": "ce19af2e37e7de4a9317ec4c63e8d5777beaf23a57120c99b4e38d38ce4946d4"
+  },
+  "lists": {
+    "requests": "3d17485d-1dac-41f0-a1af-24e45daa4567",
+    "groups": "4bf1b37f-edce-40c5-8fa0-36543a2d0cd6",
+    "memberships": "db611ec3-7fa3-477a-878e-effbbb195cb8",
+    "participants": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
+    "language": "3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63",
+    "culture": "cf7ed5b4-2e11-4a0a-a417-6c63ed60f614",
+    "timezone": "7beddfff-1881-4a82-8003-29933b836350"
+  },
+  "bounds": {
+    "requests": 500,
+    "groups": 100,
+    "memberships": 2000,
+    "profiles": 500,
+    "language": 5000,
+    "culture": 5000,
+    "timezone": 5000,
+    "responseChars": 250000
+  },
+  "readOrder": "GET currentuser -> top2 unique own profile binding -> requests/groups/memberships/profiles/language/culture/timezone complete bounded Id-ascending reads. Reject null, all native next-link spellings, count bound+1 and duplicates; no paging/partial/truncation.",
+  "schemaAudit": {
+    "perClick": false,
+    "owner": "#81 deployment/maintenance audit; existing verified mappings used. Root prospective setup/receipt schemas irrelevant to this read-only reader; no receipts/Introduction selected. No setup, permissions, connection or entitlement change."
+  },
+  "failure": "Failure anywhere clears Groups and Members, returns groupsjson=[]/groupstatus empty and sanitized fixed error code/message. No backend text, partial private data, success-as-empty or false Waiting.",
+  "packaging": "READABLE_NATIVE_SOLUTION_PARENT; integrator assigns new workflow identity/root and packages existing SharePoint reference; no legacy ZIP or native certification",
+  "nativeStatus": "NOT_IMPORTED_NOT_TESTED; ordinary participant access deferred; prior #12/#66/#81 evidence is not #64 runtime proof",
+  "drift81NoImpact": "New #64 consumer only; existing mapped fields/types and accepted commitment/capacity/display semantics. Explicit owner refinement includes Ended own groups. No shared schema/normalization/compatibility/interface/source/package or catalogue activity semantics changed; no discovery gate reused. Child runtime and pending target receipts unaffected. No issue edits per owner scope; append this consumer assessment to parent ledger during integration. v2 adds only caller-own membership system Id as an opaque Leave intent reference; no shared/schema/eligibility/commit/capacity change. #14 retains server-side authority/freshness checks. No #62 change.",
+  "packageBuildId": "31fbef9c-81bc-4409-bf9f-2f25b4c0e6a1",
+  "definitionSha256": "440df39b310047dde6118e0c30fae9e78192bd9f52b6c9fdf5bc5c7c3031a101",
+  "actions": 185,
+  "maximumActionDepth": 5,
+  "connectorReadDefinitions": 9,
+  "writes": 0,
+  "prerequisites": [
+    "Existing entitled Power Automate/SharePoint environment and existing inspected Invoker connection; no paid/custom connector/runtime.",
+    "Parent assigns NEW #64 workflow/root and builds enclosing Solution package with standard SharePoint reference; never overwrite CallerProbe or working flows.",
+    "Import/connection selection/owner-synthetic native test and Power Apps refresh/rebind remain unavoidable, NOT RUN. Stop dependent work for actual tenant prerequisite mismatch; no paid fallback.",
+    "Owner-only/synthetic current/source/episode fixtures; ordinary-user access testing remains deferred. No automatic fixture/reset/migration writes by reader."
+  ],
+  "leaveEpisodeReference": {
+    "field": "membershipId",
+    "type": "positive integer",
+    "source": "raw membership.Id retained internally in OperationalEpisodes; Own_episodes is already actor-filtered, then Own_group_episode filters current group and requires exactly one row before public projection.",
+    "consumer": "#14 TandemLeaveGroup input number_2; bind stale Leave intent to the exact episode.",
+    "authorization": "Reference only. #14 must still resolve current Invoker actor and verify exact own/group episode, current authority and freshness; a saved ID does not grant access or revive an old episode.",
+    "inputChange": "NONE: MyGroups still accepts only ownParticipantId number.",
+    "publicMembers": "Approved profile fields only; no membershipId added to members array or other-member payload."
+  }
+}
