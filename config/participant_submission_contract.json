@@ -81,7 +81,7 @@
   "sharedConsumerCandidate": {
     "sourceTicket": 61,
     "build": "issue-61-shared-consumer-v1",
-    "state": "LOCAL_CANDIDATE_NATIVE_SOLUTION_AUTOMATIC_BINDING_NOT_RUN",
+    "state": "NATIVE_EVENT_READS_PROFILE_INVOCATION_NOOP_PASS_STATUS_WRITE_PENDING",
     "generator": "scripts/power_automate/participant_submission_shared.py",
     "definition": "artifacts/participant_submission/TandemParticipantSubmission-shared-v1.definition.json",
     "solutionSource": "artifacts/participant_submission/TandemParticipantSubmission-shared-v1.solution-source.json",
@@ -102,10 +102,13 @@
       "solutionLogicalReference": "cre46_sharepointonline_a22363a216",
       "marker": "AUTOMATED_SOURCE_VERIFIED",
       "markerScope": "Legacy native automated Embedded source verified only; no native automatic Solution proof",
-      "nativeSolutionAutomaticBinding": "NOT_RUN",
+      "nativeSolutionAutomaticBinding": "PASS_OWNER_EVENT_READS_SHARED_PROFILE_NOOP; Status-write binding pending",
       "deploymentGate": "Verify existing owner connection resolution in assembled Solution and automatic event smoke before replacing live v2; never use manual Invoker adapter"
     },
-    "metrics": {"actionDefinitions": 29, "maximumNesting": 3},
+    "metrics": {
+      "actionDefinitions": 29,
+      "maximumNesting": 3
+    },
     "preserved": "Read current/event reference, exact ETag Status-only changed update, no retry on conflict, readback and follow-up no-op. No participation/openness/identity/selection, permission, group or membership writes",
     "packaging": "Readable legacy-shaped draft and separate core-packager source only; no standalone legacy ZIP while final Solution assembly/binding remains unverified",
     "driftReview81": {
@@ -114,10 +117,31 @@
       "otherConsumerPackagesChanged": false,
       "impact": "Only #61 consumes existing contract1/rules1 PROFILE. No schema, catalogue, normalization, null-handling, availability, compatibility, capacity or commit rule change. Closed #9/#12/#66 and current native #81 QUICK3/FULL44 evidence retained",
       "regressions": "tests/test_participant_submission_shared.py executes emitted parent and unchanged delivered v2 child; full local suite recorded in FLOW_61 guide",
-      "nativeConsumerParity": "NOT_RUN",
-      "nativeSolutionBinding": "NOT_RUN",
+      "nativeConsumerParity": "PARTIAL_PASS_VALID_ALREADY_ACTIVE_NOOP_ONLY",
+      "nativeSolutionBinding": "OWNER_EVENT_READS_CHILD_NOOP_PASS_STATUS_WRITE_PENDING",
       "sharedNativeQuickAndFull": "PASS_PREVIOUS_BUILD_UNCHANGED",
       "githubEdits": "Not performed by explicit owner instruction; local #61 ledger is the review handoff to #81/core batch"
+    },
+    "nativeCoreBatch": {
+      "solutionVersion": "1.0.0.1",
+      "sharedBuildId": "bd66271f-090e-4f5c-a890-8cb5b61173cc",
+      "parentRun": "08584069192652841427464544862CU18",
+      "childRun": "08584069192622793814733430516CU11",
+      "evidence": "artifacts/participant_submission/results/shared-v1-no-change.owner-report.json",
+      "passed": [
+        "Event-driven current-item/catalogue reads",
+        "Shared PROFILE returns OK on expected batch build",
+        "Valid item38 already Active -> NO_CHANGE/statusChanged=false"
+      ],
+      "pending": [
+        "Status correction/write/readback and autonomous no-op follow-up",
+        "Other content/catalogue/creation/failure/conflict variants",
+        "Independent old-validator-off confirmation",
+        "Ordinary-participant access"
+      ],
+      "reportedLegacyChildAnnotation": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+      "actualPackagedWorkflowTarget": "f1f91974-4124-557e-b7fe-d51e9972681d",
+      "annotationAssessment": "Known core-assembler metadata omission: Workflow target rebound correctly, Compose sharedChildId annotation retains template ID. Track #81 next-package metadata fix; no additional import requested for this no-op test."
     }
   }
 }
