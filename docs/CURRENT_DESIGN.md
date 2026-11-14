@@ -1,4 +1,16 @@
 # Current design source of truth
+## Current authorized batch — 2026-11-14
+
+[#45](https://github.com/maoy1/tandem-language-culture-app/issues/45) now delivers twelve production workflows together: [#81](https://github.com/maoy1/tandem-language-culture-app/issues/81) shared validation and business flows #7/#61/#10/#62/#63/#11/#17/#65/#64/#13/#14. Implementation is complete locally; one disabled-import Solution is being verified. All new native import, schema setup, connection, app binding and runtime acceptance remain NOT RUN. Prior native results retain their original build and do not certify this batch. The owner authorized parallel implementation while retaining one flow per ticket/PR.
+
+The shared child owns schema validation, normalization and matching. Whole-schema checks run during owner setup/audit; business flows retain authenticated identity, current operational authority, relevant live eligibility and exact ETag/unique-key/commit guards. Discovery uses one bulk PAIRS evaluation for people. Readers and group controls do not call shared eligibility when it has no bearing on their operation. Personal participation/openness is separate from validation and committed group-control authority.
+
+One-time additive setup creates optional plain-text request Introduction (maximum 2,000 in app/flow) and TandemOperationReceipts with ten agreed fields. Exact title resolution allows one import followed by Setup Apply + Audit; no post-setup GUID rebuild is required. Setup changes no participant/request/member rows, deletes or permissions. Missing or mismatched schema blocks activation. No lease takeover, background repair service or additional production runtime is introduced.
+
+Notifications are decided: in-app plus email, sender Tandemteam@elsevier.com, approved event/audience matrix in #49. The mailbox REST probe failed; #21 email delivery stays blocked and outside these twelve flows. Request/group views provide the core in-app path; no email success is claimed. Full app screens (#16/#67/#68) and deferred ordinary-participant access/privacy proof remain separate work.
+
+The sections below preserve earlier decisions and versioned evidence; this current batch status supersedes old sequencing, undecided-channel and implementation-not-started statements.
+
 
 This file records the approved MVP direction and the implemented baseline.
 Approved target behavior is not evidence that a field, flow or permission exists.
@@ -46,7 +58,7 @@ operational dependencies before relying on them.
 | Combined groups | Language/culture combined groups have 2–10 total; both focuses require a sharer and a different learner | Owner approved |
 | Participant status | Separate Active/Paused/Inactive participation from validation | #46 then #6 |
 | Culture-only participation | Supported; no mandatory language selection | #5/#7 |
-| Notifications | Evaluate options first; channel/event matrix not yet agreed | #49 then #21 |
+| Notifications | In-app plus email approved; shared-mailbox REST capability failed, email delivery blocked | #49 / #21 |
 | Membership changes | Normal acceptance, membership and slot updates automatic | #11/#12/#17/#47 |
 | Exceptions | Necessary admin support permitted; avoid routine organiser matching | #13/#14 |
 | Excel import | Inspect/map/migrate at the end of implementation | #48; before launch if existing-data launch requirement remains |

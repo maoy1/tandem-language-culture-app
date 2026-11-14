@@ -1,10 +1,18 @@
 # Tandem implementation plan
+## Current batch delivery — #45 / #81
+
+All twelve production flows have local implementations under the authorized parallel batch. Finish the coordinated disabled-import Solution, run the combined regression suite and actual-packaged-graph smoke/interoperability tests, publish one focused PR per flow and put checkbox handovers in the issues. Two disposable owner helpers (schema setup/audit and shared smoke) are additional to the twelve production flows.
+
+Owner sequence after delivery: import once; map existing SharePoint connections; enable shared child and helpers; run the 45-case shared smoke; run Setup dry, explicit Apply and complete audit; repeat Apply to check writes skip. Only then enable/test business flows in order Send → MyRequests → Cancel → Discovery → participant validation → personal response → group join/response → MyGroups → Update/Leave. Disable the old participant validator before enabling its replacement. Use owner/synthetic data; preserve working versions for cutover. Return exact reports/build/run references and keep unexecuted cases unchecked.
+
+The new batch is NOT tenant-certified. Keep runtime tickets open; app integration and ordinary-user access/privacy are pending, and #21 email is blocked by the failed sender mailbox probe. The historical checkpoints below are retained, not transferred to new versions.
+
 
 The approved design is CURRENT_DESIGN.md. This plan reflects the owner's
 annotations to Combined Requirements v0.2. GitHub tickets hold implementation
 acceptance and status; planning completion does not imply deployment.
 
-## Current focus - #7 Discovery owner preview; #12/#47 complete; #61 Ready for testing
+## Historical implementation checkpoints
 
 #46 is accepted/closed. Tracking now separates Flow, App, Shared technical and
 Overview tickets. One production flow has one owner; old partial work/evidence
