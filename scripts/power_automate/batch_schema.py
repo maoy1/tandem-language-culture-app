@@ -38,7 +38,7 @@ def request(uri, previous=None, method='GET', payload=None):
 
 
 def complete(action):
-    return "and(equals(actions('" + action + "')?['status'],'Succeeded'),empty(coalesce(body('" + action + "')?['d']?['__next'],body('" + action + "')?['@odata.nextLink'],'')))"
+    return "and(equals(actions('" + action + "')?['status'],'Succeeded'),not(equals(body('" + action + "')?['d']?['results'],null)),empty(coalesce(body('" + action + "')?['d']?['__next'],body('" + action + "')?['@odata.nextLink'],'')))"
 
 
 def field_match(spec):
@@ -117,6 +117,7 @@ def actions(build_id):
         'applyRequested': "@equals(triggerBody()?['boolean'],true)", 'runReference': "@workflow()?['run']?['name']",
         'schemaVerified': "@and(equals(actions('Schema_extensions_ready')?['status'],'Succeeded'),equals(body('Parse_schema_result')?['code'],'OK'),equals(body('Parse_schema_result')?['result']?['schemaMatches'],true),equals(body('Parse_schema_result')?['result']?['allSchema'],true))",
         'schemaResult': "@body('Parse_schema_result')?['result']",
+        'collectionComplete': "@and(equals(actions('Each_schema_metadata')?['status'],'Succeeded'),equals(length(variables('SchemaSnapshots')),8),empty(body('Incomplete_schema_snapshots')))",
         'differences': "@variables('Differences')", 'rowWrites': 0, 'deletes': 0, 'permissionChanges': 0,
         'receiptList': "@outputs('Receipt_list')", 'scope': 'Additive schema only; no automatic conversions or rollback. Dry run by default.'})
     a['Setup_report']['runAfter'] = {'Schema_extensions_ready': ALL}
@@ -165,8 +166,9 @@ def audit_actions():
         'Fields': "@body('Read_schema_fields')?['d']?['results']", 'complete': '@' + complete('Read_schema_fields')}},
         'runAfter': d.after('Read_schema_fields')}
     a['Each_schema_metadata'] = d.loop("@outputs('Schema_targets')", loop, 'Schema_targets')
+    a['Incomplete_schema_snapshots'] = d.query("@variables('SchemaSnapshots')", "not(equals(item()?['complete'],true))", 'Each_schema_metadata')
     a['Schema_request'] = d.compose({'contractVersion': 1, 'rulesVersion': 1, 'mode': 'SCHEMA',
-        'metadata': {'lists': "@variables('SchemaSnapshots')"}}, 'Each_schema_metadata')
+        'metadata': {'lists': "@variables('SchemaSnapshots')"}}, 'Incomplete_schema_snapshots')
     a['Validate_collected_schema'] = {'type': 'Scope', 'runAfter': d.after('Schema_request'), 'actions': {
         'Call_schema_validator': {'type': 'Workflow', 'inputs': {'host': {'workflowReferenceName': 'e9aa88eb-a666-4df1-b088-176be7bcd00d'},
             'body': {'text': "@string(outputs('Schema_request'))"}}, 'runAfter': {}},

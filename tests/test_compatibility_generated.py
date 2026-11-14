@@ -45,14 +45,19 @@ class Runner:
                     'replace':lambda s,old,new:s.replace(old,new),'trim':lambda s:s.strip(),'toLower':lambda s:s.lower(),'json':json.loads,
                     'first':lambda a:a[0],'workflow':lambda:{'run':{'name':'local-subset-not-a-tenant-run'}},
                     'concat':lambda *a:''.join(str(x) for x in a),'int':int,
+                    'substring':lambda s,start,count:s[start:start+count],
                     'string':lambda v:json.dumps(v,separators=(',',':')) if isinstance(v,(dict,list,bool)) else str(v),
                     'sub':lambda a,b:a-b,'createArray':lambda *v:list(v),'add':lambda a,b:a+b,'div':lambda a,b:a//b,'mod':lambda a,b:a%b,
                     'actions':lambda n:{'status':getattr(self,'action_states',{}).get(n,'Skipped')},
                     'triggerBody':lambda:context.get('triggerBody',{})}
+                funcs.update(getattr(self,'extra_functions',lambda context:{})(context))
                 result=funcs[t](*args)
             while at<len(tokens) and tokens[at]=='?':
                 at+=1;assert tokens[at]=='[';at+=1;key=value();assert tokens[at]==']';at+=1
-                result=result.get(key) if result is not None else None
+                if isinstance(result,list):
+                    assert type(key) is int,'Native array index must be an integer'
+                    result=result[key] if 0<=key<len(result) else None
+                else:result=result.get(key) if result is not None else None
             return result
         result=value();assert at==len(tokens),(text,tokens[at:]);return result
 

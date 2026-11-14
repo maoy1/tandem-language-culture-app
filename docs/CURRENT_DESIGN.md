@@ -1,4 +1,16 @@
 # Current design source of truth
+## Current authorized batch — 2026-11-14
+
+[#45](https://github.com/maoy1/tandem-language-culture-app/issues/45) now delivers twelve production workflows together: [#81](https://github.com/maoy1/tandem-language-culture-app/issues/81) shared validation and business flows #7/#61/#10/#62/#63/#11/#17/#65/#64/#13/#14. Implementation is complete locally; one disabled-import Solution is assembled for owner testing. All new native import, schema setup, connection, app binding and runtime acceptance remain NOT RUN. Prior native results retain their original build and do not certify this batch. The owner authorized parallel implementation while retaining one flow per ticket/PR.
+
+The shared child owns schema validation, normalization and matching. Whole-schema checks run during owner setup/audit; business flows retain authenticated identity, current operational authority, relevant live eligibility and exact ETag/unique-key/commit guards. Discovery uses one bulk PAIRS evaluation for people. Readers and group controls do not call shared eligibility when it has no bearing on their operation. Personal participation/openness is separate from validation and committed group-control authority.
+
+One-time additive setup creates optional plain-text request Introduction (maximum 2,000 in app/flow) and TandemOperationReceipts with ten agreed fields. Exact title resolution allows one import followed by Setup Apply + Audit; no post-setup GUID rebuild is required. Setup changes no participant/request/member rows, deletes or permissions. Missing or mismatched schema blocks activation. No lease takeover, background repair service or additional production runtime is introduced.
+
+Notifications are decided: in-app plus email, sender Tandemteam@elsevier.com, approved event/audience matrix in #49. The mailbox REST probe failed; #21 email delivery stays blocked and outside these twelve flows. Request/group views provide the core in-app path; no email success is claimed. Full app screens (#16/#67/#68) and deferred ordinary-participant access/privacy proof remain separate work.
+
+The sections below preserve earlier decisions and versioned evidence; this current batch status supersedes old sequencing, undecided-channel and implementation-not-started statements.
+
 
 This file records the approved MVP direction and the implemented baseline.
 Approved target behavior is not evidence that a field, flow or permission exists.
@@ -46,7 +58,7 @@ operational dependencies before relying on them.
 | Combined groups | Language/culture combined groups have 2–10 total; both focuses require a sharer and a different learner | Owner approved |
 | Participant status | Separate Active/Paused/Inactive participation from validation | #46 then #6 |
 | Culture-only participation | Supported; no mandatory language selection | #5/#7 |
-| Notifications | Evaluate options first; channel/event matrix not yet agreed | #49 then #21 |
+| Notifications | In-app plus email approved; shared-mailbox REST capability failed, email delivery blocked | #49 / #21 |
 | Membership changes | Normal acceptance, membership and slot updates automatic | #11/#12/#17/#47 |
 | Exceptions | Necessary admin support permitted; avoid routine organiser matching | #13/#14 |
 | Excel import | Inspect/map/migrate at the end of implementation | #48; before launch if existing-data launch requirement remains |
@@ -596,3 +608,16 @@ Added backward-compatible PAIRS mode: one actor plus the supplied profile set re
 
 
 #7 batch integration update: candidate matching now calls shared PAIRS once for the entire bounded profile set, preserving the existing PAIR rules; no child call inside Each_person. NORMALIZE and GROUP remain shared. This component requires the new #81 batch engine with PAIRS and is not executable against the old native-passed v2 child alone. Final Solution assembly rewires to fresh batch child ID; historical native evidence retained, new native performance/consumer tests NOT RUN. No matching semantics changed.
+
+### #81 assembly and test handover refinement
+
+The import remains one coordinated Solution: twelve production flows plus two disposable owner maintenance helpers (schema setup/audit and 45-case connector-free shared smoke). Existing v2 child and working business IDs are not overwritten. Assembly rebinds the inspected shared child ID and exact old build literal to the new batch child/build, preserving all consumer build identities and checks. Native document envelopes are copied from the inspected source for every component; automated owner binding remains separately marked legacy-inspected/Solution-native-NOT RUN. A local SharePoint transport fixture models only current reads, ETags and uniqueness for interoperability of actual generated graphs; no domain-rule implementation or hosted runtime is added. All final native tests remain NOT RUN.
+
+
+## #81 final coordinated batch artifact — 2026-11-14
+
+TandemCoreBatch version **1.0.0.0**, shared build **4db7f9fa-6d67-48b0-a7a6-33638d7ff4a1**, ZIP SHA256 **bd854ae74a5e0291d985aa5fadc3fb3088c8135e7c5e337148acb02e89d4c959**. Delivery: `artifacts/core_batch/TandemCoreBatch-v1.zip`; readable exact packaged definitions and IO/connection schema are alongside it. Twelve production flows plus two disposable owner helpers; all import disabled. The native-derived bundle preserves interactive Invoker and the separately inspected legacy automatic Embedded binding; new automatic Solution execution remains NOT RUN.
+
+Measured production definitions/depth: shared93/7; Discovery167/6; participant validation29/3; Send99/4; MyRequests128/4; Cancel71/5; personal Respond296/7; group Send147/5; group Respond393/5; MyGroups185/5; Update250/5; Leave231/4. Helpers Setup115/6 and Smoke8/2. Every flow is below500 actions/depth8; maximum393/7. Exact fresh workflow IDs and hashes are in the review JSON. Shared contract/rules remain1; prospective schema baseline2 covers8roles/59fields. All eleven consumer tickets are impacted by this linked deployment and retain their native acceptance checklists.
+
+Local combined regressions and actual-packaged-graph tests are recorded in TEST_RUNS and `artifacts/core_batch/validation.json`; native import/setup/audit/consumer/app/access results remain NOT RUN. Existing native QUICK3/FULL44/SharePoint owner-probe results remain tied to their old c79 build. No tenant state, working app/flow, permission or mailbox was changed by building this artifact.

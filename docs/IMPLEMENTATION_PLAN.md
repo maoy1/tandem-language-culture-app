@@ -1,10 +1,18 @@
 # Tandem implementation plan
+## Current batch delivery — #45 / #81
+
+All twelve production flows have local implementations under the authorized parallel batch. Finish the coordinated disabled-import Solution, run the combined regression suite and actual-packaged-graph smoke/interoperability tests, publish one focused PR per flow and put checkbox handovers in the issues. Two disposable owner helpers (schema setup/audit and shared smoke) are additional to the twelve production flows.
+
+Owner sequence after delivery: import once; map existing SharePoint connections; enable shared child and helpers; run the 45-case shared smoke; run Setup dry, explicit Apply and complete audit; repeat Apply to check writes skip. Only then enable/test business flows in order Send → MyRequests → Cancel → Discovery → participant validation → personal response → group join/response → MyGroups → Update/Leave. Disable the old participant validator before enabling its replacement. Use owner/synthetic data; preserve working versions for cutover. Return exact reports/build/run references and keep unexecuted cases unchecked.
+
+The new batch is NOT tenant-certified. Keep runtime tickets open; app integration and ordinary-user access/privacy are pending, and #21 email is blocked by the failed sender mailbox probe. The historical checkpoints below are retained, not transferred to new versions.
+
 
 The approved design is CURRENT_DESIGN.md. This plan reflects the owner's
 annotations to Combined Requirements v0.2. GitHub tickets hold implementation
 acceptance and status; planning completion does not imply deployment.
 
-## Current focus - #7 Discovery owner preview; #12/#47 complete; #61 Ready for testing
+## Historical implementation checkpoints
 
 #46 is accepted/closed. Tracking now separates Flow, App, Shared technical and
 Overview tickets. One production flow has one owner; old partial work/evidence
@@ -681,3 +689,16 @@ Added backward-compatible PAIRS mode: one actor plus the supplied profile set re
 
 
 #7 batch integration update: candidate matching now calls shared PAIRS once for the entire bounded profile set, preserving the existing PAIR rules; no child call inside Each_person. NORMALIZE and GROUP remain shared. This component requires the new #81 batch engine with PAIRS and is not executable against the old native-passed v2 child alone. Final Solution assembly rewires to fresh batch child ID; historical native evidence retained, new native performance/consumer tests NOT RUN. No matching semantics changed.
+
+### #81 assembly and test handover refinement
+
+The import remains one coordinated Solution: twelve production flows plus two disposable owner maintenance helpers (schema setup/audit and 45-case connector-free shared smoke). Existing v2 child and working business IDs are not overwritten. Assembly rebinds the inspected shared child ID and exact old build literal to the new batch child/build, preserving all consumer build identities and checks. Native document envelopes are copied from the inspected source for every component; automated owner binding remains separately marked legacy-inspected/Solution-native-NOT RUN. A local SharePoint transport fixture models only current reads, ETags and uniqueness for interoperability of actual generated graphs; no domain-rule implementation or hosted runtime is added. All final native tests remain NOT RUN.
+
+
+## #81 final coordinated batch artifact — 2026-11-14
+
+TandemCoreBatch version **1.0.0.0**, shared build **4db7f9fa-6d67-48b0-a7a6-33638d7ff4a1**, ZIP SHA256 **bd854ae74a5e0291d985aa5fadc3fb3088c8135e7c5e337148acb02e89d4c959**. Delivery: `artifacts/core_batch/TandemCoreBatch-v1.zip`; readable exact packaged definitions and IO/connection schema are alongside it. Twelve production flows plus two disposable owner helpers; all import disabled. The native-derived bundle preserves interactive Invoker and the separately inspected legacy automatic Embedded binding; new automatic Solution execution remains NOT RUN.
+
+Measured production definitions/depth: shared93/7; Discovery167/6; participant validation29/3; Send99/4; MyRequests128/4; Cancel71/5; personal Respond296/7; group Send147/5; group Respond393/5; MyGroups185/5; Update250/5; Leave231/4. Helpers Setup115/6 and Smoke8/2. Every flow is below500 actions/depth8; maximum393/7. Exact fresh workflow IDs and hashes are in the review JSON. Shared contract/rules remain1; prospective schema baseline2 covers8roles/59fields. All eleven consumer tickets are impacted by this linked deployment and retain their native acceptance checklists.
+
+Local combined regressions and actual-packaged-graph tests are recorded in TEST_RUNS and `artifacts/core_batch/validation.json`; native import/setup/audit/consumer/app/access results remain NOT RUN. Existing native QUICK3/FULL44/SharePoint owner-probe results remain tied to their old c79 build. No tenant state, working app/flow, permission or mailbox was changed by building this artifact.

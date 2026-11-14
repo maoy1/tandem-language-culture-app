@@ -20,7 +20,7 @@
     "TandemLeaveGroup": 14
   },
   "import": "All components get fresh batch-specific IDs, imported disabled; no silent replacement or duplicate active participant validators.",
-  "maintenance": "One optional disposable TandemBatchSchemaSetup action, separate from the twelve production flows; default read-only. Required extensions not yet applied.",
+  "maintenance": "Two optional disposable owner helpers, separate from the twelve production flows: dry-by-default TandemBatchSchemaSetup and connector-free TandemCoreValidationSmoke (45 synthetic cases). Required schema extensions and new native tests remain NOT RUN.",
   "nativeAcceptance": "NOT RUN; old native evidence is versioned and does not certify this batch.",
   "email": "#21 excluded from twelve-flow scope; approved in-app plus email, Tandemteam@elsevier.com REST probe failed. No email connector or delivery workaround in this batch."
 }
