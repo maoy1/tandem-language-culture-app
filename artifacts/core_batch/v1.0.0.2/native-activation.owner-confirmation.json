@@ -1,0 +1,35 @@
+{
+  "sourceTicket": 81,
+  "solutionVersion": "1.0.0.2",
+  "sharedBuildId": "aaeaf9aa-c1c8-4605-a6a8-53012d536ee9",
+  "zipSha256": "0d1b97508db5c5995199bac0853d45ee73ba147a48008c0fb1c369740b4868bd",
+  "evidenceType": "OWNER_CONFIRMATION",
+  "ownerStatement": "ok, all five can be activated.",
+  "confirmedFlows": {
+    "TandemLeaveGroup": {
+      "id": "879a36cc-5bfe-5085-8f0e-805faad13f48",
+      "activation": "PASS_OWNER_CONFIRMED"
+    },
+    "TandemMyGroups": {
+      "id": "fcf94de0-e60d-5484-8565-a436b87c0e0b",
+      "activation": "PASS_OWNER_CONFIRMED"
+    },
+    "TandemRespondGroupJoinRequest": {
+      "id": "d53f1797-9647-5910-9bda-8a48e0fced31",
+      "activation": "PASS_OWNER_CONFIRMED"
+    },
+    "TandemRespondRequest": {
+      "id": "b983e199-0544-53c2-af4d-c8bee5d3de8d",
+      "activation": "PASS_OWNER_CONFIRMED"
+    },
+    "TandemCancelRequest": {
+      "id": "8bee0275-1c6a-54b3-9225-cf637d3047f0",
+      "activation": "PASS_OWNER_CONFIRMED"
+    }
+  },
+  "scope": "Activation of the five previously failing definitions only; no business execution or data-write outcome inferred.",
+  "nativeSmoke": "NOT RUN / report not yet supplied",
+  "businessAcceptance": "NOT RUN",
+  "ordinaryParticipantAccess": "DEFERRED",
+  "runReference": "Not applicable: enabling is not a flow execution"
+}

@@ -256,7 +256,9 @@ def build_actions(original=None,mapping=None,groups=None,build_id='local-review'
     b.add('Current_user',g.http('_api/web/currentuser?$select=Id'))
     g.collection(b,'Own_profile',d.cat(g.base['participants']+'/items?$select=Id&$filter=ParticipantaccountId eq ',"@string(body('Current_user')?['d']?['Id'])",'&$top=2'),1)
     b.gate('Own_profile_one',"equals(length(body('Own_profile')?['d']?['results']),1)",'CALLER_PROFILE_UNVERIFIED');b.set('Actor_id','Actor',"@first(body('Own_profile')?['d']?['results'])?['Id']")
-    g.getvar(b,'Initial_request','requests',"body('Input')?['number']",'Request')
+    # The later Initial_Request reread must not differ only by case. Native
+    # template name resolution can collapse those dependencies into a cycle.
+    g.getvar(b,'Bootstrap_request','requests',"body('Input')?['number']",'Request')
     b.add('Request_shape',d.parse("@variables('Request')",{'type':'object','required':['Id','SenderParticipantId','TargetGroupId','RequestType','Status','OperationComplete','ConnectionKey'],'properties':{'SenderParticipantId':{'type':'integer','minimum':1},'TargetGroupId':{'type':'integer','minimum':1},'RequestType':{'type':'string','enum':['Group']},'OperationComplete':{'type':'boolean'}}}))
     b.set('Target_id','TargetGroup',"@variables('Request')?['TargetGroupId']");b.set('Requester_id','Requester',"@variables('Request')?['SenderParticipantId']")
     b.compose('Canonical_intent',{'version':1,'kind':'respond-group-join','actorId':"@variables('Actor')",'requestId':"@body('Input')?['number']",'decision':"@body('Input')?['text']",'groupId':"@variables('TargetGroup')",'requesterId':"@variables('Requester')"})

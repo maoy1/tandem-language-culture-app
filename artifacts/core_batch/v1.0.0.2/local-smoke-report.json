@@ -1,0 +1,19 @@
+{
+  "execution": "LOCAL_INTERPRETER_NOT_TENANT",
+  "sourceZipSha256": "0d1b97508db5c5995199bac0853d45ee73ba147a48008c0fb1c369740b4868bd",
+  "report": {
+    "kind": "TandemValidationSmoke",
+    "suite": "BATCH",
+    "sourceTicket": 81,
+    "packageBuildId": "aaeaf9aa-c1c8-4605-a6a8-53012d536ee9",
+    "syntheticOnly": true,
+    "runReference": "local-subset-not-a-tenant-run",
+    "testCount": 45,
+    "completedCount": 45,
+    "allPassed": true,
+    "failedCases": [],
+    "connectors": 0,
+    "reads": 0,
+    "writes": 0
+  }
+}
