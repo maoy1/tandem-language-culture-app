@@ -1,0 +1,11 @@
+{
+  "sourceTicket": 16,
+  "coreSolution": "TandemCoreBatch 1.0.0.1",
+  "sharedBuildId": "bd66271f-090e-4f5c-a890-8cb5b61173cc",
+  "bindings": {
+    "TandemDiscovery": "fd8d85eb-5af0-54a3-b05b-c8183830d4b2",
+    "TandemSendRequest": "bd284001-372a-512f-9bda-e5d2709a091d",
+    "TandemSendGroupJoinRequest": "1c00da26-d2c0-583b-9fac-17cff45a35f2"
+  },
+  "nativeBindingStatus": "NOT RUN: verify resolved flow IDs/connections in Power Apps Studio before executing"
+}

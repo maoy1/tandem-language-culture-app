@@ -1,0 +1,167 @@
+{
+  "sourceTicket": 16,
+  "candidateVersion": "Discovery-v1",
+  "sourceSha256": "0cc7cf61dd9b9de02da552ec88c7330a50587ecc2e877c47629cf4d62f4f1658",
+  "candidateSha256": "ee00b86d7810d2e6c1ccd52777b7a1ef9003e60aa8638fa270817503289ffdee",
+  "testCount": 36,
+  "allPassed": true,
+  "checks": [
+    {
+      "case": "preserved:Header.json",
+      "passed": true
+    },
+    {
+      "case": "preserved:Controls/4.json",
+      "passed": true
+    },
+    {
+      "case": "preserved:Controls/97.json",
+      "passed": true
+    },
+    {
+      "case": "preserved:Controls/106.json",
+      "passed": true
+    },
+    {
+      "case": "preserved:Src/scrRequests.pa.yaml",
+      "passed": true
+    },
+    {
+      "case": "preserved:Controls/1.json",
+      "passed": true
+    },
+    {
+      "case": "preserved:Src/App.pa.yaml",
+      "passed": true
+    },
+    {
+      "case": "preserved:Src/_EditorState.pa.yaml",
+      "passed": true
+    },
+    {
+      "case": "preserved:References/Themes.json",
+      "passed": true
+    },
+    {
+      "case": "preserved:References/ModernThemes.json",
+      "passed": true
+    },
+    {
+      "case": "preserved:References/Resources.json",
+      "passed": true
+    },
+    {
+      "case": "preserved:References/Templates.json",
+      "passed": true
+    },
+    {
+      "case": "preserved:AppCheckerResult.sarif",
+      "passed": true
+    },
+    {
+      "case": "preserved:References/AuxDataMap.json",
+      "passed": true
+    },
+    {
+      "case": "preserved:Resources/PublishInfo.json",
+      "passed": true
+    },
+    {
+      "case": "registration changes restricted to Discovery entry",
+      "passed": true
+    },
+    {
+      "case": "app identity and all non-flow properties preserved",
+      "passed": true
+    },
+    {
+      "case": "unrelated connection:8e5fc91d-01fe-46bb-a696-3b49fe4194b5",
+      "passed": true
+    },
+    {
+      "case": "unrelated connection:7a7f9c0c-38a7-4854-ab37-7f151dce53bb",
+      "passed": true
+    },
+    {
+      "case": "unrelated connection:093e99f1-a424-4001-aa88-67dfa18a7a3a",
+      "passed": true
+    },
+    {
+      "case": "SharePoint binding unchanged",
+      "passed": true
+    },
+    {
+      "case": "TandemDiscovery:current core workflow",
+      "passed": true
+    },
+    {
+      "case": "TandemDiscovery:inputs",
+      "passed": true
+    },
+    {
+      "case": "TandemDiscovery:outputs",
+      "passed": true
+    },
+    {
+      "case": "TandemSendGroupJoinRequest:current core workflow",
+      "passed": true
+    },
+    {
+      "case": "TandemSendGroupJoinRequest:inputs",
+      "passed": true
+    },
+    {
+      "case": "TandemSendGroupJoinRequest:outputs",
+      "passed": true
+    },
+    {
+      "case": "TandemSendRequest:current core workflow",
+      "passed": true
+    },
+    {
+      "case": "TandemSendRequest:inputs",
+      "passed": true
+    },
+    {
+      "case": "TandemSendRequest:outputs",
+      "passed": true
+    },
+    {
+      "case": "PAC YAML loading enabled",
+      "passed": true
+    },
+    {
+      "case": "no Discovery display:User().Email",
+      "passed": true
+    },
+    {
+      "case": "no Discovery display:Participantaccount",
+      "passed": true
+    },
+    {
+      "case": "no Discovery display:accountKey",
+      "passed": true
+    },
+    {
+      "case": "no Discovery display:WinningOperationKey",
+      "passed": true
+    },
+    {
+      "case": "no Discovery display:SourceRequestId",
+      "passed": true
+    }
+  ],
+  "sourceFormulaSanity": {
+    "checked": 143,
+    "result": "PASS: delimiters, quoting and alias separators only; not compilation"
+  },
+  "packager": "Microsoft.PowerApps.CLI.Tool 2.15.1 / canvas SourceCode",
+  "powerFxCompilation": "NOT RUN: requires Power Apps Studio",
+  "tenantFlowBinding": "NOT RUN",
+  "nativeImport": "NOT RUN",
+  "publishedVersion": null,
+  "ordinaryParticipantAccess": "DEFERRED",
+  "runtimeFlowsChanged": 0,
+  "note": "PAC source overlay loads on Studio edit; Controls JSON and AppCheckerResult are the original cached files, not a new compilation result.",
+  "candidateUnpackSourceRoundtrip": "PASS: both source overlays recovered unchanged by Microsoft PAC"
+}
