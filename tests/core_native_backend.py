@@ -197,7 +197,10 @@ class Connection:
 
 class ParentRunner(ChildRunner):
     def extra_functions(self, context):
-        return {'guid': lambda: str(uuid4()), 'utcNow': lambda: '2026-11-14T12:00:00Z',
+        def utc_now(format=None):
+            assert format in [None, 'yyyy-MM-ddTHH:mm:ssZ'], 'Unsupported fixture date format'
+            return '2026-11-14T12:00:00Z'
+        return {'guid': lambda: str(uuid4()), 'utcNow': utc_now,
                 'split': lambda value, separator: value.split(separator), 'join': lambda values, separator: separator.join(values),
                 'startsWith': lambda value, prefix: value.startswith(prefix), 'endsWith': lambda value, suffix: value.endswith(suffix),
                 'skip': lambda values, count: values[count:], 'take': lambda values, count: values[:count],

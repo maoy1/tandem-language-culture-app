@@ -1,6 +1,6 @@
 """Fixture axioms only; business interoperability runs through emitted parents."""
 import pytest
-from core_native_backend import predicate, seed, Connection, ROLES
+from core_native_backend import predicate, seed, Connection, ROLES, ParentRunner
 
 
 @pytest.mark.parametrize('expression,expected', [
@@ -27,3 +27,14 @@ def test_transport_uniqueness_and_exact_etag_boundary():
     request['parameters/headers']['IF-MATCH'] = '"1"'
     assert connection.request(request)['statusCode'] == 204
     assert db.tables['requests'][0]['Status'] == 'Cancelled'
+
+
+@pytest.mark.parametrize('expression,expected', [
+    ("@substring('11111111-2222-4333-8444-555555555555',8,1)", '-'),
+    ("@split('request:7:participant:2',':')?[1]", '7'),
+    ("@split('request:7',':')?[5]", None),
+    ("@utcNow()", '2026-11-14T12:00:00Z'),
+    ("@utcNow('yyyy-MM-ddTHH:mm:ssZ')", '2026-11-14T12:00:00Z')])
+def test_native_scalar_and_array_primitives_used_by_delivered_flows(expression, expected):
+    runner = ParentRunner(Connection(seed()))
+    assert runner.expr(expression, {'items': {}}) == expected

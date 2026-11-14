@@ -115,7 +115,7 @@ def test_personal_accept_group_reader_group_send_cancel_and_leave_interoperate()
     assert len(db.tables['members']) == 2
     inbox, _ = invoke(db, 'inbox', 1, {'number': 1})
     assert inbox['resultcode'] == 'OK', inbox
-    incoming = next(r for r in json.loads(inbox['requestsjson']) if r['id'] == int(join['requestid']))
+    incoming = next(r for r in json.loads(inbox['requestsjson']) if r['requestId'] == int(join['requestid']))
     assert incoming['introduction'] == 'Hello from participant 3'
     cancelled, _ = invoke(db, 'cancel', 3, {'number': 3, 'number_1': int(join['requestid'])})
     assert cancelled['resultcode'] == 'CANCELLED', cancelled
