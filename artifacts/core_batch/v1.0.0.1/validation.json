@@ -39,7 +39,11 @@
     "correctedImportAndReadOnlyAudit": "OWNER_CONFIRMED_PASS_SUMMARY",
     "ordinaryUserAccess": "DEFERRED_NOT_VERIFIED",
     "readOnlyAuditEvidence": "results/schema-audit.owner-confirmation.json",
-    "repeatApply": "NOT_RUN"
+    "repeatApply": "NATIVE_SCHEMA_PASS_CREATE_ACTION_STATUSES_NOT_PROVIDED",
+    "repeatApplyEvidence": "results/schema-repeat-apply.owner-report.json",
+    "repeatApplyRun": "08584069211508254579686294345CU13",
+    "schemaValidationRun": "08584069211275890958307283979CU25",
+    "requestCharacters": 41372
   },
   "nextOwnerStep": "Update existing TandemCoreBatch Solution, preserve existing connections and disabled business/event flows, then run TandemBatchSchemaSetup ApplyChanges=No and return Setup_report."
 }
