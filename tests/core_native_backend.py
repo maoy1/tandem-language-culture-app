@@ -229,7 +229,8 @@ def seed():
     db = Database()
     for i, teach, learn in [(1, [1], [2]), (2, [2], [1]), (3, [], [1]), (4, [2], [])]:
         db.insert('participants', {'ParticipantaccountId': i * 101,
-            'Participantaccount': {'Id': i * 101, 'Claims': 'trusted-' + str(i), 'DisplayName': 'Person ' + str(i), 'Email': 'PRIVATE_EMAIL'},
+            'Participantaccount': {'Id': i * 101, 'Claims': 'trusted-' + str(i), 'DisplayName': 'Person ' + str(i),
+                                   'Title': 'Person ' + str(i), 'Email': 'PRIVATE_EMAIL'},
             'Status': 'Active', 'ParticipationStatus': 'Active', 'OpenToConnections': True,
             'TeachlanguagesId': {'results': teach}, 'LearnlanguagesId': {'results': learn},
             'ShareCulturesId': {'results': []}, 'LearnCulturesId': {'results': []},
