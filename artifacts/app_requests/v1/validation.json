@@ -1,9 +1,9 @@
 {
   "artifactVersion": "Requests-v1",
-  "sha256": "88e609458ae7ee83f38fe8457780205e59a45e0254368b8b65967e1f5af2d9b5",
+  "sha256": "48b9b2af53b3ad07e2dc41af2bb29587969aa186f889822da7bbf3c3d4125143",
   "baseAppSha256": "ee00b86d7810d2e6c1ccd52777b7a1ef9003e60aa8638fa270817503289ffdee",
   "coreZipSha256": "0d1b97508db5c5995199bac0853d45ee73ba147a48008c0fb1c369740b4868bd",
-  "testCount": 2156,
+  "testCount": 2164,
   "allPassed": true,
   "formulaSanityCount": 1950,
   "flowCallCount": 17,
@@ -3191,6 +3191,10 @@
       "passed": true
     },
     {
+      "case": "existing proven lookup:cmbLearnLanguages.Items",
+      "passed": true
+    },
+    {
       "case": "Canvas equality operator:cmbLearnLanguages.PaddingLeft",
       "passed": true
     },
@@ -3568,6 +3572,10 @@
     },
     {
       "case": "Canvas equality operator:cmbTeachLanguages.Items",
+      "passed": true
+    },
+    {
+      "case": "existing proven lookup:cmbTeachLanguages.Items",
       "passed": true
     },
     {
@@ -4671,6 +4679,10 @@
       "passed": true
     },
     {
+      "case": "existing proven lookup:cmbShareCultures.Items",
+      "passed": true
+    },
+    {
       "case": "Canvas equality operator:cmbShareCultures.PaddingLeft",
       "passed": true
     },
@@ -5051,6 +5063,10 @@
       "passed": true
     },
     {
+      "case": "existing proven lookup:cmbLearnCultures.Items",
+      "passed": true
+    },
+    {
       "case": "Canvas equality operator:cmbLearnCultures.PaddingLeft",
       "passed": true
     },
@@ -5391,6 +5407,10 @@
       "passed": true
     },
     {
+      "case": "existing proven lookup:DataCardValue2.DefaultSelectedItems",
+      "passed": true
+    },
+    {
       "case": "Canvas equality operator:DataCardValue2.DisabledBorderColor",
       "passed": true
     },
@@ -5432,6 +5452,10 @@
     },
     {
       "case": "Canvas equality operator:DataCardValue2.Items",
+      "passed": true
+    },
+    {
+      "case": "existing proven lookup:DataCardValue2.Items",
       "passed": true
     },
     {
@@ -8207,6 +8231,10 @@
       "passed": true
     },
     {
+      "case": "existing proven lookup:reqLanguages.Items",
+      "passed": true
+    },
+    {
       "case": "Canvas equality operator:reqLanguages.DefaultSelectedItems",
       "passed": true
     },
@@ -8260,6 +8288,10 @@
     },
     {
       "case": "Canvas equality operator:reqCultures.Items",
+      "passed": true
+    },
+    {
+      "case": "existing proven lookup:reqCultures.Items",
       "passed": true
     },
     {

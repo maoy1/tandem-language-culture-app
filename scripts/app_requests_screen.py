@@ -197,8 +197,8 @@ def screen():
     c.append(combo('reqType', Items='["Language", "Culture", "Combined"]', DefaultSelectedItems='["Language"]', X='reqPanel.X + 24', Y='346', Width='382', Visible=form_visible, AccessibleLabel='"Exchange type"', OnChange='Reset(reqCapacity); Reset(reqLanguages); Reset(reqCultures)'))
     c.append(label('reqCapacityLabel', Text='"Total capacity, including both participants"', X='reqPanel.X + 430', Y='314', Width='406', Height='28', Visible=form_visible))
     c.append(combo('reqCapacity', Items='ForAll(Sequence(If(reqType.Selected.Value = "Language", 2, 9), 2) As reqSize, Text(reqSize.Value, "0", "en-US"))', DisplayFields='["Value"]', SearchFields='["Value"]', IsSearchable='false', DefaultSelectedItems='["2"]', X='reqPanel.X + 430', Y='346', Width='406', Visible=form_visible, AccessibleLabel='"Total group capacity"'))
-    for name, field, excluded, y in [('reqLanguages', 'Teachlanguages', 'Culture', 432), ('reqCultures', 'ShareCultures', 'Language', 518)]:
-        c.append(combo(name, Items=f'Choices([@Participants].{field})', DefaultSelectedItems='[]', SelectMultiple='true', IsSearchable='true',
+    for name, field, excluded, y in [('reqLanguages', 'Teach languages', 'Culture', 432), ('reqCultures', 'Cultures I can share', 'Language', 518)]:
+        c.append(combo(name, Items=f"Choices([@Participants].'{field}')", DefaultSelectedItems='[]', SelectMultiple='true', IsSearchable='true',
                        X='reqPanel.X + 24', Y=str(y), Width='812', Visible=form_visible,
                        DisplayMode=f'If({EDITABLE} && reqType.Selected.Value <> "{excluded}", DisplayMode.Edit, DisplayMode.Disabled)', AccessibleLabel='"' + name[3:] + ' focus selections"'))
     modal_label('reqDialogRules', Text='"Language: 2 or 3 people total. Culture / Combined: 2–10. Each focus requires a sharer and a different learner. Choose up to 100 focuses per catalogue. "', Y='568', Height='52', **{'Visible': form_visible})

@@ -108,6 +108,7 @@ def verify(base_path,core_path,path):
     if 'Src/scrMyGroups.pa.yaml' in after:expected.add('scrMyGroups')
     check('expected screen set',set(s for d in screen_docs.values() for s in d.get('Screens',{}))==expected)
     check('screen order includes every screen',yaml.safe_load(after['Src/_EditorState.pa.yaml'])['EditorState']['ScreensOrder']==['MainScreen1','scrDiscovery','scrRequests']+(['scrMyGroups'] if 'scrMyGroups' in expected else []))
+    proven_choices=set(re.findall(r'Choices\(\[@Participants\]\.[^)]+\)',before['Src/MainScreen1.pa.yaml'].decode()))
     all_names=[];calls=[];count=0
     for file,doc in screen_docs.items():
         all_names+=list(all_controls(doc))
@@ -115,6 +116,8 @@ def verify(base_path,core_path,path):
             formula_sanity(formula);count+=1
             masked=re.sub(r'"(?:""|[^"])*"','',formula)
             check('Canvas equality operator:'+name+'.'+prop,'==' not in masked)
+            for lookup in re.findall(r'Choices\(\[@Participants\]\.[^)]+\)',formula):
+                check('existing proven lookup:'+name+'.'+prop,lookup in proven_choices)
             for flow,arity in run_calls(formula):
                 spec=next(iter(flows[flow]['trigger'].values()))['inputs']['schema']
                 check(f'Run arity:{name}.{prop}/{flow}',len(spec.get('required',[]))<=arity<=len(spec['properties']))

@@ -96,8 +96,8 @@ class RequestsSourceTests(unittest.TestCase):
 
     def test_existing_catalogues_plain_text_and_navigation_slots(self):
         items = controls()
-        self.assertEqual(items['reqLanguages']['Properties']['Items'], '=Choices([@Participants].Teachlanguages)')
-        self.assertEqual(items['reqCultures']['Properties']['Items'], '=Choices([@Participants].ShareCultures)')
+        self.assertEqual(items['reqLanguages']['Properties']['Items'], "=Choices([@Participants].'Teach languages')")
+        self.assertEqual(items['reqCultures']['Properties']['Items'], "=Choices([@Participants].'Cultures I can share')")
         self.assertIn('Text(Value(reqFocus.Id), "0", "en-US")', app.CAPTURE)
         self.assertNotIn('JSON(ForAll', app.CAPTURE)
         self.assertEqual(items['reqDetails']['Properties']['Mode'], '=TextMode.MultiLine')

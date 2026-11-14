@@ -6,7 +6,7 @@
   "baseAppSha256": "ee00b86d7810d2e6c1ccd52777b7a1ef9003e60aa8638fa270817503289ffdee",
   "coreSolutionVersion": "1.0.0.2",
   "coreZipSha256": "0d1b97508db5c5995199bac0853d45ee73ba147a48008c0fb1c369740b4868bd",
-  "sha256": "88e609458ae7ee83f38fe8457780205e59a45e0254368b8b65967e1f5af2d9b5",
+  "sha256": "48b9b2af53b3ad07e2dc41af2bb29587969aa186f889822da7bbf3c3d4125143",
   "screens": [
     "MainScreen1",
     "scrDiscovery",
