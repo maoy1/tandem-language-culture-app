@@ -16,7 +16,8 @@ PEOPLE = json.loads((shared.ROOT / 'config/tenant_schema_mapping.json').read_tex
 GROUPS = json.loads((shared.ROOT / 'config/group_schema_mapping.json').read_text())
 ROLES = {**{k: v['listId'] for k, v in PEOPLE['lists'].items()},
          **{k: v['listId'] for k, v in GROUPS['lists'].items()},
-         'requests': '3d17485d-1dac-41f0-a1af-24e45daa4567'}
+         'requests': '3d17485d-1dac-41f0-a1af-24e45daa4567',
+         'receipts': 'f0000000-0000-4000-8000-000000000081'}
 TITLES = {'participants': 'Participants', 'language': 'Language catalogue', 'culture': 'Culture catalogue',
           'timezone': 'Time zone catalogue', 'groups': 'Groups', 'members': 'Group Members',
           'requests': 'Connection Requests', 'receipts': 'TandemOperationReceipts'}
@@ -79,7 +80,15 @@ class Database:
         self.before_write = None
 
     def insert(self, role, fields):
-        row = {**deepcopy(fields), 'Id': max([r['Id'] for r in self.tables[role]], default=0) + 1}
+        defaults = {'requests': {'RecipientParticipantId': None, 'TargetGroupId': None,
+                    'WinningOperationKey': None, 'OperationComplete': False, 'Introduction': None},
+                    'groups': {'Purpose': None, 'WriteOwner': None, 'SetupComplete': False,
+                               'LanguageFocusId': {'results': []}, 'CultureFocusId': {'results': []}},
+                    'members': {'LeftAt': None},
+                    'receipts': {'Complete': False, 'Uncertain': False, 'Retryable': False, 'DomainEffects': False,
+                                 'ResultJson': None, 'AttemptToken': None, 'SealedAttempts': None, 'Stage': None}}
+        row = {**deepcopy(defaults.get(role, {})), **deepcopy(fields),
+               'Id': max([r['Id'] for r in self.tables[role]], default=0) + 1}
         row.setdefault('Created', '2026-11-14T12:00:00Z')
         row['__metadata'] = {'etag': '"1"', 'type': TYPES.get(role, 'SP.Data.CatalogueListItem')}
         self.tables[role].append(row)
@@ -157,6 +166,7 @@ class Connection:
         assert method in ['POST', 'PATCH', 'MERGE'], method
         patch = deepcopy(params['parameters/body'])
         if isinstance(patch, str): patch = json.loads(patch)
+        if '__metadata' in patch: assert patch['__metadata']['type'] == TYPES.get(role, 'SP.Data.CatalogueListItem'), 'Wrong native item entity type'
         patch.pop('__metadata', None)
         if self.db.before_write:
             hook, self.db.before_write = self.db.before_write, None
@@ -177,7 +187,9 @@ class Connection:
                 return self.response({'error': {'innerError': {'errors': ['-2130575169', 'Microsoft.SharePoint.SPDuplicateValuesFoundException']}}}, 502)
             row = self.db.insert(role, patch)
         self.db.log.append({'role': role, 'id': row['Id'], 'patch': patch})
-        return self.response(row, 502 if fault == 'after' else (204 if match else 201))
+        if fault == 'after': return self.response({'error': 'simulated lost success response'}, 502)
+        if match: return {'statusCode': 204, 'body': None}
+        return self.response(row, 201)
 
 
 class ParentRunner(ChildRunner):
