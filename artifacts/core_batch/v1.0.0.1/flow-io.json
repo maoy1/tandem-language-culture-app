@@ -1,0 +1,1119 @@
+{
+  "TandemDiscovery": {
+    "trigger": {
+      "manual": {
+        "type": "Request",
+        "kind": "PowerAppV2",
+        "inputs": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "number": {
+                "description": "ParticipantId",
+                "title": "Number",
+                "type": "number",
+                "x-ms-content-hint": "NUMBER",
+                "x-ms-dynamically-added": true
+              }
+            },
+            "required": [
+              "number"
+            ]
+          }
+        }
+      }
+    },
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "cre46_sharepointonline_a22363a216"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "responses": {
+      "Respond_to_a_Power_App_or_flow": {
+        "type": "object",
+        "properties": {
+          "candidatesjson": {
+            "title": "candidatesjson",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "errormessage": {
+            "title": "errormessage",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "groupsjson": {
+            "title": "groupsjson",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "resultcode": {
+            "title": "resultcode",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "runreference": {
+            "title": "runreference",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "mode": {
+            "title": "mode",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          }
+        },
+        "additionalProperties": {}
+      }
+    }
+  },
+  "TandemParticipantSubmission": {
+    "trigger": {
+      "When_an_item_is_created_or_modified": {
+        "recurrence": {
+          "frequency": "Minute",
+          "interval": 1
+        },
+        "evaluatedRecurrence": {
+          "frequency": "Minute",
+          "interval": 1
+        },
+        "splitOn": "@triggerOutputs()?['body/value']",
+        "type": "OpenApiConnection",
+        "inputs": {
+          "parameters": {
+            "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+            "table": "fd3adf46-f81d-4a7b-a80c-567fde0175dc"
+          },
+          "host": {
+            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+            "connectionName": "shared_sharepointonline",
+            "operationId": "GetOnUpdatedItems"
+          },
+          "authentication": "@parameters('$authentication')"
+        }
+      }
+    },
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cre46_sharepointonline_a22363a216"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "responses": {}
+  },
+  "TandemSendRequest": {
+    "trigger": {
+      "manual": {
+        "type": "Request",
+        "kind": "PowerAppV2",
+        "inputs": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "number": {
+                "description": "SenderParticipantId",
+                "title": "Number",
+                "type": "number",
+                "x-ms-content-hint": "NUMBER",
+                "x-ms-dynamically-added": true
+              },
+              "number_1": {
+                "description": "RecipientParticipantId",
+                "title": "Number 1",
+                "type": "number",
+                "x-ms-content-hint": "NUMBER",
+                "x-ms-dynamically-added": true
+              },
+              "text": {
+                "type": "string",
+                "title": "IntentId",
+                "x-ms-content-hint": "TEXT",
+                "x-ms-dynamically-added": true
+              }
+            },
+            "required": [
+              "number",
+              "number_1",
+              "text"
+            ]
+          }
+        }
+      }
+    },
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "cre46_sharepointonline_a22363a216"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "responses": {
+      "Respond": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "title": "success",
+            "type": "boolean",
+            "x-ms-content-hint": "BOOLEAN",
+            "x-ms-dynamically-added": true
+          },
+          "message": {
+            "title": "message",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "resultjson": {
+            "type": "string",
+            "title": "resultjson",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "requestid": {
+            "type": "string",
+            "title": "requestid",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "status": {
+            "type": "string",
+            "title": "status",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "resultcode": {
+            "type": "string",
+            "title": "resultcode",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "errormessage": {
+            "type": "string",
+            "title": "errormessage",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "runreference": {
+            "type": "string",
+            "title": "runreference",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          }
+        }
+      }
+    }
+  },
+  "TandemMyRequests": {
+    "trigger": {
+      "manual": {
+        "type": "Request",
+        "kind": "PowerAppV2",
+        "inputs": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "number": {
+                "description": "Please enter a number",
+                "title": "NumParticipantIdber",
+                "type": "number",
+                "x-ms-content-hint": "NUMBER",
+                "x-ms-dynamically-added": true
+              }
+            },
+            "required": [
+              "number"
+            ]
+          }
+        }
+      }
+    },
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "cre46_sharepointonline_a22363a216"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "responses": {
+      "Respond_to_a_Power_App_or_flow": {
+        "type": "object",
+        "properties": {
+          "requestsjson": {
+            "title": "requestsjson",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "errormessage": {
+            "title": "errormessage",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "resultcode": {
+            "title": "resultcode",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "runreference": {
+            "title": "runreference",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "mode": {
+            "title": "mode",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "paging": {
+            "title": "paging",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          }
+        }
+      }
+    }
+  },
+  "TandemCancelRequest": {
+    "trigger": {
+      "manual": {
+        "type": "Request",
+        "kind": "PowerAppV2",
+        "inputs": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "number": {
+                "description": "",
+                "title": "ParticipantId",
+                "type": "number",
+                "x-ms-content-hint": "NUMBER",
+                "x-ms-dynamically-added": true
+              },
+              "number_1": {
+                "description": "Please enter a number",
+                "title": "RequestId",
+                "type": "number",
+                "x-ms-content-hint": "NUMBER",
+                "x-ms-dynamically-added": true
+              }
+            },
+            "required": [
+              "number",
+              "number_1"
+            ]
+          }
+        }
+      }
+    },
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "cre46_sharepointonline_a22363a216"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "responses": {
+      "Respond_to_a_Power_App_or_flow": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "success",
+            "x-ms-content-hint": "BOOLEAN",
+            "x-ms-dynamically-added": true
+          },
+          "message": {
+            "type": "string",
+            "title": "message",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "resultcode": {
+            "type": "string",
+            "title": "resultcode",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "currentstatus": {
+            "type": "string",
+            "title": "currentstatus",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "operationcomplete": {
+            "type": "boolean",
+            "title": "operationcomplete",
+            "x-ms-content-hint": "BOOLEAN",
+            "x-ms-dynamically-added": true
+          },
+          "replay": {
+            "type": "boolean",
+            "title": "replay",
+            "x-ms-content-hint": "BOOLEAN",
+            "x-ms-dynamically-added": true
+          },
+          "runreference": {
+            "type": "string",
+            "title": "runreference",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "mode": {
+            "type": "string",
+            "title": "mode",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "writeattempted": {
+            "type": "boolean",
+            "title": "writeattempted",
+            "x-ms-content-hint": "BOOLEAN",
+            "x-ms-dynamically-added": true
+          },
+          "outcomeunknown": {
+            "type": "boolean",
+            "title": "outcomeunknown",
+            "x-ms-content-hint": "BOOLEAN",
+            "x-ms-dynamically-added": true
+          }
+        },
+        "additionalProperties": {}
+      }
+    }
+  },
+  "TandemRespondRequest": {
+    "trigger": {
+      "manual": {
+        "type": "Request",
+        "kind": "PowerAppV2",
+        "inputs": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "number": {
+                "description": "Please enter a number",
+                "title": "ParticipantId",
+                "type": "number",
+                "x-ms-content-hint": "NUMBER",
+                "x-ms-dynamically-added": true
+              },
+              "number_1": {
+                "description": "Please enter a number",
+                "title": "RequestId",
+                "type": "number",
+                "x-ms-content-hint": "NUMBER",
+                "x-ms-dynamically-added": true
+              },
+              "text": {
+                "description": "Please enter your input",
+                "title": "Decision",
+                "type": "string",
+                "x-ms-content-hint": "TEXT",
+                "x-ms-dynamically-added": true
+              },
+              "text_1": {
+                "description": "Please enter your input",
+                "title": "GroupName",
+                "type": "string",
+                "x-ms-content-hint": "TEXT",
+                "x-ms-dynamically-added": true
+              },
+              "text_2": {
+                "description": "Please enter your input",
+                "title": "ExchangeType",
+                "type": "string",
+                "x-ms-content-hint": "TEXT",
+                "x-ms-dynamically-added": true
+              },
+              "number_2": {
+                "description": "Please enter a number",
+                "title": "Capacity",
+                "type": "number",
+                "x-ms-content-hint": "NUMBER",
+                "x-ms-dynamically-added": true
+              },
+              "text_3": {
+                "description": "Please enter your input",
+                "title": "LanguageFocusIds",
+                "type": "string",
+                "x-ms-content-hint": "TEXT",
+                "x-ms-dynamically-added": true
+              },
+              "text_4": {
+                "description": "Please enter your input",
+                "title": "CultureFocusIds",
+                "type": "string",
+                "x-ms-content-hint": "TEXT",
+                "x-ms-dynamically-added": true
+              },
+              "text_5": {
+                "title": "IntentId",
+                "type": "string",
+                "description": "Retain one GUID per explicit response, including retries.",
+                "x-ms-content-hint": "TEXT",
+                "x-ms-dynamically-added": true
+              }
+            },
+            "required": [
+              "number",
+              "number_1",
+              "text",
+              "text_1",
+              "text_2",
+              "number_2",
+              "text_3",
+              "text_4",
+              "text_5"
+            ]
+          }
+        }
+      }
+    },
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "cre46_sharepointonline_a22363a216"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "responses": {
+      "Respond_to_a_Power_App_or_flow": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "title": "success",
+            "type": "boolean",
+            "x-ms-content-hint": "BOOLEAN",
+            "x-ms-dynamically-added": true
+          },
+          "message": {
+            "title": "message",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "groupid": {
+            "title": "groupid",
+            "type": "number",
+            "x-ms-content-hint": "NUMBER",
+            "x-ms-dynamically-added": true
+          },
+          "resultcode": {
+            "title": "resultcode",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "operationkey": {
+            "title": "operationkey",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          }
+        }
+      }
+    }
+  },
+  "TandemSendGroupJoinRequest": {
+    "trigger": {
+      "manual": {
+        "type": "Request",
+        "kind": "PowerAppV2",
+        "inputs": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "number": {
+                "type": "number",
+                "title": "GroupId",
+                "x-ms-content-hint": "NUMBER",
+                "x-ms-dynamically-added": true
+              },
+              "text": {
+                "type": "string",
+                "title": "IntentId",
+                "x-ms-content-hint": "TEXT",
+                "x-ms-dynamically-added": true
+              },
+              "text_1": {
+                "type": "string",
+                "title": "Introduction",
+                "x-ms-content-hint": "TEXT",
+                "x-ms-dynamically-added": true
+              }
+            },
+            "required": [
+              "number",
+              "text"
+            ]
+          }
+        }
+      }
+    },
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "cre46_sharepointonline_a22363a216"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "responses": {
+      "Respond": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "success",
+            "x-ms-dynamically-added": true
+          },
+          "requestid": {
+            "type": "string",
+            "title": "requestid",
+            "x-ms-dynamically-added": true
+          },
+          "status": {
+            "type": "string",
+            "title": "status",
+            "x-ms-dynamically-added": true
+          },
+          "resultcode": {
+            "type": "string",
+            "title": "resultcode",
+            "x-ms-dynamically-added": true
+          },
+          "resultjson": {
+            "type": "string",
+            "title": "resultjson",
+            "x-ms-dynamically-added": true
+          },
+          "runreference": {
+            "type": "string",
+            "title": "runreference",
+            "x-ms-dynamically-added": true
+          },
+          "errormessage": {
+            "type": "string",
+            "title": "errormessage",
+            "x-ms-dynamically-added": true
+          }
+        }
+      }
+    }
+  },
+  "TandemRespondGroupJoinRequest": {
+    "trigger": {
+      "manual": {
+        "type": "Request",
+        "kind": "PowerAppV2",
+        "inputs": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "number": {
+                "type": "number",
+                "title": "RequestId",
+                "x-ms-content-hint": "NUMBER"
+              },
+              "text": {
+                "type": "string",
+                "title": "Decision",
+                "x-ms-content-hint": "TEXT"
+              },
+              "text_1": {
+                "type": "string",
+                "title": "IntentUUID",
+                "x-ms-content-hint": "TEXT"
+              }
+            },
+            "required": [
+              "number",
+              "text",
+              "text_1"
+            ]
+          }
+        }
+      }
+    },
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "cre46_sharepointonline_a22363a216"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "responses": {
+      "Respond_to_a_Power_App_or_flow": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "success"
+          },
+          "resultcode": {
+            "type": "string",
+            "title": "resultcode"
+          },
+          "resultjson": {
+            "type": "string",
+            "title": "resultjson"
+          },
+          "runreference": {
+            "type": "string",
+            "title": "runreference"
+          },
+          "retryable": {
+            "type": "boolean",
+            "title": "retryable"
+          },
+          "errormessage": {
+            "type": "string",
+            "title": "errormessage"
+          }
+        }
+      }
+    }
+  },
+  "TandemMyGroups": {
+    "trigger": {
+      "manual": {
+        "type": "Request",
+        "kind": "PowerAppV2",
+        "inputs": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "number": {
+                "type": "number",
+                "title": "ParticipantId",
+                "x-ms-content-hint": "NUMBER",
+                "x-ms-dynamically-added": true
+              }
+            },
+            "required": [
+              "number"
+            ]
+          }
+        }
+      }
+    },
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "cre46_sharepointonline_a22363a216"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "responses": {
+      "Respond_to_a_Power_App_or_flow": {
+        "type": "object",
+        "properties": {
+          "groupsjson": {
+            "title": "groupsjson",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "groupstatus": {
+            "title": "groupstatus",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "errormessage": {
+            "title": "errormessage",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "resultcode": {
+            "title": "resultcode",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "runreference": {
+            "title": "runreference",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "mode": {
+            "title": "mode",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "paging": {
+            "title": "paging",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          }
+        }
+      }
+    }
+  },
+  "TandemUpdateGroup": {
+    "trigger": {
+      "manual": {
+        "type": "Request",
+        "kind": "PowerAppV2",
+        "inputs": {
+          "schema": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "text"
+            ],
+            "properties": {
+              "text": {
+                "type": "string",
+                "title": "RequestJson",
+                "x-ms-content-hint": "TEXT",
+                "x-ms-dynamically-added": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "cre46_sharepointonline_a22363a216"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "responses": {
+      "Respond": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "success",
+            "x-ms-dynamically-added": true
+          },
+          "resultcode": {
+            "type": "string",
+            "title": "resultcode",
+            "x-ms-dynamically-added": true
+          },
+          "resultjson": {
+            "type": "string",
+            "title": "resultjson",
+            "x-ms-dynamically-added": true
+          },
+          "groupjson": {
+            "type": "string",
+            "title": "groupjson",
+            "x-ms-dynamically-added": true
+          },
+          "etag": {
+            "type": "string",
+            "title": "etag",
+            "x-ms-dynamically-added": true
+          },
+          "errormessage": {
+            "type": "string",
+            "title": "errormessage",
+            "x-ms-dynamically-added": true
+          },
+          "runreference": {
+            "type": "string",
+            "title": "runreference",
+            "x-ms-dynamically-added": true
+          }
+        }
+      }
+    }
+  },
+  "TandemLeaveGroup": {
+    "trigger": {
+      "manual": {
+        "type": "Request",
+        "kind": "PowerAppV2",
+        "inputs": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "number",
+              "number_1",
+              "number_2",
+              "text"
+            ],
+            "properties": {
+              "number": {
+                "type": "number",
+                "title": "ParticipantId",
+                "x-ms-content-hint": "NUMBER",
+                "x-ms-dynamically-added": true
+              },
+              "number_1": {
+                "type": "number",
+                "title": "GroupId",
+                "x-ms-content-hint": "NUMBER",
+                "x-ms-dynamically-added": true
+              },
+              "number_2": {
+                "type": "number",
+                "title": "MembershipId",
+                "x-ms-content-hint": "NUMBER",
+                "x-ms-dynamically-added": true
+              },
+              "text": {
+                "type": "string",
+                "title": "IntentId",
+                "x-ms-content-hint": "TEXT",
+                "x-ms-dynamically-added": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "cre46_sharepointonline_a22363a216"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "responses": {
+      "Respond_to_a_Power_App_or_flow": {
+        "type": "object",
+        "required": [
+          "success",
+          "resultcode",
+          "message",
+          "resultjson",
+          "replay",
+          "writeattempted",
+          "outcomeunknown",
+          "runreference",
+          "buildid",
+          "mode"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "success",
+            "x-ms-dynamically-added": true,
+            "x-ms-content-hint": "BOOLEAN"
+          },
+          "resultcode": {
+            "type": "string",
+            "title": "resultcode",
+            "x-ms-dynamically-added": true,
+            "x-ms-content-hint": "TEXT"
+          },
+          "message": {
+            "type": "string",
+            "title": "message",
+            "x-ms-dynamically-added": true,
+            "x-ms-content-hint": "TEXT"
+          },
+          "resultjson": {
+            "type": "string",
+            "title": "resultjson",
+            "x-ms-dynamically-added": true,
+            "x-ms-content-hint": "TEXT"
+          },
+          "replay": {
+            "type": "boolean",
+            "title": "replay",
+            "x-ms-dynamically-added": true,
+            "x-ms-content-hint": "BOOLEAN"
+          },
+          "writeattempted": {
+            "type": "boolean",
+            "title": "writeattempted",
+            "x-ms-dynamically-added": true,
+            "x-ms-content-hint": "BOOLEAN"
+          },
+          "outcomeunknown": {
+            "type": "boolean",
+            "title": "outcomeunknown",
+            "x-ms-dynamically-added": true,
+            "x-ms-content-hint": "BOOLEAN"
+          },
+          "runreference": {
+            "type": "string",
+            "title": "runreference",
+            "x-ms-dynamically-added": true,
+            "x-ms-content-hint": "TEXT"
+          },
+          "buildid": {
+            "type": "string",
+            "title": "buildid",
+            "x-ms-dynamically-added": true,
+            "x-ms-content-hint": "TEXT"
+          },
+          "mode": {
+            "type": "string",
+            "title": "mode",
+            "x-ms-dynamically-added": true,
+            "x-ms-content-hint": "TEXT"
+          }
+        }
+      }
+    }
+  },
+  "TandemValidateContext": {
+    "trigger": {
+      "manual": {
+        "type": "Request",
+        "kind": "Button",
+        "inputs": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "title": "RequestJson",
+                "type": "string",
+                "x-ms-dynamically-added": true,
+                "x-ms-content-hint": "TEXT"
+              }
+            },
+            "required": [
+              "text"
+            ]
+          }
+        }
+      }
+    },
+    "connectionReferences": {},
+    "responses": {
+      "Respond_to_a_Power_App_or_flow": {
+        "type": "object",
+        "properties": {
+          "resultjson": {
+            "title": "resultjson",
+            "type": "string",
+            "x-ms-dynamically-added": true
+          },
+          "resultcode": {
+            "title": "resultcode",
+            "type": "string",
+            "x-ms-dynamically-added": true
+          },
+          "success": {
+            "title": "success",
+            "type": "boolean",
+            "x-ms-dynamically-added": true
+          }
+        }
+      }
+    }
+  },
+  "TandemBatchSchemaSetup": {
+    "trigger": {
+      "manual": {
+        "type": "Request",
+        "kind": "Button",
+        "inputs": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "boolean": {
+                "type": "boolean",
+                "title": "ApplyChanges",
+                "default": false
+              }
+            },
+            "required": [
+              "boolean"
+            ]
+          }
+        }
+      }
+    },
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "cre46_sharepointonline_a22363a216"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "responses": {}
+  },
+  "TandemCoreValidationSmoke": {
+    "trigger": {
+      "manual": {
+        "type": "Request",
+        "kind": "Button",
+        "inputs": {
+          "schema": {
+            "type": "object",
+            "properties": {},
+            "required": []
+          }
+        }
+      }
+    },
+    "connectionReferences": {},
+    "responses": {}
+  }
+}

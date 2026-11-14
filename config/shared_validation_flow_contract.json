@@ -96,7 +96,7 @@
   "nativeSourceAdapterCases": 22,
   "runtimePackageUnchangedBySourceAdapter": true,
   "batchDevelopment": {
-    "state": "BUILT_LOCAL_TESTS_PASS_NATIVE_NOT_RUN",
+    "state": "SCHEMA_COLLECTOR_REPAIR_BUILT_NATIVE_RETEST_PENDING",
     "productionFlows": 12,
     "prospectiveBaseline": "config/batch_validation_schema.json",
     "roles": 8,
@@ -123,12 +123,12 @@
       65
     ],
     "solutionName": "TandemCoreBatch",
-    "solutionVersion": "1.0.0.0",
-    "packageBuildId": "4db7f9fa-6d67-48b0-a7a6-33638d7ff4a1",
-    "packageSha256": "bd854ae74a5e0291d985aa5fadc3fb3088c8135e7c5e337148acb02e89d4c959",
-    "package": "artifacts/core_batch/TandemCoreBatch-v1.zip",
-    "readableDefinitions": "artifacts/core_batch/definitions",
-    "exactIO": "artifacts/core_batch/flow-io.json",
+    "solutionVersion": "1.0.0.1",
+    "packageBuildId": "bd66271f-090e-4f5c-a890-8cb5b61173cc",
+    "packageSha256": "2708aef6bdff431c6681e17aeaca44d46073b9ef83ed2bd81af2ea3124661e92",
+    "package": "artifacts/core_batch/v1.0.0.1/TandemCoreBatch-v1.zip",
+    "readableDefinitions": "artifacts/core_batch/v1.0.0.1/definitions",
+    "exactIO": "artifacts/core_batch/v1.0.0.1/flow-io.json",
     "metrics": {
       "actions": 93,
       "maximumActionDepth": 7
