@@ -17,6 +17,10 @@ COMPONENTS = {
     'inbox': 'artifacts/my_requests/TandemMyRequests-v7-introduction-target.definition.json',
     'cancel': 'artifacts/cancel_request/TandemCancelRequest-v4.definition.json',
     'discovery': 'artifacts/tandem_discovery/TandemDiscovery-shared.definition.json',
+    'respond': 'artifacts/respond_request/TandemRespondRequest-11.2.0.definition.json',
+    'groups': 'artifacts/my_groups/TandemMyGroups-v2.definition.json',
+    'group_send': 'artifacts/group_send/TandemSendGroupJoinRequest-v1.solution-parent.json',
+    'leave': 'artifacts/leave_group/TandemLeaveGroup-v1.definition.json',
 }
 OLD_BUILD = 'c79b7b64-b3ce-4de3-aa74-0ed62bca1524'
 LOCAL_BUILD = 'local-linked-core-build'
@@ -85,3 +89,43 @@ def test_delivered_send_reconciles_lost_success_and_never_posts_twice():
     replay, _ = invoke(db, 'send', 1, {'number': 1, 'number_1': 2, 'text': INTENT})
     assert replay['resultcode'] == 'REPLAY' and replay['requestid'] == sent['requestid']
     assert len(db.tables['requests']) == len(db.log) == 1
+
+
+def accepted_group(db):
+    sent, _ = invoke(db, 'send', 1, {'number': 1, 'number_1': 2, 'text': INTENT})
+    assert sent['resultcode'] == 'SAVED', sent
+    response, runner = invoke(db, 'respond', 2, {'number': 2, 'number_1': int(sent['requestid']),
+        'text': 'Accept', 'text_1': 'Practice', 'text_2': 'Language', 'number_2': 3,
+        'text_3': '[1]', 'text_4': '[]', 'text_5': '22222222-2222-4333-8444-555555555555'})
+    assert response['success'], (response, [n for n, state in runner.action_states.items() if state == 'Failed'])
+    assert len(db.tables['groups']) == 1 and len(db.tables['members']) == 2
+    return db.tables['groups'][0]['Id']
+
+
+def test_personal_accept_group_reader_group_send_cancel_and_leave_interoperate():
+    db = seed(); group_id = accepted_group(db)
+    own, _ = invoke(db, 'groups', 1, {'number': 1})
+    assert own['resultcode'] == 'OK', own
+    group = json.loads(own['groupsjson'])[0]
+    assert group['groupId'] == group_id and group['memberCount'] == 2 and group['freeSlots'] == 1
+    assert group['membershipId'] == next(m['Id'] for m in db.tables['members'] if m['ParticipantId'] == 1)
+    join, _ = invoke(db, 'group_send', 3, {'number': group_id,
+        'text': '33333333-2222-4333-8444-555555555555', 'text_1': 'Hello from participant 3'})
+    assert join['success'] and join['status'] == 'Pending', join
+    assert len(db.tables['members']) == 2
+    inbox, _ = invoke(db, 'inbox', 1, {'number': 1})
+    assert inbox['resultcode'] == 'OK', inbox
+    incoming = next(r for r in json.loads(inbox['requestsjson']) if r['id'] == int(join['requestid']))
+    assert incoming['introduction'] == 'Hello from participant 3'
+    cancelled, _ = invoke(db, 'cancel', 3, {'number': 3, 'number_1': int(join['requestid'])})
+    assert cancelled['resultcode'] == 'CANCELLED', cancelled
+    db.tables['participants'][0]['ParticipationStatus'] = 'Paused'
+    db.tables['participants'][0]['OpenToConnections'] = False
+    left, runner = invoke(db, 'leave', 1, {'number': 1, 'number_1': group_id, 'number_2': group['membershipId'],
+        'text': '44444444-2222-4333-8444-555555555555'})
+    assert left['success'], (left, [n for n, state in runner.action_states.items() if state == 'Failed'])
+    assert db.tables['groups'][0]['State'] == 'Open'
+    assert len(db.tables['members']) == 2 and next(m for m in db.tables['members'] if m['ParticipantId'] == 1)['MembershipStatus'] == 'Left'
+    after, _ = invoke(db, 'groups', 1, {'number': 1})
+    assert after['resultcode'] == 'OK' and after['groupstatus'] == 'Waiting' and after['groupsjson'] == '[]', after
+    assert not any(entry['role'] in ['participants', 'language', 'culture', 'timezone'] for entry in db.log)
