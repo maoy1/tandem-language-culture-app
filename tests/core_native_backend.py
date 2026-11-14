@@ -135,7 +135,10 @@ class Connection:
                 row = next((r for r in rows if r['Id'] == params['id']), None)
                 if row is None: return self.response({}, 404)
                 return {'statusCode': 200, 'body': connector_row(row)}
-            return {'statusCode': 200, 'body': {'value': [connector_row(r) for r in rows]}}
+            rows = [row for row in rows if predicate(params.get('$filter', ''), row)]
+            top = int(params.get('$top', 5000))
+            return {'statusCode': 200, 'body': {'value': [connector_row(r) for r in rows[:top]],
+                **({'@odata.nextLink': 'fixture-next-page'} if len(rows) > top else {})}}
         if '/currentuser' in uri.lower(): return self.response({'Id': self.actor * 101})
         query = {k: v[0] for k, v in parse_qs(urlsplit(uri).query).items()}
         def selected(value):
