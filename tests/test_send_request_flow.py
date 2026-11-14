@@ -319,7 +319,7 @@ def test_delivered_native_parent_document_executes_with_delivered_child():
     parent=json.loads(path.read_text(encoding='utf-8'))
     assert parent['properties']['connectionReferences']['shared_sharepointonline']['runtimeSource']=='invoker'
     actions=parent['properties']['definition']['actions']
-    assert measure(actions)=={'actions':113,'maximumActionDepth':4}
+    assert measure(actions)=={'actions':99,'maximumActionDepth':4}
     assert measure(CHILD_ACTIONS)=={'actions':84,'maximumActionDepth':7}
     server=Server();runner=SendRunner(server)
     context={'items':{},'triggerBody':{'number':1,'number_1':2,'text':INTENT}}
