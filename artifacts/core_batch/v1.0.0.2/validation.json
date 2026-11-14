@@ -85,8 +85,9 @@
   "componentIdsPreserved": true,
   "interfacesEqualPreviousVersion": true,
   "nativeImport": "NOT RUN",
-  "nativeActivation": "NOT RUN",
+  "nativeActivation": "PASS_OWNER_CONFIRMED_FIVE_REPAIRED_FLOWS",
   "nativeSmoke": "NOT RUN",
   "ordinaryParticipantAccess": "DEFERRED",
-  "schemaChanges": 0
+  "schemaChanges": 0,
+  "nativeActivationEvidence": "native-activation.owner-confirmation.json"
 }

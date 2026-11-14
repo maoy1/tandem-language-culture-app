@@ -74,9 +74,10 @@
       "unsupportedPatterns": 0
     }
   ],
-  "nativeActivation": "NOT RUN",
+  "nativeActivation": "PASS_OWNER_CONFIRMED_FIVE_REPAIRED_FLOWS",
   "rowWrites": 0,
   "schemaChanges": 0,
   "circularDependencyFlow": "TandemRespondGroupJoinRequest",
-  "ownerEvidence": "Owner identified failing flow d53f1797-9647-5910-9bda-8a48e0fced31; its case-only Initial_request/Initial_Request collisions produce a case-folded dependency cycle. Corrected native activation is NOT RUN."
+  "ownerEvidence": "Owner identified the circular error in group response, then confirmed all five repaired flows can activate on the replacement package.",
+  "nativeActivationEvidence": "native-activation.owner-confirmation.json"
 }
