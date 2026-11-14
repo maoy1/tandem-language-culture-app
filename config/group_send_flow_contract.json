@@ -1,0 +1,77 @@
+{
+  "sourceTicket": 17,
+  "flowName": "TandemSendGroupJoinRequest",
+  "packageBuildId": "issue-17-group-send-v1",
+  "state": "LOCAL_IMPLEMENTATION_NATIVE_DEPLOYMENT_BLOCKED_PENDING_SCHEMA_AND_CALLER_VERIFICATION",
+  "runtime": "Power Automate Solution parent using existing SharePoint Invoker connection; no additional runtime, connector or licence",
+  "inputsInOrder": [
+    {"key": "number", "title": "GroupId", "type": "positive integer", "required": true},
+    {"key": "text", "title": "IntentId", "type": "UUID string exactly 36 characters", "required": true},
+    {"key": "text_1", "title": "Introduction", "type": "plain text, maximum 2000 characters", "required": false}
+  ],
+  "introductionCanonicalization": "Missing/null becomes empty string; other text including whitespace remains exact. Literal text, no HTML interpretation or silent trimming",
+  "actor": "No actor input. SharePoint currentuser.Id via native Invoker -> exactly one Participants account lookup match -> current actor account rechecked before new send. Injected actor references never authorize a sender",
+  "sharedChild": {
+    "id": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+    "build": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
+    "contractVersion": 1,
+    "rulesVersion": 1,
+    "mode": "GROUP",
+    "check": "Typed reviewed envelope plus outer success/resultcode agreement and result.compatible=true; success alone is insufficient",
+    "parentContext": "Fresh actor and all physical Active member profiles, complete active catalogues/Any ID, Open group focus/capacity and live member IDs; focusSharersAvailable from explicit Active/Active/true current member profiles"
+  },
+  "keys": {
+    "SendOperationKey": "group:{trustedActorId}:{lowercaseIntentUUID}",
+    "ConnectionKey": "open:group:{groupId}:participant:{trustedActorId}",
+    "requiredNativeSettings": "Both Text keys required, unique and indexed; deployment audit required. No per-call schema audit",
+    "history": "Settled rows retain immutable intent/parties/group/Introduction and rekey ConnectionKey to history:request:{Id}; terminal replay returns stored ID/status"
+  },
+  "replay": "After trusted caller resolution and before current availability/group checks. Exact sender, nullable recipient, group, Introduction, operation key and valid lifecycle key/status/commit must match. Changed group or Introduction returns INTENT_CONFLICT. No eligibility recheck or write on exact replay",
+  "newSendGuards": [
+    "Fresh Open group, SetupComplete=true, blank WriteOwner, correct ID, valid bounded typed capacity/focus",
+    "Accepted/OperationComplete=true settled Personal source request with nonblank winner and history key; source parties present and distinct",
+    "No own current/non-Left membership, including Active provisional/uncommitted rows",
+    "Complete physical Active membership read; all physical rows count toward capacity, unique participants, no actor, every episode committed to this group/source",
+    "Current actor account still belongs to Invoker; fresh nullable availability and catalogue selections passed unchanged to shared GROUP",
+    "Actual shared GROUP compatible including focus relationships, type-specific size, free slot, actor availability and available focus sharers",
+    "No live unique key or legacy Pending/Accepted-incomplete join for the same actor/group"
+  ],
+  "writes": {
+    "requestCreatesPerInvocation": 1,
+    "retryPolicy": "none",
+    "payload": ["Title", "RequestType=Group", "SenderParticipantId=numeric trusted own profile", "RecipientParticipantId=null", "TargetGroupId=GroupId", "Introduction=canonical plain text", "Status=Pending", "SendOperationKey", "ConnectionKey", "WinningOperationKey=null", "OperationComplete=false"],
+    "reconciliation": "After success/failure/timeout read exact immutable SendOperationKey; confirm only exact stored payload/lifecycle. No second POST, broad duplicate classification or success by HTTP code alone. Unresolved/malformed/readback failure -> CREATE_OUTCOME_UNKNOWN; retain same UUID",
+    "receipts": 0,
+    "memberships": 0,
+    "groups": 0,
+    "permissions": 0,
+    "schema": 0
+  },
+  "outputs": {"success": "Boolean", "requestid": "String numeric ID, zero if not confirmed", "status": "Stored request status or empty", "resultcode": "SAVED/REPLAY or bounded failure", "resultjson": "Sanitized versioned report", "runreference": "Parent run ID", "errormessage": "No backend details or Introduction/account keys"},
+  "limits": {"actionDefinitions": 147, "maximumNesting": 5, "maxActions": 500, "maxDepth": 8, "activeMembers": 10, "memberCommitRowsPerMember": 500, "catalogueRowsPerRole": 5000, "focusIdsPerRole": 50},
+  "artifacts": {
+    "readableParent": "artifacts/group_send/TandemSendGroupJoinRequest-v1.solution-parent.json",
+    "review": "artifacts/group_send/TandemSendGroupJoinRequest-v1.solution-parent.review.json",
+    "legacyZip": "NOT_EMITTED: final Solution assembly must resolve shared Workflow child before import; not a standalone legacy flow"
+  },
+  "schemaPrerequisite": {
+    "source": "#81 config/batch_schema_contract.json at a385e2847aa733eb3fd8069dfdecf5c20e216193",
+    "sourceSha256": "f189c44795dd448faaf7c8a0087b3aeed6357b264f21f8cb4e8860955b308495",
+    "Introduction": {"type": "Note", "required": false, "richText": false, "appendOnly": false, "maximumCharacters": 2000},
+    "nativeSettingsVerified": false,
+    "deploymentGate": "One-time batch setup/audit must verify Introduction, request Number sender/nullable recipient, nullable TargetGroup lookup, Group choice, unique keys and commit fields. Stop activation if unavailable/mismatched. This flow never creates or changes schema. No receipt list needed for this sender"
+  },
+  "binding": {"runtimeSource": "invoker", "logicalReference": "cre46_sharepointonline_a22363a216", "nativeParentExport": "ce19af2e37e7de4a9317ec4c63e8d5777beaf23a57120c99b4e38d38ce4946d4", "ordinaryUserAccessVerified": false, "consumerNativeParity": "NOT_RUN", "marker61": "Not used; keep automated legacy-source marker separate from this interactive send parent"},
+  "driftLedger81": {
+    "sharedEngineOrRulesEdited": false,
+    "schemaAppliedByThisChange": false,
+    "impact": "New #17 consumer reuses existing GROUP contract1/rules1 and existing request keys/commit. Planned Introduction persistence adds a consumer dependency on #81 batch setup; no receipt duplication and no new schema proposed here",
+    "receivingTickets": [17, 62, 65, 67, 81],
+    "requiredFollowThrough": "#81 deployment audit/baseline must cover actual Introduction before activation; readers/responders/app preserve immutable original text and use plain-text rendering/authorized audience. Other consumer packages intentionally unchanged in this one-ticket branch",
+    "nativeSharedQuickAndFull": "PASS_PREVIOUS_UNCHANGED_V2_BUILD_ONLY",
+    "nativeNewSend": "NOT_RUN",
+    "nativeSchemaSetup": "BLOCKED_UNVERIFIED",
+    "nativeAccessAndAudience": "DEFERRED_UNVERIFIED",
+    "githubIssueEdits": "Not performed by owner instruction; this local ledger is the integration handoff"
+  }
+}

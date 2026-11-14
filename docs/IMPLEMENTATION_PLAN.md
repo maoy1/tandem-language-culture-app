@@ -649,3 +649,37 @@ Owner chose **2,000 characters** for the optional plain-text group-join introduc
 Technical field proposal: optional plain-text Note column Introduction on Connection Requests, rich text/append disabled; actual column/settings are NOT verified or applied. SharePoint field mapping/setup and the flow/API/app mapping remain #17 work. All schema changes must update #81 baseline/audit/contract and affected consumers (#62/#65/#67), with existing native evidence retained by version. #81 has no Introduction persistence/parser today, so this planning decision does not change its current five-mode rule engine/package. Add actual schema coverage when the field is introduced.
 
 Contract evidence only: acceptance cases empty/omitted, 2,000 accepted and 2,001 rejected in both app/server are NOT RUN. #17 remains Planned, not implemented/Ready. No flow, list, data, permission or existing app changed. This clears the remaining explicit product choice for core group-join implementation; receipt-schema and Solution SharePoint/caller prerequisites still need technical verification.
+
+## #17 parallel-batch sender handoff — 2026-11-14
+
+[#17](https://github.com/maoy1/tandem-language-culture-app/issues/17) only, under
+[#45](https://github.com/maoy1/tandem-language-culture-app/issues/45). Owner explicitly
+authorizes parallel work. Own branch codex/issue-17-group-send from origin/main;
+#61 commit996a3ae remains untouched. Existing #10 single-create/readback pattern
+adapted after Boyle's fd3e8d0 commit without editing/depending on his worktree.
+
+1. Local generator group_send_flow.py, dedicated tests/contract and full readable
+   parent/review delivered as issue-17-group-send-v1:147 definitions/depth5. Inputs
+   GroupId, IntentId UUID, optional plain Introduction max2,000. Native Invoker actor
+   resolution, exact replay before eligibility, fresh committed group/members/focus,
+   unchanged shared GROUP and unique live+intent keys. One POST, no separate receipt,
+   no request retry without exact intent reconciliation, no business/schema side effects
+   beyond that Pending request. Tests run emitted parent plus delivered child graph.
+2. Before activation, #81 one-time batch setup/audit must verify planned Introduction
+   Note/plain/non-append, numeric sender/nullable recipient/TargetGroup, Group choice,
+   immutable keys required+unique+indexed and commit lifecycle. No per-click audit.
+   This branch records the existing planned contract; it changes no schema/shared
+   baseline. Missing/unverified tenant prerequisites block activation explicitly.
+3. Core assembles the readable parent with the unchanged shared child. Preserve
+   native Invoker logical reference cre46_sharepointonline_a22363a216; do not apply
+   #61's automated Embedded marker. Record final Solution parent/child IDs, hashes,
+   metrics and disabled import. No standalone legacy ZIP is claimed by a linked JSON.
+4. Execute #17's own native caller/send/replay/Introduction boundary/duplicate/unknown
+   outcome cases with permitted synthetic fixtures. Exact steps/expected persistence,
+   cleanup and blocked harness/access cases: docs/FLOW_17_GROUP_SEND.md. Minimal
+   Power Apps .Run order and frozen-draft retry guidance are prepared there; actual
+   app binding, plain authorized display and native two-account/access proof NOT RUN.
+5. #81 local drift ledger lives in config/group_send_flow_contract.json. Shared
+   engine versions and native QUICK3/FULL44 history preserved; consumers #62/#65/#67
+   must preserve immutable Introduction and authorized audience once setup is real.
+   No issue edits/push/closure/readiness upgrade. Keep pending native cases explicit.
