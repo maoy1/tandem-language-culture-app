@@ -1,0 +1,494 @@
+Screens:
+  scrRequests:
+    Properties:
+      Fill: "=RGBA(250,250,250,1)"
+    Children:
+      -
+        scrRequests_Nav_scrDiscovery:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Text: "=\"Discovery\""
+            X: "=Parent.Width - 610"
+            Y: "=20"
+            Width: "=140"
+            Height: "=40"
+            Size: "=12"
+            DisplayMode: "=If(varDiscoveryBusy || varDiscoverySending || (varReqBusy || varReqSending) || (!IsBlank(varReqDialog)), DisplayMode.Disabled, DisplayMode.Edit)"
+            OnSelect: "=Set(varDiscoveryActorId, varAppActorId); Navigate(scrDiscovery, ScreenTransition.None); Set(varDiscoveryBusy, true);\nSet(varDiscoveryError, \"\");\nClear(colDiscoveryPeople); Clear(colDiscoveryGroups);\nIfError(\n    Set(varDiscoveryResponse, TandemDiscovery.Run(varDiscoveryActorId));\n    If(varDiscoveryResponse.resultcode = \"OK\",\n        ClearCollect(colDiscoveryPeople,\n            ForAll(Table(ParseJSON(varDiscoveryResponse.candidatesjson)) As r,\n                {kind: \"Person\", targetId: Value(r.Value.profileId),\n                 title: Text(r.Value.displayName), summary: Text(r.Value.fitType),\n                 detail: \"Teaches: \" & Concat(Table(r.Value.profile.teachLanguages) As x, Text(x.Value.label), \", \") & Char(10) & \"Learning: \" & Concat(Table(r.Value.profile.learnLanguages) As x, Text(x.Value.label), \", \") & Char(10) & \"Cultures to share: \" & Concat(Table(r.Value.profile.shareCultures) As x, Text(x.Value.label), \", \") & Char(10) & \"Cultures of interest: \" & Concat(Table(r.Value.profile.learnCultures) As x, Text(x.Value.label), \", \") & Char(10) & \"Time zone: \" & Coalesce(Text(r.Value.profile.timeZone.label), \"Not specified\") & Char(10) & \"Learning focus: \" & Text(r.Value.profile.learningFocus) & Char(10) & \"Comments: \" & Text(r.Value.profile.comments) & Char(10) & Char(10) & If(!IsEmpty(Table(r.Value.match.canLearnLanguageIds)), \"You can learn: \" & Concat(Filter(Table(r.Value.profile.teachLanguages) As x, Value(x.Value.id) in ForAll(Table(r.Value.match.canLearnLanguageIds) As mid, Value(mid.Value))) As matched, Text(matched.Value.label), \", \") & Char(10), \"\") & If(!IsEmpty(Table(r.Value.match.canShareLanguageIds)), \"You can teach: \" & Concat(Filter(Table(r.Value.profile.learnLanguages) As x, Value(x.Value.id) in ForAll(Table(r.Value.match.canShareLanguageIds) As mid, Value(mid.Value))) As matched, Text(matched.Value.label), \", \") & Char(10), \"\") & If(!IsEmpty(Table(r.Value.match.canLearnCultureIds)), \"You can learn about: \" & Concat(Filter(Table(r.Value.profile.shareCultures) As x, Value(x.Value.id) in ForAll(Table(r.Value.match.canLearnCultureIds) As mid, Value(mid.Value))) As matched, Text(matched.Value.label), \", \") & Char(10), \"\") & If(!IsEmpty(Table(r.Value.match.canShareCultureIds)), \"You can share about: \" & Concat(Filter(Table(r.Value.profile.learnCultures) As x, Value(x.Value.id) in ForAll(Table(r.Value.match.canShareCultureIds) As mid, Value(mid.Value))) As matched, Text(matched.Value.label), \", \") & Char(10), \"\")}));\n        ClearCollect(colDiscoveryGroups,\n            ForAll(Table(ParseJSON(varDiscoveryResponse.groupsjson)) As r,\n                {kind: \"Group\", targetId: Value(r.Value.groupId),\n                 title: Text(r.Value.name),\n                 summary: Text(r.Value.memberCount) & \"/\" & Text(r.Value.capacity) & \" members · \" & Text(r.Value.freeSlots) & \" places available\",\n                 detail: Text(r.Value.exchangeType) & \" exchange · Open\" & Char(10) & \"Languages: \" & Concat(Table(r.Value.languageFocus) As x, Text(x.Value.label), \", \") & Char(10) & \"Cultures: \" & Concat(Table(r.Value.cultureFocus) As x, Text(x.Value.label), \", \") & Char(10) & Text(r.Value.description) & Char(10) & Char(10) & \"Members\" & Char(10) & Concat(Table(r.Value.members) As m, Text(m.Value.displayName) & Char(10) & \"Teaches: \" & Concat(Table(m.Value.teachLanguages) As x, Text(x.Value.label), \", \") & Char(10) & \"Learning: \" & Concat(Table(m.Value.learnLanguages) As x, Text(x.Value.label), \", \") & Char(10) & \"Cultures to share: \" & Concat(Table(m.Value.shareCultures) As x, Text(x.Value.label), \", \") & Char(10) & \"Cultures of interest: \" & Concat(Table(m.Value.learnCultures) As x, Text(x.Value.label), \", \") & Char(10) & \"Time zone: \" & Coalesce(Text(m.Value.timeZone.label), \"Not specified\") & Char(10) & \"Learning focus: \" & Text(m.Value.learningFocus) & Char(10) & \"Comments: \" & Text(m.Value.comments), Char(10) & Char(10))})),\n        Set(varDiscoveryError, Switch(varDiscoveryResponse.resultcode,\n            \"PROFILE_UNAVAILABLE\", \"Your saved profile is not currently available for discovery. Review your registration and availability.\",\n            \"Discovery could not load. Reference: \" & varDiscoveryResponse.runreference))\n    ),\n    Clear(colDiscoveryPeople); Clear(colDiscoveryGroups);\n    Set(varDiscoveryError, \"Discovery could not load. Select Refresh to try again.\")\n);\nSet(varDiscoveryBusy, false)"
+      -
+        reqTitle:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=24"
+            Text: "=\"My requests\""
+            X: "=24"
+            Y: "=16"
+            Width: "=Parent.Width - 640"
+            Height: "=44"
+            FontWeight: "=FontWeight.Semibold"
+      -
+        reqBack:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"My registration\""
+            X: "=Parent.Width - 300"
+            Y: "=20"
+            Width: "=160"
+            DisplayMode: "=If(varReqBusy || varReqSending || !IsBlank(varReqDialog), DisplayMode.Disabled, DisplayMode.Edit)"
+            OnSelect: "=Navigate(MainScreen1, ScreenTransition.None)"
+      -
+        reqRefresh:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"Refresh\""
+            X: "=Parent.Width - 128"
+            Y: "=20"
+            Width: "=104"
+            DisplayMode: "=If(varReqBusy || varReqSending || (!IsBlank(varReqDialog) && IsBlank(varRequestsIntent)), DisplayMode.Disabled, DisplayMode.Edit)"
+            OnSelect: "=Set(varReqBusy, true);\nSet(varReqError, \"\");\nSet(varReqDiagnostic, \"\");\nSet(varReqLoaded, false);\nSet(varReqInspectRequestId, If(!IsBlank(varRequestsIntent), varReqIntentRequest, varReqSelected.requestId));\nSet(varReqSelected, Blank());\nClear(reqRows);\nIf(IsBlank(varReqTab), Set(varReqTab, \"Received\"));\nIf(IsBlank(varAppActorId) || varAppActorId <= 0,\n    Set(varReqError, \"Open My registration and select your saved profile first\"),\n    If(!IsBlank(varRequestsIntent) && varReqIntentActor <> varAppActorId,\n        Set(varReqError, \"Return to the saved profile used for the unresolved action before refreshing.\"),\n        IfError(\n            Set(varReqReadResponse, TandemMyRequests.Run(varAppActorId));\n            If(varReqReadResponse.resultcode = \"OK\",\n                ClearCollect(reqRows,\n                    ForAll(Table(ParseJSON(varReqReadResponse.requestsjson)) As reqRow,\n                        {requestId: Value(reqRow.Value.requestId),\n                         requestType: Text(reqRow.Value.requestType),\n                         direction: Text(reqRow.Value.direction),\n                         status: Text(reqRow.Value.status),\n                         created: Text(reqRow.Value.created),\n                         availability: Text(reqRow.Value.availability),\n                         processing: Boolean(reqRow.Value.processing),\n                         completed: Boolean(reqRow.Value.completed),\n                         introduction: Text(reqRow.Value.introduction),\n                         canAccept: Boolean(reqRow.Value.actions.accept),\n                         canDecline: Boolean(reqRow.Value.actions.decline),\n                         canCancel: Boolean(reqRow.Value.actions.cancel)}));\n                Set(varReqSelected, LookUp(reqRows, requestId = varReqInspectRequestId));\n                Set(varReqLoaded, true),\n                Set(varReqError, \"Requests could not load. Code: \" & varReqReadResponse.resultcode & \". Reference: \" & varReqReadResponse.runreference)\n            ),\n            Clear(reqRows);\n            Set(varReqDiagnostic, FirstError.Message);\n            Set(varReqError, \"Requests could not load. Check the app connection or try Refresh. No action result is implied.\")\n        )\n    )\n);\nSet(varReqBusy, false)"
+      -
+        reqState:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=12"
+            Text: "=If(varReqBusy, \"Loading saved requests…\", If(!IsBlank(varReqError), varReqError, \"Review requests you sent or received. Select a request for details and available actions.\"))"
+            X: "=24"
+            Y: "=84"
+            Width: "=Parent.Width - 48"
+            Height: "=52"
+      -
+        reqTab0:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"Sent\""
+            X: "=24"
+            Y: "=144"
+            Width: "=162"
+            DisplayMode: "=If(IsBlank(varRequestsIntent) && !varReqBusy && !varReqSending && IsBlank(varReqDialog), DisplayMode.Edit, DisplayMode.Disabled)"
+            OnSelect: "=Set(varReqTab, \"Sent\"); Set(varReqSelected, Blank())"
+      -
+        reqTab1:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"Received\""
+            X: "=198"
+            Y: "=144"
+            Width: "=162"
+            DisplayMode: "=If(IsBlank(varRequestsIntent) && !varReqBusy && !varReqSending && IsBlank(varReqDialog), DisplayMode.Edit, DisplayMode.Disabled)"
+            OnSelect: "=Set(varReqTab, \"Received\"); Set(varReqSelected, Blank())"
+      -
+        reqTab2:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"Group incoming\""
+            X: "=372"
+            Y: "=144"
+            Width: "=162"
+            DisplayMode: "=If(IsBlank(varRequestsIntent) && !varReqBusy && !varReqSending && IsBlank(varReqDialog), DisplayMode.Edit, DisplayMode.Disabled)"
+            OnSelect: "=Set(varReqTab, \"Group incoming\"); Set(varReqSelected, Blank())"
+      -
+        reqTab3:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"History\""
+            X: "=546"
+            Y: "=144"
+            Width: "=162"
+            DisplayMode: "=If(IsBlank(varRequestsIntent) && !varReqBusy && !varReqSending && IsBlank(varReqDialog), DisplayMode.Edit, DisplayMode.Disabled)"
+            OnSelect: "=Set(varReqTab, \"History\"); Set(varReqSelected, Blank())"
+      -
+        reqList:
+          Control: "Gallery@2.15.0"
+          Properties:
+            Items: "=Filter(reqRows,\n        Switch(varReqTab,\n            \"Sent\", direction = \"Sent\" && status = \"Pending\",\n            \"Received\", direction = \"Received\" && requestType = \"Personal\" && status = \"Pending\",\n            \"Group incoming\", direction = \"Received\" && requestType = \"Group\" && status = \"Pending\",\n            \"History\", status <> \"Pending\", false))"
+            X: "=24"
+            Y: "=200"
+            Width: "=392"
+            Height: "=Parent.Height - 224"
+            TemplateSize: "=112"
+            AccessibleLabel: "=\"Requests in the selected view\""
+            DisplayMode: "=If(IsBlank(varRequestsIntent) && !varReqBusy && !varReqSending && IsBlank(varReqDialog), DisplayMode.Edit, DisplayMode.Disabled)"
+            TemplateFill: "=If(ThisItem.requestId = varReqSelected.requestId, RGBA(225,239,250,1), RGBA(255,255,255,1))"
+            OnSelect: "=Set(varReqSelected, ThisItem); Set(varReqOutcome, \"\")"
+          Variant: "BrowseLayout_Vertical_TwoTextVariant_ver5.0"
+          Children:
+            -
+              reqRowTitle:
+                Control: "Label@2.5.1"
+                Properties:
+                  Font: "=Font.'Segoe UI'"
+                  Size: "=12"
+                  Text: "=\"Request #\" & Text(ThisItem.requestId) & \" · \" & ThisItem.requestType"
+                  X: "=12"
+                  Y: "=8"
+                  Width: "=Parent.TemplateWidth - 24"
+                  Height: "=32"
+                  FontWeight: "=FontWeight.Semibold"
+                  OnSelect: "=Select(Parent)"
+            -
+              reqRowState:
+                Control: "Label@2.5.1"
+                Properties:
+                  Font: "=Font.'Segoe UI'"
+                  Size: "=12"
+                  Text: "=ThisItem.direction & \" · \" & ThisItem.status & If(ThisItem.processing, \" · Processing\", \"\") & Char(10) & ThisItem.created"
+                  X: "=12"
+                  Y: "=44"
+                  Width: "=Parent.TemplateWidth - 24"
+                  Height: "=60"
+                  OnSelect: "=Select(Parent)"
+      -
+        reqEmpty:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=12"
+            Text: "=\"No requests in this view.\""
+            X: "=36"
+            Y: "=220"
+            Width: "=360"
+            Height: "=60"
+            Visible: "=varReqLoaded && IsEmpty(Filter(reqRows,\n        Switch(varReqTab,\n            \"Sent\", direction = \"Sent\" && status = \"Pending\",\n            \"Received\", direction = \"Received\" && requestType = \"Personal\" && status = \"Pending\",\n            \"Group incoming\", direction = \"Received\" && requestType = \"Group\" && status = \"Pending\",\n            \"History\", status <> \"Pending\", false)))"
+      -
+        reqSelectedTitle:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=20"
+            Text: "=If(IsBlank(varReqSelected.requestId), \"Select a request\", \"Request #\" & Text(varReqSelected.requestId) & \" · \" & varReqSelected.requestType)"
+            X: "=440"
+            Y: "=200"
+            Width: "=Parent.Width - 464"
+            Height: "=48"
+      -
+        reqDetails:
+          Control: "Classic/TextInput@2.3.2"
+          Properties:
+            Size: "=12"
+            Default: "=If(IsBlank(varReqSelected.requestId), \"\", varReqSelected.direction & \" · \" & varReqSelected.status & Char(10) & \"Created: \" & varReqSelected.created & Char(10) & \"Availability: \" & varReqSelected.availability & Char(10) & \"Completion: \" & If(varReqSelected.processing, \"Processing; membership completion is not confirmed\", If(varReqSelected.completed, \"Complete\", \"Not complete\")) & Char(10) & Char(10) & \"Introduction\" & Char(10) & Coalesce(varReqSelected.introduction, \"\"))"
+            DisplayMode: "=DisplayMode.View"
+            Mode: "=TextMode.MultiLine"
+            X: "=440"
+            Y: "=256"
+            Width: "=Parent.Width - 464"
+            Height: "=Parent.Height - 464"
+            AccessibleLabel: "=\"Saved request details and plain-text introduction\""
+      -
+        reqActionAccept:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"Accept\""
+            X: "=440"
+            Y: "=Parent.Height - 196"
+            Width: "=138"
+            Visible: "=!IsBlank(varReqSelected.requestId) && varReqSelected.canAccept"
+            DisplayMode: "=If(IsBlank(varRequestsIntent) && !varReqBusy && !varReqSending && IsBlank(varReqDialog) && varReqLoaded && varReqSelected.canAccept, DisplayMode.Edit, DisplayMode.Disabled)"
+            OnSelect: "=Set(varReqDialog, \"Accept\"); Set(varReqOutcome, \"\"); Reset(reqName); Reset(reqType); Reset(reqCapacity); Reset(reqLanguages); Reset(reqCultures)"
+      -
+        reqActionDecline:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"Decline\""
+            X: "=590"
+            Y: "=Parent.Height - 196"
+            Width: "=138"
+            Visible: "=!IsBlank(varReqSelected.requestId) && varReqSelected.canDecline"
+            DisplayMode: "=If(IsBlank(varRequestsIntent) && !varReqBusy && !varReqSending && IsBlank(varReqDialog) && varReqLoaded && varReqSelected.canDecline, DisplayMode.Edit, DisplayMode.Disabled)"
+            OnSelect: "=Set(varReqDialog, \"Decline\"); Set(varReqOutcome, \"\"); Reset(reqName); Reset(reqType); Reset(reqCapacity); Reset(reqLanguages); Reset(reqCultures)"
+      -
+        reqActionCancel:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"Cancel\""
+            X: "=740"
+            Y: "=Parent.Height - 196"
+            Width: "=138"
+            Visible: "=!IsBlank(varReqSelected.requestId) && varReqSelected.canCancel"
+            DisplayMode: "=If(IsBlank(varRequestsIntent) && !varReqBusy && !varReqSending && IsBlank(varReqDialog) && varReqLoaded && varReqSelected.canCancel, DisplayMode.Edit, DisplayMode.Disabled)"
+            OnSelect: "=Set(varReqDialog, \"Cancel\"); Set(varReqOutcome, \"\"); Reset(reqName); Reset(reqType); Reset(reqCapacity); Reset(reqLanguages); Reset(reqCultures)"
+      -
+        reqRetry:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"Retry same action\""
+            X: "=440"
+            Y: "=Parent.Height - 144"
+            Width: "=190"
+            Visible: "=!IsBlank(varRequestsIntent)"
+            DisplayMode: "=If(varReqBusy || varReqSending, DisplayMode.Disabled, DisplayMode.Edit)"
+            OnSelect: "=Set(varReqSending, true);\nSet(varReqOutcome, \"\");\nSet(varReqDiagnostic, \"\");\nSet(varReqActionSuccess, false);\nSet(varReqActionCode, \"\");\nSet(varReqActionMessage, \"\");\nSet(varReqActionReference, \"\");\nIf(IsBlank(varAppActorId) || varAppActorId <= 0 || varReqIntentActor <> varAppActorId || IsBlank(varRequestsIntent),\n    Set(varReqOutcome, \"Open My registration and select the saved profile used for this action first.\"),\nIfError(\n    If(varReqIntentDecision = \"Cancel\",\n        Set(varReqCancelResponse, TandemCancelRequest.Run(varReqIntentActor, varReqIntentRequest));\n        Set(varReqActionSuccess, varReqCancelResponse.success && varReqCancelResponse.operationcomplete && !varReqCancelResponse.outcomeunknown && varReqCancelResponse.currentstatus = \"Cancelled\");\n        Set(varReqActionCode, varReqCancelResponse.resultcode);\n        Set(varReqActionMessage, varReqCancelResponse.message);\n        Set(varReqActionReference, varReqCancelResponse.runreference),\n        If(varReqIntentKind = \"Personal\",\n            Set(varReqPersonalResponse, TandemRespondRequest.Run(varReqIntentActor, varReqIntentRequest,\n    varReqIntentDecision, varReqIntentName, varReqIntentType, varReqIntentCapacity,\n    varReqIntentLanguages, varReqIntentCultures, varRequestsIntent));\n            Set(varReqActionSuccess, varReqPersonalResponse.success);\n            Set(varReqActionCode, varReqPersonalResponse.resultcode);\n            Set(varReqActionMessage, varReqPersonalResponse.message),\n            Set(varReqGroupResponse, TandemRespondGroupJoinRequest.Run(varReqIntentRequest, varReqIntentDecision, varRequestsIntent));\n            Set(varReqActionSuccess, varReqGroupResponse.success);\n            Set(varReqActionCode, varReqGroupResponse.resultcode);\n            Set(varReqActionMessage, varReqGroupResponse.errormessage);\n            Set(varReqActionReference, varReqGroupResponse.runreference)\n        )\n    );\n    If(varReqActionSuccess,\n        Set(varReqOutcome, \"Your action is confirmed. Refreshing saved requests…\");\n        Set(varRequestsIntent, Blank());\n        Set(varReqDialog, Blank());\n        Set(varReqBusy, true);\nSet(varReqError, \"\");\nSet(varReqDiagnostic, \"\");\nSet(varReqLoaded, false);\nSet(varReqInspectRequestId, If(!IsBlank(varRequestsIntent), varReqIntentRequest, varReqSelected.requestId));\nSet(varReqSelected, Blank());\nClear(reqRows);\nIf(IsBlank(varReqTab), Set(varReqTab, \"Received\"));\nIf(IsBlank(varAppActorId) || varAppActorId <= 0,\n    Set(varReqError, \"Open My registration and select your saved profile first\"),\n    If(!IsBlank(varRequestsIntent) && varReqIntentActor <> varAppActorId,\n        Set(varReqError, \"Return to the saved profile used for the unresolved action before refreshing.\"),\n        IfError(\n            Set(varReqReadResponse, TandemMyRequests.Run(varAppActorId));\n            If(varReqReadResponse.resultcode = \"OK\",\n                ClearCollect(reqRows,\n                    ForAll(Table(ParseJSON(varReqReadResponse.requestsjson)) As reqRow,\n                        {requestId: Value(reqRow.Value.requestId),\n                         requestType: Text(reqRow.Value.requestType),\n                         direction: Text(reqRow.Value.direction),\n                         status: Text(reqRow.Value.status),\n                         created: Text(reqRow.Value.created),\n                         availability: Text(reqRow.Value.availability),\n                         processing: Boolean(reqRow.Value.processing),\n                         completed: Boolean(reqRow.Value.completed),\n                         introduction: Text(reqRow.Value.introduction),\n                         canAccept: Boolean(reqRow.Value.actions.accept),\n                         canDecline: Boolean(reqRow.Value.actions.decline),\n                         canCancel: Boolean(reqRow.Value.actions.cancel)}));\n                Set(varReqSelected, LookUp(reqRows, requestId = varReqInspectRequestId));\n                Set(varReqLoaded, true),\n                Set(varReqError, \"Requests could not load. Code: \" & varReqReadResponse.resultcode & \". Reference: \" & varReqReadResponse.runreference)\n            ),\n            Clear(reqRows);\n            Set(varReqDiagnostic, FirstError.Message);\n            Set(varReqError, \"Requests could not load. Check the app connection or try Refresh. No action result is implied.\")\n        )\n    )\n);\nSet(varReqBusy, false),\n        Set(varReqOutcome, \"Action not confirmed. Code: \" & varReqActionCode & If(IsBlank(varReqActionReference), \"\", \". Reference: \" & varReqActionReference) & \". Refresh to inspect saved status. Retry retains the same action and settings.\")\n    ),\n    Set(varReqDiagnostic, FirstError.Message);\n    Set(varReqOutcome, \"No confirmation received. Refresh to inspect saved status. Retry retains the same action and settings.\")\n));\nSet(varReqDialog, Blank());\nSet(varReqSending, false)"
+      -
+        reqNewIntent:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"Review new action\""
+            X: "=644"
+            Y: "=Parent.Height - 144"
+            Width: "=190"
+            Visible: "=!IsBlank(varRequestsIntent)"
+            DisplayMode: "=If(varReqBusy || varReqSending, DisplayMode.Disabled, DisplayMode.Edit)"
+            OnSelect: "=Set(varReqDialog, \"New intent\")"
+      -
+        reqOutcome:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=12"
+            Text: "=varReqOutcome & If(!IsBlank(varRequestsIntent), Char(10) & \"Unresolved: \" & varReqIntentDecision & \" request #\" & Text(varReqIntentRequest) & \". An earlier action may already be saved. Refresh to check its current status before choosing another action.\", \"\")"
+            X: "=440"
+            Y: "=Parent.Height - 92"
+            Width: "=Parent.Width - 464"
+            Height: "=84"
+      -
+        reqShade:
+          Control: "Rectangle@2.3.0"
+          Properties:
+            X: "=0"
+            Y: "=0"
+            Width: "=Parent.Width"
+            Height: "=Parent.Height"
+            Fill: "=RGBA(0,0,0,0.45)"
+            Visible: "=!IsBlank(varReqDialog)"
+      -
+        reqPanel:
+          Control: "Rectangle@2.3.0"
+          Properties:
+            X: "=(Parent.Width - 860) / 2"
+            Y: "=84"
+            Width: "=860"
+            Height: "=Parent.Height - 104"
+            Fill: "=RGBA(255,255,255,1)"
+            Visible: "=!IsBlank(varReqDialog)"
+      -
+        reqDialogTitle:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=20"
+            X: "=reqPanel.X + 24"
+            Width: "=812"
+            Text: "=If(varReqDialog = \"New intent\", \"Review before starting a new action\", varReqDialog & \" request #\" & Text(varReqSelected.requestId))"
+            Y: "=100"
+            Height: "=40"
+            FontWeight: "=FontWeight.Semibold"
+            Visible: "=!IsBlank(varReqDialog)"
+      -
+        reqDialogHelp:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=12"
+            X: "=reqPanel.X + 24"
+            Width: "=812"
+            Text: "=If(varReqDialog = \"New intent\", \"The previous action may already have saved. Refresh and inspect saved status before proceeding. Starting a different action ends this local retry. It does not undo any saved change.\", If(varReqDialog = \"Accept\" && varReqSelected.requestType = \"Personal\", \"Choose the new group’s name, type, size and focuses. Each focus needs someone who can share and a different person who wants to learn.\", \"Confirm this action for the selected request.\"))"
+            Y: "=144"
+            Height: "=76"
+            Visible: "=!IsBlank(varReqDialog)"
+      -
+        reqNameLabel:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=12"
+            Text: "=\"Group name (required, up to 255 characters)\""
+            X: "=reqPanel.X + 24"
+            Y: "=228"
+            Width: "=630"
+            Height: "=28"
+            Visible: "=!IsBlank(varReqDialog) && (varReqDialog = \"Accept\" && varReqSelected.requestType = \"Personal\") && IsBlank(varRequestsIntent)"
+      -
+        reqTypeLabel:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=12"
+            Text: "=\"Exchange type\""
+            X: "=reqPanel.X + 24"
+            Y: "=314"
+            Width: "=630"
+            Height: "=28"
+            Visible: "=!IsBlank(varReqDialog) && (varReqDialog = \"Accept\" && varReqSelected.requestType = \"Personal\") && IsBlank(varRequestsIntent)"
+      -
+        reqLanguageLabel:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=12"
+            Text: "=\"Language focuses (required for Language / Combined)\""
+            X: "=reqPanel.X + 24"
+            Y: "=400"
+            Width: "=630"
+            Height: "=28"
+            Visible: "=!IsBlank(varReqDialog) && (varReqDialog = \"Accept\" && varReqSelected.requestType = \"Personal\") && IsBlank(varRequestsIntent)"
+      -
+        reqCultureLabel:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=12"
+            Text: "=\"Culture focuses (required for Culture / Combined)\""
+            X: "=reqPanel.X + 24"
+            Y: "=486"
+            Width: "=630"
+            Height: "=28"
+            Visible: "=!IsBlank(varReqDialog) && (varReqDialog = \"Accept\" && varReqSelected.requestType = \"Personal\") && IsBlank(varRequestsIntent)"
+      -
+        reqName:
+          Control: "Classic/TextInput@2.3.2"
+          Properties:
+            Size: "=12"
+            Default: "=\"\""
+            MaxLength: "=255"
+            X: "=reqPanel.X + 24"
+            Y: "=260"
+            Width: "=812"
+            Height: "=40"
+            AccessibleLabel: "=\"Group name\""
+            Visible: "=!IsBlank(varReqDialog) && (varReqDialog = \"Accept\" && varReqSelected.requestType = \"Personal\") && IsBlank(varRequestsIntent)"
+            DisplayMode: "=If(IsBlank(varRequestsIntent) && !varReqBusy && !varReqSending, DisplayMode.Edit, DisplayMode.Disabled)"
+      -
+        reqType:
+          Control: "Classic/ComboBox@2.4.0"
+          Properties:
+            DisplayFields: "=[\"Value\"]"
+            SearchFields: "=[\"Value\"]"
+            Size: "=12"
+            Height: "=40"
+            SelectMultiple: "=false"
+            DisplayMode: "=If(IsBlank(varRequestsIntent) && !varReqBusy && !varReqSending, DisplayMode.Edit, DisplayMode.Disabled)"
+            Items: "=[\"Language\", \"Culture\", \"Combined\"]"
+            DefaultSelectedItems: "=[\"Language\"]"
+            X: "=reqPanel.X + 24"
+            Y: "=346"
+            Width: "=382"
+            Visible: "=!IsBlank(varReqDialog) && (varReqDialog = \"Accept\" && varReqSelected.requestType = \"Personal\") && IsBlank(varRequestsIntent)"
+            AccessibleLabel: "=\"Exchange type\""
+            OnChange: "=Reset(reqCapacity); Reset(reqLanguages); Reset(reqCultures)"
+      -
+        reqCapacityLabel:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=12"
+            Text: "=\"Total capacity, including both participants\""
+            X: "=reqPanel.X + 430"
+            Y: "=314"
+            Width: "=406"
+            Height: "=28"
+            Visible: "=!IsBlank(varReqDialog) && (varReqDialog = \"Accept\" && varReqSelected.requestType = \"Personal\") && IsBlank(varRequestsIntent)"
+      -
+        reqCapacity:
+          Control: "Classic/ComboBox@2.4.0"
+          Properties:
+            DisplayFields: "=[\"Value\"]"
+            SearchFields: "=[\"Value\"]"
+            Size: "=12"
+            Height: "=40"
+            SelectMultiple: "=false"
+            DisplayMode: "=If(IsBlank(varRequestsIntent) && !varReqBusy && !varReqSending, DisplayMode.Edit, DisplayMode.Disabled)"
+            Items: "=ForAll(Sequence(If(reqType.Selected.Value = \"Language\", 2, 9), 2) As reqSize, Text(reqSize.Value, \"0\", \"en-US\"))"
+            IsSearchable: "=false"
+            DefaultSelectedItems: "=[\"2\"]"
+            X: "=reqPanel.X + 430"
+            Y: "=346"
+            Width: "=406"
+            Visible: "=!IsBlank(varReqDialog) && (varReqDialog = \"Accept\" && varReqSelected.requestType = \"Personal\") && IsBlank(varRequestsIntent)"
+            AccessibleLabel: "=\"Total group capacity\""
+      -
+        reqLanguages:
+          Control: "Classic/ComboBox@2.4.0"
+          Properties:
+            DisplayFields: "=[\"Value\"]"
+            SearchFields: "=[\"Value\"]"
+            Size: "=12"
+            Height: "=40"
+            SelectMultiple: "=true"
+            DisplayMode: "=If(IsBlank(varRequestsIntent) && !varReqBusy && !varReqSending && reqType.Selected.Value <> \"Culture\", DisplayMode.Edit, DisplayMode.Disabled)"
+            Items: "=Choices([@Participants].'Teach languages')"
+            DefaultSelectedItems: "=[]"
+            IsSearchable: "=true"
+            X: "=reqPanel.X + 24"
+            Y: "=432"
+            Width: "=812"
+            Visible: "=!IsBlank(varReqDialog) && (varReqDialog = \"Accept\" && varReqSelected.requestType = \"Personal\") && IsBlank(varRequestsIntent)"
+            AccessibleLabel: "=\"Languages focus selections\""
+      -
+        reqCultures:
+          Control: "Classic/ComboBox@2.4.0"
+          Properties:
+            DisplayFields: "=[\"Value\"]"
+            SearchFields: "=[\"Value\"]"
+            Size: "=12"
+            Height: "=40"
+            SelectMultiple: "=true"
+            DisplayMode: "=If(IsBlank(varRequestsIntent) && !varReqBusy && !varReqSending && reqType.Selected.Value <> \"Language\", DisplayMode.Edit, DisplayMode.Disabled)"
+            Items: "=Choices([@Participants].'Cultures I can share')"
+            DefaultSelectedItems: "=[]"
+            IsSearchable: "=true"
+            X: "=reqPanel.X + 24"
+            Y: "=518"
+            Width: "=812"
+            Visible: "=!IsBlank(varReqDialog) && (varReqDialog = \"Accept\" && varReqSelected.requestType = \"Personal\") && IsBlank(varRequestsIntent)"
+            AccessibleLabel: "=\"Cultures focus selections\""
+      -
+        reqDialogRules:
+          Control: "Label@2.5.1"
+          Properties:
+            Font: "=Font.'Segoe UI'"
+            Size: "=12"
+            X: "=reqPanel.X + 24"
+            Width: "=812"
+            Text: "=\"Language: 2 or 3 people total. Culture / Combined: 2–10. Each focus requires a sharer and a different learner. Choose up to 100 focuses per catalogue. \""
+            Y: "=568"
+            Height: "=52"
+            Visible: "=!IsBlank(varReqDialog) && (varReqDialog = \"Accept\" && varReqSelected.requestType = \"Personal\") && IsBlank(varRequestsIntent)"
+      -
+        reqConfirm:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=If(varReqSending, \"Submitting…\", If(varReqDialog = \"New intent\", \"Start a different action\", \"Confirm \" & Lower(varReqDialog)))"
+            X: "=reqPanel.X + 24"
+            Y: "=Parent.Height - 92"
+            Width: "=240"
+            Visible: "=!IsBlank(varReqDialog)"
+            DisplayMode: "=If(varReqBusy || varReqSending || (!IsBlank(varRequestsIntent) && varReqDialog <> \"New intent\") || (varReqDialog <> \"New intent\" && (!varReqLoaded || IsBlank(varAppActorId) || varAppActorId <= 0 || IsBlank(varReqSelected.requestId) || !Switch(varReqDialog, \"Accept\", varReqSelected.canAccept, \"Decline\", varReqSelected.canDecline, \"Cancel\", varReqSelected.canCancel, false))) || ((varReqDialog = \"Accept\" && varReqSelected.requestType = \"Personal\") && !(!IsBlank(Trim(reqName.Text)) && Len(Trim(reqName.Text)) <= 255 &&\n    !IsBlank(reqType.Selected.Value) && !IsBlank(reqCapacity.Selected.Value) &&\n    Value(reqCapacity.Selected.Value) >= 2 && Value(reqCapacity.Selected.Value) <= If(reqType.Selected.Value = \"Language\", 3, 10) &&\n    (reqType.Selected.Value = \"Culture\" || (!IsEmpty(reqLanguages.SelectedItems) && CountRows(reqLanguages.SelectedItems) <= 100)) &&\n    (reqType.Selected.Value = \"Language\" || (!IsEmpty(reqCultures.SelectedItems) && CountRows(reqCultures.SelectedItems) <= 100)))), DisplayMode.Disabled, DisplayMode.Edit)"
+            OnSelect: "=If(varReqDialog = \"New intent\", Set(varRequestsIntent, Blank()); Set(varReqDialog, Blank()); Set(varReqOutcome, \"Select an action after reviewing the saved status.\"); Set(varReqBusy, true);\nSet(varReqError, \"\");\nSet(varReqDiagnostic, \"\");\nSet(varReqLoaded, false);\nSet(varReqInspectRequestId, If(!IsBlank(varRequestsIntent), varReqIntentRequest, varReqSelected.requestId));\nSet(varReqSelected, Blank());\nClear(reqRows);\nIf(IsBlank(varReqTab), Set(varReqTab, \"Received\"));\nIf(IsBlank(varAppActorId) || varAppActorId <= 0,\n    Set(varReqError, \"Open My registration and select your saved profile first\"),\n    If(!IsBlank(varRequestsIntent) && varReqIntentActor <> varAppActorId,\n        Set(varReqError, \"Return to the saved profile used for the unresolved action before refreshing.\"),\n        IfError(\n            Set(varReqReadResponse, TandemMyRequests.Run(varAppActorId));\n            If(varReqReadResponse.resultcode = \"OK\",\n                ClearCollect(reqRows,\n                    ForAll(Table(ParseJSON(varReqReadResponse.requestsjson)) As reqRow,\n                        {requestId: Value(reqRow.Value.requestId),\n                         requestType: Text(reqRow.Value.requestType),\n                         direction: Text(reqRow.Value.direction),\n                         status: Text(reqRow.Value.status),\n                         created: Text(reqRow.Value.created),\n                         availability: Text(reqRow.Value.availability),\n                         processing: Boolean(reqRow.Value.processing),\n                         completed: Boolean(reqRow.Value.completed),\n                         introduction: Text(reqRow.Value.introduction),\n                         canAccept: Boolean(reqRow.Value.actions.accept),\n                         canDecline: Boolean(reqRow.Value.actions.decline),\n                         canCancel: Boolean(reqRow.Value.actions.cancel)}));\n                Set(varReqSelected, LookUp(reqRows, requestId = varReqInspectRequestId));\n                Set(varReqLoaded, true),\n                Set(varReqError, \"Requests could not load. Code: \" & varReqReadResponse.resultcode & \". Reference: \" & varReqReadResponse.runreference)\n            ),\n            Clear(reqRows);\n            Set(varReqDiagnostic, FirstError.Message);\n            Set(varReqError, \"Requests could not load. Check the app connection or try Refresh. No action result is implied.\")\n        )\n    )\n);\nSet(varReqBusy, false), If(IsBlank(varRequestsIntent),\n    Set(varReqIntentActor, varAppActorId);\n    Set(varReqIntentRequest, varReqSelected.requestId);\n    Set(varReqIntentKind, varReqSelected.requestType);\n    Set(varReqIntentDecision, varReqDialog);\n    Set(varReqIntentName, If(varReqDialog = \"Accept\" && varReqSelected.requestType = \"Personal\", Trim(reqName.Text), \"\"));\n    Set(varReqIntentType, If(varReqDialog = \"Accept\" && varReqSelected.requestType = \"Personal\", reqType.Selected.Value, \"Language\"));\n    Set(varReqIntentCapacity, If(varReqDialog = \"Accept\" && varReqSelected.requestType = \"Personal\", Value(reqCapacity.Selected.Value), 2));\n    Set(varReqIntentLanguages, If(varReqDialog = \"Accept\" && varReqSelected.requestType = \"Personal\" && reqType.Selected.Value <> \"Culture\",\n        \"[\" & Concat(reqLanguages.SelectedItems As reqFocus, Text(Value(reqFocus.Id), \"0\", \"en-US\"), \",\") & \"]\", \"[]\"));\n    Set(varReqIntentCultures, If(varReqDialog = \"Accept\" && varReqSelected.requestType = \"Personal\" && reqType.Selected.Value <> \"Language\",\n        \"[\" & Concat(reqCultures.SelectedItems As reqFocus, Text(Value(reqFocus.Id), \"0\", \"en-US\"), \",\") & \"]\", \"[]\"));\n    Set(varRequestsIntent, Text(GUID()))\n);\nSet(varReqSending, true);\nSet(varReqOutcome, \"\");\nSet(varReqDiagnostic, \"\");\nSet(varReqActionSuccess, false);\nSet(varReqActionCode, \"\");\nSet(varReqActionMessage, \"\");\nSet(varReqActionReference, \"\");\nIf(IsBlank(varAppActorId) || varAppActorId <= 0 || varReqIntentActor <> varAppActorId || IsBlank(varRequestsIntent),\n    Set(varReqOutcome, \"Open My registration and select the saved profile used for this action first.\"),\nIfError(\n    If(varReqIntentDecision = \"Cancel\",\n        Set(varReqCancelResponse, TandemCancelRequest.Run(varReqIntentActor, varReqIntentRequest));\n        Set(varReqActionSuccess, varReqCancelResponse.success && varReqCancelResponse.operationcomplete && !varReqCancelResponse.outcomeunknown && varReqCancelResponse.currentstatus = \"Cancelled\");\n        Set(varReqActionCode, varReqCancelResponse.resultcode);\n        Set(varReqActionMessage, varReqCancelResponse.message);\n        Set(varReqActionReference, varReqCancelResponse.runreference),\n        If(varReqIntentKind = \"Personal\",\n            Set(varReqPersonalResponse, TandemRespondRequest.Run(varReqIntentActor, varReqIntentRequest,\n    varReqIntentDecision, varReqIntentName, varReqIntentType, varReqIntentCapacity,\n    varReqIntentLanguages, varReqIntentCultures, varRequestsIntent));\n            Set(varReqActionSuccess, varReqPersonalResponse.success);\n            Set(varReqActionCode, varReqPersonalResponse.resultcode);\n            Set(varReqActionMessage, varReqPersonalResponse.message),\n            Set(varReqGroupResponse, TandemRespondGroupJoinRequest.Run(varReqIntentRequest, varReqIntentDecision, varRequestsIntent));\n            Set(varReqActionSuccess, varReqGroupResponse.success);\n            Set(varReqActionCode, varReqGroupResponse.resultcode);\n            Set(varReqActionMessage, varReqGroupResponse.errormessage);\n            Set(varReqActionReference, varReqGroupResponse.runreference)\n        )\n    );\n    If(varReqActionSuccess,\n        Set(varReqOutcome, \"Your action is confirmed. Refreshing saved requests…\");\n        Set(varRequestsIntent, Blank());\n        Set(varReqDialog, Blank());\n        Set(varReqBusy, true);\nSet(varReqError, \"\");\nSet(varReqDiagnostic, \"\");\nSet(varReqLoaded, false);\nSet(varReqInspectRequestId, If(!IsBlank(varRequestsIntent), varReqIntentRequest, varReqSelected.requestId));\nSet(varReqSelected, Blank());\nClear(reqRows);\nIf(IsBlank(varReqTab), Set(varReqTab, \"Received\"));\nIf(IsBlank(varAppActorId) || varAppActorId <= 0,\n    Set(varReqError, \"Open My registration and select your saved profile first\"),\n    If(!IsBlank(varRequestsIntent) && varReqIntentActor <> varAppActorId,\n        Set(varReqError, \"Return to the saved profile used for the unresolved action before refreshing.\"),\n        IfError(\n            Set(varReqReadResponse, TandemMyRequests.Run(varAppActorId));\n            If(varReqReadResponse.resultcode = \"OK\",\n                ClearCollect(reqRows,\n                    ForAll(Table(ParseJSON(varReqReadResponse.requestsjson)) As reqRow,\n                        {requestId: Value(reqRow.Value.requestId),\n                         requestType: Text(reqRow.Value.requestType),\n                         direction: Text(reqRow.Value.direction),\n                         status: Text(reqRow.Value.status),\n                         created: Text(reqRow.Value.created),\n                         availability: Text(reqRow.Value.availability),\n                         processing: Boolean(reqRow.Value.processing),\n                         completed: Boolean(reqRow.Value.completed),\n                         introduction: Text(reqRow.Value.introduction),\n                         canAccept: Boolean(reqRow.Value.actions.accept),\n                         canDecline: Boolean(reqRow.Value.actions.decline),\n                         canCancel: Boolean(reqRow.Value.actions.cancel)}));\n                Set(varReqSelected, LookUp(reqRows, requestId = varReqInspectRequestId));\n                Set(varReqLoaded, true),\n                Set(varReqError, \"Requests could not load. Code: \" & varReqReadResponse.resultcode & \". Reference: \" & varReqReadResponse.runreference)\n            ),\n            Clear(reqRows);\n            Set(varReqDiagnostic, FirstError.Message);\n            Set(varReqError, \"Requests could not load. Check the app connection or try Refresh. No action result is implied.\")\n        )\n    )\n);\nSet(varReqBusy, false),\n        Set(varReqOutcome, \"Action not confirmed. Code: \" & varReqActionCode & If(IsBlank(varReqActionReference), \"\", \". Reference: \" & varReqActionReference) & \". Refresh to inspect saved status. Retry retains the same action and settings.\")\n    ),\n    Set(varReqDiagnostic, FirstError.Message);\n    Set(varReqOutcome, \"No confirmation received. Refresh to inspect saved status. Retry retains the same action and settings.\")\n));\nSet(varReqDialog, Blank());\nSet(varReqSending, false))"
+      -
+        reqDismiss:
+          Control: "Classic/Button@2.2.0"
+          Properties:
+            Height: "=40"
+            Size: "=12"
+            Text: "=\"Back\""
+            X: "=reqPanel.X + 280"
+            Y: "=Parent.Height - 92"
+            Width: "=140"
+            Visible: "=!IsBlank(varReqDialog)"
+            DisplayMode: "=If(varReqSending, DisplayMode.Disabled, DisplayMode.Edit)"
+            OnSelect: "=Set(varReqDialog, Blank())"

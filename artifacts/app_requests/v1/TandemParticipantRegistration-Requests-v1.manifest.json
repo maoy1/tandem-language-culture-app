@@ -1,0 +1,579 @@
+{
+  "artifactVersion": "Requests-v1",
+  "sourceTickets": [
+    67
+  ],
+  "baseAppSha256": "ee00b86d7810d2e6c1ccd52777b7a1ef9003e60aa8638fa270817503289ffdee",
+  "coreSolutionVersion": "1.0.0.2",
+  "coreZipSha256": "0d1b97508db5c5995199bac0853d45ee73ba147a48008c0fb1c369740b4868bd",
+  "sha256": "48b9b2af53b3ad07e2dc41af2bb29587969aa186f889822da7bbf3c3d4125143",
+  "screens": [
+    "MainScreen1",
+    "scrDiscovery",
+    "scrRequests"
+  ],
+  "flowBindings": {
+    "TandemCancelRequest": {
+      "id": "8bee0275-1c6a-54b3-9225-cf637d3047f0",
+      "inputs": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "description": "",
+            "title": "ParticipantId",
+            "type": "number",
+            "x-ms-content-hint": "NUMBER",
+            "x-ms-dynamically-added": true
+          },
+          "number_1": {
+            "description": "Please enter a number",
+            "title": "RequestId",
+            "type": "number",
+            "x-ms-content-hint": "NUMBER",
+            "x-ms-dynamically-added": true
+          }
+        },
+        "required": [
+          "number",
+          "number_1"
+        ]
+      },
+      "responses": {
+        "Respond_to_a_Power_App_or_flow": {
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "title": "success",
+              "x-ms-content-hint": "BOOLEAN",
+              "x-ms-dynamically-added": true
+            },
+            "message": {
+              "type": "string",
+              "title": "message",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "resultcode": {
+              "type": "string",
+              "title": "resultcode",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "currentstatus": {
+              "type": "string",
+              "title": "currentstatus",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "operationcomplete": {
+              "type": "boolean",
+              "title": "operationcomplete",
+              "x-ms-content-hint": "BOOLEAN",
+              "x-ms-dynamically-added": true
+            },
+            "replay": {
+              "type": "boolean",
+              "title": "replay",
+              "x-ms-content-hint": "BOOLEAN",
+              "x-ms-dynamically-added": true
+            },
+            "runreference": {
+              "type": "string",
+              "title": "runreference",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "mode": {
+              "type": "string",
+              "title": "mode",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "writeattempted": {
+              "type": "boolean",
+              "title": "writeattempted",
+              "x-ms-content-hint": "BOOLEAN",
+              "x-ms-dynamically-added": true
+            },
+            "outcomeunknown": {
+              "type": "boolean",
+              "title": "outcomeunknown",
+              "x-ms-content-hint": "BOOLEAN",
+              "x-ms-dynamically-added": true
+            }
+          },
+          "additionalProperties": {}
+        }
+      }
+    },
+    "TandemDiscovery": {
+      "id": "fd8d85eb-5af0-54a3-b05b-c8183830d4b2",
+      "inputs": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "description": "ParticipantId",
+            "title": "Number",
+            "type": "number",
+            "x-ms-content-hint": "NUMBER",
+            "x-ms-dynamically-added": true
+          }
+        },
+        "required": [
+          "number"
+        ]
+      },
+      "responses": {
+        "Respond_to_a_Power_App_or_flow": {
+          "type": "object",
+          "properties": {
+            "candidatesjson": {
+              "title": "candidatesjson",
+              "type": "string",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "errormessage": {
+              "title": "errormessage",
+              "type": "string",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "groupsjson": {
+              "title": "groupsjson",
+              "type": "string",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "resultcode": {
+              "title": "resultcode",
+              "type": "string",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "runreference": {
+              "title": "runreference",
+              "type": "string",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "mode": {
+              "title": "mode",
+              "type": "string",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            }
+          },
+          "additionalProperties": {}
+        }
+      }
+    },
+    "TandemMyRequests": {
+      "id": "85b7ac12-e1f5-56ce-b882-10b47218e9ad",
+      "inputs": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "description": "Please enter a number",
+            "title": "NumParticipantIdber",
+            "type": "number",
+            "x-ms-content-hint": "NUMBER",
+            "x-ms-dynamically-added": true
+          }
+        },
+        "required": [
+          "number"
+        ]
+      },
+      "responses": {
+        "Respond_to_a_Power_App_or_flow": {
+          "type": "object",
+          "properties": {
+            "requestsjson": {
+              "title": "requestsjson",
+              "type": "string",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "errormessage": {
+              "title": "errormessage",
+              "type": "string",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "resultcode": {
+              "title": "resultcode",
+              "type": "string",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "runreference": {
+              "title": "runreference",
+              "type": "string",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "mode": {
+              "title": "mode",
+              "type": "string",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "paging": {
+              "title": "paging",
+              "type": "string",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            }
+          }
+        }
+      }
+    },
+    "TandemRespondGroupJoinRequest": {
+      "id": "d53f1797-9647-5910-9bda-8a48e0fced31",
+      "inputs": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "number",
+            "title": "RequestId",
+            "x-ms-content-hint": "NUMBER"
+          },
+          "text": {
+            "type": "string",
+            "title": "Decision",
+            "x-ms-content-hint": "TEXT"
+          },
+          "text_1": {
+            "type": "string",
+            "title": "IntentUUID",
+            "x-ms-content-hint": "TEXT"
+          }
+        },
+        "required": [
+          "number",
+          "text",
+          "text_1"
+        ]
+      },
+      "responses": {
+        "Respond_to_a_Power_App_or_flow": {
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "title": "success"
+            },
+            "resultcode": {
+              "type": "string",
+              "title": "resultcode"
+            },
+            "resultjson": {
+              "type": "string",
+              "title": "resultjson"
+            },
+            "runreference": {
+              "type": "string",
+              "title": "runreference"
+            },
+            "retryable": {
+              "type": "boolean",
+              "title": "retryable"
+            },
+            "errormessage": {
+              "type": "string",
+              "title": "errormessage"
+            }
+          }
+        }
+      }
+    },
+    "TandemRespondRequest": {
+      "id": "b983e199-0544-53c2-af4d-c8bee5d3de8d",
+      "inputs": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "description": "Please enter a number",
+            "title": "ParticipantId",
+            "type": "number",
+            "x-ms-content-hint": "NUMBER",
+            "x-ms-dynamically-added": true
+          },
+          "number_1": {
+            "description": "Please enter a number",
+            "title": "RequestId",
+            "type": "number",
+            "x-ms-content-hint": "NUMBER",
+            "x-ms-dynamically-added": true
+          },
+          "text": {
+            "description": "Please enter your input",
+            "title": "Decision",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "text_1": {
+            "description": "Please enter your input",
+            "title": "GroupName",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "text_2": {
+            "description": "Please enter your input",
+            "title": "ExchangeType",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "number_2": {
+            "description": "Please enter a number",
+            "title": "Capacity",
+            "type": "number",
+            "x-ms-content-hint": "NUMBER",
+            "x-ms-dynamically-added": true
+          },
+          "text_3": {
+            "description": "Please enter your input",
+            "title": "LanguageFocusIds",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "text_4": {
+            "description": "Please enter your input",
+            "title": "CultureFocusIds",
+            "type": "string",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "text_5": {
+            "title": "IntentId",
+            "type": "string",
+            "description": "Retain one GUID per explicit response, including retries.",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          }
+        },
+        "required": [
+          "number",
+          "number_1",
+          "text",
+          "text_1",
+          "text_2",
+          "number_2",
+          "text_3",
+          "text_4",
+          "text_5"
+        ]
+      },
+      "responses": {
+        "Respond_to_a_Power_App_or_flow": {
+          "type": "object",
+          "properties": {
+            "success": {
+              "title": "success",
+              "type": "boolean",
+              "x-ms-content-hint": "BOOLEAN",
+              "x-ms-dynamically-added": true
+            },
+            "message": {
+              "title": "message",
+              "type": "string",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "groupid": {
+              "title": "groupid",
+              "type": "number",
+              "x-ms-content-hint": "NUMBER",
+              "x-ms-dynamically-added": true
+            },
+            "resultcode": {
+              "title": "resultcode",
+              "type": "string",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "operationkey": {
+              "title": "operationkey",
+              "type": "string",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            }
+          }
+        }
+      }
+    },
+    "TandemSendGroupJoinRequest": {
+      "id": "1c00da26-d2c0-583b-9fac-17cff45a35f2",
+      "inputs": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "number",
+            "title": "GroupId",
+            "x-ms-content-hint": "NUMBER",
+            "x-ms-dynamically-added": true
+          },
+          "text": {
+            "type": "string",
+            "title": "IntentId",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          },
+          "text_1": {
+            "type": "string",
+            "title": "Introduction",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          }
+        },
+        "required": [
+          "number",
+          "text"
+        ]
+      },
+      "responses": {
+        "Respond": {
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "title": "success",
+              "x-ms-dynamically-added": true
+            },
+            "requestid": {
+              "type": "string",
+              "title": "requestid",
+              "x-ms-dynamically-added": true
+            },
+            "status": {
+              "type": "string",
+              "title": "status",
+              "x-ms-dynamically-added": true
+            },
+            "resultcode": {
+              "type": "string",
+              "title": "resultcode",
+              "x-ms-dynamically-added": true
+            },
+            "resultjson": {
+              "type": "string",
+              "title": "resultjson",
+              "x-ms-dynamically-added": true
+            },
+            "runreference": {
+              "type": "string",
+              "title": "runreference",
+              "x-ms-dynamically-added": true
+            },
+            "errormessage": {
+              "type": "string",
+              "title": "errormessage",
+              "x-ms-dynamically-added": true
+            }
+          }
+        }
+      }
+    },
+    "TandemSendRequest": {
+      "id": "bd284001-372a-512f-9bda-e5d2709a091d",
+      "inputs": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "description": "SenderParticipantId",
+            "title": "Number",
+            "type": "number",
+            "x-ms-content-hint": "NUMBER",
+            "x-ms-dynamically-added": true
+          },
+          "number_1": {
+            "description": "RecipientParticipantId",
+            "title": "Number 1",
+            "type": "number",
+            "x-ms-content-hint": "NUMBER",
+            "x-ms-dynamically-added": true
+          },
+          "text": {
+            "type": "string",
+            "title": "IntentId",
+            "x-ms-content-hint": "TEXT",
+            "x-ms-dynamically-added": true
+          }
+        },
+        "required": [
+          "number",
+          "number_1",
+          "text"
+        ]
+      },
+      "responses": {
+        "Respond": {
+          "type": "object",
+          "properties": {
+            "success": {
+              "title": "success",
+              "type": "boolean",
+              "x-ms-content-hint": "BOOLEAN",
+              "x-ms-dynamically-added": true
+            },
+            "message": {
+              "title": "message",
+              "type": "string",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "resultjson": {
+              "type": "string",
+              "title": "resultjson",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "requestid": {
+              "type": "string",
+              "title": "requestid",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "status": {
+              "type": "string",
+              "title": "status",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "resultcode": {
+              "type": "string",
+              "title": "resultcode",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "errormessage": {
+              "type": "string",
+              "title": "errormessage",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            },
+            "runreference": {
+              "type": "string",
+              "title": "runreference",
+              "x-ms-content-hint": "TEXT",
+              "x-ms-dynamically-added": true
+            }
+          }
+        }
+      }
+    }
+  },
+  "packager": "Microsoft PAC 2.15.1 SourceCode; Studio validation required",
+  "nativeImport": "NOT RUN",
+  "publishedAppVersion": null,
+  "ordinaryUserAccess": "DEFERRED",
+  "runtimeFlowChanges": 0,
+  "schemaChanges": 0,
+  "newConnectors": 0
+}
