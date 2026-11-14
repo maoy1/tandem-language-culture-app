@@ -123,3 +123,31 @@ def test_packaged_smoke_executes_the_actual_rebound_batch_child(tmp_path):
     assert report['allPassed'], report['failedCases']
     assert report['testCount'] == report['completedCount'] == 45
     assert len(connection.child_calls) == 45
+
+
+def test_actual_packaged_setup_report_matches_bundle_and_child_build(tmp_path):
+    from core_native_backend import Connection, Database, ParentRunner
+    from test_batch_schema import Tenant
+    original = tmp_path / 'native.zip'; source(original)
+    docs = documents(original)
+    docs['TandemValidateContext']['properties']['definition']['actions'] = core.shared_validation.definition_actions(
+        core.batch_schema.baseline(), 'new-batch-build', 'local-rules')
+    output = tmp_path / 'batch.zip'
+    review = core.assemble(original, docs, output)
+    with ZipFile(output) as archive:
+        custom = ET.fromstring(archive.read('customizations.xml'))
+        packaged = {node.attrib['Name']: json.loads(archive.read(node.findtext('JsonFileName').lstrip('/')))
+                    for node in custom.findall('./Workflows/Workflow')}
+    child = packaged['TandemValidateContext']['properties']['definition']['actions']
+    child_transport = Connection(Database(), child_actions=child, child_id=core.identifier('TandemValidateContext'))
+    tenant = Tenant(exists=True)
+    class SetupTransport:
+        def request(self, parameters):
+            return child_transport.request(parameters) if '_workflow' in parameters else tenant.request(parameters)
+    runner = ParentRunner(SetupTransport())
+    runner.run(packaged['TandemBatchSchemaSetup']['properties']['definition']['actions'],
+               {'items': {}, 'triggerBody': {'boolean': False}})
+    report = runner.outputs['Setup_report']
+    assert report['packageBuildId'] == review['sharedBuildId'] == child['Validation_report']['inputs']['packageBuildId']
+    assert len(child_transport.child_calls) == 1
+    assert not tenant.writes  # dry setup/audit, no native changes

@@ -63,7 +63,7 @@ def assemble(native_source, documents, output, include_setup=True, include_smoke
     source_docs = deepcopy(documents)
     original_child = CONTRACT['nativeSharedChildTemplateId']
     if include_setup:
-        source_docs['TandemBatchSchemaSetup'] = invoker_parent_document(seed, batch_schema.trigger(), batch_schema.actions('batch-schema-v1'))
+        source_docs['TandemBatchSchemaSetup'] = invoker_parent_document(seed, batch_schema.trigger(), batch_schema.actions(shared_build))
     if include_smoke:
         cases = shared_validation.smoke_cases()
         prospective = batch_schema.baseline()
