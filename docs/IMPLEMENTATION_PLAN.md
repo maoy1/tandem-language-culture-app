@@ -649,3 +649,34 @@ Owner chose **2,000 characters** for the optional plain-text group-join introduc
 Technical field proposal: optional plain-text Note column Introduction on Connection Requests, rich text/append disabled; actual column/settings are NOT verified or applied. SharePoint field mapping/setup and the flow/API/app mapping remain #17 work. All schema changes must update #81 baseline/audit/contract and affected consumers (#62/#65/#67), with existing native evidence retained by version. #81 has no Introduction persistence/parser today, so this planning decision does not change its current five-mode rule engine/package. Add actual schema coverage when the field is introduced.
 
 Contract evidence only: acceptance cases empty/omitted, 2,000 accepted and 2,001 rejected in both app/server are NOT RUN. #17 remains Planned, not implemented/Ready. No flow, list, data, permission or existing app changed. This clears the remaining explicit product choice for core group-join implementation; receipt-schema and Solution SharePoint/caller prerequisites still need technical verification.
+
+## #61 parallel-batch shared-consumer handoff — 2026-11-14
+
+[#61](https://github.com/maoy1/tandem-language-culture-app/issues/61) only, under
+[#45](https://github.com/maoy1/tandem-language-culture-app/issues/45). Owner explicitly
+authorizes parallel work; other tickets and shared-child implementation are outside
+this branch. Current source is origin/main 7eba0ba0e5739477d4259474c2cb8fb8b3e3ee94.
+
+1. Local candidate: `scripts/power_automate/participant_submission_shared.py`,
+   build issue-61-shared-consumer-v1, child contract1/rules1 PROFILE; emitted parent
+   29 definitions/depth3. Execute actual emitted parent + unchanged v2 child in
+   tests/test_participant_submission_shared.py. Preserve deployed v2 and evidence.
+2. Core packaging consumes the separate `.solution-source.json`. Its automated
+   adapter preserves legacy `$authentication` and resolves existing SharePoint
+   logical component with `runtimeSource: embedded`; never call the interactive
+   Invoker adapter. `_connectionEvidence=AUTOMATED_SOURCE_VERIFIED` attests the
+   inspected legacy Embedded source only. Exact original owner reference and
+   hashes are retained in the adjacent review; automatic Solution binding NOT RUN.
+3. Do not deploy based on that marker. Final Solution assembly and existing owner
+   connection resolution must be inspected, imported disabled, then tested under
+   #61's controlled single-validator cutover. If binding differs/prompts a new
+   permission/licence/connection mode, stop dependent activation. Standalone legacy
+   ZIP is withheld pending valid final Solution parent assembly. No fabricated ZIP.
+4. Run native parity/no-op/invalid/stale-write cases using the appended #61 guide.
+   Keep old v2 results, remaining acceptance and ordinary-access deferral truthful;
+   no shared-child or other consumer runtime is upgraded by this local change.
+
+#81 drift ledger is nested in config/participant_submission_contract.json:
+no shared schema, versions, semantic rules or baseline changes; native shared
+QUICK3/FULL44 PASS retained; new consumer parity/binding NOT RUN. No issue edits
+or pushes authorized. No additional deployed service, connector or entitlement.

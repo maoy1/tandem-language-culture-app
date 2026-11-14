@@ -560,3 +560,39 @@ Owner chose **2,000 characters** for the optional plain-text group-join introduc
 Technical field proposal: optional plain-text Note column Introduction on Connection Requests, rich text/append disabled; actual column/settings are NOT verified or applied. SharePoint field mapping/setup and the flow/API/app mapping remain #17 work. All schema changes must update #81 baseline/audit/contract and affected consumers (#62/#65/#67), with existing native evidence retained by version. #81 has no Introduction persistence/parser today, so this planning decision does not change its current five-mode rule engine/package. Add actual schema coverage when the field is introduced.
 
 Contract evidence only: acceptance cases empty/omitted, 2,000 accepted and 2,001 rejected in both app/server are NOT RUN. #17 remains Planned, not implemented/Ready. No flow, list, data, permission or existing app changed. This clears the remaining explicit product choice for core group-join implementation; receipt-schema and Solution SharePoint/caller prerequisites still need technical verification.
+
+## #61 shared PROFILE consumer candidate — 2026-11-14
+
+[#61](https://github.com/maoy1/tandem-language-culture-app/issues/61), under
+[#45](https://github.com/maoy1/tandem-language-culture-app/issues/45): separate
+owner-authorized parallel-batch branch from origin/main. New local generator
+`participant_submission_shared.py` delegates profile normalization/content checks
+to unchanged native child e9aa88eb-a666-4df1-b088-176be7bcd00d, contract1/rules1
+PROFILE. Parent keeps trusted current reads, complete catalogue reads, changed
+Status-only ETag write/readback and no-op follow-up. No per-event schema audit,
+participation/openness/identity/selection, permission, group or membership writes.
+PROFILE receives null availability without reading/resetting those business fields.
+
+Actual legacy export SHA256 a81c0c87b262ffb5a13fe079dec4a13bcc345e763c1e57c10dd02bed57dae90c
+uses named Embedded SharePoint owner connection b7e419509f0f4da89895a5ebd1f3a216
+and `$authentication`. The readable draft preserves its trigger and references.
+Separate automated adapter resolves the existing native component
+cre46_sharepointonline_a22363a216 and emits `runtimeSource: embedded`; it never
+uses the manual Invoker adapter or Raw trigger-token expression. Core marker
+`AUTOMATED_SOURCE_VERIFIED` means **legacy automated source inspected only**.
+Native automatic Solution import/owner-resolution/execution remains **NOT RUN**;
+do not infer it from the manual probe or legacy evidence. Deployment is gated.
+
+Build issue-61-shared-consumer-v1: 29 definitions/depth3; unchanged child84/depth7.
+Readable draft, separate Solution source and hash/binding review are under
+artifacts/participant_submission. No legacy ZIP until valid final Solution
+assembly; no live flow/app replacement, readiness upgrade or issue edit.
+Existing v2 build88637754-4c91-4833-9dcf-5116d8bfb77e, item38 evidence and Live26
+remain historical/current runtime evidence, not proof for this new consumer.
+
+#81 drift assessment: no shared schema/contract/rules/null/availability/catalogue
+semantics change and no child/other consumer package edits. Existing PROFILE
+content semantics, including active Any as content and culture-only/null-zone,
+are reused; no matching occurs. Local #61 contract ledger records scope and
+native NOT RUN gates; shared QUICK3/FULL44 PASS remains bounded to its old build.
+Exact adapter/test handover is appended to docs/FLOW_61_PARTICIPANT_SUBMISSION.md.
