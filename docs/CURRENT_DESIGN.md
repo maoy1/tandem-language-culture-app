@@ -656,6 +656,49 @@ Owner chose **2,000 characters** for the optional plain-text group-join introduc
 Technical field proposal: optional plain-text Note column Introduction on Connection Requests, rich text/append disabled; actual column/settings are NOT verified or applied. SharePoint field mapping/setup and the flow/API/app mapping remain #17 work. All schema changes must update #81 baseline/audit/contract and affected consumers (#62/#65/#67), with existing native evidence retained by version. #81 has no Introduction persistence/parser today, so this planning decision does not change its current five-mode rule engine/package. Add actual schema coverage when the field is introduced.
 
 Contract evidence only: acceptance cases empty/omitted, 2,000 accepted and 2,001 rejected in both app/server are NOT RUN. #17 remains Planned, not implemented/Ready. No flow, list, data, permission or existing app changed. This clears the remaining explicit product choice for core group-join implementation; receipt-schema and Solution SharePoint/caller prerequisites still need technical verification.
+
+## #17 group join sender implementation candidate — 2026-11-14
+
+[#17 TandemSendGroupJoinRequest](https://github.com/maoy1/tandem-language-culture-app/issues/17),
+under [#45](https://github.com/maoy1/tandem-language-culture-app/issues/45), is built
+locally on its own owner-authorized parallel-batch branch from origin/main7eba0ba.
+Build **issue-17-group-send-v1**, **147 action definitions/depth5**. New Power Apps
+V2 input order: **GroupId(number), IntentId(text UUID), Introduction(text_1 optional,
+plain text max2,000)**. No caller-supplied actor: native SharePoint Invoker resolves
+current account and exactly one own profile, rechecked against the current item.
+
+Exact immutable **group:{actorId}:{lowerUUID}** replay precedes availability/group
+checks. Stored sender, recipient=null, group and original Introduction (null/omitted
+canonical empty) must match, including valid live/history lifecycle; changed payload
+conflicts. Fresh sends check Open/SetupComplete/blank WriteOwner, committed source
+and membership episodes, all physical Active rows/count/capacity, no own current or
+provisional membership, and actual shared GROUP contract1/rules1 fit/availability.
+Available focus sharers come from current member profiles; culture-only and optional
+zone/null availability use unchanged child rules. No whole-schema audit per send.
+
+One Pending request POST at most, retries off: RequestType=Group, numeric trusted
+sender, nullable recipient, TargetGroupId, exact Introduction and unique immutable
+SendOperationKey/live **open:group:{groupId}:participant:{actorId}**. Exact intent
+readback reconciles lost success; unconfirmed/corrupt/failed readback stays unknown,
+with no second POST. No separate receipt is needed for this sender. No group,
+membership, permission or schema writes; acceptance rechecks remain #65, not a
+slot reservation by #17. App call/draft preservation guide is prepared, not applied.
+
+Readable full native Invoker Solution parent/review in artifacts/group_send; no
+standalone legacy ZIP before valid final core Solution assembly. Native parent,
+app, access and new request tests **NOT RUN**. Planned Introduction Note/plain/2,000
+comes from #81 batch_schema_contract.json at a385e284; actual field/unique-key/setup
+audit and connection/caller verification block activation. Ordinary access remains
+deferred. No issue edit, native cutover or readiness/closure claim by this change.
+
+#81 drift ledger in config/group_send_flow_contract.json: shared child/schema/rules
+and other packages unchanged; same child e9aa88eb-a666-4df1-b088-176be7bcd00d/v2 build
+c79b7b64-b3ce-4de3-aa74-0ed62bca1524, previous QUICK3/FULL44 results retain only their
+old scope. Setup must cover actual Introduction before activation; #62/#65/#67
+preserve immutable original text and authorized plain display. #61 commit996a3ae
+and its automated Embedded marker remain separate and unchanged. Full #17 mapping,
+bounded tests, blocked cases and cleanup: docs/FLOW_17_GROUP_SEND.md.
+
 # Issue 11 native response build — 11.1.0
 
 [#11 TandemRespondRequest](https://github.com/maoy1/tandem-language-culture-app/issues/11)
