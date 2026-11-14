@@ -164,7 +164,7 @@ def bind_flows(entries,flows,required):
     entries['msapp/References/DataSources.json']=json.dumps(data,ensure_ascii=False).encode()
 
 
-def build(base_app,core_zip,output,pac,screen_names=('requests',)):
+def build(base_app,core_zip,output,pac,screen_names=('requests','groups')):
     base_app,output=Path(base_app),Path(output)
     if hashlib.sha256(base_app.read_bytes()).hexdigest()!=BASE_SHA:raise ValueError('Expected the owner-tested Discovery-v1 source app')
     if output.exists():raise FileExistsError('Versioned app output already exists; preserve it: '+str(output))
@@ -214,5 +214,6 @@ def build(base_app,core_zip,output,pac,screen_names=('requests',)):
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--base-app',type=Path,required=True);p.add_argument('--core-solution',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True);p.add_argument('--dotnet',required=True);p.add_argument('--pac-dll',required=True)
-    p.add_argument('--screens',nargs='+',choices=list(MODULES),default=['requests']);a=p.parse_args()
-    result=build(a.base_app,a.core_solution,a.output,[a.dotnet,a.pac_dll],tuple(a.screens));print(json.dumps(result,indent=2))
+    p.add_argument('--screens',nargs='+',choices=list(MODULES),default=['requests','groups']);a=p.parse_args()
+    result=build(a.base_app,a.core_solution,a.output,[a.dotnet,a.pac_dll],tuple(a.screens))
+    print(json.dumps({k:result[k] for k in ['artifactVersion','sourceTickets','sha256','screens','nativeImport']},indent=2))
