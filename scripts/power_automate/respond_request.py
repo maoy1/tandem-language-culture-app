@@ -15,8 +15,8 @@ from .solution_source import inspect_caller_export, invoker_parent_document
 
 ROOT = Path(__file__).resolve().parents[2]
 NAME = 'TandemRespondRequest'
-VERSION = '11.1.0'
-BUILD = '94e47272-28bc-4529-bb2f-521b90e43011'
+VERSION = '11.2.0'
+BUILD = '28a0e136-7f75-4d65-b217-258ef163b112'
 FLOW_ID = 'fd170a11-2aec-4bab-a3f1-38ed38f23211'
 CHILD = 'e9aa88eb-a666-4df1-b088-176be7bcd00d'
 SHARED_BUILD = 'c79b7b64-b3ce-4de3-aa74-0ed62bca1524'
@@ -106,11 +106,21 @@ class Builder:
     def set(self, name, variable, value):
         return self.add(name, d.setvar(variable, value))
 
-    def gate(self, name, predicate, code):
-        # A failed built-in action stops this scope, preserving all history.
-        return self.add(name, d.condition(predicate, {}, {
-            name + '_code': d.setvar('Code', code),
-            name + '_stop': d.compose('@div(1,0)', name + '_code')}))
+    def gate(self, name, predicate, code=None, all_after=False):
+        # Native typed assertion: only Boolean true can pass. Name the failure
+        # stage first, then fail the Parse JSON action on false. This replaces
+        # an If/SetVariable/divide-by-zero branch without weakening its predicate.
+        if code is not None:
+            self.add(name + '_code', d.setvar('Code', code), all_after)
+        result = self.add(name, d.parse({'passed': '@' + predicate}, {
+            'type': 'object', 'required': ['passed'],
+            'properties': {'passed': {'type': 'boolean', 'enum': [True]}}}),
+                          all_after=all_after if code is None else False)
+        if all_after:
+            entry = name + '_code' if code is not None else name
+            for statuses in self.target[entry]['runAfter'].values():
+                statuses.remove('Skipped')
+        return result
 
     def http(self, name, uri, method='GET', body=None, etag=None, all_after=False):
         headers = {'Accept': 'application/json;odata=verbose'}
@@ -168,10 +178,28 @@ class Builder:
 
     def request_identity(self, row):
         return both(same(field(row, 'RequestType'), "'Personal'"),
+                    same(field(row, 'Id'), "triggerBody()?['number_1']"),
                     same(field(row, 'TargetGroupId'), 'null'),
                     same(field(row, 'RecipientParticipantId'), "triggerBody()?['number']"),
                     same(field(row, 'SenderParticipantId'), "outputs('Initial_request')?['SenderParticipantId']"),
-                    same(field(row, 'RecipientParticipantId'), "outputs('Initial_request')?['RecipientParticipantId']"))
+                    same(field(row, 'RecipientParticipantId'), "outputs('Initial_request')?['RecipientParticipantId']"),
+                    same(field(row, 'SendOperationKey'), "outputs('Initial_request')?['SendOperationKey']"),
+                    self.request_keys(row))
+
+    def request_keys(self, row):
+        sender, recipient = field(row, 'SenderParticipantId'), field(row, 'RecipientParticipantId')
+        live = "concat('open:person:',string(if(less(" + sender + ',' + recipient + '),' + sender + ',' + recipient + \
+               ")),':',string(if(less(" + sender + ',' + recipient + '),' + recipient + ',' + sender + ')))'
+        return both(
+            same("length(replace(" + field(row, 'SendOperationKey') + ",concat('personal:',string(" + sender + "),':'),''))", '36'),
+            'or(' + both(same(field(row, 'Status'), "'Pending'"),
+                          same(field(row, 'OperationComplete'), 'false'), 'empty(' + field(row, 'WinningOperationKey') + ')',
+                          same(field(row, 'ConnectionKey'), live)) + ',' +
+            both(same(field(row, 'Status'), "'Accepted'"), same(field(row, 'OperationComplete'), 'false'),
+                 'not(empty(' + field(row, 'WinningOperationKey') + '))', same(field(row, 'ConnectionKey'), live)) + ',' +
+            both("contains(createArray('Accepted','Declined','Cancelled')," + field(row, 'Status') + ')',
+                 same(field(row, 'OperationComplete'), 'true'), 'not(empty(' + field(row, 'WinningOperationKey') + '))',
+                 same(field(row, 'ConnectionKey'), "concat('history:request:',string(triggerBody()?['number_1']))")) + ')')
 
     def accepted(self, row, complete_=False):
         return both(self.request_identity(row), same(field(row, 'Status'), "'Accepted'"),
@@ -187,7 +215,17 @@ class Builder:
         self.gate('Own_profile_matches', both(same('length(' + rows('Own_profile') + ')', '1'),
                        same(safe_first('Own_profile') + "?['Id']", "triggerBody()?['number']")), 'UNAUTHORIZED')
         self.http('Read_request', ref(self.base['requests'], "triggerBody()?['number_1']"))
-        self.compose('Initial_request', '@' + raw('Read_request'))
+        shape = {'Id': {'type': 'integer', 'minimum': 1},
+                 'SenderParticipantId': {'type': 'integer', 'minimum': 1},
+                 'RecipientParticipantId': {'type': 'integer', 'minimum': 1},
+                 'RequestType': {'type': 'string', 'enum': ['Personal']}, 'TargetGroupId': {'type': 'null'},
+                 'Status': {'type': 'string', 'enum': ['Pending', 'Accepted', 'Declined', 'Cancelled']},
+                 'OperationComplete': {'type': 'boolean'}, 'WinningOperationKey': {'type': ['string', 'null']},
+                 'ConnectionKey': {'type': 'string'},
+                 'SendOperationKey': {'type': 'string', 'pattern': '^personal:[1-9][0-9]*:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'}}
+        self.add('Request_shape', d.parse('@' + raw('Read_request'),
+                                        {'type': 'object', 'required': list(shape), 'properties': shape}))
+        self.compose('Initial_request', "@body('Request_shape')")
         self.gate('Personal_recipient', both(self.request_identity('Read_request'),
                     "greater(coalesce(" + field('Read_request', 'SenderParticipantId') + ',0),0)',
                     "not(equals(" + field('Read_request', 'SenderParticipantId') + ",triggerBody()?['number']))"), 'UNAUTHORIZED')
@@ -197,8 +235,9 @@ class Builder:
         self.branch('Parse_accept_inputs_only', "equals(triggerBody()?['text'],'Accept')", self.accept_inputs)
         # Decline never parses unused acceptance JSON.
         self.compose('Typed_intent', {
-            'kind': 'PersonalResponse', 'version': 1, 'actorId': "@triggerBody()?['number']",
+            'kind': 'PersonalResponse', 'version': 2, 'actorId': "@triggerBody()?['number']",
             'requestId': "@triggerBody()?['number_1']", 'senderId': '@' + field('Read_request', 'SenderParticipantId'),
+            'sendOperationKey': '@' + field('Read_request', 'SendOperationKey'),
             'decision': "@triggerBody()?['text']",
             **{key: "@if(equals(triggerBody()?['text'],'Accept'),triggerBody()?['" + source + "']," + empty + ')'
                for key, source, empty in [('groupName', 'text_1', "''"), ('exchangeType', 'text_2', "''"),
@@ -207,8 +246,9 @@ class Builder:
             'cultureFocusIds': "@if(equals(triggerBody()?['text'],'Accept'),body('Culture_focus'),json('[]'))"})
         for role in ['receipts', 'groups', 'members']:
             self.http('Meta_' + role, self.base[role] + '?$select=Id,Title,ListItemEntityTypeFullName')
-            self.gate('Meta_' + role + '_valid', "not(empty(" + field('Meta_' + role, 'ListItemEntityTypeFullName') + '))', 'SCHEMA_UNAVAILABLE')
-        self.gate('Receipt_title', same(field('Meta_receipts', 'Title'), "'TandemOperationReceipts'"), 'SCHEMA_UNAVAILABLE')
+        self.gate('Metadata_valid', both(
+            *["not(empty(" + field('Meta_' + role, 'ListItemEntityTypeFullName') + '))' for role in ['receipts', 'groups', 'members']],
+            same(field('Meta_receipts', 'Title'), "'TandemOperationReceipts'")), 'SCHEMA_UNAVAILABLE')
 
     def receipt_lookup(self, name, all_after=False):
         self.collection(name, 'receipts', "concat('OperationKey eq ''',outputs('Operation_key'),'''')", 1, all_after)
@@ -248,7 +288,15 @@ class Builder:
         self.branch('Finalize_sealed_release',
                     "and(equals(triggerBody()?['text'],'Accept'),equals(outputs('Receipt')?['Retryable'],true))",
                     self.release_sealed)
+        self.branch('Validate_accept_only', "equals(triggerBody()?['text'],'Accept')",
+                    lambda: self.validation('Initial'))
+        self.record_effect('Decision')
+        self.decision()
         self.branch('Run_decision', "equals(triggerBody()?['text'],'Decline')", self.decline, self.accept)
+        # The decision branch may aggregate a reconciled failed create. Only a
+        # business branch that reached its verified terminal result may finalize.
+        self.gate('Business_result_verified', "equals(variables('Result')?['success'],true)", all_after=True)
+        self.finalize('Decision')
 
     def release_sealed(self):
         self.collection('Sealed_source_group', 'groups', "concat('SourceRequestId eq ',string(triggerBody()?['number_1']))", 1)
@@ -265,45 +313,46 @@ class Builder:
         self.gate(prefix + '_effect_owner', same(field(n, 'AttemptToken'), "outputs('Attempt')"), 'RECEIPT_RACE')
         self.merge(prefix + '_record_domain_effect', 'receipts', n, {'DomainEffects': True, 'Stage': 'Decision'})
 
-    def decision(self, accepted):
-        name = 'Accept' if accepted else 'Decline'
+    def decision(self):
+        name = 'Decision'
         self.http(name + '_request_fresh', ref(self.base['requests'], "triggerBody()?['number_1']"))
         def pending():
             self.gate(name + '_pending_identity', both(self.request_identity(name + '_request_fresh'),
                 "empty(" + field(name + '_request_fresh', 'WinningOperationKey') + ')',
                 "not(equals(" + field(name + '_request_fresh', 'OperationComplete') + ',true))'), 'REQUEST_CONFLICT')
-            value = {'Status': 'Accepted' if accepted else 'Declined', 'WinningOperationKey': "@outputs('Operation_key')",
-                     'OperationComplete': not accepted}
-            if not accepted:
-                value['ConnectionKey'] = "@concat('history:',string(triggerBody()?['number_1']))"
+            value = {'Status': "@if(equals(triggerBody()?['text'],'Accept'),'Accepted','Declined')",
+                     'WinningOperationKey': "@outputs('Operation_key')",
+                     'OperationComplete': "@equals(triggerBody()?['text'],'Decline')",
+                     'ConnectionKey': "@if(equals(triggerBody()?['text'],'Decline'),concat('history:request:',string(triggerBody()?['number_1'])),"
+                                      + field(name + '_request_fresh', 'ConnectionKey') + ')'}
             self.merge(name + '_pending_CAS', 'requests', name + '_request_fresh', value)
         self.branch(name + '_pending', same(field(name + '_request_fresh', 'Status'), "'Pending'"), pending)
         self.http(name + '_decision_readback', ref(self.base['requests'], "triggerBody()?['number_1']"), all_after=True)
-        predicate = self.accepted(name + '_decision_readback') if accepted else both(
+        predicate = both(
             self.request_identity(name + '_decision_readback'), same(field(name + '_decision_readback', 'Status'), "'Declined'"),
             same(field(name + '_decision_readback', 'WinningOperationKey'), "outputs('Operation_key')"),
             same(field(name + '_decision_readback', 'OperationComplete'), 'true'),
-            same(field(name + '_decision_readback', 'ConnectionKey'), "concat('history:',string(triggerBody()?['number_1']))"))
-        self.gate(name + '_won', predicate, 'DECISION_CONFLICT')
+            same(field(name + '_decision_readback', 'ConnectionKey'), "concat('history:request:',string(triggerBody()?['number_1']))"))
+        self.gate(name + '_won', 'if(equals(triggerBody()?[\'text\'],\'Accept\'),' +
+                  self.accepted(name + '_decision_readback') + ',' + predicate + ')', 'DECISION_CONFLICT')
 
     def decline(self):
-        self.record_effect('Decline')
-        self.decision(False)
         self.set('Declined_result', 'Result', {'success': True, 'message': 'Declined', 'groupid': 0,
                     'resultcode': 'DECLINED', 'operationkey': "@outputs('Operation_key')"})
-        self.finalize('Decline')
 
     def validation(self, prefix):
         for label, key in [('Sender', 'SenderParticipantId'), ('Recipient', 'RecipientParticipantId')]:
             self.http(prefix + '_' + label, ref(self.base['participants'], "outputs('Initial_request')?['" + key + "']"))
         for role in ['language', 'culture', 'timezone']:
             self.http(prefix + '_' + role, self.base[role] + '/items?$top=5001')
-            self.gate(prefix + '_' + role + '_complete', d.complete(prefix + '_' + role, 5000), 'INCOMPLETE_CATALOGUE')
+        self.gate(prefix + '_Catalogues_complete', both(*[
+            d.complete(prefix + '_' + role, 5000) for role in ['language', 'culture', 'timezone']]), 'INCOMPLETE_CATALOGUE')
+        for role in ['language', 'culture', 'timezone']:
             self.add(prefix + '_Active_' + role, d.query('@' + rows(prefix + '_' + role), "equals(item()?['Active'],true)"))
             self.add(prefix + '_' + role + '_ids', d.select('@body(' + string(prefix + '_Active_' + role) + ')', "@item()?['Id']"))
         self.add(prefix + '_Any', d.query('@' + rows(prefix + '_language'), "equals(toLower(coalesce(item()?['ISOcode'],'')),'any')"))
         self.gate(prefix + '_Any_unique', 'lessOrEquals(length(body(' + string(prefix + '_Any') + ')),1)', 'CATALOGUE_INTEGRITY')
-        profiles = []
+        profiles, identity_checks = [], []
         for label in ['Sender', 'Recipient']:
             n = prefix + '_' + label
             profiles.append({
@@ -313,9 +362,10 @@ class Builder:
                 **{k: '@' + field(n, actual) + "?['results']" for k, actual in [
                     ('teachIds', 'TeachlanguagesId'), ('learnIds', 'LearnlanguagesId'),
                     ('shareCultureIds', 'ShareCulturesId'), ('learnCultureIds', 'LearnCulturesId')]}})
-            self.gate(n + '_identity', both('greater(coalesce(' + field(n, 'ParticipantaccountId') + ',0),0)',
+            identity_checks.append(both('greater(coalesce(' + field(n, 'ParticipantaccountId') + ',0),0)',
                 same(field(n, 'Id'), "outputs('Initial_request')?['" + ('SenderParticipantId' if label == 'Sender' else 'RecipientParticipantId') + "']"),
-                same(field(n, 'ParticipantaccountId'), field('Read_invoker', 'Id')) if label == 'Recipient' else 'true'), 'PROFILE_IDENTITY')
+                same(field(n, 'ParticipantaccountId'), field('Read_invoker', 'Id')) if label == 'Recipient' else 'true'))
+        self.gate(prefix + '_Profile_identity', both(*identity_checks), 'PROFILE_IDENTITY')
         context = {
             'contractVersion': 1, 'rulesVersion': 1, 'profiles': profiles,
             'catalogues': {**{k: '@body(' + string(prefix + '_' + role + '_ids') + ')' for k, role in [
@@ -387,14 +437,38 @@ class Builder:
         self.http('Group_claimed', ref(self.base['groups'], "variables('GroupId')"))
         self.gate('Group_owned', self.group_matches('Group_claimed'), 'GROUP_BUSY')
 
+    def ensure_members(self):
+        parent, previous = self.target, self.previous
+        self.target, self.previous = {}, None
+        def iteration():
+            # Foreach can schedule the next serial iteration after a failure.
+            # Leave this false unless the whole current member path reconciles.
+            self.set('Member_iteration_started', 'MembersContinue', False)
+            self.ensure_member('Member', "items('Ensure_initial_members')")
+            self.add('Count_verified_member', {'type': 'IncrementVariable',
+                                               'inputs': {'name': 'VerifiedMembers', 'value': 1}})
+            self.set('Member_iteration_completed', 'MembersContinue', True)
+        self.branch('Member_iteration', "equals(variables('MembersContinue'),true)", iteration)
+        inside = self.target
+        self.target, self.previous = parent, previous
+        self.add('Ensure_initial_members', d.loop(
+            "@createArray(outputs('Initial_request')?['SenderParticipantId'],outputs('Initial_request')?['RecipientParticipantId'])",
+            inside))
+        # Foreach can remain Failed after a lost create response even when
+        # its exact unique-key readback reconciled the result. Require both
+        # completed iterations, not just the container's aggregate status.
+        self.gate('Members_loop_complete',
+                  "and(equals(variables('MembersContinue'),true),equals(variables('VerifiedMembers'),2))",
+                  'MEMBERSHIP_CONFLICT_OR_UNCERTAIN', all_after=True)
+
     def ensure_member(self, label, party):
-        key = "concat('request:',string(triggerBody()?['number_1']),':participant:',string(outputs('Initial_request')?['" + party + "']))"
+        key = "concat('request:',string(triggerBody()?['number_1']),':participant:',string(" + party + '))'
         self.collection(label + '_find', 'members', "concat('MembershipKey eq '''," + key + ",'''')", 1)
         def create():
             self.http(label + '_guard', ref(self.base['groups'], "variables('GroupId')"))
             self.gate(label + '_owned', self.group_matches(label + '_guard'), 'GROUP_BUSY')
             self.post(label + '_create', 'members', {'GroupId': "@variables('GroupId')",
-                    'ParticipantId': "@outputs('Initial_request')?['" + party + "']", 'MembershipKey': '@' + key,
+                    'ParticipantId': '@' + party, 'MembershipKey': '@' + key,
                     'MembershipStatus': 'Active', 'JoinedAt': '@utcNow()'})
         self.branch(label + '_absent', same('length(' + rows(label + '_find') + ')', '0'), create)
         self.collection(label + '_readback', 'members', "concat('MembershipKey eq '''," + key + ",'''')", 1, True)
@@ -407,7 +481,7 @@ class Builder:
         self.branch(label + '_definite_stopped', both(same('length(' + rows(label + '_readback') + ')', '0'), definite), stopped)
         self.gate(label + '_exact', both(same('length(' + rows(label + '_readback') + ')', '1'),
             same(safe_first(label + '_readback') + "?['GroupId']", "variables('GroupId')"),
-            same(safe_first(label + '_readback') + "?['ParticipantId']", "outputs('Initial_request')?['" + party + "']"),
+            same(safe_first(label + '_readback') + "?['ParticipantId']", party),
             same(safe_first(label + '_readback') + "?['MembershipKey']", key),
             same(safe_first(label + '_readback') + "?['MembershipStatus']", "'Active'"),
             "not(empty(" + safe_first(label + '_readback') + "?['JoinedAt']))",
@@ -433,19 +507,16 @@ class Builder:
             self.gate(n + '_unique', same("length(body('" + n + "'))", "length(union(body('" + n + "'),body('" + n + "')))"), 'DUPLICATE_FOCUS')
 
     def accept(self):
-        self.validation('Initial')
-        self.record_effect('Accept')
-        self.decision(True)
         self.ensure_group()
-        self.ensure_member('Sender_member', 'SenderParticipantId')
-        self.ensure_member('Recipient_member', 'RecipientParticipantId')
+        self.ensure_members()
         self.verify_members('Before_commit')
         self.validation('Fresh')
         # Compare the versions used for evaluation, retaining parent freshness.
         for label in ['Sender', 'Recipient']:
             self.http('Last_' + label, ref(self.base['participants'], field('Fresh_' + label, 'Id')))
-            self.gate('Last_' + label + '_unchanged', same(field('Last_' + label, '__metadata') + "?['etag']",
-                       field('Fresh_' + label, '__metadata') + "?['etag']"), 'STALE_PROFILE')
+        self.gate('Last_profiles_unchanged', both(*[
+            same(field('Last_' + label, '__metadata') + "?['etag']",
+                 field('Fresh_' + label, '__metadata') + "?['etag']") for label in ['Sender', 'Recipient']]), 'STALE_PROFILE')
         self.http('Request_before_publish', ref(self.base['requests'], "triggerBody()?['number_1']"))
         self.gate('Accepted_incomplete_owned', self.accepted('Request_before_publish'), 'REQUEST_COMMIT_CONFLICT')
         self.http('Group_before_publish', ref(self.base['groups'], "variables('GroupId')"))
@@ -456,17 +527,16 @@ class Builder:
         self.gate('Published_group_exact', both(self.group_matches('Group_publish_readback', True, True),
             same(field('Group_publish_readback', 'State'), "if(greater(triggerBody()?['number_2'],2),'Open','Closed')")), 'GROUP_PUBLISH_READBACK')
         self.merge('Complete_request', 'requests', 'Request_before_publish', {'OperationComplete': True,
-                    'ConnectionKey': "@concat('history:',string(triggerBody()?['number_1']))"})
+                    'ConnectionKey': "@concat('history:request:',string(triggerBody()?['number_1']))"})
         self.http('Committed_request', ref(self.base['requests'], "triggerBody()?['number_1']"))
         self.gate('Committed_request_exact', both(self.accepted('Committed_request', True),
-                same(field('Committed_request', 'ConnectionKey'), "concat('history:',string(triggerBody()?['number_1']))")), 'REQUEST_COMMIT_READBACK')
+                same(field('Committed_request', 'ConnectionKey'), "concat('history:request:',string(triggerBody()?['number_1']))")), 'REQUEST_COMMIT_READBACK')
         self.verify_members('Committed')
         self.http('Committed_group', ref(self.base['groups'], "variables('GroupId')"))
         self.gate('Committed_group_exact', both(self.group_matches('Committed_group', True, True),
             same(field('Committed_group', 'State'), "if(greater(triggerBody()?['number_2'],2),'Open','Closed')")), 'GROUP_COMMIT_READBACK')
         self.set('Accepted_result', 'Result', {'success': True, 'message': 'Accepted', 'groupid': "@variables('GroupId')",
                     'resultcode': 'ACCEPTED', 'operationkey': "@outputs('Operation_key')"})
-        self.finalize('Accept')
 
     def release(self, prefix):
         self.http(prefix + '_group', ref(self.base['groups'], "variables('GroupId')"))
@@ -488,9 +558,10 @@ class Builder:
         self.gate(prefix + '_receipt_completed_exact', both(same(field(read, 'Complete'), 'true'),
             same(field(read, 'IntentJson'), "string(outputs('Typed_intent'))"),
             same(field(read, 'ResultJson'), "string(variables('Result'))")), 'RECEIPT_COMMIT_READBACK')
-        if prefix == 'Accept':
+        def release():
             self.set('Current_release_token', 'ReleaseToken', "@outputs('Owner_token')")
             self.release('Final')
+        self.branch('Release_new_group', "greater(variables('GroupId'),0)", release)
         self.set(prefix + '_response_success', 'Success', True)
 
     def replay(self):
@@ -511,6 +582,9 @@ class Builder:
     def catch(self):
         # Only the positively established member-create rejection boundary may
         # seal/release. A generic catch never guesses that a timeout had no effect.
+        # Recovery's successful assertions must not overwrite the failed
+        # operation's diagnostic stage.
+        self.compose('Stopped_operation_code', "@variables('Code')")
         def own():
             self.http('Catch_receipt', ref(RECEIPTS, "variables('ReceiptId')"))
             def mark():
@@ -530,11 +604,13 @@ class Builder:
                 same(field('Catch_receipt', 'AttemptToken'), "outputs('Attempt')"),
                 'not(equals(' + field('Catch_receipt', 'Complete') + ',true))'), mark)
         self.branch('Catch_owned_receipt', "and(equals(variables('Claimed'),true),equals(variables('Success'),false))", own)
+        self.add('Restore_operation_code', d.setvar('Code', "@outputs('Stopped_operation_code')"), all_after=True)
 
     def build(self):
         for name, type_, value in [('Code', 'string', 'PROCESSING_OR_ASSISTANCE'), ('Result', 'object', {}),
                 ('Success', 'boolean', False), ('ReceiptId', 'integer', 0), ('GroupId', 'integer', 0),
-                ('Claimed', 'boolean', False), ('RetryBoundary', 'boolean', False), ('ReleaseToken', 'string', '')]:
+                ('Claimed', 'boolean', False), ('RetryBoundary', 'boolean', False), ('ReleaseToken', 'string', ''),
+                ('MembersContinue', 'boolean', True), ('VerifiedMembers', 'integer', 0)]:
             self.add('Initialize_' + name, {'type': 'InitializeVariable', 'inputs': {'variables': [{'name': name, 'type': type_, 'value': value}]}})
         def operation():
             self.authorize()
@@ -617,7 +693,7 @@ def build(output, native_source):
     workflows.append(template)
     manifest_node = solution.find('SolutionManifest')
     manifest_node.find('UniqueName').text = 'TandemRespondRequest11'
-    manifest_node.find('Version').text = '1.0.0.0'
+    manifest_node.find('Version').text = '1.0.1.0'
     for label in manifest_node.findall('./LocalizedNames/LocalizedName'):
         label.set('description', NAME + ' ' + VERSION)
     for label in manifest_node.findall('./Descriptions/Description'):
@@ -643,6 +719,15 @@ def build(output, native_source):
               'generatorSha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
               'solutionSha256': hashlib.sha256(solution_path.read_bytes()).hexdigest(),
               'solutionScope': 'Parent only; shared child not bundled or changed; existing connection-reference component retained.',
+              'previousVersion': '11.1.0', 'previousActions': 418,
+              'actionsRemoved': 418 - measure(actions)['actions'],
+              'actionHeadroom': 500 - measure(actions)['actions'],
+              'refinement': ['One sequential two-party member loop with fail-stop flag and verified-iteration count',
+                             'One common decision/effect-marker/completion path',
+                             'Native Boolean ParseJson assertions replace If/Set/divide-by-zero branches',
+                             'Batched read-only catalogue/profile/metadata assertions retain every predicate'],
+              'requestContract': 'Aligned to #10 Personal saved row: SendOperationKey, open:person:min:max, history:request:id',
+              'intentRepresentationVersion': 2,
               'triggerSource': 'config/participant_response_flow.snapshot.json; NOT certified export',
               'nativeEnvelope': seed['receipt'], 'sharedContractVersion': 1, 'sharedRulesVersion': 1,
               'nativeIntegration': 'NOT RUN', 'authorityProof': 'NOT RUN',
@@ -654,6 +739,6 @@ def build(output, native_source):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--native-source', type=Path, required=True)
-    parser.add_argument('--output', type=Path, default=ROOT / 'artifacts/respond_request/TandemRespondRequest-11.1.0.zip')
+    parser.add_argument('--output', type=Path, default=ROOT / ('artifacts/respond_request/TandemRespondRequest-' + VERSION + '.zip'))
     args = parser.parse_args()
     print(json.dumps(build(args.output, args.native_source), indent=2))

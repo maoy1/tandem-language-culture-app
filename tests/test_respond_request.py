@@ -33,10 +33,26 @@ def input_(**changes):
             'text_5': '11111111-2222-4333-8444-555555555555', **changes}
 
 
+def validate_native(value, schema):
+    validate(value, schema)
+    if isinstance(value, str):
+        assert len(value) <= schema.get('maxLength', 10**9)
+        if 'pattern' in schema:
+            assert re.fullmatch(schema['pattern'], value)
+    elif isinstance(value, dict):
+        for key, child in schema.get('properties', {}).items():
+            if key in value:
+                validate_native(value[key], child)
+    elif isinstance(value, list):
+        for item in value:
+            validate_native(item, schema.get('items', {}))
+
+
 class SharePoint:
     def __init__(self):
         self.rows = {r: {} for r in flow.Builder().base}
         self.calls = []
+        self.member_calls = []
         self.user = 138
         self.hooks = {}
         self.failures = {}
@@ -46,7 +62,8 @@ class SharePoint:
         self.insert('participants', profile(38, learn=[1]))
         self.insert('requests', {'Id': 70, 'SenderParticipantId': 32, 'RecipientParticipantId': 38,
             'RequestType': 'Personal', 'TargetGroupId': None, 'Status': 'Pending',
-            'ConnectionKey': 'personal:32:38', 'WinningOperationKey': None, 'OperationComplete': False})
+            'Title': 'Personal request', 'SendOperationKey': 'personal:32:aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee',
+            'ConnectionKey': 'open:person:32:38', 'WinningOperationKey': None, 'OperationComplete': False})
         for role, values in [('language', [{'Id': 1, 'ISOcode': 'en'}, {'Id': 2, 'ISOcode': 'fr'}, {'Id': 99, 'ISOcode': 'any'}]),
                              ('culture', [{'Id': 1, 'CultureKey': 'a'}]), ('timezone', [{'Id': 1}])]:
             for value in values:
@@ -64,14 +81,18 @@ class SharePoint:
         row.update({k: deepcopy(v) for k, v in values.items() if k != '__metadata'})
         row['__metadata']['etag'] = '"' + str(int(row['__metadata']['etag'].strip('"')) + 1) + '"'
 
-    def request(self, p, action):
+    def request(self, p, action, member=None):
         uri, method = p['parameters/uri'], p['parameters/method']
         body = p.get('parameters/body')
         self.calls.append((action, method, uri, deepcopy(body)))
-        if action in self.hooks:
-            self.hooks.pop(action)(self)
-        if action in self.failures:
-            failure = self.failures[action]
+        if member is not None:
+            self.member_calls.append((member, action, method, uri))
+        hook_key = (action, member) if (action, member) in self.hooks else action
+        failure_key = (action, member) if (action, member) in self.failures else action
+        if hook_key in self.hooks:
+            self.hooks.pop(hook_key)(self)
+        if failure_key in self.failures:
+            failure = self.failures[failure_key]
             if callable(failure):
                 return failure(self, p)
             return {'statusCode': failure, 'body': {'error': 'injected'}}
@@ -131,6 +152,7 @@ class NativeFlow(FlowRunner):
         self.run_name = run_name
         self.children = []
         self.errors = {}
+        self.member_iterations = []
 
     def expr(self, text, ctx):
         text = text.replace('workflow()', "json('" + json.dumps({'run': {'name': self.run_name}}) + "')")
@@ -152,7 +174,8 @@ class NativeFlow(FlowRunner):
                 p, kind, state = a.get('inputs', {}), a['type'], 'Succeeded'
                 try:
                     if kind == 'OpenApiConnection':
-                        self.outputs[name] = self.server.request(self.inputs(p['parameters'], ctx), name)
+                        self.outputs[name] = self.server.request(self.inputs(p['parameters'], ctx), name,
+                                                                ctx['items'].get('Ensure_initial_members'))
                         if self.outputs[name]['statusCode'] >= 400:
                             state = 'Failed'
                     elif kind == 'Workflow':
@@ -169,17 +192,15 @@ class NativeFlow(FlowRunner):
                     elif kind == 'ParseJson':
                         value = self.inputs(p['content'], ctx)
                         value = json.loads(value) if isinstance(value, str) else value
-                        validate(value, p['schema'])
-                        if isinstance(value, str):
-                            assert len(value) <= p['schema'].get('maxLength', 10**9)
-                            if 'pattern' in p['schema']:
-                                assert re.fullmatch(p['schema']['pattern'], value)
+                        validate_native(value, p['schema'])
                         self.outputs[name] = value
                     elif kind == 'InitializeVariable':
                         for v in p['variables']:
                             self.variables[v['name']] = deepcopy(v['value'])
                     elif kind == 'SetVariable':
                         self.variables[p['name']] = self.inputs(p['value'], ctx)
+                    elif kind == 'IncrementVariable':
+                        self.variables[p['name']] += self.inputs(p['value'], ctx)
                     elif kind in ['Query', 'Select']:
                         result = []
                         for row in self.inputs(p['from'], ctx):
@@ -195,6 +216,18 @@ class NativeFlow(FlowRunner):
                     elif kind == 'Scope':
                         if not self.run(a['actions'], ctx):
                             state = 'Failed'
+                    elif kind == 'Foreach':
+                        assert a['runtimeConfiguration']['concurrency']['repetitions'] == 1
+                        for row in self.inputs(a['foreach'], ctx):
+                            # Native outputs inside a foreach refer to the
+                            # current repetition, including skipped actions.
+                            for path, _ in walk(a['actions']):
+                                self.outputs.pop(path[-1], None)
+                                self.action_states.pop(path[-1], None)
+                            ok = self.run(a['actions'], {**ctx, 'items': {**ctx['items'], name: row}})
+                            if not ok:
+                                state = 'Failed'
+                            self.member_iterations.append((row, ok, deepcopy(self.action_states)))
                     elif kind == 'Response':
                         self.response = self.inputs(p['body'], ctx)
                     else:
@@ -239,7 +272,7 @@ def test_decline_ignores_unused_acceptance_inputs_and_stops():
     assert_success(r, 'DECLINED')
     assert not r.children and not r.server.rows['groups'] and not r.server.rows['members']
     assert r.server.rows['requests'][70]['Status'] == 'Declined'
-    assert r.server.rows['requests'][70]['ConnectionKey'] == 'history:70'
+    assert r.server.rows['requests'][70]['ConnectionKey'] == 'history:request:70'
 
 
 @pytest.mark.parametrize('capacity,state', [(2, 'Closed'), (3, 'Open')])
@@ -322,7 +355,7 @@ def test_culture_only_supported():
 
 def test_stale_pending_etag_cannot_overwrite_competing_decline():
     s = SharePoint()
-    s.hooks['Accept_pending_CAS'] = lambda s: s.update('requests', 70,
+    s.hooks['Decision_pending_CAS'] = lambda s: s.update('requests', 70,
         {'Status': 'Declined', 'WinningOperationKey': 'other', 'OperationComplete': True})
     r = execute(s)
     assert not r.response['success'] and r.response['resultcode'] == 'DECISION_CONFLICT'
@@ -334,7 +367,7 @@ def test_accept_race_winner_then_loser_creates_no_second_group():
     winner = []
     def compete(server):
         winner.append(execute(server, input_(text_5='aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee'), 'other-run'))
-    s.hooks['Accept_pending_CAS'] = compete
+    s.hooks['Decision_pending_CAS'] = compete
     r = execute(s)
     assert_success(winner[0])
     assert not r.response['success']
@@ -352,7 +385,7 @@ def test_fresh_or_stale_profile_after_members_does_not_publish(action):
     assert s.rows['requests'][70]['Status'] == 'Accepted' and not s.rows['requests'][70]['OperationComplete']
 
 
-@pytest.mark.parametrize('action', ['Committed_request', 'Committed_members', 'Committed_group', 'Accept_receipt_completed_readback'])
+@pytest.mark.parametrize('action', ['Committed_request', 'Committed_members', 'Committed_group', 'Decision_receipt_completed_readback'])
 def test_failed_readback_never_reports_accept_success(action):
     s = SharePoint()
     s.failures[action] = 500
@@ -362,7 +395,7 @@ def test_failed_readback_never_reports_accept_success(action):
 
 def test_known_partial_prefix_reuses_one_group_and_first_membership():
     s = SharePoint()
-    s.failures['Recipient_member_create'] = 403
+    s.failures[('Member_create', 38)] = 403
     first = execute(s)
     assert not first.response['success']
     receipt = next(iter(s.rows['receipts'].values()))
@@ -378,7 +411,7 @@ def test_known_partial_prefix_reuses_one_group_and_first_membership():
 @pytest.mark.parametrize('code', [408, 429, 500, 502, 504])
 def test_unknown_member_write_does_not_seal_or_steal(code):
     s = SharePoint()
-    s.failures['Recipient_member_create'] = code
+    s.failures[('Member_create', 38)] = code
     first = execute(s)
     assert not first.response['success']
     receipt = next(iter(s.rows['receipts'].values()))
@@ -409,7 +442,13 @@ def test_structure_native_only_unique_names_refs_exact_etags_and_limits():
     names = [path[-1] for path, _ in all_]
     assert len(names) == len(set(names))
     metrics = measure(actions)
-    assert metrics['actions'] <= 500 and metrics['maximumActionDepth'] <= 8
+    assert metrics['actions'] < 300 and metrics['maximumActionDepth'] <= 8
+    loops = [(path, a) for path, a in all_ if a['type'] == 'Foreach']
+    assert len(loops) == 1
+    assert loops[0][1]['runtimeConfiguration']['concurrency']['repetitions'] == 1
+    assert loops[0][1]['foreach'] == "@createArray(outputs('Initial_request')?['SenderParticipantId'],outputs('Initial_request')?['RecipientParticipantId'])"
+    assert len([a for _, a in all_ if a['type'] == 'OpenApiConnection'
+                and a['inputs']['parameters'].get('parameters/body', {}).get('MembershipStatus') == 'Active']) == 1
     for _, action in all_:
         if action['type'] == 'OpenApiConnection':
             p = action['inputs']['parameters']
@@ -442,7 +481,7 @@ def RECEIPT_FIELD_NAMES():
 
 def test_sealed_release_failure_is_finalized_before_reacquire():
     s = SharePoint()
-    s.failures.update(Recipient_member_create=403, Sealed_release=500)
+    s.failures.update({('Member_create', 38): 403, 'Sealed_release': 500})
     first = execute(s)
     assert not first.response['success']
     assert next(iter(s.rows['receipts'].values()))['Retryable']
@@ -455,7 +494,7 @@ def test_sealed_release_failure_is_finalized_before_reacquire():
 
 def test_three_sealed_attempts_cap_without_takeover():
     s = SharePoint()
-    s.failures['Recipient_member_create'] = 403
+    s.failures[('Member_create', 38)] = 403
     for n in range(3):
         assert not execute(s, run_name='attempt-' + str(n)).response['success']
     receipt = next(iter(s.rows['receipts'].values()))
@@ -468,7 +507,7 @@ def test_three_sealed_attempts_cap_without_takeover():
 
 def test_left_episode_is_not_revived_or_bypassed():
     s = SharePoint()
-    s.failures['Recipient_member_create'] = 403
+    s.failures[('Member_create', 38)] = 403
     assert not execute(s).response['success']
     first = next(iter(s.rows['members'].values()))
     s.update('members', first['Id'], {'MembershipStatus': 'Left', 'LeftAt': '2026-11-14T12:01:00Z'})
@@ -483,7 +522,7 @@ def test_foreign_group_owner_is_never_cleared():
     def steal(server):
         g = next(iter(server.rows['groups'].values()))
         server.update('groups', g['Id'], {'WriteOwner': 'foreign:token'})
-    s.hooks['Sender_member_guard'] = steal
+    s.hooks[('Member_guard', 32)] = steal
     r = execute(s)
     assert not r.response['success'] and not s.rows['members']
     assert next(iter(s.rows['groups'].values()))['WriteOwner'] == 'foreign:token'
@@ -517,7 +556,7 @@ def test_ambiguous_create_reconciles_only_exact_stable_row():
     def create_saved(server, p):
         server.insert('members', p['parameters/body'])
         return {'statusCode': 504, 'body': {'error': 'transport lost after write'}}
-    s.failures['Recipient_member_create'] = create_saved
+    s.failures[('Member_create', 38)] = create_saved
     r = execute(s)
     assert_success(r)
     assert len(s.rows['members']) == 2
@@ -528,7 +567,7 @@ def test_membership_duplicate_wrong_party_is_integrity_error():
     def create_wrong(server, p):
         server.insert('members', {**p['parameters/body'], 'ParticipantId': 999})
         return {'statusCode': 502, 'body': {'error': 'duplicate'}}
-    s.failures['Recipient_member_create'] = create_wrong
+    s.failures[('Member_create', 38)] = create_wrong
     r = execute(s)
     assert not r.response['success']
     assert not next(iter(s.rows['groups'].values()))['SetupComplete']
@@ -539,7 +578,7 @@ def test_decline_loses_to_accept_cannot_reverse_or_create_second_group():
     winner = []
     def compete(server):
         winner.append(execute(server, input_(text_5='aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee'), 'accept-winner'))
-    s.hooks['Decline_pending_CAS'] = compete
+    s.hooks['Decision_pending_CAS'] = compete
     r = execute(s, input_(text='Decline'))
     assert_success(winner[0])
     assert not r.response['success'] and s.rows['requests'][70]['Status'] == 'Accepted'
@@ -600,3 +639,120 @@ def test_legacy_and_parent_only_solution_package(tmp_path):
         assert parent['properties']['connectionReferences']['shared_sharepointonline']['runtimeSource'] == 'invoker'
         assert flow.CHILD in json.dumps(parent)
     assert report['nativeIntegration'] == 'NOT RUN' and report['authorityProof'] == 'NOT RUN'
+
+
+@pytest.mark.parametrize('predicate,passes', [('true', True), ('false', False), ('null', False),
+                                             ('0', False), ('1', False), ("'true'", False)])
+def test_native_assertion_requires_exact_boolean_true(predicate, passes):
+    b = flow.Builder()
+    b.gate('Assertion', predicate, 'ASSERTION_FAILED')
+    b.set('After_assertion', 'Reached', True)
+    runner = NativeFlow(SharePoint())
+    runner.run(b.actions)
+    assert runner.variables.get('Reached', False) == passes
+    assert runner.variables['Code'] == 'ASSERTION_FAILED'
+    assert len(list(walk({'Assertion': b.actions['Assertion']}))) == 1
+
+
+@pytest.mark.parametrize('code,retryable', [(403, True), (408, False), (500, False), (504, False)])
+def test_first_member_failure_stops_second_iteration_io(code, retryable):
+    s = SharePoint()
+    s.failures[('Member_create', 32)] = code
+    r = execute(s)
+    assert not r.response['success']
+    assert [i[0] for i in r.member_iterations] == [32, 38]
+    assert r.member_iterations[0][1] is False
+    assert not any(member == 38 for member, *_ in s.member_calls)
+    assert not s.rows['members']
+    receipt = next(iter(s.rows['receipts'].values()))
+    assert receipt['Retryable'] is retryable and receipt['Uncertain'] is not retryable
+    assert r.response['resultcode'] == 'MEMBERSHIP_CONFLICT_OR_UNCERTAIN'
+    if retryable:
+        s.failures.clear()
+        assert_success(execute(s, run_name='retry-first-member'))
+        assert len(s.rows['groups']) == 1 and len(s.rows['members']) == 2
+
+
+def test_first_member_paged_read_stops_second_and_cannot_seal():
+    s = SharePoint()
+    s.paged.add('Member_readback')
+    r = execute(s)
+    assert not r.response['success']
+    assert not any(member == 38 for member, *_ in s.member_calls)
+    assert len(s.rows['members']) == 1
+    receipt = next(iter(s.rows['receipts'].values()))
+    assert receipt['Uncertain'] and not receipt['Retryable']
+    assert not next(iter(s.rows['groups'].values()))['SetupComplete']
+
+
+def test_second_iteration_has_no_stale_create_output_from_first():
+    s = SharePoint()
+    s.failures[('Member_create', 38)] = 403
+    first = execute(s)
+    assert not first.response['success']
+    assert 'Member_create' in first.member_iterations[0][2]
+    offset = len(s.member_calls)
+    s.failures.clear()
+    second = execute(s, run_name='retry-existing-first')
+    assert_success(second)
+    assert not any(member == 32 and name == 'Member_create'
+                   for member, name, *_ in s.member_calls[offset:])
+    assert second.member_iterations[0][2].get('Member_create') is None
+    assert second.member_iterations[1][2]['Member_create'] == 'Succeeded'
+    assert len(s.rows['members']) == 2
+
+
+def test_send10_saved_row_contract_survives_response_and_history():
+    s = SharePoint()
+    before = deepcopy(s.rows['requests'][70])
+    assert before['Title'] == 'Personal request'
+    assert before['SendOperationKey'] == 'personal:32:aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee'
+    assert before['ConnectionKey'] == 'open:person:32:38'
+    assert before['TargetGroupId'] is None and before['WinningOperationKey'] is None
+    assert before['Status'] == 'Pending' and before['OperationComplete'] is False
+    assert_success(execute(s))
+    saved = s.rows['requests'][70]
+    for key in ['Title', 'SendOperationKey', 'SenderParticipantId', 'RecipientParticipantId', 'TargetGroupId']:
+        assert saved[key] == before[key]
+    assert saved['ConnectionKey'] == 'history:request:70'
+
+
+@pytest.mark.parametrize('change', [
+    {'SendOperationKey': None}, {'SendOperationKey': 'personal:32:wrong'},
+    {'SendOperationKey': 'personal:38:aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee'},
+    {'ConnectionKey': 'personal:32:38'}, {'ConnectionKey': 'open:person:38:32'},
+    {'SenderParticipantId': '32'}, {'RecipientParticipantId': '38'},
+    {'OperationComplete': None}, {'WinningOperationKey': 'premature-winner'},
+])
+def test_malformed_send_contract_rejected_before_receipt_or_domain_effect(change):
+    s = SharePoint()
+    s.update('requests', 70, change)
+    before = deepcopy(s.rows)
+    r = execute(s)
+    assert not r.response['success'] and s.rows == before
+
+
+@pytest.mark.parametrize('stage', ['Decision_request_fresh', 'Request_before_publish'])
+@pytest.mark.parametrize('change', [
+    {'SendOperationKey': 'personal:32:aaaaaaaa-bbbb-4ccc-8ddd-ffffffffffff'},
+    {'ConnectionKey': 'open:person:38:32'},
+    {'RecipientParticipantId': 39},
+])
+def test_fresh_request_immutable_parties_and_keys_cannot_drift(stage, change):
+    s = SharePoint()
+    s.hooks[stage] = lambda server: server.update('requests', 70, change)
+    r = execute(s)
+    assert not r.response['success']
+    assert not any(g['SetupComplete'] for g in s.rows['groups'].values())
+    if stage == 'Decision_request_fresh':
+        assert s.rows['requests'][70]['Status'] == 'Pending'
+
+
+def test_send10_reverse_direction_keeps_sorted_live_key():
+    s = SharePoint()
+    s.user = 132
+    s.update('requests', 70, {'SenderParticipantId': 38, 'RecipientParticipantId': 32,
+                             'SendOperationKey': 'personal:38:aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee'})
+    r = execute(s, input_(number=32))
+    assert_success(r)
+    assert [i[0] for i in r.member_iterations] == [38, 32]

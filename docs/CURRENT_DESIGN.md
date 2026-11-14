@@ -586,3 +586,28 @@ acceptance is certified. These remain NOT RUN; ordinary-account access remains
 owner-deferred. No working imported flow/app, notification channel, permissions
 or historical proof changed. Owner authorized parallel flow builds and commit
 only, with no push/issue edit.
+
+## Issue 11 refinement and Send contract alignment — 11.2.0
+
+[#11 TandemRespondRequest](https://github.com/maoy1/tandem-language-culture-app/issues/11)
+candidate11.2.0 replaces the unimported11.1.0 candidate for integration:
+**296 action definitions/depth7**, down122 from418, with204 actions of headroom.
+One sequential two-party Foreach replaces duplicate membership fragments;
+continuation plus an exact verified-iteration count prevents second-party I/O
+after a failed first iteration. Common effect/decision/receipt stages and typed
+Boolean assertion guards remove duplication. All #47 authority/CAS/unique/
+readback/commit/recovery predicates remain. No runtime helper or extra flow.
+
+Current request reads now enforce the actual #10 producer contract: typed
+Personal parties/null target, immutable SendOperationKey and exact
+open:person:min:max live reservation. Settled history uses history:request:id,
+correcting11.1's shorter key to match #10 replay. Receipt intent representation2
+freezes SendOperationKey; app I/O, shared contract1/rules1 and token formats
+are unchanged. No new schema is requested; shared child/source is untouched.
+
+Build28a0e136-7f75-4d65-b217-258ef163b112, new packages/review/validation and
+the detailed #81 drift handoff are in ISSUE_11_RESPOND_REQUEST.md. Local affected
+graph/envelope/coordination tests: **141 PASS** (92 response cases). Earlier
+11.1/full-suite420 evidence is retained separately; it is not a new full-suite
+run. Native import/authority/business/cross-flow acceptance remain NOT RUN.
+No issue, working flow, app, permission or tenant setting was changed.

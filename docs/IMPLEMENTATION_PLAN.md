@@ -684,3 +684,25 @@ remain **NOT RUN**; ordinary-account tests stay deferred. Generator/package
 delivery does not close #11 or certify wider release. No new notification channel
 or deployment dependency is selected. Local regression results and immutable
 artifact hashes are in the adjacent validation/review JSON.
+
+## Issue 11 refinement checkpoint — 11.2.0
+
+Review/refinement for
+[#11](https://github.com/maoy1/tandem-language-culture-app/issues/11) stays on
+codex/issue-11-business-response. Use the new11.2.0 package/review, build
+28a0e136-7f75-4d65-b217-258ef163b112: **296 definitions/depth7**; old418 becomes
+historical preparation evidence. Sequential guarded two-member processing,
+shared decision/finalization and native Boolean assertions provide122-definition
+reduction while retaining the operation guards and bounded #47 recovery.
+
+Corrected producer fixture and runtime row gates align with #10 SendOperationKey,
+open:person:min:max and history:request:id. Typed intent representation2 includes
+the immutable send key; app/shared I/O and receipt/group field schema are
+unchanged. #81's integration ledger handoff is in ISSUE_11_RESPOND_REQUEST.md;
+no shared source or issue edit was made. Affected graph/native-envelope/
+coordination regressions: **141 PASS**, including92 response cases. Retain prior
+420-test11.1 evidence; do not represent it as a full current-suite rerun.
+
+Next remains parent setup/readback and native import, trusted caller, business
+parity and cross-writer tests against this version. Native integration NOT RUN;
+ordinary-account testing deferred. No deployment or readiness/closure inferred.

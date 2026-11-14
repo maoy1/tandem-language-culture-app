@@ -5,11 +5,69 @@ personal response flow; [#45](https://github.com/maoy1/tandem-language-culture-a
 is the owner overview. The owner-authorized parallel batch supersedes the earlier
 single-active-ticket constraint. No issue, label, working flow or app was edited.
 
-Version **11.1.0**, build **94e47272-28bc-4529-bb2f-521b90e43011**. Generated native
+Version **11.2.0**, build **28a0e136-7f75-4d65-b217-258ef163b112**. Generated native
 Power Automate actions; Python is optional local generation/testing only. The old
 77-action snapshot/Decline overlay remain historical evidence. Native integration
 and this consumer's authority proof are **NOT RUN**. Ordinary-account access is
 owner-deferred. Keep #11 open until its scoped acceptance and tenant tests pass.
+
+## Simplification and producer alignment
+
+This candidate supersedes unimported 11.1.0 for integration. Its original packages
+and full-suite evidence are retained; they are not the current candidate.
+The graph is **296 definitions / depth7**, down **122 (29%)** from418, leaving
+**204 definitions** of headroom. Counts include every branch/container; the fixed
+two loop executions do not double its definition count.
+
+| Disjoint major block | Definitions |
+|---|---:|
+| Initialization, two scopes and response | 13 |
+| Typed input/identity/request/receipt preparation | 49 |
+| Completed-vs-incomplete router | 1 |
+| Completed historical replay/release | 14 |
+| Claimed new/retry operation, validation, decision and commit | 203 |
+| Stopped-outcome recording and diagnostic preservation | 16 |
+| Total | 296 |
+
+The203 block contains the initial/fresh shared-validation stages (73 definitions
+by stage prefix), guarded creation/publication and common effect/decision/receipt
+completion. Those stages stay separate across the domain-write boundary so the
+fresh checks cannot reuse pre-decision facts. No runtime helpers or extra flow
+dependencies were introduced.
+
+One native sequential Foreach processes the two trusted party IDs. Before each
+iteration it clears MembersContinue; only exact member readback increments
+VerifiedMembers and restores continuation. A failed first member prevents
+second-member I/O. The count must be exactly2 before downstream commit. Foreach
+may aggregate Failed for a lost create response even after exact reconciliation;
+only both verified iterations can pass the post-loop assertion. Likewise the
+common receipt finalizer requires the verified business-result marker, so a
+container status alone never authorizes it.
+
+Identical failure guards now name the diagnostic stage and use a native ParseJson
+object whose passed property must be Boolean true. This replaces expanded
+If/SetVariable/divide-by-zero branches. Recovery preserves the original failed
+stage code. Metadata/catalogue/profile checks are grouped only across read-only
+reads, with all prior predicates retained; no authority, freshness, CAS, unique,
+capacity, readback or commitment check is dropped.
+
+The test seed now matches the inspected actual #10 Create_pending body:
+Title=Personal request, SendOperationKey=personal:{sender}:{uuid},
+ConnectionKey=open:person:{min}:{max}, numeric parties, Personal/null target,
+Pending, OperationComplete=false and WinningOperationKey=null. No live producer
+roundtrip is claimed. Each fresh response read preserves both parties and the
+SendOperationKey, and checks the exact live/settled key against state. Terminal
+release now uses **history:request:{requestId}**, matching #10 replay rather than
+11.1.0's shorter history key. This is a consumer correction, not a new schema.
+
+Typed receipt intent representation is version2 and includes SendOperationKey.
+App inputs/outputs, OperationKey/AttemptToken/WriteOwner formats and shared
+contract1/rules1 are unchanged. An old11.1 receipt with the same key conflicts
+instead of being silently rewritten; no11.1 native receipt/deployment is certified.
+Use fresh fixture intents for this unimported candidate. Parent #81 should record
+the version/build/hash and #10 producer/history alignment at integration; no issue
+edit or shared source update is authorized here. Existing native evidence is
+unchanged, while this candidate's native cases remain NOT RUN.
 
 ## One-time setup and native gates
 
@@ -40,11 +98,11 @@ Exceptional uncertain-write assistance remains necessary in some failures.
 
 The `artifacts/respond_request/` directory contains:
 
-- `TandemRespondRequest-11.1.0.zip`: legacy package.
-- `TandemRespondRequest-11.1.0.definition.json`: readable legacy definition.
-- `TandemRespondRequest-11.1.0.solution.zip`: parent-only unmanaged Solution,
+- `TandemRespondRequest-11.2.0.zip`: legacy package.
+- `TandemRespondRequest-11.2.0.definition.json`: readable legacy definition.
+- `TandemRespondRequest-11.2.0.solution.zip`: parent-only unmanaged Solution,
   retaining the native Invoker connection-reference shape.
-- `TandemRespondRequest-11.1.0.review.json`: source receipt, hashes and metrics.
+- `TandemRespondRequest-11.2.0.review.json`: source receipt, hashes and metrics.
 - `validation.json`: local results and explicit native evidence boundaries.
 
 Both import paths are **unimported**. Legacy child-reference resolution remains
@@ -56,7 +114,7 @@ existing connection-reference component; it never bundles or updates the child.
    this version/build/hashes and the exact contract.
 2. After setup gates pass, import **one** route in the existing permitted
    environment, disabled. Legacy: Import package, **Create as new**, distinct name
-   `TandemRespondRequest 11.1.0 candidate`, existing SharePoint connection.
+   `TandemRespondRequest 11.2.0 candidate`, existing SharePoint connection.
    Never select Update for the working flow. If child resolution fails, stop
    that route and review/import the companion through the existing permitted
    Solution path. New parent ID: `fd170a11-2aec-4bab-a3f1-38ed38f23211`.
@@ -75,7 +133,7 @@ existing connection-reference component; it never bundles or updates the child.
 Local reproduction (use a new empty output directory):
 
 ```text
-python -m scripts.power_automate.respond_request --native-source <owner-native-export.zip> --output <new-directory>/TandemRespondRequest-11.1.0.zip
+python -m scripts.power_automate.respond_request --native-source <owner-native-export.zip> --output <new-directory>/TandemRespondRequest-11.2.0.zip
 python -m pytest tests/test_respond_request.py -q
 ```
 
@@ -152,7 +210,7 @@ strings; they do not parse prefixes for authority. `SealedAttempts` is a JSON
 array of UUID strings, blank→[]. Cap three sealed attempts; no TTL/lease takeover.
 
 Personal Pending-only CAS saves the winner with the exact request ETag. Decline
-atomically saves Declined/complete and `ConnectionKey=history:{requestId}` and
+atomically saves Declined/complete and `ConnectionKey=history:request:{requestId}` and
 does no acceptance work. Accept retains the live key until completion and creates/
 reuses one unique SourceRequestId group, with WriteOwner already set on create.
 Group claims/publication/release use exact ETags. Episodes use
