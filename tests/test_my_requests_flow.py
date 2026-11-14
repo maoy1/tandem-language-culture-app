@@ -8,6 +8,8 @@ from xml.etree import ElementTree as ET
 from zipfile import ZipFile
 import pytest
 from test_discovery_flow import FlowRunner
+from test_shared_validation import ChildRunner, NoIO, BASELINE
+from scripts.power_automate import shared_validation as shared
 from scripts.power_automate import my_requests_flow as flow
 from scripts.power_automate.schema_audit import measure
 
@@ -16,7 +18,26 @@ GROUPS = json.loads((flow.ROOT / 'config/group_schema_mapping.json').read_text(e
 
 
 class ReaderRunner(FlowRunner):
+    def run(self, actions, context=None):
+        if 'Call_normalization' in actions:
+            call = actions['Call_normalization']
+            assert call['inputs']['host']['workflowReferenceName'] == flow.CHILD_ID
+            self.child_body = call['inputs']['body']
+            actions = deepcopy(actions)
+            actions['Call_normalization'] = {**call, 'type': 'Compose', 'inputs': '@readerNormalize()'}
+        return super().run(actions, context)
+
     def expr(self, expression, context):
+        if expression == '@readerNormalize()':
+            if getattr(self.server, 'child_transport_failure', False):
+                raise ValueError('PRIVATE_CHILD_FAILURE')
+            child = ChildRunner(NoIO())
+            child.run(shared.definition_actions(BASELINE, flow.SHARED['packageBuildId'], 'local-source'),
+                      {'items': {}, 'triggerBody': self.inputs(self.child_body, context)})
+            response = child.response
+            if getattr(self.server, 'child_mutation', None):
+                response = self.server.child_mutation(deepcopy(response))
+            return response
         # Independently evaluate only emitted native XML metadata primitives.
         pattern = r"xpath\(xml\((?:coalesce\(item\(\)\?\['SchemaXml'\],'<Field/>'\)|if\(empty\(item\(\)\?\['SchemaXml'\]\),'<Field/>',item\(\)\?\['SchemaXml'\]\))\),'([^']+)'\)"
         def xpath(match):
@@ -105,9 +126,9 @@ class Fake:
         return {'statusCode': 200, 'body': {'d': d}}
 
 
-def execute(server=None, actor=1):
+def execute(server=None, actor=1, introduction_verified=False):
     r = ReaderRunner(server or Fake(), actor)
-    r.run(flow.build_actions(source(), PEOPLE, GROUPS, 'test-build'))
+    r.run(flow.build_actions(source(), PEOPLE, GROUPS, 'test-build', introduction_verified))
     assert r.response is not None
     return r
 
@@ -197,7 +218,7 @@ def test_settled_keys_and_completion_coherent(status, complete, key, value):
     failure(execute(f), 'REQUEST_DATA_INCOMPLETE')
 
 
-@pytest.mark.parametrize('role', ['requests', 'profiles', 'groups', 'memberships', 'requests_fields', 'profiles_fields', 'groups_fields', 'memberships_fields', 'own'])
+@pytest.mark.parametrize('role', ['requests', 'profiles', 'groups', 'memberships', 'own'])
 def test_nextlink_never_partial_success(role):
     f = Fake(); f.group(); f.paged = role; failure(execute(f))
 
@@ -207,21 +228,6 @@ def test_count_overflow_never_partial_success(role):
     f = Fake(); f.group(); f.overflow = role; failure(execute(f), 'READ_BOUND_OR_INCOMPLETE')
 
 
-@pytest.mark.parametrize('mutation', ['missing', 'type', 'unique', 'indexed', 'required', 'lookup', 'vocabulary', 'duplicateField'])
-def test_schema_gate_before_row_reads(mutation):
-    f = Fake(); fields = f.fields['requests']
-    if mutation == 'missing': fields.pop()
-    if mutation == 'type': fields[0]['TypeAsString'] = 'LookupMulti'
-    if mutation == 'unique': next(x for x in fields if x['InternalName'] == 'SendOperationKey')['EnforceUniqueValues'] = False
-    if mutation == 'indexed': next(x for x in fields if x['InternalName'] == 'ConnectionKey')['Indexed'] = False
-    if mutation == 'required': fields[0]['Required'] = False
-    if mutation == 'lookup':
-        target = next(x for x in fields if x['InternalName'] == 'TargetGroup')
-        target['SchemaXml'] = target['SchemaXml'].replace(GROUPS['lists']['groups']['listId'], 'wrong-list')
-    if mutation == 'vocabulary': next(x for x in fields if x['InternalName'] == 'RequestType')['SchemaXml'] = '<Field><CHOICES><CHOICE>Personal</CHOICE><CHOICE>Team</CHOICE></CHOICES></Field>'
-    if mutation == 'duplicateField': fields.append(deepcopy(fields[0]))
-    failure(execute(f), 'REQUEST_SCHEMA_UNVERIFIED')
-    assert not any('/items?' in q for q in f.queries)
 
 
 @pytest.mark.parametrize('key,value', [('ParticipationStatus', 'Paused'), ('ParticipationStatus', 'Inactive'), ('OpenToConnections', False), ('Status', 'Needs review')])
@@ -241,9 +247,9 @@ def test_group_unavailable_pending_does_not_hide_authorized_history(variant):
     assert x['availability'] == 'UnavailablePending' and x['actions']['decline'] and not x['actions']['accept']
 
 
-@pytest.mark.parametrize('fail', ['/currentuser', '/fields?', '/items?'])
+@pytest.mark.parametrize('fail', ['/currentuser', '/items?'])
 def test_generic_502_sanitized_not_duplicate(fail):
-    f = Fake(); f.fail = fail; failure(execute(f), 'REQUEST_SCHEMA_UNVERIFIED' if fail == '/fields?' else 'READ_OR_DATA_FAILED')
+    f = Fake(); f.fail = fail; failure(execute(f), 'READ_OR_DATA_FAILED')
 
 
 def test_projection_failure_after_first_append_clears_all():
@@ -252,7 +258,7 @@ def test_projection_failure_after_first_append_clears_all():
     assert r.variables['Requests'] == []
 
 
-def test_structure_global_uniqueness_raw_auth_get_only_and_no_shared_utility():
+def test_structure_global_uniqueness_raw_auth_get_only_with_pure_child():
     graph = flow.build_actions(source(), PEOPLE, GROUPS, 'fixture'); metrics = measure(graph)
     assert metrics['actions'] <= 500 and metrics['maximumActionDepth'] <= 8
     def visit(block):
@@ -288,38 +294,12 @@ def test_duplicate_identity_keys_fail_closed(role, field):
     failure(execute(f), 'DATA_INTEGRITY')
 
 
-@pytest.mark.parametrize('role', ['requests_fields', 'profiles_fields', 'groups_fields', 'memberships_fields'])
-def test_metadata_overflow_and_extra_choice_fail_closed(role):
-    f = Fake(); request_fn = f.request
-    def oversized(p):
-        response = request_fn(p)
-        if '/fields?' in p['parameters/uri'] and role.split('_')[0] in next((k for k, v in {'requests': flow.REQUESTS, 'profiles': PEOPLE['lists']['participants']['listId'], 'groups': GROUPS['lists']['groups']['listId'], 'memberships': GROUPS['lists']['members']['listId']}.items() if v in p['parameters/uri']), ''):
-            response['body']['d']['results'] *= 501
-        return response
-    f.request = oversized; failure(execute(f), 'REQUEST_SCHEMA_UNVERIFIED')
 
 
-@pytest.mark.parametrize('field', ['Id', 'BaseTemplate'])
-def test_wrong_list_identity_is_schema_failure(field):
-    f = Fake(); request_fn = f.request
-    def mismatched(p):
-        response = request_fn(p)
-        if '?$select=Id,BaseTemplate' in p['parameters/uri']: response['body']['d'][field] = 'wrong' if field == 'Id' else 101
-        return response
-    f.request = mismatched; failure(execute(f), 'REQUEST_SCHEMA_UNVERIFIED')
 
 
-def test_schema_xml_extra_choice_or_malformed_xml_cannot_authorize_reads():
-    for xml in ['<Field><CHOICES><CHOICE>Personal</CHOICE><CHOICE>Group</CHOICE><CHOICE>Other</CHOICE></CHOICES></Field>', '<broken']:
-        f = Fake(); next(x for x in f.fields['requests'] if x['InternalName'] == 'RequestType')['SchemaXml'] = xml
-        failure(execute(f), 'REQUEST_SCHEMA_UNVERIFIED')
 
 
-def test_later_failure_does_not_overwrite_first_specific_error():
-    f = Fake(); f.data['requests'][0]['ConnectionKey'] = 'wrong'
-    r = execute(f); failure(r, 'REQUEST_DATA_INCOMPLETE')
-    assert r.action_states['Each_visible_request'] == 'Skipped'
-    assert r.action_states.get('Set_generic_failure', 'Skipped') == 'Skipped'
 
 
 def test_full_bounds_and_reverse_person_pair_remain_complete():
@@ -338,23 +318,10 @@ def test_no_setvariable_self_reference():
     walk(flow.build_actions(source(), PEOPLE, GROUPS, 'fixture'))
 
 
-@pytest.mark.parametrize('field', ['SenderParticipantId', 'RecipientParticipantId', 'TargetGroup', 'RequestType', 'Status', 'WinningOperationKey', 'OperationComplete'])
-def test_benign_request_indexes_are_allowed(field):
-    f = Fake(); next(x for x in f.fields['requests'] if x['InternalName'] == field)['Indexed'] = True
-    r = execute(f)
-    assert r.response['resultcode'] == 'OK' and len(public(r)) == 2
 
 
-@pytest.mark.parametrize('field,required', [('RequestType', False), ('Status', False), ('WinningOperationKey', True), ('OperationComplete', True)])
-def test_required_request_flags_remain_exact(field, required):
-    f = Fake(); next(x for x in f.fields['requests'] if x['InternalName'] == field)['Required'] = required
-    failure(execute(f), 'REQUEST_SCHEMA_UNVERIFIED')
 
 
-@pytest.mark.parametrize('flag', ['Hidden', 'ReadOnlyField'])
-def test_request_fields_must_be_visible_and_writable_as_shared_contract(flag):
-    f = Fake(); next(x for x in f.fields['requests'] if x['InternalName'] == 'Status')[flag] = True
-    failure(execute(f), 'REQUEST_SCHEMA_UNVERIFIED')
 
 
 def test_original_created_field_and_descending_timestamp_then_id_order():
@@ -400,28 +367,10 @@ def test_actual_number_metadata_with_owner_setup_target_passes():
     assert execute(f).response['resultcode'] == 'OK'
 
 
-def test_actual_unconfigured_report_still_fails_closed():
-    f = Fake(); f.fields['requests'] = deepcopy(ACTUAL_REFERENCE_METADATA)
-    failure(execute(f), 'REQUEST_SCHEMA_UNVERIFIED')
-    assert not any('/items?' in q for q in f.queries)
 
 
-@pytest.mark.parametrize('field', ['SenderParticipantId', 'RecipientParticipantId'])
-def test_former_participant_lookup_mapping_rejected(field):
-    f = Fake(); target = next(x for x in f.fields['requests'] if x['InternalName'] == field)
-    target.update(metadata(field[:-2], {'TypeAsString': 'Lookup', 'Required': field == 'SenderParticipantId', 'EnforceUniqueValues': False, 'Hidden': False, 'ReadOnlyField': False, 'LookupList': PEOPLE['lists']['participants']['listId']}))
-    failure(execute(f), 'REQUEST_SCHEMA_UNVERIFIED')
 
 
-@pytest.mark.parametrize('field', ['SenderParticipantId', 'RecipientParticipantId'])
-@pytest.mark.parametrize('decimals', [None, '2', 'Auto'])
-def test_wrong_or_missing_number_decimals_rejected(field, decimals):
-    f = Fake(); target = next(x for x in f.fields['requests'] if x['InternalName'] == field)
-    root = ET.fromstring(target['SchemaXml'])
-    if decimals is None: del root.attrib['Decimals']
-    else: root.set('Decimals', decimals)
-    target['SchemaXml'] = ET.tostring(root, encoding='unicode')
-    failure(execute(f), 'REQUEST_SCHEMA_UNVERIFIED')
 
 
 @pytest.mark.parametrize('field', ['SenderParticipantId', 'RecipientParticipantId'])
@@ -439,31 +388,10 @@ def test_fractional_number_reference_rejected_before_keys_and_projection(field):
     assert r.action_states['Data_requests'] == 'Skipped'
 
 
-@pytest.mark.parametrize('style',['xml_nodes','scalar','value_array'])
-def test_schema_attribute_values_do_not_depend_on_xpath_node_serialization(style):
-    server=Fake();server.group();runner=ReaderRunner(server);runner.attribute_style=style
-    runner.run(flow.build_actions(source(),PEOPLE,GROUPS,'scalar-attribute-regression'))
-    assert runner.response['resultcode']=='OK'
-    assert len(runner.outputs['requests_field_SenderParticipantId'])==1
-    assert len(runner.outputs['requests_field_TargetGroup'])==1
-    assert len(runner.outputs['memberships_field_Group'])==1
 
 
-def test_legacy_attribute_node_comparison_rejects_valid_sender_but_scalar_check_accepts():
-    server=Fake();actual=next(x for x in server.fields['requests'] if x['InternalName']=='SenderParticipantId')
-    runner=ReaderRunner(server);ctx={'item':actual,'items':{}}
-    old="@equals(first(union(xpath(xml(coalesce(item()?['SchemaXml'],'<Field/>')),'/Field/@Decimals'),createArray(''))),'0')"
-    fixed="@equals(string(xpath(xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml'])),'string(/Field/@Decimals)')),'0')"
-    assert not runner.expr(old,ctx)
-    assert runner.expr(fixed,ctx)
 
 
-def test_exact_owner_sender_field_without_fake_decimals_property_matches_metadata_gate():
-    server=Fake();actual=json.loads((flow.ROOT/'tests/fixtures/my_requests_sender_metadata.json').read_text())
-    assert 'Decimals' not in actual
-    server.fields['requests']=[actual if x['InternalName']=='SenderParticipantId' else x for x in server.fields['requests']]
-    result=execute(server);assert result.response['resultcode']=='OK'
-    assert result.outputs['requests_field_SenderParticipantId']==[actual]
 
 
 def test_empty_history_allows_unrelated_legacy_null_availability_without_defaults_or_writes():
@@ -472,8 +400,8 @@ def test_empty_history_allows_unrelated_legacy_null_availability_without_default
     before=deepcopy(server.data);result=execute(server,actor=3)
     assert result.response['resultcode']=='OK' and public(result)==[]
     assert server.data==before
-    assert result.body('Data_profiles')[0]['ParticipationStatus'] is None
-    assert result.body('Data_profiles')[0]['OpenToConnections'] is None
+    assert result.body('Normalized_profiles')[0]['participationStatus'] is None
+    assert result.body('Normalized_profiles')[0]['openToConnections'] is None
 
 
 @pytest.mark.parametrize('field',['Status','ParticipationStatus','OpenToConnections'])
@@ -489,3 +417,102 @@ def test_null_profile_availability_keeps_pending_history_and_cancel_decline_but_
 def test_malformed_availability_remains_a_data_error(field,value):
     server=Fake();server.data['profiles'][0][field]=value
     failure(execute(server),'DATA_INTEGRITY')
+
+
+def test_click_has_no_schema_audit_and_real_child_normalizes_internal_profiles():
+    server=Fake();server.group();before=deepcopy(server.data);runner=execute(server)
+    assert runner.response['resultcode']=='OK' and server.data==before
+    assert not any('/fields' in q or 'BaseTemplate' in q for q in server.queries)
+    assert runner.body('Normalization_report')['success'] is True
+    assert runner.body('Normalization_report')['authorizesAction'] is False
+    assert runner.body('Normalized_profiles')[0]['accountKey']=='participant:1'
+    assert 'accountKey' not in json.dumps(runner.response)
+
+
+@pytest.mark.parametrize('variant',['transport','malformed','missing','failed','version','build','authority','io','null_profiles','dropped','duplicate'])
+def test_shared_child_failure_or_incomplete_result_fails_closed(variant):
+    server=Fake();before=deepcopy(server.data)
+    def mutate(response):
+        if variant=='malformed': return {'resultjson':'PRIVATE_BAD_JSON'}
+        if variant=='missing': return {}
+        value=json.loads(response['resultjson'])
+        if variant=='failed': value.update(success=False,code='INVALID_INPUT')
+        if variant=='version': value['rulesVersion']=99
+        if variant=='build': value['packageBuildId']='stale'
+        if variant=='authority': value['authorizesAction']=True
+        if variant=='io': value['writes']=1
+        if variant=='null_profiles': value['result']['profiles']=None
+        if variant=='dropped': value['result']['profiles'].pop()
+        if variant=='duplicate': value['result']['profiles'][1]=value['result']['profiles'][0]
+        response['resultjson']=json.dumps(value);return response
+    server.child_transport_failure=variant=='transport';server.child_mutation=mutate
+    failure(execute(server),'SHARED_VALIDATION_FAILED');assert server.data==before
+
+
+@pytest.mark.parametrize('role',['requests','profiles','groups','memberships','own'])
+def test_native_null_collection_never_becomes_empty_success(role):
+    server=Fake();original=server.request
+    def null_response(parameters):
+        result=original(parameters);uri=parameters['parameters/uri']
+        match=('ParticipantaccountId eq' in uri) if role=='own' else ('/items?' in uri and 'ParticipantaccountId eq' not in uri and {
+            'requests':flow.REQUESTS,'profiles':PEOPLE['lists']['participants']['listId'],
+            'groups':GROUPS['lists']['groups']['listId'],'memberships':GROUPS['lists']['members']['listId']}[role] in uri)
+        if match: result['body']['d']['results']=None
+        return result
+    server.request=null_response;failure(execute(server))
+
+
+@pytest.mark.parametrize('value',[None,'','a'*2000])
+def test_setup_gated_group_introduction_visible_only_after_audience(value):
+    server=Fake();server.group();server.data['requests'][-1]['Introduction']=value
+    server.data['requests'].append({**request(95,2,None,99),'Introduction':'PRIVATE_OTHER_GROUP_INTRO'})
+    # Invalid group target is unrelated and never projected.
+    result=execute(server,introduction_verified=True)
+    assert result.response['resultcode']=='OK'
+    assert row(result,71)['introduction']==(value or '')
+    assert 'PRIVATE_OTHER_GROUP_INTRO' not in json.dumps(result.response)
+    assert all(x['introduction']=='' for x in public(result) if x['requestType']=='Personal')
+
+
+def test_introduction_not_selected_or_exposed_before_setup_and_overlength_rejected_after():
+    server=Fake();server.group();server.data['requests'][-1]['Introduction']='x'*2001
+    result=execute(server)
+    assert result.response['resultcode']=='OK' and all('introduction' not in x for x in public(result))
+    assert not any('Introduction' in q for q in server.queries)
+    failure(execute(server,introduction_verified=True),'REQUEST_DATA_INCOMPLETE')
+
+
+def test_readable_solution_parent_preserves_native_invoker_and_original_trigger(tmp_path,monkeypatch):
+    from test_solution_source import export_fixture,CHILD
+    from scripts.power_automate.solution_source import RAW_INVOKER,walk
+    native=tmp_path/'native.zip';export_fixture(native)
+    monkeypatch.setattr(flow,'CHILD_ID',CHILD)
+    monkeypatch.setattr(flow,'SHARED',{**flow.SHARED,'packageBuildId':'unit-build'})
+    src=tmp_path/'original.json';src.write_text(json.dumps(source()))
+    output=tmp_path/'reader.definition.json'
+    review=flow.build_parent(src,native,output)
+    document=json.loads(output.read_text());props=document['properties']
+    assert props['definition']['triggers']==source()['properties']['definition']['triggers']
+    assert props['connectionReferences']['shared_sharepointonline']['runtimeSource']=='invoker'
+    assert review['nativeStatus']=='NOT_IMPORTED_NOT_TESTED' and review['writes']==0
+    assert review['actions']<=500 and review['maximumActionDepth']<=8
+    for _,action in walk(props['definition']['actions']):
+        if action['type']=='OpenApiConnection':
+            assert action['inputs']['authentication']=={'type':'Raw','value':RAW_INVOKER}
+            assert action['inputs']['parameters']['parameters/method']=='GET'
+    with pytest.raises(FileExistsError):flow.build_parent(src,native,output)
+
+
+def test_delivered_parent_executes_against_real_child_and_is_source_current():
+    import hashlib
+    path=flow.ROOT/'artifacts/my_requests/TandemMyRequests-v7.definition.json'
+    review=json.loads(path.with_suffix('.review.json').read_text())
+    assert review['definitionSha256']==hashlib.sha256(path.read_bytes()).hexdigest()
+    assert review['generatorSha256']==hashlib.sha256(Path(flow.__file__).read_bytes()).hexdigest()
+    assert review['sharedImplementationSha256']==hashlib.sha256(Path(shared.__file__).read_bytes()).hexdigest()
+    server=Fake();server.group();before=deepcopy(server.data)
+    runner=ReaderRunner(server)
+    runner.run(json.loads(path.read_text())['properties']['definition']['actions'])
+    assert runner.response['resultcode']=='OK' and row(runner,71)['actions']['accept']
+    assert server.data==before
+    assert not any(v in json.dumps(runner.response) for v in ['PRIVATE_','accountKey','MembershipKey','SendOperationKey'])

@@ -11,7 +11,9 @@ from .build_import_probe import build_package as envelope
 from .schema_audit import measure
 
 ROOT = Path(__file__).resolve().parents[2]
-NAME = 'TandemMyRequests v6'
+NAME = 'TandemMyRequests v7'
+SHARED = json.loads((ROOT / 'config/shared_validation_flow_contract.json').read_text())
+CHILD_ID = json.loads((ROOT / 'artifacts/shared_validation/results/native-sharepoint-solution.analysis.json').read_text())['sharedChildId']
 BOUNDS = {'requests': 500, 'memberships': 2000, 'profiles': 500, 'groups': 100, 'fields': 500, 'responseChars': 250000}
 REQUESTS = '3d17485d-1dac-41f0-a1af-24e45daa4567'
 
@@ -95,7 +97,7 @@ def source_metadata(original):
     return source['parameters']['dataset'], deepcopy(source['authentication'])
 
 
-def build_actions(original, people, groups, build_id):
+def build_actions(original, people, groups, build_id, introduction_verified=False):
     site, auth = source_metadata(original)
     targets = {'requests': REQUESTS, 'profiles': people['lists']['participants']['listId'],
                'groups': groups['lists']['groups']['listId'], 'memberships': groups['lists']['members']['listId']}
@@ -118,37 +120,9 @@ def build_actions(original, people, groups, build_id):
     s = {'Input_reference': parse("@triggerBody()?['number']", integer()),
          'Read_invoker': http('_api/web/currentuser?$select=Id', 'Input_reference'),
          'Invoker': parse("@body('Read_invoker')?['d']", obj({'Id': integer()}), 'Read_invoker')}
-    s['Metadata_stage'] = setvar('ErrorCode', 'REQUEST_SCHEMA_UNVERIFIED', 'Invoker')
-    prev = 'Metadata_stage'
-    for role, fields in field_contracts(people, groups).items():
-        read = 'Read_' + role + '_fields'
-        identity = 'Read_' + role + '_list'
-        s[identity] = http(base(role) + '?$select=Id,BaseTemplate', prev)
-        verified = role + '_list_verified'
-        s[verified] = gate(verified, "and(equals(toLower(body('" + identity + "')?['d']?['Id']),'" + targets[role] + "'),equals(body('" + identity + "')?['d']?['BaseTemplate'],100))", 'REQUEST_SCHEMA_UNVERIFIED', identity)
-        s[read] = http(base(role) + '/fields?$select=InternalName,TypeAsString,Required,EnforceUniqueValues,Indexed,Hidden,ReadOnlyField,SchemaXml&$top=501', verified)
-        bounded = role + '_metadata_complete'
-        s[bounded] = gate(bounded, complete(read, 500), 'REQUEST_SCHEMA_UNVERIFIED', read); prev = bounded
-        for name, expected in fields.items():
-            q = role + '_field_' + name
-            tests = ["equals(item()?['InternalName'],'" + name + "')"]
-            schema_xml = "xml(if(empty(item()?['SchemaXml']),'<Field/>',item()?['SchemaXml']))"
-            lookup = "string(xpath(" + schema_xml + ",'string(/Field/@List)'))"
-            choices = "xpath(" + schema_xml + ",'/Field/CHOICES/CHOICE/text()')"
-            for key, value in expected.items():
-                if key == 'LookupList': tests.append("equals(toLower(replace(replace(" + lookup + ",'{',''),'}','')),'" + value + "')")
-                elif key == 'Decimals':
-                    tests.append("equals(string(xpath(" + schema_xml + ",'string(/Field/@Decimals)')),'" + value + "')")
-                elif key == 'Choices':
-                    tests.append('equals(length(' + choices + '),' + str(len(value)) + ')')
-                    tests += ["contains(" + choices + ",'" + v + "')" for v in value]
-                else: tests.append("equals(item()?['" + key + "']," + (str(value).lower() if isinstance(value, bool) else "'" + value + "'") + ')')
-            s[q] = query('@' + rows(read), 'and(' + ','.join(tests) + ')', prev)
-            g = q + '_gate'; s[g] = gate(g, "equals(length(body('" + q + "')),1)", 'REQUEST_SCHEMA_UNVERIFIED', q); prev = g
     # URI is constructed only from server-validated numeric identity.
     ownuri = "@concat('" + base('profiles').replace("'", "''") + "/items?$select=Id&$filter=ParticipantaccountId eq ',string(body('Invoker')?['Id']),'&$top=2')"
-    s['Metadata_verified'] = setvar('ErrorCode', '', prev)
-    s['Read_own'] = http(ownuri, 'Metadata_verified')
+    s['Read_own'] = http(ownuri, 'Invoker')
     s['Own_complete'] = gate('Own_complete', complete('Read_own', 1), 'UNAUTHORIZED_PROFILE', 'Read_own')
     s['Own_match'] = gate('Own_match', "and(equals(length(" + rows('Read_own') + "),1),equals(first(union(" + rows('Read_own') + ",createArray(json('{}'))))?['Id'],triggerBody()?['number']))", 'UNAUTHORIZED_PROFILE', 'Own_complete')
     s['Actor'] = compose("@triggerBody()?['number']", 'Own_match'); prev = 'Actor'
@@ -158,6 +132,8 @@ def build_actions(original, people, groups, build_id):
         'groups': 'Id,SourceRequestId,SetupComplete,State,Capacity,WriteOwner',
         'memberships': 'Id,GroupId,ParticipantId,MembershipStatus,MembershipKey,LeftAt',
     }
+    if introduction_verified:
+        selects['requests'] += ',Introduction'
     schemas = {
         'requests': obj({'Id': integer(), 'Created': text(), 'SenderParticipantId': {'type': 'number', 'minimum': 1}, 'RecipientParticipantId': {'type': ['number', 'null'], 'minimum': 1}, 'TargetGroupId': integer(True),
                          'RequestType': choice('Personal', 'Group'), 'Status': choice('Pending', 'Accepted', 'Declined', 'Cancelled'),
@@ -166,6 +142,8 @@ def build_actions(original, people, groups, build_id):
         'groups': obj({'Id': integer(), 'SourceRequestId': integer(), 'SetupComplete': {'type': 'boolean'}, 'State': choice('Open', 'Closed', 'Ended'), 'Capacity': {'type': 'integer', 'minimum': 2, 'maximum': 10}, 'WriteOwner': {'type': ['string', 'null']}}),
         'memberships': obj({'Id': integer(), 'GroupId': integer(), 'ParticipantId': integer(), 'MembershipStatus': choice('Active', 'Left'), 'MembershipKey': text(), 'LeftAt': {'type': ['string', 'null']}}),
     }
+    if introduction_verified:
+        schemas['requests']['properties']['Introduction'] = {'type': ['string', 'null'], 'maxLength': 2000}
     for role in selects:
         read = 'Read_' + role; bound = role + '_complete'; parsed = 'Raw_requests' if role == 'requests' else 'Data_' + role
         order = 'Created desc,ID desc' if role == 'requests' else 'Id asc'
@@ -194,7 +172,32 @@ def build_actions(original, people, groups, build_id):
         s[q] = {'type': 'Select', 'inputs': {'from': "@body('Data_" + role + "')", 'select': "@item()?['" + field + "']"}, 'runAfter': after(prev)}
         s[q + '_gate'] = gate(q + '_gate', "equals(length(body('" + q + "')),length(union(body('" + q + "'),body('" + q + "'))))", 'DATA_INTEGRITY', q)
         prev = q + '_gate'
-    s['Actor_profile'] = query("@body('Data_profiles')", "equals(item()?['Id'],outputs('Actor'))", prev)
+    # Reader-only availability adapter: row IDs are internal correlation keys,
+    # not account authentication. No role/catalogue data or compatibility claim.
+    s['Normalization_profiles'] = {'type': 'Select', 'runAfter': after(prev), 'inputs': {
+        'from': "@body('Data_profiles')", 'select': {
+            'profileId': "@item()?['Id']", 'accountKey': "@concat('participant:',string(item()?['Id']))",
+            'status': "@item()?['Status']", 'participationStatus': "@item()?['ParticipationStatus']",
+            'openToConnections': "@item()?['OpenToConnections']"}}}
+    s['Normalization_envelope'] = compose({'contractVersion': 1, 'rulesVersion': 1, 'mode': 'NORMALIZE',
+        'profiles': "@body('Normalization_profiles')", 'catalogues': {
+            'languageIds': [], 'cultureIds': [], 'timezoneIds': [], 'anyLanguageId': None}}, 'Normalization_profiles')
+    s['Child_stage'] = setvar('ErrorCode', 'SHARED_VALIDATION_FAILED', 'Normalization_envelope')
+    s['Call_normalization'] = {'type': 'Workflow', 'runAfter': after('Child_stage'), 'inputs': {
+        'host': {'workflowReferenceName': CHILD_ID}, 'body': {'text': "@string(outputs('Normalization_envelope'))"}}}
+    s['Normalization_report'] = parse("@json(body('Call_normalization')?['resultjson'])", {'type': 'object'}, 'Call_normalization')
+    report = "body('Normalization_report')"
+    valid = f"and(equals({report}?['kind'],'TandemValidateContext'),equals({report}?['contractVersion'],1),equals({report}?['rulesVersion'],1),equals({report}?['packageBuildId'],'{SHARED['packageBuildId']}'),equals({report}?['success'],true),equals({report}?['code'],'OK'),equals({report}?['authorizesAction'],false),equals({report}?['connectors'],0),equals({report}?['reads'],0),equals({report}?['writes'],0))"
+    s['Normalization_verified'] = gate('Normalization_verified', valid, 'SHARED_VALIDATION_FAILED', 'Normalization_report')
+    s['Normalized_profiles'] = parse("@body('Normalization_report')?['result']?['profiles']", {'type': 'array', 'maxItems': BOUNDS['profiles'], 'items': obj({
+        'profileId': integer(), 'status': {'type': ['string', 'null']},
+        'participationStatus': {'type': ['string', 'null'], 'enum': ['Active', 'Paused', 'Inactive', None]},
+        'openToConnections': {'type': ['boolean', 'null']}})}, 'Normalization_verified')
+    s['Normalized_ids'] = {'type': 'Select', 'inputs': {'from': "@body('Normalized_profiles')", 'select': "@item()?['profileId']"}, 'runAfter': after('Normalized_profiles')}
+    s['Normalization_complete'] = gate('Normalization_complete', "and(equals(length(union(body('Normalized_ids'),body('Normalized_ids'))),length(body('profiles_ids'))),equals(length(body('Normalized_ids')),length(body('profiles_ids'))),equals(length(union(body('Normalized_ids'),body('profiles_ids'))),length(body('profiles_ids'))))", 'SHARED_VALIDATION_FAILED', 'Normalized_ids')
+    s['Normalization_finished'] = setvar('ErrorCode', '', 'Normalization_complete')
+    prev = 'Normalization_finished'
+    s['Actor_profile'] = query("@body('Normalized_profiles')", "equals(item()?['profileId'],outputs('Actor'))", prev)
     s['Actor_exists'] = gate('Actor_exists', "equals(length(body('Actor_profile')),1)", 'DATA_INTEGRITY', 'Actor_profile')
     # Validate modern request intents/terminal keys; legacy incomplete rows return explicit failure, never rewritten.
     r = "items('Validate_requests')"
@@ -206,6 +209,8 @@ def build_actions(original, people, groups, build_id):
     pending = f"equals({r}?['Status'],'Pending')"
     unsettled = f"or({pending},and(equals({r}?['Status'],'Accepted'),equals({r}?['OperationComplete'],false)))"
     valid = f"and(or({personal},{group}),not(empty(trim({r}?['SendOperationKey']))),equals({r}?['ConnectionKey'],if({unsettled},{live},concat('history:request:',string({r}?['Id'])))),if({pending},and(equals({r}?['OperationComplete'],false),empty({r}?['WinningOperationKey'])),and(not(empty(trim(coalesce({r}?['WinningOperationKey'],'')))),or(equals({r}?['Status'],'Accepted'),equals({r}?['OperationComplete'],true)))))"
+    if introduction_verified:
+        valid = f"and({valid},lessOrEquals(length(coalesce({r}?['Introduction'],'')),2000))"
     s['Validate_requests'] = loop("@body('Data_requests')", {'Request_integrity': gate('Request_integrity', valid, 'REQUEST_DATA_INCOMPLETE')}, 'Actor_exists')
     # Source and episode authority includes exact party/group binding; Left/provisional never grant authority.
     m = "items('Each_own_episode')"; g = first('Episode_group'); e = "item()"
@@ -225,10 +230,10 @@ def build_actions(original, people, groups, build_id):
     r = "items('Each_visible_request')"
     own = f"equals({r}?['SenderParticipantId'],outputs('Actor'))"
     pending = f"equals({r}?['Status'],'Pending')"
-    def available(p): return f"and(equals({p}?['Status'],'Active'),equals({p}?['ParticipationStatus'],'Active'),equals({p}?['OpenToConnections'],true))"
+    def available(p): return f"and(equals({p}?['status'],'Active'),equals({p}?['participationStatus'],'Active'),equals({p}?['openToConnections'],true))"
     visible = {
-        'Request_sender': query("@body('Data_profiles')", f"equals(item()?['Id'],{r}?['SenderParticipantId'])"),
-        'Request_recipient': query("@body('Data_profiles')", f"equals(item()?['Id'],{r}?['RecipientParticipantId'])", 'Request_sender'),
+        'Request_sender': query("@body('Normalized_profiles')", f"equals(item()?['profileId'],{r}?['SenderParticipantId'])"),
+        'Request_recipient': query("@body('Normalized_profiles')", f"equals(item()?['profileId'],{r}?['RecipientParticipantId'])", 'Request_sender'),
         'Request_group': query("@body('Data_groups')", f"equals(item()?['Id'],{r}?['TargetGroupId'])", 'Request_recipient'),
         'Request_active_members': query("@body('Data_memberships')", f"and(equals(item()?['GroupId'],{r}?['TargetGroupId']),equals(item()?['MembershipStatus'],'Active'))", 'Request_group'),
     }
@@ -247,6 +252,8 @@ def build_actions(original, people, groups, build_id):
         'actions': {'cancel': '@and(' + own + ',' + pending + ')', 'decline': '@and(' + canrespond + ',' + pending + ')',
                     'accept': '@and(' + canrespond + ',' + pending + ",outputs('Request_available')," + available(first('Actor_profile')) + ')'},
     }, 'Visible_parties_exist')
+    if introduction_verified:
+        visible['Append_public_request']['inputs']['value']['introduction'] = f"@if(equals({r}?['RequestType'],'Group'),coalesce({r}?['Introduction'],''),'')"
     s['Each_visible_request'] = loop("@body('Audience_requests')", visible, 'Audience_requests')
     s['Response_bound'] = gate('Response_bound', "lessOrEquals(length(string(variables('Requests'))),250000)", 'RESPONSE_BOUND', 'Each_visible_request')
     a['Read_authorized_requests'] = {'type': 'Scope', 'actions': s, 'runAfter': after('Initialize_OperationalGroups')}
@@ -264,13 +271,13 @@ def build_actions(original, people, groups, build_id):
     return a
 
 
-def build_package(source, output):
+def build_package(source, output, introduction_verified=False):
     source, output = Path(source), Path(output)
     if any(p.exists() for p in [output, output.with_suffix('.definition.json'), output.with_suffix('.review.json')]): raise FileExistsError(output)
     original = read_source(source); site, _ = source_metadata(original)
     people = json.loads((ROOT / 'config/tenant_schema_mapping.json').read_text(encoding='utf-8'))
     groups = json.loads((ROOT / 'config/group_schema_mapping.json').read_text(encoding='utf-8'))
-    build_id = str(uuid4()); actions = build_actions(original, people, groups, build_id)
+    build_id = str(uuid4()); actions = build_actions(original, people, groups, build_id, introduction_verified)
     with TemporaryDirectory() as temp:
         p = Path(temp) / 'envelope.zip'; envelope(p, sharepoint_site=site)
         with ZipFile(p) as z: entries = {n: json.loads(z.read(n)) for n in z.namelist()}
@@ -281,7 +288,7 @@ def build_package(source, output):
     selected_connection = document['properties']['connectionReferences']['shared_sharepointonline']['connectionName']
     document['properties']['connectionReferences']['shared_sharepointonline'] = deepcopy(original['properties']['connectionReferences']['shared_sharepointonline'])
     document['properties']['connectionReferences']['shared_sharepointonline']['connectionName'] = selected_connection
-    entries['manifest.json']['details'].update(displayName=NAME + '-package', description='Issue 62 owner-preview read-only reader; Create as new; requires runtime schema verification.')
+    entries['manifest.json']['details'].update(displayName=NAME + '-package', description='Issue 62 owner-preview read-only reader; Create as new; requires existing shared child; native Solution consumer parity unproven.')
     for r in entries['manifest.json']['resources'].values():
         if r['type'] == 'Microsoft.Flow/flows': r['details']['displayName'] = NAME
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -294,7 +301,7 @@ def build_package(source, output):
               'sourcePublicShape': list(original['properties']['definition']['actions']['Request_rows']['inputs']['select']),
               'sourceShapeChange': 'Retain every original Request_rows field including created and Created desc, ID desc ordering; add group/type/completion/availability/actions. Full UI binding pending.',
               'packageSha256': hashlib.sha256(output.read_bytes()).hexdigest(), 'generatorSha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-              'tenantResult': 'NOT_IMPORTED_NOT_TESTED', 'ordinaryUserAccessVerified': False, 'requestSchema': 'OBSERVED_NUMBER_REFERENCES_TARGET_SETUP_PENDING',
+              'tenantResult': 'NOT_IMPORTED_NOT_TESTED', 'ordinaryUserAccessVerified': False, 'requestSchema': 'MAINTENANCE_81_NO_PER_CLICK_AUDIT', 'sharedChildId': CHILD_ID, 'sharedBuildId': SHARED['packageBuildId'], 'introductionVerified': introduction_verified, 'nativeSolutionConsumerParity': 'NOT_RUN', 'legacyWorkflowDependencyImport': 'UNPROVEN_USE_REVIEWABLE_SOLUTION_PARENT',
               'referenceAdapter': 'SenderParticipantId/RecipientParticipantId Number with XML Decimals=0; whole-valued numeric refs normalized to int before canonical keys/public IDs.',
               'limits': {'actions': 500, 'maximumActionDepth': 8}, 'globalActionNamesUnique': True}
     output.with_suffix('.definition.json').write_bytes((json.dumps(document, indent=2) + '\n').encode('utf-8'))
@@ -302,9 +309,55 @@ def build_package(source, output):
     return review
 
 
+def build_parent(source, solution_source, output, introduction_verified=False):
+    """Readable #62 Solution parent only; enclosing Solution packaging belongs to parent integration.
+
+    A legacy ZIP cannot establish the external Workflow dependency or native
+    Power Apps Solution parity. Do not hand it over as an importable replacement.
+    """
+    from .solution_source import inspect_caller_export, invoker_parent_document, walk
+    output = Path(output)
+    review_path = output.with_suffix('.review.json')
+    if output.exists() or review_path.exists(): raise FileExistsError(output)
+    original = read_source(source); site, _ = source_metadata(original)
+    seed = inspect_caller_export(solution_source, site, SHARED['packageBuildId'])
+    people = json.loads((ROOT / 'config/tenant_schema_mapping.json').read_text())
+    groups = json.loads((ROOT / 'config/group_schema_mapping.json').read_text())
+    build_id = str(uuid4())
+    actions = build_actions(original, people, groups, build_id, introduction_verified)
+    document = invoker_parent_document(seed, original['properties']['definition']['triggers'], actions)
+    document['properties']['displayName'] = NAME
+    # Seed is a probe template; new workflow identity/root is assigned by the
+    # integrating Solution packager, never overwrite the probe or working flow.
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(document, indent=2)+'\n', encoding='utf-8', newline='\n')
+    review = {'sourceTicket': 62, 'packageBuildId': build_id, **measure(actions),
+        'writes': 0, 'connectorReadDefinitions': sum(a['type']=='OpenApiConnection' for _, a in walk(actions)),
+        'sharedChildId': CHILD_ID, 'sharedBuildId': SHARED['packageBuildId'],
+        'sharedMode': 'NORMALIZE', 'schemaAuditPerClick': False,
+        'runtimeSource': 'invoker', 'sourceTriggerPreserved': True,
+        'sourceExportSha256': hashlib.sha256(Path(source).read_bytes()).hexdigest(),
+        'solutionSeedSha256': seed['receipt']['sourceExportSha256'],
+        'generatorSha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        'definitionSha256': hashlib.sha256(output.read_bytes()).hexdigest(),
+        'sharedImplementationSha256': hashlib.sha256((ROOT/'scripts/power_automate/shared_validation.py').read_bytes()).hexdigest(),
+        'sharedContractVersion': 1, 'sharedRulesVersion': 1,
+        'introductionVerified': introduction_verified, 'bounds': BOUNDS,
+        'nativeStatus': 'NOT_IMPORTED_NOT_TESTED', 'ordinaryUserAccessVerified': False,
+        'packaging': 'READABLE_SOLUTION_PARENT; parent integration assigns new workflow ID/root and packages existing child dependency; no legacy ZIP delivered',
+        'nativeEvidence': 'v6 empty-history PASS retained separately; #81 child QUICK3/FULL44 and inspected Invoker envelope do not certify this parent',
+        'limits': {'actions': 500, 'maximumActionDepth': 8}}
+    review_path.write_text(json.dumps(review, indent=2)+'\n', encoding='utf-8', newline='\n')
+    return review
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__); p.add_argument('--source', type=Path, required=True); p.add_argument('--output', type=Path, required=True)
-    args = p.parse_args(); print(json.dumps(build_package(args.source, args.output), indent=2))
+    p.add_argument('--solution-source', type=Path, help='Inspected native #81 unmanaged source; emits readable parent instead of legacy ZIP')
+    p.add_argument('--introduction-verified', action='store_true', help='Only after #17 actual Introduction setup/readback verification')
+    args = p.parse_args()
+    report = build_parent(args.source, args.solution_source, args.output, args.introduction_verified) if args.solution_source else build_package(args.source, args.output, args.introduction_verified)
+    print(json.dumps(report, indent=2))
 
 
 if __name__ == '__main__': main()

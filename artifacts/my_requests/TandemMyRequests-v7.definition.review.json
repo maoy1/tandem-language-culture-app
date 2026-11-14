@@ -1,0 +1,38 @@
+{
+  "sourceTicket": 62,
+  "packageBuildId": "72df3b79-e724-412f-bfb9-e48a1a6011c1",
+  "actions": 128,
+  "maximumActionDepth": 4,
+  "writes": 0,
+  "connectorReadDefinitions": 6,
+  "sharedChildId": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+  "sharedBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
+  "sharedMode": "NORMALIZE",
+  "schemaAuditPerClick": false,
+  "runtimeSource": "invoker",
+  "sourceTriggerPreserved": true,
+  "sourceExportSha256": "34befb29df105e601ee32dfaf321c307938ed15a82884f1c2c1df794958e574f",
+  "solutionSeedSha256": "ce19af2e37e7de4a9317ec4c63e8d5777beaf23a57120c99b4e38d38ce4946d4",
+  "generatorSha256": "658953eb107f24b515d8fb4aa3a0cc0e7050b169e34b8123179cd2b7f6316eef",
+  "definitionSha256": "f18ee0b70837ae3c809d902e83912ca364d5d98d5a6e5999928051ad30d0526a",
+  "sharedImplementationSha256": "4d16f3291116cf5c297c28d22403d8a56edf6e9a3d9c220f6ce8034d7564428f",
+  "sharedContractVersion": 1,
+  "sharedRulesVersion": 1,
+  "introductionVerified": false,
+  "bounds": {
+    "requests": 500,
+    "memberships": 2000,
+    "profiles": 500,
+    "groups": 100,
+    "fields": 500,
+    "responseChars": 250000
+  },
+  "nativeStatus": "NOT_IMPORTED_NOT_TESTED",
+  "ordinaryUserAccessVerified": false,
+  "packaging": "READABLE_SOLUTION_PARENT; parent integration assigns new workflow ID/root and packages existing child dependency; no legacy ZIP delivered",
+  "nativeEvidence": "v6 empty-history PASS retained separately; #81 child QUICK3/FULL44 and inspected Invoker envelope do not certify this parent",
+  "limits": {
+    "actions": 500,
+    "maximumActionDepth": 8
+  }
+}
