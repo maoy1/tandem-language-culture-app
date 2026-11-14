@@ -1,0 +1,171 @@
+{
+  "sourceTicket": 13,
+  "schemaVersion": 1,
+  "flowName": "TandemUpdateGroup v1",
+  "state": "LOCAL_IMPLEMENTATION_NATIVE_SETUP_AUTHORITY_PENDING",
+  "parentBatchSchemaSource": "config/batch_schema_contract.json owned by parent #81",
+  "parentBatchSchemaSha256": "f189c44795dd448faaf7c8a0087b3aeed6357b264f21f8cb4e8860955b308495",
+  "parentBatchSchemaSnapshot": {
+    "sourceTicket": 81,
+    "schemaVersion": 1,
+    "state": "IMPLEMENTED_SCHEMA_TARGET_NOT_APPLIED_OR_TENANT_VERIFIED",
+    "site": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+    "requestsListId": "3d17485d-1dac-41f0-a1af-24e45daa4567",
+    "introduction": {
+      "name": "Introduction",
+      "type": "Note",
+      "required": false,
+      "richText": false,
+      "appendOnly": false,
+      "maximumCharacters": 2000
+    },
+    "receipts": {
+      "title": "TandemOperationReceipts",
+      "description": "Tandem bounded operation receipts; schema contract 81/1. No participant direct writes.",
+      "listId": null,
+      "fields": [
+        {
+          "name": "OperationKey",
+          "type": "Text",
+          "required": true,
+          "unique": true,
+          "indexed": true,
+          "maxLength": 255
+        },
+        {
+          "name": "IntentJson",
+          "type": "Note",
+          "required": true
+        },
+        {
+          "name": "ResultJson",
+          "type": "Note",
+          "required": false
+        },
+        {
+          "name": "Complete",
+          "type": "Boolean",
+          "required": false,
+          "default": "0"
+        },
+        {
+          "name": "Uncertain",
+          "type": "Boolean",
+          "required": false,
+          "default": "0"
+        },
+        {
+          "name": "Retryable",
+          "type": "Boolean",
+          "required": false,
+          "default": "0"
+        },
+        {
+          "name": "DomainEffects",
+          "type": "Boolean",
+          "required": false,
+          "default": "0"
+        },
+        {
+          "name": "AttemptToken",
+          "type": "Text",
+          "required": false,
+          "maxLength": 255
+        },
+        {
+          "name": "SealedAttempts",
+          "type": "Note",
+          "required": false
+        },
+        {
+          "name": "Stage",
+          "type": "Text",
+          "required": false,
+          "maxLength": 255
+        }
+      ]
+    },
+    "scope": "One-time owner schema setup/audit; no business item writes, deletes or permission changes. Existing mismatches are reported, never silently converted.",
+    "nativeEvidence": "NOT RUN",
+    "consumerTickets": [
+      10,
+      11,
+      13,
+      14,
+      17,
+      62,
+      63,
+      64,
+      65
+    ],
+    "email": "Excluded: approved mailbox failed REST capability probe; #49/#21 remains separate."
+  },
+  "descriptionLimit": 2000,
+  "descriptionLimitKind": "Technical plain-text API bound only, not a native Note schema setting or new product approval",
+  "nativeResult": "NOT_RUN",
+  "receiptListId": null,
+  "sharedValidator": "No normalization or matching needed; operation-time identity, operational membership, capacity, state and CAS only.",
+  "packageBuildId": "55d4d4c3-958d-48a1-ac0e-a20fdea8ad1f",
+  "localTests": 116,
+  "fullRepositoryTests": 473,
+  "metrics": {
+    "actions": 250,
+    "maximumActionDepth": 5,
+    "maximumActions": 500,
+    "maximumDepth": 8
+  },
+  "artifactZipSha256": "593f01560f346d65d56d6d4f6c3549773956c6dbc4638fa49efec511bff5afa4",
+  "parentDocumentSha256": "3a1798ac11460a3d6d0348ba4f6e5752cf0fd055ed0316345c6e0169d71934a2",
+  "input": {
+    "text": "RequestJson object; required exact actorId, groupId, expectedETag, intentId UUID and edits. Both envelope and edits reject extra properties. All four edits Title/Purpose/Capacity/State are required; description may be empty."
+  },
+  "editAllowlist": {
+    "Title": "Nonblank string, maximum255 characters; value preserved.",
+    "Purpose": "Plain text string, maximum2000 characters; empty allowed. Native blank Note readback coalesces to empty string; no native field limit changed.",
+    "Capacity": "Strict integer Language2/3, Culture/Combined2..10; never below ALL physical Active rows including provisional and paused participants.",
+    "State": "Exact Open/Closed/Ended; fresh edits only from Open/Closed; Ended final. No count-driven state changes."
+  },
+  "authority": "Same Invoker currentuser -> unique own ParticipantaccountId -> exact actorId; group SetupComplete plus Accepted/OperationComplete source; current physical Active membership -> exact canonical membership episode request, Accepted/OperationComplete and correct personal-source parties or Group target/sender. Repeat group/membership/request reads under exact-token guard. Personal ParticipationStatus, OpenToConnections and profile availability are not group-control authority.",
+  "outputs": {
+    "success": "Boolean, true only UPDATED or successful historical REPLAY after completion/release proof.",
+    "resultcode": "UPDATED, REPLAY, or sanitized rejection/conflict/busy/unknown/setup failure.",
+    "resultjson": "Versioned report; saved is immutable historical result, with original domain-write revision/member count; no receipt/owner/account fields.",
+    "groupjson": "On success, current captured public group snapshot {groupId,title,purpose,capacity,state,etag}; independent of historical saved result.",
+    "etag": "Same captured current group revision as groupjson, after release if performed. Use with that exact snapshot and refresh before a new deliberate edit.",
+    "errormessage": "Sanitized text; unknown outcomes never claim no effect.",
+    "runreference": "Power Automate run reference."
+  },
+  "coordination": {
+    "operationKey": "update:{trustedActorId}:{lowercaseIntentUUID}",
+    "ownerToken": "Compact serialized {operation: operationKey, attempt: fresh server guid()} in both WriteOwner and receipt AttemptToken; opaque to other writers, exact string comparison only.",
+    "frozenIntent": "Typed {kind:update,actorId,groupId,expectedETag,edits}; native equals(json(stored IntentJson), frozen intent). Same key changed payload/revision conflicts.",
+    "writeOrder": "receipt unique create/readback -> exact expected-ETag group claim/readback -> fresh group/member/episode proof/count -> conditional possible-effect marker -> exact-ETag allowlist edit/readback -> completed receipt/readback -> exact own-token group release/readback -> success. All writes retryPolicy none.",
+    "replay": "Current authority required; completed exact receipt returns saved historical result, never repeats the edit. May release only its own exact saved old token; leaves a different current owner untouched.",
+    "knownNoDomainRejection": "Persist completed Rejected receipt and release only a confirmed owned token. A changed group ETag with a different token positively rules out a late original CAS and permits terminal no-domain rejection without touching the foreign owner.",
+    "unknown": "Incomplete receipt/uncertain write retains ownership and returns non-success; no timeout, lease takeover, auto retry or generic502-as-success. Completed receipt with failed release can finalize release on replay without another domain edit.",
+    "DomainEffects": "Set true/Uncertain true conservatively BEFORE attempting the edit; this means effects may exist. Cleared to false on positively proven no-domain rejection; successful completed result has DomainEffects true/Uncertain false."
+  },
+  "dependencyGates": [
+    "Parent #81 performs one-time Setup Apply+Audit for the ten fields, unique/indexed OperationKey, plain JSON Notes, standard Title and exact unique list title before enabling business flows. Default resolves that title and works after setup without rebuild/reimport; optional actual GUID pin only if already available.",
+    "Existing #12 Groups/GroupMembers metadata remains unchanged; #19/#42 native Invoker/current-member data authority is still unverified for this flow.",
+    "All group capacity/state/membership writers must honor the same opaque nonempty WriteOwner guard and exact CAS rules.",
+    "Parent assembles native Solution/bindings and records #81/#13 ledger/issue evidence. No shared validator call is needed for capacity-only operation guards."
+  ],
+  "driftReview81": {
+    "sharedEngineSchemaRulesVersionChanges": false,
+    "consumerScope": "New #13 operation-only guard/parent. Existing shared schema/normalization/compatibility implementation untouched; no copied eligibility rules.",
+    "receiptSchemaSource": "Uses parent-owned ten-field target snapshot/hash only; new receipt setup remains parent #81, not delivered/applied by this branch.",
+    "consumerFilesChanged": "Only update_group_flow.py, its tests/contract/artifacts and #13 docs appends.",
+    "nativeEvidence": "Prior #9/#12/#47/#81 proof retained; #13 own native build/import/caller/authority/write/race tests NOT RUN; ordinary-participant tests deferred.",
+    "parentLedger": "Parent must record this build/hash, technical description bound and native statuses in #81/#13 when integrating; no issue or push from this branch."
+  },
+  "receiptBuiltinTitle": "Receipt creation also populates standard built-in Title with OperationKey, avoiding reliance on Title being optional. This adds no custom field/setting; parent verifies built-in Title remains writable in actual list.",
+  "receiptResolution": {
+    "default": "EXACT_UNIQUE_TITLE",
+    "title": "TandemOperationReceipts",
+    "uri": "_api/web/lists/getbytitle('TandemOperationReceipts')",
+    "optionalGuidPin": true,
+    "oneImport": "Import parent Solution once, run parent Setup Apply+Audit with business flows disabled, then enable/test the same imported flow. No GUID pin, regeneration or reimport required in default title mode.",
+    "runtime": "Read/validate current ID/title/BaseTemplate/entity type and rows; absent/malformed target fails closed. Resolution is not tenant schema verification."
+  }
+}

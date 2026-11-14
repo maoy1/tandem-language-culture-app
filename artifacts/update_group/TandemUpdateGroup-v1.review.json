@@ -1,0 +1,31 @@
+{
+  "sourceTicket": 13,
+  "packageBuildId": "55d4d4c3-958d-48a1-ac0e-a20fdea8ad1f",
+  "flowName": "TandemUpdateGroup v1",
+  "actions": 250,
+  "maximumActionDepth": 5,
+  "limits": {
+    "actions": 500,
+    "maximumActionDepth": 8
+  },
+  "sha256": "593f01560f346d65d56d6d4f6c3549773956c6dbc4638fa49efec511bff5afa4",
+  "parentSha256": "3a1798ac11460a3d6d0348ba4f6e5752cf0fd055ed0316345c6e0169d71934a2",
+  "generatorSha256": "9e2a6a799266228371b607cb716c80d6a1c7f026025c27f6aade466f688cbee3",
+  "batchSchemaSha256": "f189c44795dd448faaf7c8a0087b3aeed6357b264f21f8cb4e8860955b308495",
+  "batchSchemaVersion": 1,
+  "receiptListId": null,
+  "receiptSetupVerified": false,
+  "receiptTargetMode": "EXACT_UNIQUE_TITLE",
+  "deploymentGate": "ENABLE_ONLY_AFTER_PARENT_SETUP_APPLY_AND_AUDIT; NO_REBUILD_REQUIRED_FOR_TITLE_RESOLUTION",
+  "connectionSource": "Invoker",
+  "ownerFallback": false,
+  "schemaWrites": 0,
+  "membershipWrites": 0,
+  "participantWrites": 0,
+  "descriptionTechnicalLimit": 2000,
+  "nativeResult": "NOT_IMPORTED_NOT_TESTED",
+  "nativeMemberAuthorityVerified": false,
+  "ordinaryUserAccessVerified": false,
+  "sharedValidator": "Not invoked: no profile normalization or matching; only operation-time authority/count/CAS guards.",
+  "deployment": "Complete legacy-format parent. Parent batch owns Solution assembly/connection validation and #81 setup; no native linkage/readiness claim."
+}
