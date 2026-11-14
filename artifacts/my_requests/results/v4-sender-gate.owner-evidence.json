@@ -1,0 +1,29 @@
+{
+  "sourceTicket": 62,
+  "runReference": null,
+  "reportedGate": "requests_field_SenderParticipantId_gate",
+  "reportedStatus": "ActionFailed",
+  "queryOutput": {
+    "body": []
+  },
+  "metadataHttpStatus": 200,
+  "metadataServiceRequestId": "f2f84ca2-10e9-8000-4fe3-8ea7fd4c9ec7",
+  "metadataResponseDate": "2026-11-08T22:58:20Z",
+  "senderField": {
+    "InternalName": "SenderParticipantId",
+    "TypeAsString": "Number",
+    "Required": true,
+    "EnforceUniqueValues": false,
+    "Indexed": false,
+    "Hidden": false,
+    "ReadOnlyField": false,
+    "SchemaXml": "<Field Type=\"Number\" DisplayName=\"SenderParticipantId\" Required=\"TRUE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" Decimals=\"0\" ID=\"{7909dcd2-f0b9-4158-9b9a-2017cb156fcd}\" SourceID=\"{3d17485d-1dac-41f0-a1af-24e45daa4567}\" StaticName=\"SenderParticipantId\" Name=\"SenderParticipantId\" ColName=\"float1\" RowOrdinal=\"0\"/>"
+  },
+  "findings": "Returned field matches required name/type/flags/Decimals. Reader selected attribute nodes whereas passing preflight uses XPath string() scalar. Replace reader attribute comparisons with scalar values; add node/scalar representation regression.",
+  "evidenceLimit": "Raw native XPath return representation was not supplied; exact node serialization is inferred, not directly observed. Corrected package still needs owner retest.",
+  "nativeRetest": "NOT_RUN",
+  "schemaOrPermissionChangeRequired": false,
+  "expectedImportedBuildId": "36bebc35-e946-411a-ac3f-dd244bf3dd9a",
+  "buildIdConfirmedInReturnedOutputs": false,
+  "versionContext": "V4 from current owner handoff; failed run build ID not independently returned."
+}

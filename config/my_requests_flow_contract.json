@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "sourceTicket": 62,
+  "flowName": "TandemMyRequests",
+  "scope": "Read-only authorized own sent, personal received and current operational group incoming requests/history.",
+  "state": "LOCAL_SHARED_NORMALIZE_MIGRATION_NATIVE_PARENT_NOT_RUN",
+  "runtime": "Power Apps interactive parent in existing Power Automate Solution, existing SharePoint Invoker connection and existing connector-free #81 child only; Python local build/tests only.",
+  "sourceExport": {
+    "name": "TandemMyRequests_20261108220317.zip",
+    "sha256": "34befb29df105e601ee32dfaf321c307938ed15a82884f1c2c1df794958e574f",
+    "rawExportCommitted": false,
+    "sourceTriggerPreservedExactly": true
+  },
+  "input": {
+    "number": "Existing PowerAppV2 number ParticipantId reference (title NumParticipantIdber preserved exactly); strict positive integer, must equal server-resolved unique own participant. Never actor authority."
+  },
+  "outputs": {
+    "requestsjson": "JSON string of complete authorized minimal rows, or [] on any failure.",
+    "errormessage": "Empty on OK; sanitized fixed error message otherwise.",
+    "resultcode": [
+      "OK",
+      "UNAUTHORIZED_PROFILE",
+      "READ_BOUND_OR_INCOMPLETE",
+      "REQUEST_DATA_INCOMPLETE",
+      "DATA_INTEGRITY",
+      "MEMBERSHIP_INTEGRITY",
+      "RESPONSE_BOUND",
+      "READ_OR_DATA_FAILED",
+      "SHARED_VALIDATION_FAILED"
+    ],
+    "runreference": "Native run name for support.",
+    "mode": "OWNER_PREVIEW_PENDING_ACCESS_PROOF",
+    "paging": "NO_PAGING_COMPLETE_BOUNDED_READ"
+  },
+  "publicRow": {
+    "requestId": "integer",
+    "senderParticipantId": "integer",
+    "recipientParticipantId": "integer|null",
+    "targetGroupId": "integer|null",
+    "requestType": "Personal|Group",
+    "status": "Pending|Accepted|Declined|Cancelled",
+    "direction": "Sent|Received",
+    "processing": "Accepted and not OperationComplete",
+    "completed": "Stored OperationComplete, never inferred from Accepted",
+    "availability": "Available|UnavailablePending|NotApplicable",
+    "actions": {
+      "cancel": "Own Pending only.",
+      "decline": "Pending personal recipient or current operational active group member; own sender cannot respond.",
+      "accept": "Pending authorized recipient/group responder hint plus requester/target availability. Current committed group-member responder authority NEVER requires their own ParticipationStatus Active/OpenToConnections true. Personal recipient availability remains a new-connection hint. Group focus-sharer/requester/shared rules are rechecked independently by the accepting writer; hints never authorize mutation."
+    },
+    "created": "Original request Created timestamp string, preserved for existing history labels.",
+    "introduction": "Compile with include_introduction=True (legacy introduction_verified=True is a target-inclusion alias ONLY). Field/settings must be applied/read back before tenant use. Target compilation itself makes NO verification claim. Nullable/absent -> empty; maximum2000 enforced; only Group request text AFTER authorized audience; personal -> empty. Default-off v7 and separate introduction-target v7 artifacts are both retained; broader visibility never inferred."
+  },
+  "projection": "Audience query runs before public projection. Every original Request_rows public field is retained, including created from Created, references/status/direction. No names are needed; no profile/account/email/raw request/technical operation fields are public.",
+  "caller": "Original PowerAppV2 number -> strict positive integer -> original Invoker Raw currentuser Id -> unique bounded own ParticipantaccountId lookup -> exact own reference equality. No child-supplied actor/owner fallback. Identity field configuration verified during maintenance/setup; current row authority remains parent-owned.",
+  "connections": {
+    "source": "Invoker",
+    "connector": "shared_sharepointonline",
+    "operation": "HttpRequest GET only",
+    "site": "Original export dataset preserved",
+    "authentication": "Exact original Raw token expression preserved; never Embedded.",
+    "import": "Readable Solution parent uses inspected native runtimeSource=invoker/reference/auth. Parent integration must assign new workflow ID/root and package existing child dependency; no deployable legacy ZIP for v7. Import/rebind/smoke NOT RUN."
+  },
+  "listIds": {
+    "requests": "3d17485d-1dac-41f0-a1af-24e45daa4567",
+    "profiles": "fd3adf46-f81d-4a7b-a80c-567fde0175dc",
+    "groups": "4bf1b37f-edce-40c5-8fa0-36543a2d0cd6",
+    "memberships": "db611ec3-7fa3-477a-878e-effbbb195cb8"
+  },
+  "runtimeMetadataGate": {
+    "perClick": false,
+    "owner": "#81 explicit deployment/maintenance SCHEMA audit; actual tenant setup/readback stays prerequisite, not inferred from this reader.",
+    "priorEvidence": "v6 metadata/empty-history results remain versioned; no new schema or permissions applied."
+  },
+  "readPolicy": {
+    "bounds": {
+      "requests": 500,
+      "memberships": 2000,
+      "profiles": 500,
+      "groups": 100,
+      "fields": 500,
+      "responseChars": 250000
+    },
+    "order": "Original request Created desc, ID desc through native $orderby; no cursor or paging inputs.",
+    "complete": "Bound+1 complete data reads; reject null collections, next links and overflow. No metadata GETs per click. All collections validated before projection.",
+    "wholeListGate": "Conservative full bounded list reads; any malformed/legacy incomplete request or invalid data can block the whole response. No silent skip, partial success, truncation, migration, deletions or schema writes.",
+    "errors": "Clear all partial public rows; never return raw connector text, account identities or backend errors. Generic 502 is a read failure; reader has no writes/duplicate recovery path."
+  },
+  "requestInvariants": {
+    "send": "SendOperationKey nonblank and unique; stored key is technical data, never caller authority. Reader neither generates nor mutates operation keys. Writer owns immutable typed intent/actor binding and replay checks under #47.",
+    "connection": "Pending or Accepted-incomplete uses exact open:person:minId:maxId or open:group:groupId:participant:senderId; terminal complete uses history:request:id. All ConnectionKeys unique.",
+    "pending": "OperationComplete false and no winner.",
+    "terminal": "Nonblank WinningOperationKey. Accepted may remain incomplete/live/processing; Declined and Cancelled must be complete/history. Accepted complete must be history.",
+    "legacy": "Historical rows remain unchanged; incomplete or malformed legacy data returns REQUEST_DATA_INCOMPLETE until separate accepted mapping/migration exists."
+  },
+  "membershipAuthority": "Only Active own episode with empty LeftAt, exactly one active own row per group, exact request:id:participant:actor episode, Accepted+OperationComplete request bound to actor and group, complete personal source, SetupComplete true, group not Ended. Personal episode must equal group SourceRequestId with actor among its parties; group episode must target exact group with actor as sender. Left/provisional/missing/mismatched episodes grant no authority. No leader.",
+  "availability": "Requester/target current availability only; Closed/Ended/full/busy/incomplete target unavailable. Current operational Active group responder authority is membership-based; personal Paused/Inactive/openness/validation changes do not remove it. Physical Active membership rows including provisional/paused consume capacity. No state/row changes. Group focus-sharer availability/compatibility/freshness/guard are action-writer/shared-rule rechecks, not certified by this reader.",
+  "actions": 128,
+  "maximumActionDepth": 4,
+  "writes": 0,
+  "globalActionNamesUnique": true,
+  "integration": [
+    "Parent packages this readable native-envelope document in a new #62 workflow/root with dependency on the exact existing #81 child and inspected SharePoint reference. Never overwrite CallerProbe, shared child or working reader.",
+    "Run explicit #81 maintenance/deployment audit as appropriate; this reader makes no per-click schema certification.",
+    "Power Apps #67 refresh/rebind required; original Run(ownParticipantId) and six response strings retained. Parse requestsjson only on OK; action hints do not authorize mutations.",
+    "Parent batch compiles Introduction target before setup via include_introduction=True; actual #17/#81 setup/readback remains a prerequisite BEFORE tenant use. Default-off artifact remains available. Neither old nor new spelling certifies setup.",
+    "No push, issue edit, deployment, app edit, permission change or native test performed in this change."
+  ],
+  "nativeStatus": "V7_NOT_IMPORTED_NOT_TESTED; V6_OWNER_EMPTY_HISTORY_PASS_RETAINED",
+  "packageVersion": "v7",
+  "packageBuildId": "2c9d2814-dcfb-4951-8abe-955b9067863b",
+  "referenceAdapter": "Read SenderParticipantId/RecipientParticipantId as positive number / nullable positive number. Explicit equals(x,int(x)) for sender and equals(coalesce(recipient,0),int(coalesce(recipient,0))) gate rejects fractions; normalize both to int BEFORE canonical connection-key validation, authority comparisons and public projection. Null group recipient retained. System Id/TargetGroupId remain integer. Decimals=0 alone is not integer authority.",
+  "ownerSetupPrerequisites": [
+    "Existing #81 child matching build c79b7b64-b3ce-4de3-aa74-0ed62bca1524; inspected native Invoker envelope; existing organisational entitlements only.",
+    "Parent integration Solution packaging/import/rebind and owner/synthetic smoke are unavoidable and NOT RUN here. Stop if actual tenant prerequisites unavailable; no new paid connector/runtime.",
+    "Populated native history/authority/null/failure/latency/app checks remain NOT RUN; ordinary-participant access deferred.",
+    "Build inclusion is prospective only: include_introduction=True or legacy introduction_verified=True does NOT certify actual field/setup. Parent #81 batch target setup must pass before use.",
+    "If foundation changes shared implementation hash (owner integration reports old4d16/new7365), retain exact source-hash drift test; merge foundation and regenerate artifacts. Do not weaken/hash-ignore the test or infer PASS from functional-only integration.",
+    "Native connection seed proof build is separate from runtime expected_shared_build_id; parent canonical manifest/rebind maps exact expected engine build while preserving consumer build identity."
+  ],
+  "importDisplayName": "TandemMyRequests v7",
+  "legacyAvailability": "Null Status/ParticipationStatus/OpenToConnections preserved; profile is unavailable for new acceptance. Authorized history/cancel/decline stay readable. No null-to-Active/Yes default, write, deletion, rejoin or membership-state change.",
+  "nativeSmokeRunReference": "08584074267842029485356386842CU16",
+  "sharedNormalization": {
+    "childId": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+    "packageBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
+    "contractVersion": 1,
+    "rulesVersion": 1,
+    "mode": "NORMALIZE",
+    "input": "After bounded authenticated reads and structural/ID checks, Select profileId=Id, accountKey=participant:<Id> (internal row-correlation token, never account identity/authority), status=Status, participationStatus=ParticipationStatus, openToConnections=OpenToConnections. Roles/timezone omitted; catalogues explicitly empty with anyLanguageId=null. Reader availability subset only; no role/catalogue matching, identity normalization or compatibility claim. Number reference canonicalization remains request-intent parent guard.",
+    "output": "Require kind/version/build/success/code/authorizesAction=false/zero I/O; typed nonnull profiles, same cardinality and exact unique ID set. Normalized availability fields drive hints. No internal accountKey/resultjson exposed. Failure clears all public rows.",
+    "noImpact81": "Consumer builder knobs/authority hint only, no shared engine/rules/schema/baseline/interface/source changes. Prospective root #81 setup reported by owner:114 actions/depth6, audits eight roles through shared child/new59-field baseline; actual schema/native setup NOT RUN here. Parent assembly must supply explicit expected shared build from canonical manifest, regenerate reader artifacts and remeasure final parent before tenant use. No shared sources or issue edits in this branch.",
+    "expectedBuildOverride": "build_actions/build_parent/build_package accept expected_shared_build_id=None by default (current canonical SHARED packageBuildId). Explicit manifest-derived batch build selects a NEW exact expected runtime pin; never accept arbitrary matching only by contract/rules or keep c79 pin on new engine. Child immutable identity, version/rules/success/non-authority/zero-I/O/output-completeness checks remain strict. Native connection seed proof build is recorded separately from expected runtime build."
+  },
+  "definitionSha256": "9edaa4b8f3561d36c2f5e83a995e6d4db19dea58fcaab5fc04908dd9c18a99e5",
+  "introductionCompilation": {
+    "primaryParameter": "include_introduction: optional bool",
+    "compatibilityAlias": "introduction_verified: bool; legacy name means target inclusion only, NOT verification",
+    "actualSetup": "NOT_APPLIED_NOT_VERIFIED; batch target setup/native audit NOT RUN",
+    "batchSetupOwnerReport": "#81 prospective114actions/depth6; all8roles via shared child/new59-field baseline; report is planning context, not #62 tenant evidence",
+    "targetArtifact": "artifacts/my_requests/TandemMyRequests-v7-introduction-target.definition.json",
+    "sharedBuildPrerequisite": "Parent must explicitly select expected shared runtime build from canonical batch manifest. This branch cannot infer unknown prospective engine build."
+  },
+  "defaultArtifact": {
+    "path": "artifacts/my_requests/TandemMyRequests-v7.definition.json",
+    "buildId": "018eb8bd-3987-4dd9-a6ed-e271ab6878f4",
+    "sha256": "9edaa4b8f3561d36c2f5e83a995e6d4db19dea58fcaab5fc04908dd9c18a99e5",
+    "includeIntroduction": false,
+    "actualSchema": "NOT_APPLIED_NOT_VERIFIED"
+  },
+  "introductionTargetArtifact": {
+    "path": "artifacts/my_requests/TandemMyRequests-v7-introduction-target.definition.json",
+    "buildId": "1b4c6c75-2417-40b6-84cf-93a841b37c6a",
+    "sha256": "96c0f5c25e81c140f2b0e0c0965bcbf5880a5c9445bb1935e7b78dc75f5086a8",
+    "includeIntroduction": true,
+    "actualSchema": "NOT_APPLIED_NOT_VERIFIED",
+    "expectedSharedBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
+    "batchUse": "Recompile or explicit canonical-manifest pin rewrite in parent assembly; new engine build/hash NOT silently accepted. Then actual setup/readback and native consumer tests BEFORE use."
+  },
+  "batchDependencyCurrent": "Shared source refreshed against #81 c4c8932; final engine build/ID explicitly rebound by coordinated assembler; new native tests NOT RUN."
+}

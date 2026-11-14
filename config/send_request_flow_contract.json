@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "sourceTicket": 10,
+  "flow": "TandemSendRequest v4",
+  "state": "LOCAL_SHARED_PAIR_IMPLEMENTED_SOLUTION_INTEGRATION_PENDING",
+  "packageBuildId": "67071ada-681d-4522-ad5f-5d9c97235a7d",
+  "sourceExportSha256": "823383a1b2941a38ebf80c3e2f0a288f72a9956d24db793767e2dda5eeff0ab8",
+  "input": {
+    "number": "Preserved SenderParticipantId reference, positive integer; must equal same-Invoker server-resolved participant.",
+    "number_1": "Preserved RecipientParticipantId reference, positive integer.",
+    "text": "NEW REQUIRED IntentId UUID; one ID per explicit send intent, reused unchanged after invocation/unknown failure."
+  },
+  "output": {
+    "success": "Existing Boolean retained",
+    "message": "Existing Text retained",
+    "resultjson": "Text typed report",
+    "requestid": "Text numeric request reference or 0",
+    "status": "Text saved status; REPLAY may be terminal history",
+    "resultcode": "SAVED / REPLAY / CONNECTION_EXISTS / UNSETTLED_CONNECTION_EXISTS / INTENT_CONFLICT / CREATE_OUTCOME_UNKNOWN / SHARED_VALIDATION_FAILED / SHARED_CALL_FAILED / schema/read/availability failures",
+    "errormessage": "Sanitized Text",
+    "runreference": "Text"
+  },
+  "requestListId": "3d17485d-1dac-41f0-a1af-24e45daa4567",
+  "runtimeSchemaGate": "Retain narrow Connection Requests list/type and 9 field/key metadata guard; no full seven-role schema scan and no child SCHEMA mode per click. Existing explicit metadata-only preflight remains separate.",
+  "schemaMappingStatus": "Verified request metadata via run 08584074285601068216673996565CU29; requestSchemaMapping config authoritative. Native sender/write and ordinary access remain unverified.",
+  "proposedFields": {
+    "SenderParticipantId": "Existing required Number, Decimals=0; preserve field ID and name.",
+    "RecipientParticipantId": "Existing Number, Decimals=0; optional for Group requests (already verified), preserve field ID/name.",
+    "TargetGroup": "Existing optional single Groups Lookup",
+    "RequestType": "Existing required Choice Personal/Group",
+    "Status": "Existing required Choice Pending/Accepted/Declined/Cancelled, keep unchanged",
+    "SendOperationKey": "Existing required unique indexed Text",
+    "ConnectionKey": "Existing required unique indexed Text",
+    "WinningOperationKey": "Existing optional Text",
+    "OperationComplete": "Existing optional Boolean, default No"
+  },
+  "keys": {
+    "SendOperationKey": "personal:{trusted-actor}:{lowercase-client-uuid}",
+    "ConnectionKey": "open:person:{min(actor,target)}:{max(actor,target)}; holds Pending/Accepted-incomplete; settled terminal history:request:{id}"
+  },
+  "authority": "Same Invoker SharePoint currentuser -> exactly one ParticipantaccountId match -> sender input equality before request/candidate reads. No owner fallback. Ordinary-user private access remains unverified.",
+  "send": "Resolve same-Invoker own profile; immutable intent replay before availability/child. For fresh send read only current actor/target and active catalogues; child contract1/rules1 PAIR owns normalization/eligibility. Require expected child version/build, OK, success=true and typed result.eligible=true; null availability is ineligible. Then current unique/unsettled reads and one POST/readback.",
+  "writeBoundary": "One request POST only; both native unique constraints arbitrate races, automatic retry disabled. Exact immutable SendOperationKey readback can settle a lost response; failed/unknown create without exact row returns CREATE_OUTCOME_UNKNOWN, never claims no effect. No membership/group/notification/profile/permission writes.",
+  "receiptScope": "Minimal immutable personal intent has only trusted actor and target; uniquely keyed request row itself is send receipt. No separate operation store or lock platform introduced. Completed/history replay never creates a fresh request.",
+  "recovery": "Keep same intent after unknown transport outcome. Reverse concurrent send may return unknown when other intent owns live key; refresh My requests. Never make a new UUID automatically as a retry workaround.",
+  "tenantResult": "V4_NOT_IMPORTED_NOT_TESTED; V3_OWNER_SMOKE_HISTORY_PRESERVED",
+  "ordinaryUserAccessVerified": false,
+  "localCases": 56,
+  "limits": {
+    "actions": 113,
+    "depth": 4,
+    "maximumActions": 500,
+    "maximumDepth": 8
+  },
+  "prerequisites": [
+    "Request schema/mapping and existing rows must be reviewed; preflight is read-only and does not apply constraints/backfill.",
+    "All replacement request writers must adopt same keys/decision protocol before cutover; old exported send/cancel do not populate/rekey the new fields.",
+    "Do not alter old flows or published app while import-previewing; #11/#17/#65 integration remains separately owned.",
+    "#39/#42 audience/policy/ordinary-user privacy remain rollout gates."
+  ],
+  "sharedValidation": {
+    "childId": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+    "contractVersion": 1,
+    "rulesVersion": 1,
+    "mode": "PAIR",
+    "packageBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524"
+  },
+  "deployment": "REVIEW_ONLY_LEGACY_ENVELOPE; FINAL_DEPLOY_REQUIRES_SOLUTION_PARENT; WORKFLOW_LINK_NOT_NATIVE_PROVEN",
+  "solutionParent": {
+    "file": "TandemSendRequest-v4-shared.solution-parent.json",
+    "sha256": "46a36196cfa6a2759cf332b2a3113d0034611e60601caccf945c69961c74ed26",
+    "sourceExportSha256": "ce19af2e37e7de4a9317ec4c63e8d5777beaf23a57120c99b4e38d38ce4946d4",
+    "runtimeSource": "invoker",
+    "state": "DOCUMENT_ONLY_PARENT_ASSEMBLY_AND_NATIVE_TESTS_PENDING"
+  },
+  "childFailure": "Transport/timeout/malformed/non-OK/version/build/result-shape failure rejects with sanitized failure, no POST; success alone is insufficient.",
+  "driftReview81": {
+    "impact": "Consumer-only integration; no shared schema/rule/contract/build change. Shared engine and mapping files unchanged. #81 ledger and receiving-ticket issue updates delegated to parent per owner instruction.",
+    "sharedNativeEvidence": "Prior QUICK3/FULL44 and Invoker probe preserved; v4 business parity NOT RUN.",
+    "noImpactConsumers": [
+      "#62",
+      "#63",
+      "#7",
+      "#61",
+      "#11",
+      "#17",
+      "#65"
+    ],
+    "consumerImpact": "Only #10 generated parent/build/hash changes; app inputs/outputs and request uniqueness/intent protocol unchanged. Actor unavailability now shares TARGET_UNAVAILABLE_OR_INCOMPATIBLE with recipient rejection."
+  },
+  "batchRefinement": {
+    "schemaVerification": "#81 maintenance only; historical #10 preflight reproducible separately",
+    "schemaAuditPerClick": false,
+    "actions": 99,
+    "maximumActionDepth": 4,
+    "packageBuildId": "5a207485-1a32-4e74-9b26-8baa26fad322",
+    "sha256": "49d40f0690da0f057aaec91ba0518bd1d5b2babd688db9b43771197c992df907",
+    "nativeResult": "NOT RUN",
+    "focusedTestsPassed": 57
+  }
+}
