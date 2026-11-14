@@ -140,8 +140,11 @@
       "reason": "Native setup child returned INVALID_INPUT at Request_text; raw all-field payload can exceed250000 characters. Exact native Request_text error requested.",
       "change": "Forward only baseline contract field names and nine evaluator properties; preserve exact SchemaXml, source completeness/paging and duplicate/missing checks. Surface child validation code/diagnostics/run reference and input character count.",
       "matchingNormalizationSchemaSemantics": "UNCHANGED",
-      "nativeRetest": "NOT_RUN",
-      "receiptListIdObserved": "864dfe53-b67c-4504-9d48-ad4356b813d8"
+      "nativeRetest": "PASS: corrected full8-role schema audit and repeat Apply with all Create actions owner-confirmed Skipped",
+      "receiptListIdObserved": "864dfe53-b67c-4504-9d48-ad4356b813d8",
+      "evidence": "artifacts/core_batch/v1.0.0.1/results/schema-audit.owner-confirmation.json",
+      "repeatEvidence": "artifacts/core_batch/v1.0.0.1/results/schema-repeat-apply.owner-report.json",
+      "repeatStatusEvidence": "artifacts/core_batch/v1.0.0.1/results/schema-repeat-apply.owner-confirmation.json"
     }
   }
 }

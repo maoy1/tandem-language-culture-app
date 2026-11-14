@@ -1,0 +1,18 @@
+{
+  "sourceTicket": 10,
+  "sourceSha256": "ac9327c8d7668e67067bc84c071a500da11829ddbb4121e4bc6519ee52abd2f6",
+  "runReference": "08584074285601068216673996565CU29",
+  "packageBuildId": "dd0c91b6-13b4-41e0-affd-ebafeeb87404",
+  "metadataVerified": true,
+  "itemCount": 0,
+  "itemRowsRead": 0,
+  "writes": 0,
+  "actualMetadataSyntheticGraphChecks": {
+    "send": "SAVED",
+    "cancel": "CANCELLED",
+    "reader": "OK"
+  },
+  "graphCheckScope": "Actual owner-returned request metadata plus synthetic item rows in local WDL-subset executors; not native flow runtime or data-write proof.",
+  "nativeSendCancelHistoryVerified": false,
+  "ordinaryUserAccessVerified": false
+}

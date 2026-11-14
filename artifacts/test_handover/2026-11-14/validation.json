@@ -1,0 +1,91 @@
+{
+  "ownerTicket": 45,
+  "currentProcedureLocation": "Inline GitHub issue descriptions; no separate tester procedure file",
+  "issueCount": 13,
+  "flowCaseCount": 75,
+  "caseIdsUnique": true,
+  "checks": {
+    "61": {
+      "cases": 10,
+      "characters": 11308,
+      "inputKeys": "AUTOMATIC_EVENT_NO_INPUT_FORM",
+      "checkboxPerCase": "PASS",
+      "bodySha256": "dc5ce33ad86299399326e2acb9242975af7722121a595180a39a460caf8285fe"
+    },
+    "7": {
+      "cases": 8,
+      "characters": 10253,
+      "inputKeys": "PASS",
+      "checkboxPerCase": "PASS",
+      "bodySha256": "5bd7b2aa6f32b5d929d1e9426cb1614626093676be7722f048a4c5db4278d650"
+    },
+    "10": {
+      "cases": 7,
+      "characters": 8484,
+      "inputKeys": "PASS",
+      "checkboxPerCase": "PASS",
+      "bodySha256": "61fa8d985ed0e3798ba8cd5b1ca941cd4b9869e332111ee1ec9a84442c810058"
+    },
+    "62": {
+      "cases": 7,
+      "characters": 9042,
+      "inputKeys": "PASS",
+      "checkboxPerCase": "PASS",
+      "bodySha256": "9fc2545b4aea4bcf79bf362c13b94e0254509469342df506965c6f4595d6c233"
+    },
+    "63": {
+      "cases": 6,
+      "characters": 8457,
+      "inputKeys": "PASS",
+      "checkboxPerCase": "PASS",
+      "bodySha256": "00eeefe8d42319c6e527dbd02bd3f24c5a6566d0bbe48fba3babf48511d8c5b0"
+    },
+    "11": {
+      "cases": 6,
+      "characters": 10200,
+      "inputKeys": "PASS",
+      "checkboxPerCase": "PASS",
+      "bodySha256": "0970878d1b2664379e3c81c61c3958eaec3f1ac8428e1e45b43298624c3bffec"
+    },
+    "17": {
+      "cases": 6,
+      "characters": 8997,
+      "inputKeys": "PASS",
+      "checkboxPerCase": "PASS",
+      "bodySha256": "3e6e9074bd4a036469923e6cbe0b266e1c8cb5046e14546a025b3f8707ce883a"
+    },
+    "65": {
+      "cases": 7,
+      "characters": 10051,
+      "inputKeys": "PASS",
+      "checkboxPerCase": "PASS",
+      "bodySha256": "f5b9eed96d9021b9f32354db4338755bba41987055afe5df407ae422fc8d4c2e"
+    },
+    "64": {
+      "cases": 5,
+      "characters": 8464,
+      "inputKeys": "PASS",
+      "checkboxPerCase": "PASS",
+      "bodySha256": "19ecf9119a9b9a2ce9b50122a44b77a09ebf8573ebc98fd8b82f2e3f185bc756"
+    },
+    "13": {
+      "cases": 7,
+      "characters": 9604,
+      "inputKeys": "PASS",
+      "checkboxPerCase": "PASS",
+      "bodySha256": "4fa9e896b510bda96708d86515a494380ee404fa21b9f95fb045199dc65d55dc"
+    },
+    "14": {
+      "cases": 6,
+      "characters": 9387,
+      "inputKeys": "PASS",
+      "checkboxPerCase": "PASS",
+      "bodySha256": "d2f0e20c6ea00d4dacc914f2f03cdb3d6c2a838ee1fab11c392b709ae295e79a"
+    }
+  },
+  "legacyFlowSwitchSteps": "REMOVED_FROM_ACTIVE_PROCEDURES",
+  "oldAcceptanceAndEvidence": "PRESERVED_VERBATIM_IN_DATED_SNAPSHOT_AND_RETAINED_SCOPE_SECTIONS",
+  "newRuntimeTestResults": "NONE; existing results retained by version",
+  "validation": "STATIC_DOCUMENT_AND_ACTUAL_TRIGGER_INPUT_CHECKS_PASS",
+  "runtimeOrPackageBytesChanged": false
+}

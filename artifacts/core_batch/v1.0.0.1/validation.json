@@ -33,11 +33,19 @@
   },
   "native": {
     "oldV1SchemaApply": "FAIL_INVALID_INPUT_REQUEST_TEXT; full schema NOT VERIFIED",
-    "exactRequestTextError": "REQUESTED_NOT_YET_SUPPLIED",
+    "exactRequestTextError": "NOT_CAPTURED_HISTORICAL_FAILURE; corrected schema audit and repeat now PASS",
     "oldApplyRun": "08584069362059040197682124425CU28",
     "oldChildRun": "08584069361400134595726594162CU01",
-    "correctedImportAndReadOnlyAudit": "NOT_RUN",
-    "ordinaryUserAccess": "DEFERRED_NOT_VERIFIED"
+    "correctedImportAndReadOnlyAudit": "OWNER_CONFIRMED_PASS_SUMMARY",
+    "ordinaryUserAccess": "DEFERRED_NOT_VERIFIED",
+    "readOnlyAuditEvidence": "results/schema-audit.owner-confirmation.json",
+    "repeatApply": "PASS_SCHEMA_VERIFIED_ALL_CREATE_ACTIONS_OWNER_CONFIRMED_SKIPPED",
+    "repeatApplyEvidence": "results/schema-repeat-apply.owner-report.json",
+    "repeatApplyRun": "08584069211508254579686294345CU13",
+    "schemaValidationRun": "08584069211275890958307283979CU25",
+    "requestCharacters": 41372,
+    "repeatApplyStatusEvidence": "results/schema-repeat-apply.owner-confirmation.json",
+    "packaged45CaseSmoke": "NOT_RUN"
   },
-  "nextOwnerStep": "Update existing TandemCoreBatch Solution, preserve existing connections and disabled business/event flows, then run TandemBatchSchemaSetup ApplyChanges=No and return Setup_report."
+  "nextOwnerStep": "Enable/run TandemCoreValidationSmoke with no inputs; return Smoke_report. Expect suite BATCH,45/45,allPassed=true,failedCases=[]. Keep business flows disabled until this gate passes."
 }

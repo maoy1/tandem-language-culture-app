@@ -54,8 +54,8 @@ operational dependencies before relying on them.
 | Discovery fields / Comments | Person/group display approved 2026-11-08; email/admin/system data excluded; no Comments notice | #46 contract; implement/test #7/#16/#42 |
 | Private organiser notes | Participant emails organisers; no new private-Comments split | Contact route to identify; separate from notification-channel decision |
 | Language groups | 1-to-1 or 1-to-2, meaning 2 or 3 people total | #12/#13 |
-| Culture groups | 2–10 total members, including at least one relevant culture sharer | Owner approved; #12/#13 |
-| Combined groups | Language/culture combined groups have 2–10 total; both focuses require a sharer and a different learner | Owner approved |
+| Culture groups | 2â€“10 total members, including at least one relevant culture sharer | Owner approved; #12/#13 |
+| Combined groups | Language/culture combined groups have 2â€“10 total; both focuses require a sharer and a different learner | Owner approved |
 | Participant status | Separate Active/Paused/Inactive participation from validation | #46 then #6 |
 | Culture-only participation | Supported; no mandatory language selection | #5/#7 |
 | Notifications | In-app plus email approved; shared-mailbox REST capability failed, email delivery blocked | #49 / #21 |
@@ -222,8 +222,8 @@ Groups control Open/Closed/Ended. Open groups can receive join requests only whe
 space remains; Closed groups continue without new joiners; Ended groups are no
 longer operating. Show member count and free slots. No saved participant size
 preference is required; the participant chooses and the group accepts/declines.
-Language capacity is 2 or 3 total; culture capacity is 2–10 with a relevant culture
-sharer, and combined language/culture capacity is 2–10 with a relevant culture
+Language capacity is 2 or 3 total; culture capacity is 2â€“10 with a relevant culture
+sharer, and combined language/culture capacity is 2â€“10 with a relevant culture
 sharer. Do not infer a universal minimum of 3. Open/Closed/Ended is the target simple MVP group state;
 other lifecycle states and timers require a later decision. Active members may
 accept/decline join requests and set Open/Closed/Ended, with necessary admin override.
@@ -306,7 +306,7 @@ silent commitment to every event in the source document.
 Normal registration exposes only the caller's profile; discovery returns only
 approved compatible candidate details. An app filter alone is not authorization.
 Site Members are trusted admins; their inherited access does not establish an
-ordinary user's access. The owner deferred colleague access testing; #18/#39–#42
+ordinary user's access. The owner deferred colleague access testing; #18/#39â€“#42
 remain open while work continues with owner/synthetic data. No access redesign
 is approved. Verify actual ordinary-user access before broader release.
 
@@ -341,7 +341,7 @@ Excluded: separate paid hosting, automatic AI matching/assignment, in-app chat/v
 detailed scheduling, mandatory Location catalogue, required native SharePoint
 Location input, participant Role and required participant-entered identity email.
 
-## Validation flow testing handover — #61
+## Validation flow testing handover â€” #61
 
 #61 is Ready for testing on owner direction; #9 is Done after merged #73; #47 is the sole In progress ticket. Target contract and tenant handover are in
 FLOW_61_PARTICIPANT_SUBMISSION.md and participant_submission_contract.json.
@@ -356,7 +356,7 @@ See [the #61 issue description](https://github.com/maoy1/tandem-language-culture
 results, cleanup and blocked cases. #61 stays open; no whole acceptance or
 ordinary-user access pass is implied.
 
-## Shared compatibility implementation — #9
+## Shared compatibility implementation â€” #9
 
 compatibility.py is the maintained rule/normalization source for package builders;
 config/compatibility_contract.json and COMPATIBILITY_RULES.md define adapters and
@@ -373,7 +373,7 @@ passed all 39 synthetic cases with no failures. Own shared proof accepted; #73
 review/merge pending. No live consumer/authorization/group-availability certification
 is inferred. Any language remains deferred; no further proof rerun requested.
 
-## Shared bounded coordination preparation — #47
+## Shared bounded coordination preparation â€” #47
 
 PR #73 merged; #9 own artifact complete. #47 proposes one group-specific owner
 token plus saved operation receipt, stable request/episode keys and completion
@@ -392,7 +392,7 @@ build-tagged synthetic list. Native runtime results, genuine unknown/killed-run
 recovery and production mapping remain unverified; no production schema applied.
 
 
-### #47 connector duplicate-error correction — v2
+### #47 connector duplicate-error correction â€” v2
 
 The owner supplied the first native report: 5/10 checks passed, allPassed=false. All five failed cases invoke the duplicate-response predicate. The Duplicate primary raw body confirms SharePoint error -2130575169 / Microsoft.SharePoint.SPDuplicateValuesFoundException wrapped by the existing SharePoint connector as HTTP 502. The original proof's 400/409-only classifier was too narrow. The five-case common cause is supported by local replay; a native v2 pass remains unverified.
 
@@ -403,7 +403,7 @@ Supported package: artifacts/coordination/TandemCoordinationFixture-v2.zip, buil
 Validation: 179 local tests passed, including wrapped native duplicate simulation in both writer orders and generic/error-negative cases; 321 actions / depth 6 (limits 500/8). V2 NOT_IMPORTED_NOT_TESTED. #47 remains In progress / PR #75 draft pending native results. No genuine timeout/killed-run, production consumer or notification-delivery proof inferred.
 
 
-### #47 native bounded proof passed — 2026-11-08
+### #47 native bounded proof passed â€” 2026-11-08
 
 Matching v2 build `b54d7cee-971d-4af3-924f-e81d5fefaec9`, owner run `08584074402025984197329193901CU08`: testCount=10, allPassed=true, failedCases=[]. Permission gate passed; existing tagged fixture `Tandem47Fixture_b54d7cee971d4af3` / `abade32d-8b24-4b30-b2e0-668d10238acb` reused (fixtureCreated=false). Summary exactly as supplied: `artifacts/coordination/results/fixture-v2.pass.owner-summary.json`; successful per-case details were not supplied and are not reconstructed. The package gates allPassed on exactly 10 results and no failed cases.
 
@@ -412,7 +412,7 @@ History retained: original classifier build 5/10 pass; first v2 run `08584074408
 179 local tests / 70 reference schedules previously passed; final artifact remains 321 actions / depth 6, no runtime changes after owner proof. #47 **Ready for review**, PR #75 ready; no owner rerun required. Earlier pending-run entries above are historical. Own contract review/merge remains; no production schema applied, all 70 schedules are not native-proven, genuine timeout/killed-run, production consumer/access and external notification delivery remain separate. #12 group/member schema is next after merge; #61 stays Ready for testing.
 
 
-## #12 active schema inspection — 2026-11-08
+## #12 active schema inspection â€” 2026-11-08
 
 PR #75 merged `be278a1cc7a72b862154ae8ffe201acdf998f019`; #47 closed/Done after accepted bounded contract/native proof. #12 is the sole active ticket. Existing #57 group/member snapshot is historical source evidence; current actual list IDs/field definitions/settings remain unverified.
 
@@ -421,7 +421,7 @@ Prepared `artifacts/group_schema/TandemGroupSchemaAudit.zip`, build `cb49aded-f1
 194 local tests pass, including 15 generated-inspector cases (normal collection, ambiguous/missing/unsafe targets, paging, missing arrays/identities/permissions, failed reads and package safeguards). Tenant import/run **NOT RUN**. collectionComplete means bounded metadata collected, not schema acceptance; schemaVerified remains false. No setup until actual report reviewed, any changes flagged and actual per-list capability verified. Existing rows preserved; exceptions route #48. Full operator handover/checkboxes inline in issue #12; draft PR is partial preparation, not whole-ticket Ready. #61 remains Ready for testing.
 
 
-### #12 actual mapping and direct settings — 2026-11-08
+### #12 actual mapping and direct settings â€” 2026-11-08
 
 Owner opted for direct list settings rather than another setup package. Initial audit `08584074383115048211345636667CU09` and manual-settings readback `08584074377818105096431306544CU07` match build `cb49aded-f121-410e-b7df-d9646be892dd`: collectionComplete=true/errors empty; Groups and Group Members each itemCount=0. Actual field/list IDs, types, choices, defaults, XML constraints and lookup targets recorded in `config/group_schema_mapping.json`; source reports in `artifacts/group_schema/results/`.
 
@@ -430,7 +430,7 @@ Confirmed group Title now required; WriteOwner optional nonunique Text/blank def
 Group Members Group and Participant still report indexed=false. Indexed columns page requested; no index completion or full schema acceptance claimed. #12 remains In progress / PR #76 draft. No setup package generated, row writes, renames/deletion or runtime/privacy certification. 194 existing local tests previously passed; this is metadata/evidence only, not new executable changes.
 
 
-### #12 schema mapping and five manual settings verified — 2026-11-08
+### #12 schema mapping and five manual settings verified â€” 2026-11-08
 
 Final audit build `cb49aded-f121-410e-b7df-d9646be892dd`, run `08584074372941101122136369836CU17`: collectionComplete=true, errors=[], both lists itemCount=0. Groups `4bf1b37f-edce-40c5-8fa0-36543a2d0cd6`; Group Members `db611ec3-7fa3-477a-878e-effbbb195cb8`. Group and Participant now each indexed=true; owner Indexed columns page lists separate Group / MembershipKey / Participant. Prior combined Group, Participant index was replaced with separate indexes.
 
@@ -439,7 +439,7 @@ All five direct-setting changes read back: group Title required; WriteOwner opti
 #12 Ready for review / PR #76 ready. No owner rerun or settings package needed; owner chose manual UI changes. 194 local tests previously passed; no executable change in final evidence recording. No row rejection/creation/migration, ordinary-user privacy or consuming-flow/history behavior claimed. No migration exceptions in these observed empty lists. Dynamic count/focus/identity/Ended/history guards remain respective Flow scope; #48 migration remains separate. Source/contract review and merge remain; next focused implementation is #7 Discovery after merge, #61 still Ready for testing. Earlier pending-index entries are historical.
 
 
-## #7 Discovery owner-preview build — 2026-11-08
+## #7 Discovery owner-preview build â€” 2026-11-08
 
 PR #76 merged `39ebc0cd48c428602a0434a12db0c99ac77a9de5`; #12 closed/Done. #7 is sole active ticket. Actual TandemDiscovery export inspected (source hash `7b4dc1e5df96769615088d897cf86030a2622a47dc7db56a414dbe75f41085a9`): Power Apps V2 number reference, SharePoint Invoker source with Raw authentication, Get item/Get items and candidatesjson/errormessage response. No ordinary-user access proof or owner-credential fallback inferred.
 
@@ -448,7 +448,7 @@ Built `artifacts/tandem_discovery/TandemDiscovery-v2.zip`, build `7c8589d0-fdea-
 242 local tests pass, including 48 generated Discovery graph/packaging cases (own/tampered references, availability, blank zone/culture/Any, source/member commitment, group state/count/focus/history, structured-field rejection, read/page/count/work/response limits and Invoker preservation). Native import/run NOT RUN; mode OWNER_PREVIEW_PENDING_ACCESS_PROOF. #42 privacy/ordinary-user two-account proof deferred; do not publish a participant endpoint or change permissions. Candidate groups additionally require live Connection Requests.OperationComplete Boolean plus accepted/complete source/episodes; missing schema fails explicitly, no field creation in #7. Current empty group lists allow an owner people/empty-group smoke without claiming populated group proof. Exact contract and remaining gates in config/discovery_flow_contract.json and inline #7 handover. Existing raw export remains user-owned/untracked, no source replacement or production cutover.
 
 
-### #7 owner smoke — Paused rejected, Active empty success (2026-11-08)
+### #7 owner smoke â€” Paused rejected, Active empty success (2026-11-08)
 
 Build `7c8589d0-fdea-4db8-9d44-46b7d8548acf`. Owner run `08584074350262917105745395996CU25` returned PROFILE_UNAVAILABLE/success=false while own Participation status was Paused. Owner manually changed it to Active; fresh run `08584074348343616902680114159CU10` returned OK/success=true, peopleCount=0/groupCount=0, writes=0, ordinaryUserAccessVerified=false. Exact reports and scoped evidence saved under `artifacts/tandem_discovery/results/`. No flow/package change needed for this expected availability result.
 
@@ -457,7 +457,7 @@ This proves owner-context invocation/own-reference path, Paused rejection and Ac
 Owner restated self-service access: avoid individual participant approvals/grants; use verified existing group-based app/flow access. The shown SharePoint connection consent is separate from run/data authorization. Invoker is preserved; no switch to an owner connection and no new permission changes. #42 owns the final protected-data/caller boundary; owner smoke does not resolve it. Remaining versioned tests stay unchecked in issue #7.
 
 
-## #7 resumed implementation review — 2026-11-08
+## #7 resumed implementation review â€” 2026-11-08
 
 Owner deferred the audience-group/IT question and requested continued #7 work.
 #39 assessment is queued Planned with draft #43 and successful owner metadata
@@ -505,7 +505,72 @@ Reader v6 build b108407d-4714-4d58-9852-0ffc3099c1e9: 228 actions/depth4, zero w
 Owner returned resultcode=OK, requestsjson=[], errormessage empty, mode OWNER_PREVIEW_PENDING_ACCESS_PROOF; run 08584074267842029485356386842CU16. This is the response to the v6 handover (expected build b108407d-4714-4d58-9852-0ffc3099c1e9); the response does not independently include a build ID. The earlier null-profile error no longer blocks this empty-history run. Supplied excerpt retained in artifacts/my_requests/results/v6-empty-history.owner-evidence.json. No code/package changes or repeat of this smoke needed. Populated personal/group/terminal history, native action integration, app binding and ordinary-user access remain pending; #62 stays open. 373 prior local tests unchanged; evidence-only update.
 
 
-## Planned single shared validation workflow — #81
+## Parallel development batch â€” 2026-11-08
+
+Owner explicitly requested parallel flow development after PR #77 merged
+`a19176b5e273de56cd09f395153f1fd78f593b6b`. #10/#62/#63 are active in
+separate branches/PRs for this batch; this supersedes the one-active-ticket
+scheduling rule for this batch only. #7 is queued with remaining tests retained;
+#39 audience/IT follow-up stays queued, no privacy cutover authorized.
+
+### #10 implementation and exact bindings
+
+TandemSendRequest v2 build **50e14992-a69a-4001-93f4-1ac8ed57dfe2**;
+**125 actions / depth 5**, limits 500/8.
+Original export SHA `823383a1b2941a38ebf80c3e2f0a288f72a9956d24db793767e2dda5eeff0ab8`; raw archive private/untracked.
+Preserves original SenderParticipantId `number`, RecipientParticipantId `number_1`,
+Invoker Raw connection, Boolean success and Text message outputs. Adds required
+Text `IntentId` (`text`) and report/reference/status/code outputs. The app must
+refresh/add the new flow binding and supply the retained intent; no transparent
+old-button cutover is claimed. Create as new only. Maintained #9 source unchanged.
+
+Send resolves caller before request/candidate reads; scoped server identity,
+current compatibility/availability, idempotent request receipt, native unique
+live connection key and legacy unsettled-pair guard. One POST with retries off;
+exact immutable readback reconciles lost success. Unknown stays unknown; no
+fake rollback, membership/group creation, profile update or auto-cancellation.
+29 new emitted-graph/local cases pass; tenant import/write/race/ordinary-user
+results NOT RUN. Schema prerequisites remain real integration work, not a PASS.
+
+### One metadata preflight before this batch
+
+TandemRequestSchemaPreflight build **f7fd078d-740a-4d68-a8fe-31ca2abc9e54**,
+**18 actions / depth 3**. No inputs, item reads,
+writes or permission/schema changes. Shares the expected request mapping with the
+send gate. Local valid/missing-schema cases pass; native NOT RUN.
+
+Do not enable required/unique fields or backfill existing requests blindly.
+Old exported send omits the coordination keys; old cancel only changes Status.
+Their incompatibility must be handled in the later coordinated cutover, not by
+claiming the new flows are already integrated. Request Type/TargetGroup/custom
+keys are proposed names until metadata is collected. #11/#17/#65 own their writers.
+Exact operator/test checkboxes are inline in #10; #62/#63 own their handovers.
+
+### Parallel batch delivery â€” 2026-11-08
+
+All three isolated implementations are built: Send #10 / PR #78 (125 actions/depth 5), My requests #62 / PR #80 (223/depth 4), Cancel #63 / PR #79 (138/depth 5). Shared read-only request schema preflight is 18/depth 3. All source Invoker bindings preserved, no embedded fallback; send alone adds a required retained intent UUID. Reader preserves original created timestamp/order and response row fields; cancel preserves its two input arguments. No writer cutover, schema setup or app publication performed.
+
+Combined disposable-checkout suite: 455 tests passed plus one additional cross-generator send -> cancel -> history -> same-send replay check passed. Per-flow added cases: send/preflight 29, reader 104, cancel 80. Version/hash/source commit evidence is in artifacts/send_request/request_batch.validation.json. This is local generated-graph proof, not native acceptance.
+
+Packages delivered together locally in artifacts/request_batch/TandemRequestFlows-20261108.zip (outer delivery archive, not directly importable); extract and import the inner schema preflight first. Each individual flow ZIP also remains under its own artifact folder. Three separate implementation PRs are ready for code review; tickets stay open. Checkbox handovers are inline in #10/#62/#63. Real request mapping/constraints/legacy rows and coordinated old-writer compatibility remain native integration blockers; inspect schema metadata before running replacement writers. Participant rollout is still access-gated.
+
+## Request schema native observation and adapter correction â€” 2026-11-08
+
+Run 08584074297422149453962972460CU27 (initial preflight f7fd078d-740a-4d68-a8fe-31ca2abc9e54) collected metadata, schemaVerified=false, zero item reads/writes. SenderParticipantId/RecipientParticipantId are existing required Number/Decimals=0, not Lookup fields. Status already matches. Owner reports list empty. Preserve existing field IDs/names/types; no migration needed for this observed empty list. New fields RequestType/TargetGroup/SendOperationKey/ConnectionKey/WinningOperationKey/OperationComplete remain absent, and RecipientParticipantId optionality is needed for Group requests. Source report and reviewed mapping under artifacts/send_request/results and config/request_schema_mapping.json.
+
+Corrected Send v3 a9251019-b7a5-4170-8877-682bb71b8693 (125/depth5), preflight v2 dd0c91b6-13b4-41e0-affd-ebafeeb87404 (18/depth3), preserve numeric references and report ItemCount in metadata. 34 added send/preflight cases / 276 branch tests pass locally. Reader/cancel adapters follow in separate PRs. No tenant settings or rows changed. Owner setup and test-window/cutover impact are explicit in #10; required keys make the old Send incompatible until new binding. Updated whole schema/native actions/privacy remain unverified. Prior local batch evidence is historical, not new-build/native certification.
+
+## Request schema verification passed â€” 2026-11-08
+
+Corrected preflight dd0c91b6-13b4-41e0-affd-ebafeeb87404 run **08584074285601068216673996565CU29**: collectionComplete=true/schemaVerified=true, ItemCount=0, itemRowsRead=0/writes=0. Numeric SenderParticipantId/RecipientParticipantId field IDs retained; recipient optional, six new field types/required/unique/index/default/lookup/choice metadata all match. Status unchanged. Verified mapping in config/request_schema_mapping.json; curated report/evidence in artifacts/send_request/results/schema-verified.*. No migration necessary.
+
+Actual returned metadata also passes all three generated graphs with synthetic rows locally (send SAVED, cancel CANCELLED, reader OK). This verifies metadata compatibility only; native writer/history, edit permission, races, app binding and ordinary-user privacy remain untested. Schema gate is cleared for owner smoke; no new package or setup needed. First smoke: MyRequests-v4, Create as new, existing Invoker connection, own ParticipantId (previously 38), expect resultcode OK / requestsjson [] / errormessage empty. Return Respond to a Power App or flow Outputs. Do not use old Send with required keys; new writer/app/all-writer cutover remains pending.
+
+
+### #10 owner send smoke results - 2026-11-09
+
+Owner reports matched send SAVED/Pending and unmatched send passed rejection after new-intent guidance. Expected Send v3 build a9251019-b7a5-4170-8877-682bb71b8693; successful run references/full outputs not supplied. Prior provided INTENT_CONFLICT run 08584074252930158987892330133CU13 is retained as separate evidence and is not the unmatched-case pass. Source in artifacts/send_request/results/v3-send-smokes.owner-evidence.json. Recipient30 previously lacked participation/openness, was excluded before matching; owner changed test fixture. This is bounded owner smoke, not full REQ-001/AUTH-002 acceptance: exact stored parties/keys, same-intent replay/no duplicate, cancellation/history, races, UI and ordinary-user access remain pending. No executable/package change; #10 remains open. Next: retry successful sender/recipient/IntentId unchanged, expect REPLAY/same request ID and one row.
+## Planned single shared validation workflow â€” #81
 
 Owner direction is tracked by [#81 TandemValidateContext](https://github.com/maoy1/tandem-language-culture-app/issues/81). Existing #9 shares generator source, not a single deployed validation workflow. #81 owns one read-only shared workflow for schema checks, normalization and person/group compatibility, with versioned operation-specific inputs/results. Business flows should retain their operation logic and the minimal identity/authority and atomic live-state/ETag/unique-key guards needed for correct writes. Full schema audit and fresh live eligibility have different timing; a setup audit cannot replace operation-time data checks.
 
@@ -622,6 +687,19 @@ Default v7 build `2c9d2814-dcfb-4951-8abe-955b9067863b`, SHA256 `9edaa4b8f3561d3
 
 #62 follow-up final local evidence: **485 full-suite PASS / 128 reader cases**, 52.50s. Default and Introduction-target128/depth4, six GETs/one actual emitted child/zero writes; strict hash and exact configurable build checks PASS on this branch's unchanged main-based shared source. New foundation old4d16/new7365 drift remains a parent-owned merge/regeneration prerequisite, not waived. Validation records prior v7 history separately; native/schema/privacy still NOT RUN.
 
+## #10 shared PAIR consumer implementation — 2026-11-14
+
+[#10 TandemSendRequest](https://github.com/maoy1/tandem-language-culture-app/issues/10), [PR #78](https://github.com/maoy1/tandem-language-culture-app/pull/78): owner explicitly authorizes the parallel 12-flow batch; this branch owns only Send. Integrated merged #81 from origin/main, retaining both prior evidence histories and exact conflicting untracked exports in temp. V4 build `67071ada-681d-4522-ad5f-5d9c97235a7d` delegates fresh normalization/compatibility to native Workflow child `e9aa88eb-a666-4df1-b088-176be7bcd00d`, contract1/rules1 PAIR, pinned existing shared build c79b7b64-b3ce-4de3-aa74-0ed62bca1524. Authenticated own-profile, immutable replay before availability, fresh pair/catalogue reads, narrow request-only metadata checks, current live-key/unsettled checks and one POST/unique/readback-unknown protocol remain. No per-click full schema audit. Null availability stays ineligible; deterministic object-schema failure replaces unsafe div gates in this parent.
+
+Parent 113 action definitions/depth4; shared child unchanged84/depth7; both within500/8. Readable native-envelope parent, review-only legacy ZIP, mappings, validation and complete future native test instructions are in artifacts/send_request/HANDOVER.shared-v4.md and shared-v4.validation.json. Final deployment requires parent-batch Solution assembly; legacy Workflow linkage is not natively proven. #10 native v4 caller/write/replay/race/privacy remains NOT RUN; historical v3/#81 evidence remains scoped to its versions.
+
+#81 drift no-impact assessment: no shared schema, rules, normalization semantics, version/build or other consumer files changed. This is the #10 consumer migration only; build/hashes/regressions are retained in Send evidence. Parent owns #81/#10 ledger/issue updates, Solution packaging and integration. No push/issue modification from this branch; no schema/settings/permission changes, no Ready/Done claim. See the handover for exact fixture/account/actions/expected results/failure interpretation/cleanup/evidence.
+
+Final local verification for #10 v4: **413 tests passed**, including **56 send cases**; exact delivered native parent + delivered shared-child graph exercised locally. ZIP/definition/hash checks PASS; parent113/depth4 and child84/depth7 PASS; seven shared files unchanged from merged origin/main and request mapping unchanged from prior #10 baseline. Native v4 integration remains NOT RUN.
+
+
+#10 final batch refinement: removed all request-field metadata queries and Schema_* gates from ordinary Send. One-time #81 setup/audit owns schema; historical #10 metadata preflight remains reproducible with an explicit generation-only flag. Current identity, typed intent, compatibility, native unique key arbitration and exact readback remain. 57 focused tests pass; native new parent/replay/race tests remain NOT RUN.
+
 ## #81 coordinated core batch foundation — 2026-11-14
 
 Owner explicitly authorized parallel implementation of one shared validator and eleven singly owned business flows, one coordinated Solution import, separate ticket branches/PRs and inline per-flow checklists. The old single-active-ticket sequence is superseded for this authorized batch. Core flow inventory and stable fresh component IDs are owned by config/core_batch_contract.json / scripts/power_automate/core_solution.py. No silent working-flow replacement; all generated components import disabled and the old/new event validators must never both be enabled during cutover. Full app screen implementation and ordinary-user access tests remain separate, not implied by backend import.
@@ -664,3 +742,31 @@ Solution1.0.0.1 repairs the setup collector: source-read completeness and paging
 Artifact `artifacts/core_batch/v1.0.0.1/TandemCoreBatch-v1.zip`; shared deployment build **bd66271f-090e-4f5c-a890-8cb5b61173cc**; SHA256 **2708aef6bdff431c6681e17aeaca44d46073b9ef83ed2bd81af2ea3124661e92**. Same Solution identity and component IDs, update to1.0.0.1; all components remain disabled in the package. Setup now117definitions/depth6; overallmax393/7 against500/8. All12production documents compare exactly to v1 after explicit shared-build rebinding; no operation/normalization/compatibility changes. New45-case packaged smoke and9actual-packaged business E2E cases PASS locally. Focused schema/packaging/shared regressions recorded in the new validation.json. Native collector retest NOT RUN; raw native Request_text detail still requested.
 
 Owner next: import this as UPDATE of TandemCoreBatch, preserve existing SharePoint mappings, keep business/event flows disabled; enable shared child + Setup and run **ApplyChanges=No**. Existing receipt list is retained; no repeated schema write is needed to diagnose. Expect collectionComplete=true, validationCode=OK, schemaVerified=true and full schemaResult; report also gives requestCharacters/validationDiagnostics/validationRunReference. If false, return that report/error; do not adjust list settings or rerun Apply blindly. Once read-only audit succeeds, the prior repeat-apply/remaining native checklist still applies. All affected consumer tickets reference this new version/build/hash; historical v1failure and old native proofs remain unchanged.
+
+
+### #81 corrected read-only native audit owner-confirmed — 2026-11-14
+
+For #45's corrected1.0.0.1 retest, owner confirms validationCode=OK, collectionComplete=true and schemaVerified=true. Record **OWNER-CONFIRMED READ-ONLY SCHEMA PASS**, scoped to that report summary. Full report/current run reference were not pasted, so exact package-build/run correlation is not independently captured; the next repeat report can supply it. Evidence: artifacts/core_batch/v1.0.0.1/results/schema-audit.owner-confirmation.json. No code/schema/rule/package-byte changes; ZIP/build/hash remain unchanged. Original native input failure remains historical evidence, with exact old Request_text error not supplied.
+
+Next bounded test: run TandemBatchSchemaSetup ApplyChanges=Yes once and confirm schemaVerified=true/validationCode=OK and every Create action Skipped. Return Setup_report plus skipped-action confirmation to capture runReference/build. Do not close #81/#45 or mark the combined repeat-apply acceptance passed yet. Native45-case smoke, individual business/automatic/app acceptance and ordinary-user access are not implied by this schema PASS; retain pending/deferred states.
+
+
+### #81 native repeat-apply schema report PASS — 2026-11-14
+
+Owner supplied the full corrected1.0.0.1 report: buildbd66271f-090e-4f5c-a890-8cb5b61173cc; ApplyChanges=true; parent08584069211508254579686294345CU13; child08584069211275890958307283979CU25. validationCode=OK, schemaVerified=true, collectionComplete=true, schemaMatches=true/allSchema=true, all8roles checked, no differences. Input41372characters; every diagnostic stage Succeeded. Business row writes/deletes/permissionChanges0; receipt GUID864dfe53-b67c-4504-9d48-ad4356b813d8 remains observed. Exact evidence: artifacts/core_batch/v1.0.0.1/results/schema-repeat-apply.owner-report.json.
+
+Record native full-schema PASS on repeat apply, now with exact build/parent/child correlation. The report does not contain individual Create-action statuses; **all Create actions Skipped remains unconfirmed**, not failed and not a reason to rerun. rowWrites=0 concerns business rows, not schema-creation action status. Ask only for those statuses in this same run; do not check off the combined no-schema-write repeat criterion yet. Native45-case smoke/consumer/automatic/app/access gates remain separate. ZIP bytes/build/hash/rules/schema contract unchanged; no code change or new tests required for recording native evidence.
+
+
+### #81 repeat setup safe-repeat criterion completed — 2026-11-14
+
+Owner confirms every Create action was gray/Skipped in the same native Apply run08584069211508254579686294345CU13 (buildbd66271f-090e-4f5c-a890-8cb5b61173cc). Combined with the exact8-role schema PASS report, record **repeat setup PASS**; no additional setup rerun is needed. Status evidence: artifacts/core_batch/v1.0.0.1/results/schema-repeat-apply.owner-confirmation.json. This supersedes the pending Create-status confirmation above. No code/package/schema/rule change; ZIP/hash unchanged. Next pending native gate is TandemCoreValidationSmoke (no inputs), expecting suiteBATCH,45completed/45tests,allPassed=true,failedCases=[]. Keep business/event flows disabled until that gate passes; #81/#45 remain open with consumer/automatic/app/access acceptance separate.
+
+
+## #45 delegated technical flow-test handover — 2026-11-14
+
+Owner will hand flow testing to technical colleagues, arrange necessary test access if needed, and manage activation/isolation outside the cases. No further functional case must be personally run by the owner now: import/schema/safe-repeat and owner-checked smoke are complete, and #61 event/read/shared/no-op has native PASS. Status correction/write/readback/follow-up remains required acceptance assigned to colleagues, not waived or marked passed.
+
+Current procedures live inline in #45/#81 and the11flow issues:75individual flow cases with role/fixture, numbered actions, expected response/persistence and evidence/cleanup. Repeated old-flow on/off/import/connection instructions are removed from tester steps. One-time access/entry/fixture preparation is centralized under #45 and may be delegated to a test coordinator. Colleague access is unknown; owner may arrange limited technical test access, without assuming new licensing or proving ordinary-participant privacy. First colleague test is read-only MyRequests with their actual own ParticipantId.
+
+PowerAppsV2 invocation must be usable before its case: use the portal input form if available, otherwise a coordinator-prepared Power Apps test button. No invocation route is declared tenant-verified for colleagues. Missing input entry/account/fixture/harness is BLOCKED, not PASS or a reason to invent a screen/trigger change. Importing core does not deliver #16/#67/#68 UI; a minimal technical button is sufficient. Fault/race/paging cases go to a prepared isolated operator harness; no shared live schema/catalogue/permission faults are assigned. Ordinary-participant privacy remains deferred, email remains blocked. Original acceptance/test history is archived as dated JSON, not active instructions. Static checks confirm all75case IDs unique, every case has a checkbox/steps/expectation, actual input keys match packaged triggers, bodies fit GitHub limits, and legacy toggle instructions are absent. No runtime/code/schema/matching/IO/package change; current1.0.0.1 build/hash and existing native proof remain unchanged. Shared#81 no-impact: procedure and assignment change only, consumer acceptance still scoped to receiving tickets.

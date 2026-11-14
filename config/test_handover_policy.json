@@ -1,0 +1,17 @@
+{
+  "ownerTicket": 45,
+  "date": "2026-11-14",
+  "ownerAdditionalFunctionalTestsRequiredNow": [],
+  "ownerManagesDeploymentAndFlowActivationOutsideTesterCases": true,
+  "delegatedAudience": "Technical Power Automate flow testers",
+  "access": "UNKNOWN_OWNER_WILL_ARRANGE_IF_NEEDED; verify own-account entry before writer cases",
+  "entry": "Portal parameter form if available; otherwise coordinator-prepared Power Apps button. Missing/unverified usable route is BLOCKED. No full production app UI required for technical flow tests.",
+  "firstColleagueTest": "Read-only TandemMyRequests using actual own ParticipantId",
+  "remaining61Correction": "DELEGATED_NOT_RUN_NOT_WAIVED",
+  "operatorCases": "Isolated prepared fault/paging/concurrency fixtures; no shared live schema/catalogue/permission tampering",
+  "currentCoreSolution": "TandemCoreBatch1.0.0.1",
+  "sharedBuildId": "bd66271f-090e-4f5c-a890-8cb5b61173cc",
+  "packageSha256": "2708aef6bdff431c6681e17aeaca44d46073b9ef83ed2bd81af2ea3124661e92",
+  "runtimeChange": false,
+  "scope": "Procedures/assignment only; unexecuted acceptance remains open, ordinary-participant privacy deferred, email blocked."
+}
