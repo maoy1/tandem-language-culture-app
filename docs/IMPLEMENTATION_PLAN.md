@@ -1,10 +1,18 @@
 # Tandem implementation plan
+## Current batch delivery — #45 / #81
+
+All twelve production flows have local implementations under the authorized parallel batch. Finish the coordinated disabled-import Solution, run the combined regression suite and actual-packaged-graph smoke/interoperability tests, publish one focused PR per flow and put checkbox handovers in the issues. Two disposable owner helpers (schema setup/audit and shared smoke) are additional to the twelve production flows.
+
+Owner sequence after delivery: import once; map existing SharePoint connections; enable shared child and helpers; run the 45-case shared smoke; run Setup dry, explicit Apply and complete audit; repeat Apply to check writes skip. Only then enable/test business flows in order Send → MyRequests → Cancel → Discovery → participant validation → personal response → group join/response → MyGroups → Update/Leave. Disable the old participant validator before enabling its replacement. Use owner/synthetic data; preserve working versions for cutover. Return exact reports/build/run references and keep unexecuted cases unchecked.
+
+The new batch is NOT tenant-certified. Keep runtime tickets open; app integration and ordinary-user access/privacy are pending, and #21 email is blocked by the failed sender mailbox probe. The historical checkpoints below are retained, not transferred to new versions.
+
 
 The approved design is CURRENT_DESIGN.md. This plan reflects the owner's
 annotations to Combined Requirements v0.2. GitHub tickets hold implementation
 acceptance and status; planning completion does not imply deployment.
 
-## Current focus - #7 Discovery owner preview; #12/#47 complete; #61 Ready for testing
+## Historical implementation checkpoints
 
 #46 is accepted/closed. Tracking now separates Flow, App, Shared technical and
 Overview tickets. One production flow has one owner; old partial work/evidence
@@ -730,3 +738,74 @@ Final local verification for #10 v4: **413 tests passed**, including **56 send c
 
 
 #10 final batch refinement: removed all request-field metadata queries and Schema_* gates from ordinary Send. One-time #81 setup/audit owns schema; historical #10 metadata preflight remains reproducible with an explicit generation-only flag. Current identity, typed intent, compatibility, native unique key arbitration and exact readback remain. 57 focused tests pass; native new parent/replay/race tests remain NOT RUN.
+
+## #81 coordinated core batch foundation — 2026-11-14
+
+Owner explicitly authorized parallel implementation of one shared validator and eleven singly owned business flows, one coordinated Solution import, separate ticket branches/PRs and inline per-flow checklists. The old single-active-ticket sequence is superseded for this authorized batch. Core flow inventory and stable fresh component IDs are owned by config/core_batch_contract.json / scripts/power_automate/core_solution.py. No silent working-flow replacement; all generated components import disabled and the old/new event validators must never both be enabled during cutover. Full app screen implementation and ordinary-user access tests remain separate, not implied by backend import.
+
+Production target schema is config/batch_schema_contract.json. Optional Introduction is a plain-text Note, 2,000 characters enforced by app/flow. New TandemOperationReceipts has unique required OperationKey, required plain-text IntentJson, optional ResultJson/SealedAttempts, completion/uncertain/retry/domain-effect flags, AttemptToken and Stage. No extra lock service, timer, lease takeover or background repair runtime. Setup is one bounded owner maintenance flow, dry by default; it checks ManageLists before additive writes, refuses an unrelated same-title receipt list, does not convert mismatches or add missing required receipt fields to a nonempty table, then rereads metadata. No business row writes, deletes or permission changes. Native setup/production mapping remains NOT RUN; returned receipt GUID must be retained in tenant evidence.
+
+The shared schema evaluator now accepts a baseline-defined role count and plain-text Note checks, allowing the prospective eight-role/59-field batch baseline (seven native-passed roles plus receipts and request Introduction). Existing production list identities remain GUID-pinned; the new unique receipt list title is used until native GUID evidence exists. The native-passed old baseline and v2 ZIP remain unchanged historical evidence. Shared rule/availability/normalization semantics are unchanged. The new generator and its prospective schema require a fresh batch build/hash and native regression; prior QUICK3/FULL44 are not relabelled as new runtime PASS. Every consuming ticket/package carries this impact/remaining test gate.
+
+#49 owner selected in-app plus email, sender Tandemteam@elsevier.com, and approved new personal requests to recipient, group-join requests to all active target-group members, accepted/declined to sender, cancellations to recipient or active target-group members. New Outlook connection was created, but the native shared-mailbox test failed REST capability; exact mailbox/connection compatibility remains unverified. No email connector, new licence, mailbox grant or delivery workaround is added to this twelve-flow batch. #21 email remains blocked; in-app request/group views remain within core work.
+
+
+### #81 Discovery invocation bound
+
+Added backward-compatible PAIRS mode: one actor plus the supplied profile set returns eligible pair projections using the existing PAIR expression source. It avoids a separate native child invocation per candidate (up to 500 profiles). No matching/availability/identity rule changed; result remains internal and never grants authority. Discovery consumes this additive mode; other consumers retain their existing modes. New batch engine/native evidence remains NOT RUN; old v2 evidence is not reused. Three bulk/single parity, missing actor/null availability and structure-limit tests pass. Shared foundation before this addition passed 378 full local tests.
+
+
+### #81 assembly and test handover refinement
+
+The import remains one coordinated Solution: twelve production flows plus two disposable owner maintenance helpers (schema setup/audit and 45-case connector-free shared smoke). Existing v2 child and working business IDs are not overwritten. Assembly rebinds the inspected shared child ID and exact old build literal to the new batch child/build, preserving all consumer build identities and checks. Native document envelopes are copied from the inspected source for every component; automated owner binding remains separately marked legacy-inspected/Solution-native-NOT RUN. A local SharePoint transport fixture models only current reads, ETags and uniqueness for interoperability of actual generated graphs; no domain-rule implementation or hosted runtime is added. All final native tests remain NOT RUN.
+
+
+## #81 final coordinated batch artifact — 2026-11-14
+
+TandemCoreBatch version **1.0.0.0**, shared build **4db7f9fa-6d67-48b0-a7a6-33638d7ff4a1**, ZIP SHA256 **bd854ae74a5e0291d985aa5fadc3fb3088c8135e7c5e337148acb02e89d4c959**. Delivery: `artifacts/core_batch/TandemCoreBatch-v1.zip`; readable exact packaged definitions and IO/connection schema are alongside it. Twelve production flows plus two disposable owner helpers; all import disabled. The native-derived bundle preserves interactive Invoker and the separately inspected legacy automatic Embedded binding; new automatic Solution execution remains NOT RUN.
+
+Measured production definitions/depth: shared93/7; Discovery167/6; participant validation29/3; Send99/4; MyRequests128/4; Cancel71/5; personal Respond296/7; group Send147/5; group Respond393/5; MyGroups185/5; Update250/5; Leave231/4. Helpers Setup115/6 and Smoke8/2. Every flow is below500 actions/depth8; maximum393/7. Exact fresh workflow IDs and hashes are in the review JSON. Shared contract/rules remain1; prospective schema baseline2 covers8roles/59fields. All eleven consumer tickets are impacted by this linked deployment and retain their native acceptance checklists.
+
+Local combined regressions and actual-packaged-graph tests are recorded in TEST_RUNS and `artifacts/core_batch/validation.json`; native import/setup/audit/consumer/app/access results remain NOT RUN. Existing native QUICK3/FULL44/SharePoint owner-probe results remain tied to their old c79 build. No tenant state, working app/flow, permission or mailbox was changed by building this artifact.
+
+
+## #81 native schema-input failure and compact collector repair — 2026-11-14
+
+Owner #45 Apply run08584069362059040197682124425CU28 on batch4db7f9fa collected metadata but returned schemaVerified=false/result={}, with no local setup differences or business row/deletion/permission writes. Receipt list ID864dfe53-b67c-4504-9d48-ad4356b813d8/title was observed, not a full schema PASS. Child08584069361400134595726594162CU01 was invoked with the correct build but failed Request_text as INVALID_INPUT before Envelope/schema evaluation. Raw metadata-size overflow reproduces this signature locally; exact native Request_text detail remains requested. Preserve the failed native evidence in artifacts/core_batch/results/v1-schema-apply.owner-report.json.
+
+Solution1.0.0.1 repairs the setup collector: source-read completeness and paging remain checked, but only the59 baseline contract fields and nine evaluator properties are forwarded. Hidden/system fields unrelated to the contract and per-field transport __metadata no longer consume the250000-character child bound. Exact SchemaXml, missing required fields and duplicate/mismatched contract fields remain intact; no truncation, relaxed schema/size gate, list settings or rule/normalization changes. Setup report exposes requestCharacters and child validationCode/diagnostics/run reference. Missing/duplicate/wrong-type, oversized required XML and no-write cases are regression-tested with native length enforcement. All consumer rule/authority/business graphs remain unchanged; new bundle hashes/build linkage and native retest must be recorded. Prior schema apply is not rolled back or repeated blindly; owner next uses read-only ApplyChanges=No after the corrected import.
+
+
+### #81 corrected collector package1.0.0.1
+
+Artifact `artifacts/core_batch/v1.0.0.1/TandemCoreBatch-v1.zip`; shared deployment build **bd66271f-090e-4f5c-a890-8cb5b61173cc**; SHA256 **2708aef6bdff431c6681e17aeaca44d46073b9ef83ed2bd81af2ea3124661e92**. Same Solution identity and component IDs, update to1.0.0.1; all components remain disabled in the package. Setup now117definitions/depth6; overallmax393/7 against500/8. All12production documents compare exactly to v1 after explicit shared-build rebinding; no operation/normalization/compatibility changes. New45-case packaged smoke and9actual-packaged business E2E cases PASS locally. Focused schema/packaging/shared regressions recorded in the new validation.json. Native collector retest NOT RUN; raw native Request_text detail still requested.
+
+Owner next: import this as UPDATE of TandemCoreBatch, preserve existing SharePoint mappings, keep business/event flows disabled; enable shared child + Setup and run **ApplyChanges=No**. Existing receipt list is retained; no repeated schema write is needed to diagnose. Expect collectionComplete=true, validationCode=OK, schemaVerified=true and full schemaResult; report also gives requestCharacters/validationDiagnostics/validationRunReference. If false, return that report/error; do not adjust list settings or rerun Apply blindly. Once read-only audit succeeds, the prior repeat-apply/remaining native checklist still applies. All affected consumer tickets reference this new version/build/hash; historical v1failure and old native proofs remain unchanged.
+
+
+### #81 corrected read-only native audit owner-confirmed — 2026-11-14
+
+For #45's corrected1.0.0.1 retest, owner confirms validationCode=OK, collectionComplete=true and schemaVerified=true. Record **OWNER-CONFIRMED READ-ONLY SCHEMA PASS**, scoped to that report summary. Full report/current run reference were not pasted, so exact package-build/run correlation is not independently captured; the next repeat report can supply it. Evidence: artifacts/core_batch/v1.0.0.1/results/schema-audit.owner-confirmation.json. No code/schema/rule/package-byte changes; ZIP/build/hash remain unchanged. Original native input failure remains historical evidence, with exact old Request_text error not supplied.
+
+Next bounded test: run TandemBatchSchemaSetup ApplyChanges=Yes once and confirm schemaVerified=true/validationCode=OK and every Create action Skipped. Return Setup_report plus skipped-action confirmation to capture runReference/build. Do not close #81/#45 or mark the combined repeat-apply acceptance passed yet. Native45-case smoke, individual business/automatic/app acceptance and ordinary-user access are not implied by this schema PASS; retain pending/deferred states.
+
+
+### #81 native repeat-apply schema report PASS — 2026-11-14
+
+Owner supplied the full corrected1.0.0.1 report: buildbd66271f-090e-4f5c-a890-8cb5b61173cc; ApplyChanges=true; parent08584069211508254579686294345CU13; child08584069211275890958307283979CU25. validationCode=OK, schemaVerified=true, collectionComplete=true, schemaMatches=true/allSchema=true, all8roles checked, no differences. Input41372characters; every diagnostic stage Succeeded. Business row writes/deletes/permissionChanges0; receipt GUID864dfe53-b67c-4504-9d48-ad4356b813d8 remains observed. Exact evidence: artifacts/core_batch/v1.0.0.1/results/schema-repeat-apply.owner-report.json.
+
+Record native full-schema PASS on repeat apply, now with exact build/parent/child correlation. The report does not contain individual Create-action statuses; **all Create actions Skipped remains unconfirmed**, not failed and not a reason to rerun. rowWrites=0 concerns business rows, not schema-creation action status. Ask only for those statuses in this same run; do not check off the combined no-schema-write repeat criterion yet. Native45-case smoke/consumer/automatic/app/access gates remain separate. ZIP bytes/build/hash/rules/schema contract unchanged; no code change or new tests required for recording native evidence.
+
+
+### #81 repeat setup safe-repeat criterion completed — 2026-11-14
+
+Owner confirms every Create action was gray/Skipped in the same native Apply run08584069211508254579686294345CU13 (buildbd66271f-090e-4f5c-a890-8cb5b61173cc). Combined with the exact8-role schema PASS report, record **repeat setup PASS**; no additional setup rerun is needed. Status evidence: artifacts/core_batch/v1.0.0.1/results/schema-repeat-apply.owner-confirmation.json. This supersedes the pending Create-status confirmation above. No code/package/schema/rule change; ZIP/hash unchanged. Next pending native gate is TandemCoreValidationSmoke (no inputs), expecting suiteBATCH,45completed/45tests,allPassed=true,failedCases=[]. Keep business/event flows disabled until that gate passes; #81/#45 remain open with consumer/automatic/app/access acceptance separate.
+
+
+## #45 delegated technical flow-test handover — 2026-11-14
+
+Owner will hand flow testing to technical colleagues, arrange necessary test access if needed, and manage activation/isolation outside the cases. No further functional case must be personally run by the owner now: import/schema/safe-repeat and owner-checked smoke are complete, and #61 event/read/shared/no-op has native PASS. Status correction/write/readback/follow-up remains required acceptance assigned to colleagues, not waived or marked passed.
+
+Current procedures live inline in #45/#81 and the11flow issues:75individual flow cases with role/fixture, numbered actions, expected response/persistence and evidence/cleanup. Repeated old-flow on/off/import/connection instructions are removed from tester steps. One-time access/entry/fixture preparation is centralized under #45 and may be delegated to a test coordinator. Colleague access is unknown; owner may arrange limited technical test access, without assuming new licensing or proving ordinary-participant privacy. First colleague test is read-only MyRequests with their actual own ParticipantId.
+
+PowerAppsV2 invocation must be usable before its case: use the portal input form if available, otherwise a coordinator-prepared Power Apps test button. No invocation route is declared tenant-verified for colleagues. Missing input entry/account/fixture/harness is BLOCKED, not PASS or a reason to invent a screen/trigger change. Importing core does not deliver #16/#67/#68 UI; a minimal technical button is sufficient. Fault/race/paging cases go to a prepared isolated operator harness; no shared live schema/catalogue/permission faults are assigned. Ordinary-participant privacy remains deferred, email remains blocked. Original acceptance/test history is archived as dated JSON, not active instructions. Static checks confirm all75case IDs unique, every case has a checkbox/steps/expectation, actual input keys match packaged triggers, bodies fit GitHub limits, and legacy toggle instructions are absent. No runtime/code/schema/matching/IO/package change; current1.0.0.1 build/hash and existing native proof remain unchanged. Shared#81 no-impact: procedure and assignment change only, consumer acceptance still scoped to receiving tickets.

@@ -1,0 +1,51 @@
+{
+  "sourceTicket": 81,
+  "solutionVersion": "1.0.0.1",
+  "packageBuildId": "bd66271f-090e-4f5c-a890-8cb5b61173cc",
+  "sha256": "2708aef6bdff431c6681e17aeaca44d46073b9ef83ed2bd81af2ea3124661e92",
+  "scope": "Schema collector payload projection and diagnostics only; all12production definitions unchanged after shared-build rebinding.",
+  "local": {
+    "schemaPackagingSharedRegression": {
+      "passed": 143,
+      "failed": 0,
+      "seconds": 122.0,
+      "command": "python -X utf8 -m pytest tests/test_batch_schema.py tests/test_core_solution.py tests/test_build_core_batch.py tests/test_shared_validation.py tests/test_shared_pairs.py -q -p no:cacheprovider --tb=short"
+    },
+    "actualPackagedBusinessE2E": {
+      "passed": 9,
+      "failed": 0,
+      "seconds": 3.62
+    },
+    "actualPackagedSharedSmoke": {
+      "passed": 45,
+      "failed": 0
+    },
+    "productionDefinitionComparison": "PASS: all12exact after only shared build-id rebinding",
+    "strictNativeLengthModel": "PASS: raw oversized fixture fails Request_text, compact collector verifies59fields; required oversized data still fails without truncation"
+  },
+  "limits": {
+    "setupActions": 117,
+    "setupDepth": 6,
+    "maximumActions": 393,
+    "maximumDepth": 7,
+    "allowedActions": 500,
+    "allowedDepth": 8
+  },
+  "native": {
+    "oldV1SchemaApply": "FAIL_INVALID_INPUT_REQUEST_TEXT; full schema NOT VERIFIED",
+    "exactRequestTextError": "NOT_CAPTURED_HISTORICAL_FAILURE; corrected schema audit and repeat now PASS",
+    "oldApplyRun": "08584069362059040197682124425CU28",
+    "oldChildRun": "08584069361400134595726594162CU01",
+    "correctedImportAndReadOnlyAudit": "OWNER_CONFIRMED_PASS_SUMMARY",
+    "ordinaryUserAccess": "DEFERRED_NOT_VERIFIED",
+    "readOnlyAuditEvidence": "results/schema-audit.owner-confirmation.json",
+    "repeatApply": "PASS_SCHEMA_VERIFIED_ALL_CREATE_ACTIONS_OWNER_CONFIRMED_SKIPPED",
+    "repeatApplyEvidence": "results/schema-repeat-apply.owner-report.json",
+    "repeatApplyRun": "08584069211508254579686294345CU13",
+    "schemaValidationRun": "08584069211275890958307283979CU25",
+    "requestCharacters": 41372,
+    "repeatApplyStatusEvidence": "results/schema-repeat-apply.owner-confirmation.json",
+    "packaged45CaseSmoke": "NOT_RUN"
+  },
+  "nextOwnerStep": "Enable/run TandemCoreValidationSmoke with no inputs; return Smoke_report. Expect suite BATCH,45/45,allPassed=true,failedCases=[]. Keep business flows disabled until this gate passes."
+}
