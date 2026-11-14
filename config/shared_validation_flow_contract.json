@@ -96,7 +96,7 @@
   "nativeSourceAdapterCases": 22,
   "runtimePackageUnchangedBySourceAdapter": true,
   "batchDevelopment": {
-    "state": "BUILDING_NOT_IMPORTED_OR_TENANT_TESTED",
+    "state": "BUILT_LOCAL_TESTS_PASS_NATIVE_NOT_RUN",
     "productionFlows": 12,
     "prospectiveBaseline": "config/batch_validation_schema.json",
     "roles": 8,
@@ -121,6 +121,20 @@
       63,
       64,
       65
-    ]
+    ],
+    "solutionName": "TandemCoreBatch",
+    "solutionVersion": "1.0.0.0",
+    "packageBuildId": "4db7f9fa-6d67-48b0-a7a6-33638d7ff4a1",
+    "packageSha256": "bd854ae74a5e0291d985aa5fadc3fb3088c8135e7c5e337148acb02e89d4c959",
+    "package": "artifacts/core_batch/TandemCoreBatch-v1.zip",
+    "readableDefinitions": "artifacts/core_batch/definitions",
+    "exactIO": "artifacts/core_batch/flow-io.json",
+    "metrics": {
+      "actions": 93,
+      "maximumActionDepth": 7
+    },
+    "maintenanceFlows": 2,
+    "nativeStatus": "NOT_IMPORTED_NOT_TESTED",
+    "ordinaryUserAccessVerified": false
   }
 }
