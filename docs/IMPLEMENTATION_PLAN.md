@@ -667,3 +667,16 @@ versioned NOT RUN handover are in [ISSUE_65_GROUP_RESPONSE.md](ISSUE_65_GROUP_RE
 One-time receipt/schema setup, final Solution assembly/import and native caller/
 business/load proof remain pending; ordinary-user access is deferred/#42-blocked.
 No #7/#11/shared helper/evidence/issue/working-flow edits or readiness upgrade.
+
+
+## #65 shared finalization refactor — 2026-11-14
+
+[#65 TandemRespondGroupJoinRequest](https://github.com/maoy1/tandem-language-culture-app/issues/65)
+refined build `ea732b74-947a-4478-a7df-92d2ff5696a1`: **393 actions/depth5**, 107 action headroom.
+Normal Accept/Decline, rejection and positive committed recovery share completion;
+completed/sealed operations share final matching-token release. Prior sealed-token
+release stays before retry claim. Fresh CAS/authority/commit/uniqueness checks and
+#81 NORMALIZE/GROUP contract1/rules1 remain; no schema/public IO/shared-runtime
+change or extra flow/helper. Historical 449/415 evidence remains versioned, not
+transferred to this build. See ISSUE_65_GROUP_RESPONSE.md for new validation,
+source-action alias mapping and remaining NOT RUN tenant/access/performance gates.

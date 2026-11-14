@@ -362,7 +362,7 @@ def test_parent_entry_points_and_component_receipt(tmp_path):
 
 
 def test_sealed_prefix_release_failure_is_finished_before_new_attempt_claim():
-    s=Store();s.faults['Create_episode']={'status':403};s.faults['Release_sealed_Write']={'status':500}
+    s=Store();s.faults['Create_episode']={'status':403};s.faults['Release_completed_Write']={'status':500}
     first,s=execute(s);assert not first.response['success'] and s.tables['groups'][10]['WriteOwner']
     row=list(s.tables['receipts'].values())[0];assert row['Retryable'] and json.loads(row['SealedAttempts'])==['run-A']
     second,s=execute(s,run='run-B');assert second.response['success'],(second.response,second.action_states)
@@ -400,3 +400,93 @@ def test_decline_pending_after_group_closed_full_or_requester_unavailable(varian
     assert s.tables['requests'][80]['Status']=='Declined' and s.tables['requests'][80]['OperationComplete']
     assert s.tables['requests'][80]['ConnectionKey']=='history:request:80'
     assert s.tables['members']==before and s.tables['groups'][10]['State']==state and not s.child_calls
+
+
+@pytest.mark.parametrize('decision,full',[('Accept',False),('Decline',False),('Accept',True)])
+@pytest.mark.parametrize('persist',[False,True])
+def test_shared_completion_unknown_response_keeps_receipt_before_release(decision,full,persist):
+    s=Store()
+    if full:s.tables['groups'][10]['Capacity']=2
+    s.faults['Complete_receipt_Write']={'status':500,'persist':persist}
+    r,s=execute(s,decision=decision)
+    receipt=list(s.tables['receipts'].values())[0]
+    if persist:
+        assert receipt['Complete'] and s.tables['groups'][10]['WriteOwner']==''
+        assert r.response['success']==(not full)
+    else:
+        assert not r.response['success'] and not receipt['Complete']
+        assert s.tables['groups'][10]['WriteOwner'] and r.response['resultjson']=='{}'
+    names=[n for n,p in s.calls]
+    if 'Release_completed_Write' in names:assert names.index('Complete_receipt_Write')<names.index('Release_completed_Write')
+    assert len(s.tables['members'])==(3 if decision=='Accept' and not full else 2)
+
+
+@pytest.mark.parametrize('decision,full',[('Accept',False),('Decline',False),('Accept',True)])
+def test_shared_completion_rechecks_partial_receipt_before_releasing(decision,full):
+    s=Store()
+    if full:s.tables['groups'][10]['Capacity']=2
+    s.faults['Complete_receipt_Confirm']={'status':200,'body':{'d':{}}}
+    r,s=execute(s,decision=decision)
+    assert list(s.tables['receipts'].values())[0]['Complete'] and s.tables['groups'][10]['WriteOwner']==''
+    assert r.response['success']==(not full)
+    assert any(n=='Completion_retry_readback' for n,p in s.calls)
+
+
+def test_common_definite_boundary_cannot_update_a_foreign_attempt():
+    s=Store();s.faults['Create_episode']={'status':403}
+    def replace_attempt(action,p,s):
+        if action=='Confirm_definite_boundary_Read':
+            s.hook=None;receipt=s.tables['receipts'][1];receipt['AttemptToken']='foreign-attempt';receipt['_v']+=1
+    s.hook=replace_attempt;r,s=execute(s)
+    receipt=s.tables['receipts'][1]
+    assert not r.response['success'] and not receipt['Complete'] and receipt['Uncertain']
+    assert receipt['AttemptToken']=='foreign-attempt' and s.tables['groups'][10]['WriteOwner']
+    assert not any(n=='Confirm_definite_boundary_Write' for n,p in s.calls)
+
+
+def test_receipt_patch_uses_fresh_sealed_history_without_snapshot_copy():
+    s=Store();s.tables['groups'][10]['WriteOwner']='other-operation|held'
+    def extend_history(action,p,s):
+        if action=='Seal_stopped_Read':
+            s.hook=None;receipt=s.tables['receipts'][1];receipt['SealedAttempts']='["prior-sealed"]';receipt['_v']+=1
+    s.hook=extend_history;r,s=execute(s)
+    assert not r.response['success'] and r.response['retryable']
+    assert json.loads(s.tables['receipts'][1]['SealedAttempts'])==['prior-sealed','run-A']
+    assert s.tables['groups'][10]['WriteOwner']=='other-operation|held'
+
+
+def test_shared_completion_cas_rejects_changed_receipt_attempt():
+    s=Store()
+    def replace_attempt(action,p,s):
+        if action=='Complete_receipt_Write':
+            s.hook=None;receipt=s.tables['receipts'][1];receipt['AttemptToken']='foreign-attempt';receipt['_v']+=1
+    s.hook=replace_attempt;r,s=execute(s)
+    assert not r.response['success'] and not s.tables['receipts'][1]['Complete']
+    assert s.tables['groups'][10]['WriteOwner'] and r.response['resultjson']=='{}'
+
+
+@pytest.mark.parametrize('action',['Group_list','Request_list','Member_list'])
+def test_reused_error_code_still_reports_later_metadata_failure(action):
+    s=Store();s.faults[action]={'status':200,'body':{'d':{}}};r,s=execute(s)
+    assert not r.response['success'] and r.response['resultcode']=='SCHEMA_SETUP_UNVERIFIED'
+    assert not s.tables['receipts'] and s.tables['requests'][80]['Status']=='Pending'
+
+
+def test_direct_source_snapshot_still_requires_exact_source_and_tag():
+    s=Store()
+    def wrong_source(action,p,s):
+        if action=='Initial_Source':
+            s.hook=None;row=s.row('requests',70);row['Id']=71;s.faults[action]={'status':200,'body':{'d':row}}
+    s.hook=wrong_source;r,s=execute(s)
+    assert not r.response['success'] and not s.tables['receipts']
+
+
+def test_one_shared_completion_boundary_and_final_release_are_emitted():
+    from scripts.power_automate.solution_source import walk
+    actions=flow.build_actions();rows=list(walk(actions));names=[n for n,a in rows]
+    assert measure(actions)['actions']<=397
+    assert names.count('Complete_receipt_Write')==1 and names.count('Confirm_definite_boundary_Write')==1
+    assert names.count('Release_completed_Write')==1 and names.count('Release_prior_sealed_Write')==1
+    assert 'Release_sealed_Write' not in names and 'Recover_receipt_only' not in names
+    completion_writes=[n for n,a in rows if a['type']=='OpenApiConnection' and a.get('inputs',{}).get('parameters',{}).get('parameters/body',{}).get('Complete') is True]
+    assert completion_writes==['Complete_receipt_Write']

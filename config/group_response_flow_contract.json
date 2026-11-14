@@ -2,7 +2,7 @@
   "sourceTicket": 65,
   "flowName": "TandemRespondGroupJoinRequest",
   "state": "LOCAL_PARENT_BUILT_NATIVE_NOT_RUN",
-  "packageBuildId": "040a6af8-ab91-4e09-b891-b638d96178ba",
+  "packageBuildId": "ea732b74-947a-4478-a7df-92d2ff5696a1",
   "parentComponent": "artifacts/group_response/TandemRespondGroupJoinRequest.definition.json",
   "review": "artifacts/group_response/TandemRespondGroupJoinRequest.definition.review.json",
   "builders": {
@@ -149,13 +149,62 @@
   "legacyZip": "Not applicable to linked Workflow parent; final Solution assembler supplies importable ZIP. No standalone legacy import or working-flow replacement claim.",
   "driftAssessment": "#81 NORMALIZE/GROUP shared implementation, IO contract1/rules1 and semantics unchanged; consume existing parent batch schema target exactly. No changes to #7/#11, shared helpers, #9/#12/#66 or other consumer packages. Native evidence stays version-scoped; parent additive PAIRS update independent.",
   "validation": {
-    "fullSuitePassed": 415,
-    "flowCases": 58,
-    "fullSuiteSeconds": 58.9,
-    "actions": 449,
+    "fullSuitePassed": 432,
+    "flowCases": 75,
+    "fullSuiteSeconds": 87.66,
+    "actions": 393,
     "maximumActionDepth": 5,
-    "actionHeadroom": 51,
+    "actionHeadroom": 107,
     "native": "NOT_RUN",
     "ordinaryUserAccessVerified": false
+  },
+  "validationHistory": [
+    {
+      "sourceCommit": "02dce456f56e5c02633b70450debaa721bf93c36",
+      "buildId": "040a6af8-ab91-4e09-b891-b638d96178ba",
+      "fullSuitePassed": 415,
+      "flowCases": 58,
+      "fullSuiteSeconds": 58.9,
+      "actions": 449,
+      "maximumActionDepth": 5,
+      "actionHeadroom": 51,
+      "native": "NOT_RUN",
+      "ordinaryUserAccessVerified": false
+    }
+  ],
+  "refactor": {
+    "fromActions": 449,
+    "toActions": 393,
+    "sameSharedContract": true,
+    "publicIOChanged": false,
+    "schemaChanged": false,
+    "newRuntimeHelpers": 0,
+    "historicalEvidence": "artifacts/group_response/results/refactor-baseline.json",
+    "actionAliases": {
+      "Release_sealed_*": "Release_completed_* (common final release)",
+      "Complete_rejection_* / Recover_receipt_only": "Complete_receipt_* (common completion)",
+      "Claim_rejected_* / Decision_rejected_* / Member_rejected_* / Commit_rejected_*": "Confirm_definite_boundary_* (receipt mutation after stopped business proof)",
+      "*_type_known": "*_type (typed object parser; body(...).value)"
+    },
+    "breakdown": {
+      "Business": 300,
+      "Finalize": 72,
+      "Initialization_report_response": 21
+    },
+    "remainingTypes": {
+      "InitializeVariable": 19,
+      "Scope": 2,
+      "ParseJson": 114,
+      "OpenApiConnection": 84,
+      "SetVariable": 109,
+      "Compose": 11,
+      "Query": 15,
+      "Foreach": 6,
+      "If": 21,
+      "Select": 6,
+      "AppendToArrayVariable": 3,
+      "Workflow": 2,
+      "Response": 1
+    }
   }
 }

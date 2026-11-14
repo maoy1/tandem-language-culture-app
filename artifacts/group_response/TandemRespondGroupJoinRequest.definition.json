@@ -180,23 +180,6 @@
             ]
           }
         },
-        "Init_Source": {
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "Source",
-                "type": "object",
-                "value": {}
-              }
-            ]
-          },
-          "runAfter": {
-            "Init_Group": [
-              "Succeeded"
-            ]
-          }
-        },
         "Init_Members": {
           "type": "InitializeVariable",
           "inputs": {
@@ -209,7 +192,7 @@
             ]
           },
           "runAfter": {
-            "Init_Source": [
+            "Init_Group": [
               "Succeeded"
             ]
           }
@@ -346,6 +329,40 @@
           },
           "runAfter": {
             "Init_EpisodeKey": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Init_DefiniteBoundary": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "DefiniteBoundary",
+                "type": "string",
+                "value": ""
+              }
+            ]
+          },
+          "runAfter": {
+            "Init_IntentBound": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Init_RecoveryProof": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "RecoveryProof",
+                "type": "object",
+                "value": {}
+              }
+            ]
+          },
+          "runAfter": {
+            "Init_DefiniteBoundary": [
               "Succeeded"
             ]
           }
@@ -799,15 +816,6 @@
                 ]
               }
             },
-            "Receipt_type": {
-              "type": "Compose",
-              "inputs": "@body('Receipt_list')?['d']?['ListItemEntityTypeFullName']",
-              "runAfter": {
-                "Receipt_list": [
-                  "Succeeded"
-                ]
-              }
-            },
             "Receipt_type_known_Code": {
               "type": "SetVariable",
               "inputs": {
@@ -815,28 +823,26 @@
                 "value": "SCHEMA_SETUP_UNVERIFIED"
               },
               "runAfter": {
-                "Receipt_type": [
+                "Receipt_list": [
                   "Succeeded"
                 ]
               }
             },
-            "Receipt_type_known": {
+            "Receipt_type": {
               "type": "ParseJson",
               "inputs": {
                 "content": {
-                  "valid": "@not(empty(outputs('Receipt_type')))"
+                  "value": "@body('Receipt_list')?['d']?['ListItemEntityTypeFullName']"
                 },
                 "schema": {
                   "type": "object",
                   "required": [
-                    "valid"
+                    "value"
                   ],
                   "properties": {
-                    "valid": {
-                      "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                    "value": {
+                      "type": "string",
+                      "minLength": 1
                     }
                   }
                 }
@@ -873,55 +879,32 @@
                 }
               },
               "runAfter": {
-                "Receipt_type_known": [
+                "Receipt_type": [
                   "Succeeded"
                 ]
               }
             },
             "Group_type": {
-              "type": "Compose",
-              "inputs": "@body('Group_list')?['d']?['ListItemEntityTypeFullName']",
-              "runAfter": {
-                "Group_list": [
-                  "Succeeded"
-                ]
-              }
-            },
-            "Group_type_known_Code": {
-              "type": "SetVariable",
-              "inputs": {
-                "name": "Code",
-                "value": "SCHEMA_SETUP_UNVERIFIED"
-              },
-              "runAfter": {
-                "Group_type": [
-                  "Succeeded"
-                ]
-              }
-            },
-            "Group_type_known": {
               "type": "ParseJson",
               "inputs": {
                 "content": {
-                  "valid": "@not(empty(outputs('Group_type')))"
+                  "value": "@body('Group_list')?['d']?['ListItemEntityTypeFullName']"
                 },
                 "schema": {
                   "type": "object",
                   "required": [
-                    "valid"
+                    "value"
                   ],
                   "properties": {
-                    "valid": {
-                      "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                    "value": {
+                      "type": "string",
+                      "minLength": 1
                     }
                   }
                 }
               },
               "runAfter": {
-                "Group_type_known_Code": [
+                "Group_list": [
                   "Succeeded"
                 ]
               }
@@ -952,55 +935,32 @@
                 }
               },
               "runAfter": {
-                "Group_type_known": [
+                "Group_type": [
                   "Succeeded"
                 ]
               }
             },
             "Request_type": {
-              "type": "Compose",
-              "inputs": "@body('Request_list')?['d']?['ListItemEntityTypeFullName']",
-              "runAfter": {
-                "Request_list": [
-                  "Succeeded"
-                ]
-              }
-            },
-            "Request_type_known_Code": {
-              "type": "SetVariable",
-              "inputs": {
-                "name": "Code",
-                "value": "SCHEMA_SETUP_UNVERIFIED"
-              },
-              "runAfter": {
-                "Request_type": [
-                  "Succeeded"
-                ]
-              }
-            },
-            "Request_type_known": {
               "type": "ParseJson",
               "inputs": {
                 "content": {
-                  "valid": "@not(empty(outputs('Request_type')))"
+                  "value": "@body('Request_list')?['d']?['ListItemEntityTypeFullName']"
                 },
                 "schema": {
                   "type": "object",
                   "required": [
-                    "valid"
+                    "value"
                   ],
                   "properties": {
-                    "valid": {
-                      "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                    "value": {
+                      "type": "string",
+                      "minLength": 1
                     }
                   }
                 }
               },
               "runAfter": {
-                "Request_type_known_Code": [
+                "Request_list": [
                   "Succeeded"
                 ]
               }
@@ -1031,55 +991,32 @@
                 }
               },
               "runAfter": {
-                "Request_type_known": [
+                "Request_type": [
                   "Succeeded"
                 ]
               }
             },
             "Member_type": {
-              "type": "Compose",
-              "inputs": "@body('Member_list')?['d']?['ListItemEntityTypeFullName']",
-              "runAfter": {
-                "Member_list": [
-                  "Succeeded"
-                ]
-              }
-            },
-            "Member_type_known_Code": {
-              "type": "SetVariable",
-              "inputs": {
-                "name": "Code",
-                "value": "SCHEMA_SETUP_UNVERIFIED"
-              },
-              "runAfter": {
-                "Member_type": [
-                  "Succeeded"
-                ]
-              }
-            },
-            "Member_type_known": {
               "type": "ParseJson",
               "inputs": {
                 "content": {
-                  "valid": "@not(empty(outputs('Member_type')))"
+                  "value": "@body('Member_list')?['d']?['ListItemEntityTypeFullName']"
                 },
                 "schema": {
                   "type": "object",
                   "required": [
-                    "valid"
+                    "value"
                   ],
                   "properties": {
-                    "valid": {
-                      "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                    "value": {
+                      "type": "string",
+                      "minLength": 1
                     }
                   }
                 }
               },
               "runAfter": {
-                "Member_type_known_Code": [
+                "Member_list": [
                   "Succeeded"
                 ]
               }
@@ -1110,7 +1047,7 @@
                 }
               },
               "runAfter": {
-                "Member_type_known": [
+                "Member_type": [
                   "Succeeded"
                 ]
               }
@@ -1448,23 +1385,11 @@
                 ]
               }
             },
-            "Initial_Source_Save": {
-              "type": "SetVariable",
-              "inputs": {
-                "name": "Source",
-                "value": "@body('Initial_Source')?['d']"
-              },
-              "runAfter": {
-                "Initial_Source": [
-                  "Succeeded"
-                ]
-              }
-            },
             "Initial_Source_Tag": {
               "type": "ParseJson",
               "inputs": {
                 "content": {
-                  "valid": "@and(not(empty(variables('Source')?['__metadata']?['etag'])),not(equals(variables('Source')?['__metadata']?['etag'],'*')))"
+                  "valid": "@and(not(empty(body('Initial_Source')?['d']?['__metadata']?['etag'])),not(equals(body('Initial_Source')?['d']?['__metadata']?['etag'],'*')))"
                 },
                 "schema": {
                   "type": "object",
@@ -1482,7 +1407,7 @@
                 }
               },
               "runAfter": {
-                "Initial_Source_Save": [
+                "Initial_Source": [
                   "Succeeded"
                 ]
               }
@@ -1503,7 +1428,7 @@
               "type": "ParseJson",
               "inputs": {
                 "content": {
-                  "valid": "@and(equals(variables('Group')?['SetupComplete'],true),equals(variables('Source')?['Status'],'Accepted'),equals(variables('Source')?['OperationComplete'],true),equals(variables('Source')?['RequestType'],'Personal'),equals(variables('Source')?['Id'],variables('Group')?['SourceRequestId']))"
+                  "valid": "@and(equals(variables('Group')?['SetupComplete'],true),equals(body('Initial_Source')?['d']?['Status'],'Accepted'),equals(body('Initial_Source')?['d']?['OperationComplete'],true),equals(body('Initial_Source')?['d']?['RequestType'],'Personal'),equals(body('Initial_Source')?['d']?['Id'],variables('Group')?['SourceRequestId']))"
                 },
                 "schema": {
                   "type": "object",
@@ -1782,7 +1707,7 @@
                       },
                       "parameters/body": {
                         "__metadata": {
-                          "type": "@outputs('Receipt_type')"
+                          "type": "@body('Receipt_type')?['value']"
                         },
                         "OperationKey": "@outputs('Operation_key')",
                         "IntentJson": "@string(outputs('Canonical_intent'))",
@@ -1848,18 +1773,6 @@
                 ]
               }
             },
-            "Resolve_receipt_Bound_Code": {
-              "type": "SetVariable",
-              "inputs": {
-                "name": "Code",
-                "value": "READ_BOUND_OR_INCOMPLETE"
-              },
-              "runAfter": {
-                "Resolve_receipt": [
-                  "Succeeded"
-                ]
-              }
-            },
             "Resolve_receipt_Bound": {
               "type": "ParseJson",
               "inputs": {
@@ -1882,7 +1795,7 @@
                 }
               },
               "runAfter": {
-                "Resolve_receipt_Bound_Code": [
+                "Resolve_receipt": [
                   "Succeeded"
                 ]
               }
@@ -2247,7 +2160,7 @@
                               },
                               "parameters/body": {
                                 "__metadata": {
-                                  "type": "@outputs('Group_type')"
+                                  "type": "@body('Group_type')?['value']"
                                 },
                                 "WriteOwner": ""
                               }
@@ -2499,7 +2412,7 @@
                           },
                           "parameters/body": {
                             "__metadata": {
-                              "type": "@outputs('Receipt_type')"
+                              "type": "@body('Receipt_type')?['value']"
                             },
                             "AttemptToken": "@variables('Attempt')",
                             "Retryable": false
@@ -2848,23 +2761,11 @@
                     ]
                   }
                 },
-                "Claim_stage_Read_Save": {
-                  "type": "SetVariable",
-                  "inputs": {
-                    "name": "Receipt",
-                    "value": "@body('Claim_stage_Read')?['d']"
-                  },
-                  "runAfter": {
-                    "Claim_stage_Read": [
-                      "Succeeded"
-                    ]
-                  }
-                },
                 "Claim_stage_Authority": {
                   "type": "ParseJson",
                   "inputs": {
                     "content": {
-                      "valid": "@and(not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')),equals(variables('Receipt')?['Complete'],false),equals(variables('Receipt')?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(variables('Receipt')?['SealedAttempts'],'[]')),variables('Attempt'))))"
+                      "valid": "@and(not(empty(body('Claim_stage_Read')?['d']?['__metadata']?['etag'])),not(equals(body('Claim_stage_Read')?['d']?['__metadata']?['etag'],'*')),equals(body('Claim_stage_Read')?['d']?['Complete'],false),equals(body('Claim_stage_Read')?['d']?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(body('Claim_stage_Read')?['d']?['SealedAttempts'],'[]')),variables('Attempt'))))"
                     },
                     "schema": {
                       "type": "object",
@@ -2882,7 +2783,7 @@
                     }
                   },
                   "runAfter": {
-                    "Claim_stage_Read_Save": [
+                    "Claim_stage_Read": [
                       "Succeeded"
                     ]
                   }
@@ -2903,11 +2804,11 @@
                         "Accept": "application/json;odata=verbose",
                         "Content-Type": "application/json;odata=verbose",
                         "X-HTTP-Method": "MERGE",
-                        "IF-MATCH": "@variables('Receipt')?['__metadata']?['etag']"
+                        "IF-MATCH": "@body('Claim_stage_Read')?['d']?['__metadata']?['etag']"
                       },
                       "parameters/body": {
                         "__metadata": {
-                          "type": "@outputs('Receipt_type')"
+                          "type": "@body('Receipt_type')?['value']"
                         },
                         "Stage": "GROUP_CLAIM_PLANNED",
                         "Uncertain": true
@@ -3019,7 +2920,7 @@
                       },
                       "parameters/body": {
                         "__metadata": {
-                          "type": "@outputs('Group_type')"
+                          "type": "@body('Group_type')?['value']"
                         },
                         "WriteOwner": "@outputs('Owner_token')"
                       }
@@ -3186,183 +3087,13 @@
                   "type": "If",
                   "expression": "@and(not(equals(variables('Group')?['WriteOwner'],outputs('Owner_token'))),equals(outputs('Claim_group')?['statusCode'],412))",
                   "actions": {
-                    "Claim_rejected_Read": {
-                      "type": "OpenApiConnection",
+                    "Claim_rejected_Boundary": {
+                      "type": "SetVariable",
                       "inputs": {
-                        "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                          "connectionName": "shared_sharepointonline",
-                          "operationId": "HttpRequest"
-                        },
-                        "parameters": {
-                          "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                          "parameters/method": "GET",
-                          "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
-                          "parameters/headers": {
-                            "Accept": "application/json;odata=verbose",
-                            "Content-Type": "application/json;odata=verbose"
-                          }
-                        },
-                        "authentication": {
-                          "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                          "type": "Raw"
-                        },
-                        "retryPolicy": {
-                          "type": "none"
-                        }
+                        "name": "DefiniteBoundary",
+                        "value": "CLAIM_REJECTED"
                       },
                       "runAfter": {}
-                    },
-                    "Claim_rejected_Read_Save": {
-                      "type": "SetVariable",
-                      "inputs": {
-                        "name": "Receipt",
-                        "value": "@body('Claim_rejected_Read')?['d']"
-                      },
-                      "runAfter": {
-                        "Claim_rejected_Read": [
-                          "Succeeded"
-                        ]
-                      }
-                    },
-                    "Claim_rejected_Authority": {
-                      "type": "ParseJson",
-                      "inputs": {
-                        "content": {
-                          "valid": "@and(not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')),equals(variables('Receipt')?['Complete'],false),equals(variables('Receipt')?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(variables('Receipt')?['SealedAttempts'],'[]')),variables('Attempt'))))"
-                        },
-                        "schema": {
-                          "type": "object",
-                          "required": [
-                            "valid"
-                          ],
-                          "properties": {
-                            "valid": {
-                              "type": "boolean",
-                              "enum": [
-                                true
-                              ]
-                            }
-                          }
-                        }
-                      },
-                      "runAfter": {
-                        "Claim_rejected_Read_Save": [
-                          "Succeeded"
-                        ]
-                      }
-                    },
-                    "Claim_rejected_Write": {
-                      "type": "OpenApiConnection",
-                      "inputs": {
-                        "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                          "connectionName": "shared_sharepointonline",
-                          "operationId": "HttpRequest"
-                        },
-                        "parameters": {
-                          "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                          "parameters/method": "POST",
-                          "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
-                          "parameters/headers": {
-                            "Accept": "application/json;odata=verbose",
-                            "Content-Type": "application/json;odata=verbose",
-                            "X-HTTP-Method": "MERGE",
-                            "IF-MATCH": "@variables('Receipt')?['__metadata']?['etag']"
-                          },
-                          "parameters/body": {
-                            "__metadata": {
-                              "type": "@outputs('Receipt_type')"
-                            },
-                            "Uncertain": false,
-                            "Stage": "CLAIM_REJECTED"
-                          }
-                        },
-                        "authentication": {
-                          "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                          "type": "Raw"
-                        },
-                        "retryPolicy": {
-                          "type": "none"
-                        }
-                      },
-                      "runAfter": {
-                        "Claim_rejected_Authority": [
-                          "Succeeded"
-                        ]
-                      }
-                    },
-                    "Claim_rejected_Confirm": {
-                      "type": "OpenApiConnection",
-                      "inputs": {
-                        "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                          "connectionName": "shared_sharepointonline",
-                          "operationId": "HttpRequest"
-                        },
-                        "parameters": {
-                          "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                          "parameters/method": "GET",
-                          "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
-                          "parameters/headers": {
-                            "Accept": "application/json;odata=verbose",
-                            "Content-Type": "application/json;odata=verbose"
-                          }
-                        },
-                        "authentication": {
-                          "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                          "type": "Raw"
-                        },
-                        "retryPolicy": {
-                          "type": "none"
-                        }
-                      },
-                      "runAfter": {
-                        "Claim_rejected_Write": [
-                          "Succeeded",
-                          "Failed",
-                          "TimedOut"
-                        ]
-                      }
-                    },
-                    "Claim_rejected_Confirm_Save": {
-                      "type": "SetVariable",
-                      "inputs": {
-                        "name": "Receipt",
-                        "value": "@body('Claim_rejected_Confirm')?['d']"
-                      },
-                      "runAfter": {
-                        "Claim_rejected_Confirm": [
-                          "Succeeded"
-                        ]
-                      }
-                    },
-                    "Claim_rejected_Persisted": {
-                      "type": "ParseJson",
-                      "inputs": {
-                        "content": {
-                          "valid": "@and(equals(variables('Receipt')?['Uncertain'],false),equals(variables('Receipt')?['Stage'],'CLAIM_REJECTED'),not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')))"
-                        },
-                        "schema": {
-                          "type": "object",
-                          "required": [
-                            "valid"
-                          ],
-                          "properties": {
-                            "valid": {
-                              "type": "boolean",
-                              "enum": [
-                                true
-                              ]
-                            }
-                          }
-                        }
-                      },
-                      "runAfter": {
-                        "Claim_rejected_Confirm_Save": [
-                          "Succeeded"
-                        ]
-                      }
                     },
                     "Claim_race_busy_Code": {
                       "type": "SetVariable",
@@ -3371,7 +3102,7 @@
                         "value": "GROUP_BUSY"
                       },
                       "runAfter": {
-                        "Claim_rejected_Persisted": [
+                        "Claim_rejected_Boundary": [
                           "Succeeded"
                         ]
                       }
@@ -3483,23 +3214,11 @@
                     ]
                   }
                 },
-                "Claim_confirm_Read_Save": {
-                  "type": "SetVariable",
-                  "inputs": {
-                    "name": "Receipt",
-                    "value": "@body('Claim_confirm_Read')?['d']"
-                  },
-                  "runAfter": {
-                    "Claim_confirm_Read": [
-                      "Succeeded"
-                    ]
-                  }
-                },
                 "Claim_confirm_Authority": {
                   "type": "ParseJson",
                   "inputs": {
                     "content": {
-                      "valid": "@and(not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')),equals(variables('Receipt')?['Complete'],false),equals(variables('Receipt')?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(variables('Receipt')?['SealedAttempts'],'[]')),variables('Attempt'))))"
+                      "valid": "@and(not(empty(body('Claim_confirm_Read')?['d']?['__metadata']?['etag'])),not(equals(body('Claim_confirm_Read')?['d']?['__metadata']?['etag'],'*')),equals(body('Claim_confirm_Read')?['d']?['Complete'],false),equals(body('Claim_confirm_Read')?['d']?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(body('Claim_confirm_Read')?['d']?['SealedAttempts'],'[]')),variables('Attempt'))))"
                     },
                     "schema": {
                       "type": "object",
@@ -3517,7 +3236,7 @@
                     }
                   },
                   "runAfter": {
-                    "Claim_confirm_Read_Save": [
+                    "Claim_confirm_Read": [
                       "Succeeded"
                     ]
                   }
@@ -3538,11 +3257,11 @@
                         "Accept": "application/json;odata=verbose",
                         "Content-Type": "application/json;odata=verbose",
                         "X-HTTP-Method": "MERGE",
-                        "IF-MATCH": "@variables('Receipt')?['__metadata']?['etag']"
+                        "IF-MATCH": "@body('Claim_confirm_Read')?['d']?['__metadata']?['etag']"
                       },
                       "parameters/body": {
                         "__metadata": {
-                          "type": "@outputs('Receipt_type')"
+                          "type": "@body('Receipt_type')?['value']"
                         },
                         "Stage": "GROUP_OWNED",
                         "Uncertain": false
@@ -3998,23 +3717,11 @@
                     ]
                   }
                 },
-                "Locked_Source_Save": {
-                  "type": "SetVariable",
-                  "inputs": {
-                    "name": "Source",
-                    "value": "@body('Locked_Source')?['d']"
-                  },
-                  "runAfter": {
-                    "Locked_Source": [
-                      "Succeeded"
-                    ]
-                  }
-                },
                 "Locked_Source_Tag": {
                   "type": "ParseJson",
                   "inputs": {
                     "content": {
-                      "valid": "@and(not(empty(variables('Source')?['__metadata']?['etag'])),not(equals(variables('Source')?['__metadata']?['etag'],'*')))"
+                      "valid": "@and(not(empty(body('Locked_Source')?['d']?['__metadata']?['etag'])),not(equals(body('Locked_Source')?['d']?['__metadata']?['etag'],'*')))"
                     },
                     "schema": {
                       "type": "object",
@@ -4032,7 +3739,7 @@
                     }
                   },
                   "runAfter": {
-                    "Locked_Source_Save": [
+                    "Locked_Source": [
                       "Succeeded"
                     ]
                   }
@@ -4053,7 +3760,7 @@
                   "type": "ParseJson",
                   "inputs": {
                     "content": {
-                      "valid": "@and(equals(variables('Group')?['SetupComplete'],true),equals(variables('Source')?['Status'],'Accepted'),equals(variables('Source')?['OperationComplete'],true),equals(variables('Source')?['RequestType'],'Personal'),equals(variables('Source')?['Id'],variables('Group')?['SourceRequestId']))"
+                      "valid": "@and(equals(variables('Group')?['SetupComplete'],true),equals(body('Locked_Source')?['d']?['Status'],'Accepted'),equals(body('Locked_Source')?['d']?['OperationComplete'],true),equals(body('Locked_Source')?['d']?['RequestType'],'Personal'),equals(body('Locked_Source')?['d']?['Id'],variables('Group')?['SourceRequestId']))"
                     },
                     "schema": {
                       "type": "object",
@@ -4654,18 +4361,6 @@
                         ]
                       }
                     },
-                    "Catalogue_culture_Bound_Code": {
-                      "type": "SetVariable",
-                      "inputs": {
-                        "name": "Code",
-                        "value": "READ_BOUND_OR_INCOMPLETE"
-                      },
-                      "runAfter": {
-                        "Catalogue_culture": [
-                          "Succeeded"
-                        ]
-                      }
-                    },
                     "Catalogue_culture_Bound": {
                       "type": "ParseJson",
                       "inputs": {
@@ -4688,7 +4383,7 @@
                         }
                       },
                       "runAfter": {
-                        "Catalogue_culture_Bound_Code": [
+                        "Catalogue_culture": [
                           "Succeeded"
                         ]
                       }
@@ -4748,18 +4443,6 @@
                         ]
                       }
                     },
-                    "Catalogue_timezone_Bound_Code": {
-                      "type": "SetVariable",
-                      "inputs": {
-                        "name": "Code",
-                        "value": "READ_BOUND_OR_INCOMPLETE"
-                      },
-                      "runAfter": {
-                        "Catalogue_timezone": [
-                          "Succeeded"
-                        ]
-                      }
-                    },
                     "Catalogue_timezone_Bound": {
                       "type": "ParseJson",
                       "inputs": {
@@ -4782,7 +4465,7 @@
                         }
                       },
                       "runAfter": {
-                        "Catalogue_timezone_Bound_Code": [
+                        "Catalogue_timezone": [
                           "Succeeded"
                         ]
                       }
@@ -5564,23 +5247,11 @@
                       },
                       "runAfter": {}
                     },
-                    "Decision_stage_Read_Save": {
-                      "type": "SetVariable",
-                      "inputs": {
-                        "name": "Receipt",
-                        "value": "@body('Decision_stage_Read')?['d']"
-                      },
-                      "runAfter": {
-                        "Decision_stage_Read": [
-                          "Succeeded"
-                        ]
-                      }
-                    },
                     "Decision_stage_Authority": {
                       "type": "ParseJson",
                       "inputs": {
                         "content": {
-                          "valid": "@and(not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')),equals(variables('Receipt')?['Complete'],false),equals(variables('Receipt')?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(variables('Receipt')?['SealedAttempts'],'[]')),variables('Attempt'))))"
+                          "valid": "@and(not(empty(body('Decision_stage_Read')?['d']?['__metadata']?['etag'])),not(equals(body('Decision_stage_Read')?['d']?['__metadata']?['etag'],'*')),equals(body('Decision_stage_Read')?['d']?['Complete'],false),equals(body('Decision_stage_Read')?['d']?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(body('Decision_stage_Read')?['d']?['SealedAttempts'],'[]')),variables('Attempt'))))"
                         },
                         "schema": {
                           "type": "object",
@@ -5598,7 +5269,7 @@
                         }
                       },
                       "runAfter": {
-                        "Decision_stage_Read_Save": [
+                        "Decision_stage_Read": [
                           "Succeeded"
                         ]
                       }
@@ -5619,11 +5290,11 @@
                             "Accept": "application/json;odata=verbose",
                             "Content-Type": "application/json;odata=verbose",
                             "X-HTTP-Method": "MERGE",
-                            "IF-MATCH": "@variables('Receipt')?['__metadata']?['etag']"
+                            "IF-MATCH": "@body('Decision_stage_Read')?['d']?['__metadata']?['etag']"
                           },
                           "parameters/body": {
                             "__metadata": {
-                              "type": "@outputs('Receipt_type')"
+                              "type": "@body('Receipt_type')?['value']"
                             },
                             "Stage": "DECISION_PLANNED",
                             "Uncertain": true
@@ -5735,7 +5406,7 @@
                           },
                           "parameters/body": {
                             "__metadata": {
-                              "type": "@outputs('Request_type')"
+                              "type": "@body('Request_type')?['value']"
                             },
                             "Status": "@if(equals(body('Input')?['text'],'Accept'),'Accepted','Declined')",
                             "WinningOperationKey": "@outputs('Operation_key')",
@@ -5870,184 +5541,14 @@
                               ]
                             }
                           },
-                          "Decision_rejected_Read": {
-                            "type": "OpenApiConnection",
+                          "Decision_rejected_Boundary": {
+                            "type": "SetVariable",
                             "inputs": {
-                              "host": {
-                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                                "connectionName": "shared_sharepointonline",
-                                "operationId": "HttpRequest"
-                              },
-                              "parameters": {
-                                "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                                "parameters/method": "GET",
-                                "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
-                                "parameters/headers": {
-                                  "Accept": "application/json;odata=verbose",
-                                  "Content-Type": "application/json;odata=verbose"
-                                }
-                              },
-                              "authentication": {
-                                "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                                "type": "Raw"
-                              },
-                              "retryPolicy": {
-                                "type": "none"
-                              }
+                              "name": "DefiniteBoundary",
+                              "value": "DECISION_REJECTED"
                             },
                             "runAfter": {
                               "Decision_rejection_definite": [
-                                "Succeeded"
-                              ]
-                            }
-                          },
-                          "Decision_rejected_Read_Save": {
-                            "type": "SetVariable",
-                            "inputs": {
-                              "name": "Receipt",
-                              "value": "@body('Decision_rejected_Read')?['d']"
-                            },
-                            "runAfter": {
-                              "Decision_rejected_Read": [
-                                "Succeeded"
-                              ]
-                            }
-                          },
-                          "Decision_rejected_Authority": {
-                            "type": "ParseJson",
-                            "inputs": {
-                              "content": {
-                                "valid": "@and(not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')),equals(variables('Receipt')?['Complete'],false),equals(variables('Receipt')?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(variables('Receipt')?['SealedAttempts'],'[]')),variables('Attempt'))))"
-                              },
-                              "schema": {
-                                "type": "object",
-                                "required": [
-                                  "valid"
-                                ],
-                                "properties": {
-                                  "valid": {
-                                    "type": "boolean",
-                                    "enum": [
-                                      true
-                                    ]
-                                  }
-                                }
-                              }
-                            },
-                            "runAfter": {
-                              "Decision_rejected_Read_Save": [
-                                "Succeeded"
-                              ]
-                            }
-                          },
-                          "Decision_rejected_Write": {
-                            "type": "OpenApiConnection",
-                            "inputs": {
-                              "host": {
-                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                                "connectionName": "shared_sharepointonline",
-                                "operationId": "HttpRequest"
-                              },
-                              "parameters": {
-                                "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                                "parameters/method": "POST",
-                                "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
-                                "parameters/headers": {
-                                  "Accept": "application/json;odata=verbose",
-                                  "Content-Type": "application/json;odata=verbose",
-                                  "X-HTTP-Method": "MERGE",
-                                  "IF-MATCH": "@variables('Receipt')?['__metadata']?['etag']"
-                                },
-                                "parameters/body": {
-                                  "__metadata": {
-                                    "type": "@outputs('Receipt_type')"
-                                  },
-                                  "Uncertain": false,
-                                  "Stage": "DECISION_REJECTED"
-                                }
-                              },
-                              "authentication": {
-                                "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                                "type": "Raw"
-                              },
-                              "retryPolicy": {
-                                "type": "none"
-                              }
-                            },
-                            "runAfter": {
-                              "Decision_rejected_Authority": [
-                                "Succeeded"
-                              ]
-                            }
-                          },
-                          "Decision_rejected_Confirm": {
-                            "type": "OpenApiConnection",
-                            "inputs": {
-                              "host": {
-                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                                "connectionName": "shared_sharepointonline",
-                                "operationId": "HttpRequest"
-                              },
-                              "parameters": {
-                                "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                                "parameters/method": "GET",
-                                "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
-                                "parameters/headers": {
-                                  "Accept": "application/json;odata=verbose",
-                                  "Content-Type": "application/json;odata=verbose"
-                                }
-                              },
-                              "authentication": {
-                                "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                                "type": "Raw"
-                              },
-                              "retryPolicy": {
-                                "type": "none"
-                              }
-                            },
-                            "runAfter": {
-                              "Decision_rejected_Write": [
-                                "Succeeded",
-                                "Failed",
-                                "TimedOut"
-                              ]
-                            }
-                          },
-                          "Decision_rejected_Confirm_Save": {
-                            "type": "SetVariable",
-                            "inputs": {
-                              "name": "Receipt",
-                              "value": "@body('Decision_rejected_Confirm')?['d']"
-                            },
-                            "runAfter": {
-                              "Decision_rejected_Confirm": [
-                                "Succeeded"
-                              ]
-                            }
-                          },
-                          "Decision_rejected_Persisted": {
-                            "type": "ParseJson",
-                            "inputs": {
-                              "content": {
-                                "valid": "@and(equals(variables('Receipt')?['Uncertain'],false),equals(variables('Receipt')?['Stage'],'DECISION_REJECTED'),not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')))"
-                              },
-                              "schema": {
-                                "type": "object",
-                                "required": [
-                                  "valid"
-                                ],
-                                "properties": {
-                                  "valid": {
-                                    "type": "boolean",
-                                    "enum": [
-                                      true
-                                    ]
-                                  }
-                                }
-                              }
-                            },
-                            "runAfter": {
-                              "Decision_rejected_Confirm_Save": [
                                 "Succeeded"
                               ]
                             }
@@ -6059,7 +5560,7 @@
                               "value": "DECISION_CONFLICT"
                             },
                             "runAfter": {
-                              "Decision_rejected_Persisted": [
+                              "Decision_rejected_Boundary": [
                                 "Succeeded"
                               ]
                             }
@@ -6130,23 +5631,11 @@
                         ]
                       }
                     },
-                    "Decision_confirm_Read_Save": {
-                      "type": "SetVariable",
-                      "inputs": {
-                        "name": "Receipt",
-                        "value": "@body('Decision_confirm_Read')?['d']"
-                      },
-                      "runAfter": {
-                        "Decision_confirm_Read": [
-                          "Succeeded"
-                        ]
-                      }
-                    },
                     "Decision_confirm_Authority": {
                       "type": "ParseJson",
                       "inputs": {
                         "content": {
-                          "valid": "@and(not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')),equals(variables('Receipt')?['Complete'],false),equals(variables('Receipt')?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(variables('Receipt')?['SealedAttempts'],'[]')),variables('Attempt'))))"
+                          "valid": "@and(not(empty(body('Decision_confirm_Read')?['d']?['__metadata']?['etag'])),not(equals(body('Decision_confirm_Read')?['d']?['__metadata']?['etag'],'*')),equals(body('Decision_confirm_Read')?['d']?['Complete'],false),equals(body('Decision_confirm_Read')?['d']?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(body('Decision_confirm_Read')?['d']?['SealedAttempts'],'[]')),variables('Attempt'))))"
                         },
                         "schema": {
                           "type": "object",
@@ -6164,7 +5653,7 @@
                         }
                       },
                       "runAfter": {
-                        "Decision_confirm_Read_Save": [
+                        "Decision_confirm_Read": [
                           "Succeeded"
                         ]
                       }
@@ -6185,11 +5674,11 @@
                             "Accept": "application/json;odata=verbose",
                             "Content-Type": "application/json;odata=verbose",
                             "X-HTTP-Method": "MERGE",
-                            "IF-MATCH": "@variables('Receipt')?['__metadata']?['etag']"
+                            "IF-MATCH": "@body('Decision_confirm_Read')?['d']?['__metadata']?['etag']"
                           },
                           "parameters/body": {
                             "__metadata": {
-                              "type": "@outputs('Receipt_type')"
+                              "type": "@body('Receipt_type')?['value']"
                             },
                             "Uncertain": false,
                             "DomainEffects": true,
@@ -6323,23 +5812,11 @@
                       },
                       "runAfter": {}
                     },
-                    "Member_stage_Read_Save": {
-                      "type": "SetVariable",
-                      "inputs": {
-                        "name": "Receipt",
-                        "value": "@body('Member_stage_Read')?['d']"
-                      },
-                      "runAfter": {
-                        "Member_stage_Read": [
-                          "Succeeded"
-                        ]
-                      }
-                    },
                     "Member_stage_Authority": {
                       "type": "ParseJson",
                       "inputs": {
                         "content": {
-                          "valid": "@and(not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')),equals(variables('Receipt')?['Complete'],false),equals(variables('Receipt')?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(variables('Receipt')?['SealedAttempts'],'[]')),variables('Attempt'))))"
+                          "valid": "@and(not(empty(body('Member_stage_Read')?['d']?['__metadata']?['etag'])),not(equals(body('Member_stage_Read')?['d']?['__metadata']?['etag'],'*')),equals(body('Member_stage_Read')?['d']?['Complete'],false),equals(body('Member_stage_Read')?['d']?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(body('Member_stage_Read')?['d']?['SealedAttempts'],'[]')),variables('Attempt'))))"
                         },
                         "schema": {
                           "type": "object",
@@ -6357,7 +5834,7 @@
                         }
                       },
                       "runAfter": {
-                        "Member_stage_Read_Save": [
+                        "Member_stage_Read": [
                           "Succeeded"
                         ]
                       }
@@ -6378,11 +5855,11 @@
                             "Accept": "application/json;odata=verbose",
                             "Content-Type": "application/json;odata=verbose",
                             "X-HTTP-Method": "MERGE",
-                            "IF-MATCH": "@variables('Receipt')?['__metadata']?['etag']"
+                            "IF-MATCH": "@body('Member_stage_Read')?['d']?['__metadata']?['etag']"
                           },
                           "parameters/body": {
                             "__metadata": {
-                              "type": "@outputs('Receipt_type')"
+                              "type": "@body('Receipt_type')?['value']"
                             },
                             "Stage": "MEMBERSHIP_PLANNED",
                             "Uncertain": true
@@ -6496,7 +5973,7 @@
                               },
                               "parameters/body": {
                                 "__metadata": {
-                                  "type": "@outputs('Member_type')"
+                                  "type": "@body('Member_type')?['value']"
                                 },
                                 "GroupId": "@variables('TargetGroup')",
                                 "ParticipantId": "@variables('Requester')",
@@ -6613,183 +6090,13 @@
                       "type": "If",
                       "expression": "@and(empty(variables('Episodes')),equals(outputs('Create_episode')?['statusCode'],403))",
                       "actions": {
-                        "Member_rejected_Read": {
-                          "type": "OpenApiConnection",
+                        "Member_rejected_Boundary": {
+                          "type": "SetVariable",
                           "inputs": {
-                            "host": {
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                              "connectionName": "shared_sharepointonline",
-                              "operationId": "HttpRequest"
-                            },
-                            "parameters": {
-                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                              "parameters/method": "GET",
-                              "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
-                              "parameters/headers": {
-                                "Accept": "application/json;odata=verbose",
-                                "Content-Type": "application/json;odata=verbose"
-                              }
-                            },
-                            "authentication": {
-                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                              "type": "Raw"
-                            },
-                            "retryPolicy": {
-                              "type": "none"
-                            }
+                            "name": "DefiniteBoundary",
+                            "value": "MEMBERSHIP_REJECTED"
                           },
                           "runAfter": {}
-                        },
-                        "Member_rejected_Read_Save": {
-                          "type": "SetVariable",
-                          "inputs": {
-                            "name": "Receipt",
-                            "value": "@body('Member_rejected_Read')?['d']"
-                          },
-                          "runAfter": {
-                            "Member_rejected_Read": [
-                              "Succeeded"
-                            ]
-                          }
-                        },
-                        "Member_rejected_Authority": {
-                          "type": "ParseJson",
-                          "inputs": {
-                            "content": {
-                              "valid": "@and(not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')),equals(variables('Receipt')?['Complete'],false),equals(variables('Receipt')?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(variables('Receipt')?['SealedAttempts'],'[]')),variables('Attempt'))))"
-                            },
-                            "schema": {
-                              "type": "object",
-                              "required": [
-                                "valid"
-                              ],
-                              "properties": {
-                                "valid": {
-                                  "type": "boolean",
-                                  "enum": [
-                                    true
-                                  ]
-                                }
-                              }
-                            }
-                          },
-                          "runAfter": {
-                            "Member_rejected_Read_Save": [
-                              "Succeeded"
-                            ]
-                          }
-                        },
-                        "Member_rejected_Write": {
-                          "type": "OpenApiConnection",
-                          "inputs": {
-                            "host": {
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                              "connectionName": "shared_sharepointonline",
-                              "operationId": "HttpRequest"
-                            },
-                            "parameters": {
-                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                              "parameters/method": "POST",
-                              "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
-                              "parameters/headers": {
-                                "Accept": "application/json;odata=verbose",
-                                "Content-Type": "application/json;odata=verbose",
-                                "X-HTTP-Method": "MERGE",
-                                "IF-MATCH": "@variables('Receipt')?['__metadata']?['etag']"
-                              },
-                              "parameters/body": {
-                                "__metadata": {
-                                  "type": "@outputs('Receipt_type')"
-                                },
-                                "Uncertain": false,
-                                "Stage": "MEMBERSHIP_REJECTED"
-                              }
-                            },
-                            "authentication": {
-                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                              "type": "Raw"
-                            },
-                            "retryPolicy": {
-                              "type": "none"
-                            }
-                          },
-                          "runAfter": {
-                            "Member_rejected_Authority": [
-                              "Succeeded"
-                            ]
-                          }
-                        },
-                        "Member_rejected_Confirm": {
-                          "type": "OpenApiConnection",
-                          "inputs": {
-                            "host": {
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                              "connectionName": "shared_sharepointonline",
-                              "operationId": "HttpRequest"
-                            },
-                            "parameters": {
-                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                              "parameters/method": "GET",
-                              "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
-                              "parameters/headers": {
-                                "Accept": "application/json;odata=verbose",
-                                "Content-Type": "application/json;odata=verbose"
-                              }
-                            },
-                            "authentication": {
-                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                              "type": "Raw"
-                            },
-                            "retryPolicy": {
-                              "type": "none"
-                            }
-                          },
-                          "runAfter": {
-                            "Member_rejected_Write": [
-                              "Succeeded",
-                              "Failed",
-                              "TimedOut"
-                            ]
-                          }
-                        },
-                        "Member_rejected_Confirm_Save": {
-                          "type": "SetVariable",
-                          "inputs": {
-                            "name": "Receipt",
-                            "value": "@body('Member_rejected_Confirm')?['d']"
-                          },
-                          "runAfter": {
-                            "Member_rejected_Confirm": [
-                              "Succeeded"
-                            ]
-                          }
-                        },
-                        "Member_rejected_Persisted": {
-                          "type": "ParseJson",
-                          "inputs": {
-                            "content": {
-                              "valid": "@and(equals(variables('Receipt')?['Uncertain'],false),equals(variables('Receipt')?['Stage'],'MEMBERSHIP_REJECTED'),not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')))"
-                            },
-                            "schema": {
-                              "type": "object",
-                              "required": [
-                                "valid"
-                              ],
-                              "properties": {
-                                "valid": {
-                                  "type": "boolean",
-                                  "enum": [
-                                    true
-                                  ]
-                                }
-                              }
-                            }
-                          },
-                          "runAfter": {
-                            "Member_rejected_Confirm_Save": [
-                              "Succeeded"
-                            ]
-                          }
                         },
                         "Member_definite_error_Code": {
                           "type": "SetVariable",
@@ -6798,7 +6105,7 @@
                             "value": "MEMBERSHIP_RETRY_REQUIRED"
                           },
                           "runAfter": {
-                            "Member_rejected_Persisted": [
+                            "Member_rejected_Boundary": [
                               "Succeeded"
                             ]
                           }
@@ -6910,23 +6217,11 @@
                         ]
                       }
                     },
-                    "Member_confirm_Read_Save": {
-                      "type": "SetVariable",
-                      "inputs": {
-                        "name": "Receipt",
-                        "value": "@body('Member_confirm_Read')?['d']"
-                      },
-                      "runAfter": {
-                        "Member_confirm_Read": [
-                          "Succeeded"
-                        ]
-                      }
-                    },
                     "Member_confirm_Authority": {
                       "type": "ParseJson",
                       "inputs": {
                         "content": {
-                          "valid": "@and(not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')),equals(variables('Receipt')?['Complete'],false),equals(variables('Receipt')?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(variables('Receipt')?['SealedAttempts'],'[]')),variables('Attempt'))))"
+                          "valid": "@and(not(empty(body('Member_confirm_Read')?['d']?['__metadata']?['etag'])),not(equals(body('Member_confirm_Read')?['d']?['__metadata']?['etag'],'*')),equals(body('Member_confirm_Read')?['d']?['Complete'],false),equals(body('Member_confirm_Read')?['d']?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(body('Member_confirm_Read')?['d']?['SealedAttempts'],'[]')),variables('Attempt'))))"
                         },
                         "schema": {
                           "type": "object",
@@ -6944,7 +6239,7 @@
                         }
                       },
                       "runAfter": {
-                        "Member_confirm_Read_Save": [
+                        "Member_confirm_Read": [
                           "Succeeded"
                         ]
                       }
@@ -6965,11 +6260,11 @@
                             "Accept": "application/json;odata=verbose",
                             "Content-Type": "application/json;odata=verbose",
                             "X-HTTP-Method": "MERGE",
-                            "IF-MATCH": "@variables('Receipt')?['__metadata']?['etag']"
+                            "IF-MATCH": "@body('Member_confirm_Read')?['d']?['__metadata']?['etag']"
                           },
                           "parameters/body": {
                             "__metadata": {
-                              "type": "@outputs('Receipt_type')"
+                              "type": "@body('Receipt_type')?['value']"
                             },
                             "Uncertain": false,
                             "DomainEffects": true,
@@ -7356,23 +6651,11 @@
                         ]
                       }
                     },
-                    "Commit_stage_Read_Save": {
-                      "type": "SetVariable",
-                      "inputs": {
-                        "name": "Receipt",
-                        "value": "@body('Commit_stage_Read')?['d']"
-                      },
-                      "runAfter": {
-                        "Commit_stage_Read": [
-                          "Succeeded"
-                        ]
-                      }
-                    },
                     "Commit_stage_Authority": {
                       "type": "ParseJson",
                       "inputs": {
                         "content": {
-                          "valid": "@and(not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')),equals(variables('Receipt')?['Complete'],false),equals(variables('Receipt')?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(variables('Receipt')?['SealedAttempts'],'[]')),variables('Attempt'))))"
+                          "valid": "@and(not(empty(body('Commit_stage_Read')?['d']?['__metadata']?['etag'])),not(equals(body('Commit_stage_Read')?['d']?['__metadata']?['etag'],'*')),equals(body('Commit_stage_Read')?['d']?['Complete'],false),equals(body('Commit_stage_Read')?['d']?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(body('Commit_stage_Read')?['d']?['SealedAttempts'],'[]')),variables('Attempt'))))"
                         },
                         "schema": {
                           "type": "object",
@@ -7390,7 +6673,7 @@
                         }
                       },
                       "runAfter": {
-                        "Commit_stage_Read_Save": [
+                        "Commit_stage_Read": [
                           "Succeeded"
                         ]
                       }
@@ -7411,11 +6694,11 @@
                             "Accept": "application/json;odata=verbose",
                             "Content-Type": "application/json;odata=verbose",
                             "X-HTTP-Method": "MERGE",
-                            "IF-MATCH": "@variables('Receipt')?['__metadata']?['etag']"
+                            "IF-MATCH": "@body('Commit_stage_Read')?['d']?['__metadata']?['etag']"
                           },
                           "parameters/body": {
                             "__metadata": {
-                              "type": "@outputs('Receipt_type')"
+                              "type": "@body('Receipt_type')?['value']"
                             },
                             "Stage": "REQUEST_COMMIT_PLANNED",
                             "Uncertain": true
@@ -7636,7 +6919,7 @@
                           },
                           "parameters/body": {
                             "__metadata": {
-                              "type": "@outputs('Request_type')"
+                              "type": "@body('Request_type')?['value']"
                             },
                             "OperationComplete": true,
                             "ConnectionKey": "@concat('history:request:',string(body('Input')?['number']))"
@@ -7732,183 +7015,13 @@
                       "type": "If",
                       "expression": "@and(equals(outputs('Commit_request')?['statusCode'],403),equals(variables('Request')?['Status'],'Accepted'),equals(variables('Request')?['WinningOperationKey'],outputs('Operation_key')),equals(variables('Request')?['OperationComplete'],false))",
                       "actions": {
-                        "Commit_rejected_Read": {
-                          "type": "OpenApiConnection",
+                        "Commit_rejected_Boundary": {
+                          "type": "SetVariable",
                           "inputs": {
-                            "host": {
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                              "connectionName": "shared_sharepointonline",
-                              "operationId": "HttpRequest"
-                            },
-                            "parameters": {
-                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                              "parameters/method": "GET",
-                              "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
-                              "parameters/headers": {
-                                "Accept": "application/json;odata=verbose",
-                                "Content-Type": "application/json;odata=verbose"
-                              }
-                            },
-                            "authentication": {
-                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                              "type": "Raw"
-                            },
-                            "retryPolicy": {
-                              "type": "none"
-                            }
+                            "name": "DefiniteBoundary",
+                            "value": "COMMIT_REJECTED"
                           },
                           "runAfter": {}
-                        },
-                        "Commit_rejected_Read_Save": {
-                          "type": "SetVariable",
-                          "inputs": {
-                            "name": "Receipt",
-                            "value": "@body('Commit_rejected_Read')?['d']"
-                          },
-                          "runAfter": {
-                            "Commit_rejected_Read": [
-                              "Succeeded"
-                            ]
-                          }
-                        },
-                        "Commit_rejected_Authority": {
-                          "type": "ParseJson",
-                          "inputs": {
-                            "content": {
-                              "valid": "@and(not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')),equals(variables('Receipt')?['Complete'],false),equals(variables('Receipt')?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(variables('Receipt')?['SealedAttempts'],'[]')),variables('Attempt'))))"
-                            },
-                            "schema": {
-                              "type": "object",
-                              "required": [
-                                "valid"
-                              ],
-                              "properties": {
-                                "valid": {
-                                  "type": "boolean",
-                                  "enum": [
-                                    true
-                                  ]
-                                }
-                              }
-                            }
-                          },
-                          "runAfter": {
-                            "Commit_rejected_Read_Save": [
-                              "Succeeded"
-                            ]
-                          }
-                        },
-                        "Commit_rejected_Write": {
-                          "type": "OpenApiConnection",
-                          "inputs": {
-                            "host": {
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                              "connectionName": "shared_sharepointonline",
-                              "operationId": "HttpRequest"
-                            },
-                            "parameters": {
-                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                              "parameters/method": "POST",
-                              "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
-                              "parameters/headers": {
-                                "Accept": "application/json;odata=verbose",
-                                "Content-Type": "application/json;odata=verbose",
-                                "X-HTTP-Method": "MERGE",
-                                "IF-MATCH": "@variables('Receipt')?['__metadata']?['etag']"
-                              },
-                              "parameters/body": {
-                                "__metadata": {
-                                  "type": "@outputs('Receipt_type')"
-                                },
-                                "Uncertain": false,
-                                "Stage": "COMMIT_REJECTED"
-                              }
-                            },
-                            "authentication": {
-                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                              "type": "Raw"
-                            },
-                            "retryPolicy": {
-                              "type": "none"
-                            }
-                          },
-                          "runAfter": {
-                            "Commit_rejected_Authority": [
-                              "Succeeded"
-                            ]
-                          }
-                        },
-                        "Commit_rejected_Confirm": {
-                          "type": "OpenApiConnection",
-                          "inputs": {
-                            "host": {
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                              "connectionName": "shared_sharepointonline",
-                              "operationId": "HttpRequest"
-                            },
-                            "parameters": {
-                              "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                              "parameters/method": "GET",
-                              "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
-                              "parameters/headers": {
-                                "Accept": "application/json;odata=verbose",
-                                "Content-Type": "application/json;odata=verbose"
-                              }
-                            },
-                            "authentication": {
-                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                              "type": "Raw"
-                            },
-                            "retryPolicy": {
-                              "type": "none"
-                            }
-                          },
-                          "runAfter": {
-                            "Commit_rejected_Write": [
-                              "Succeeded",
-                              "Failed",
-                              "TimedOut"
-                            ]
-                          }
-                        },
-                        "Commit_rejected_Confirm_Save": {
-                          "type": "SetVariable",
-                          "inputs": {
-                            "name": "Receipt",
-                            "value": "@body('Commit_rejected_Confirm')?['d']"
-                          },
-                          "runAfter": {
-                            "Commit_rejected_Confirm": [
-                              "Succeeded"
-                            ]
-                          }
-                        },
-                        "Commit_rejected_Persisted": {
-                          "type": "ParseJson",
-                          "inputs": {
-                            "content": {
-                              "valid": "@and(equals(variables('Receipt')?['Uncertain'],false),equals(variables('Receipt')?['Stage'],'COMMIT_REJECTED'),not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')))"
-                            },
-                            "schema": {
-                              "type": "object",
-                              "required": [
-                                "valid"
-                              ],
-                              "properties": {
-                                "valid": {
-                                  "type": "boolean",
-                                  "enum": [
-                                    true
-                                  ]
-                                }
-                              }
-                            }
-                          },
-                          "runAfter": {
-                            "Commit_rejected_Confirm_Save": [
-                              "Succeeded"
-                            ]
-                          }
                         },
                         "Commit_definite_error_Code": {
                           "type": "SetVariable",
@@ -7917,7 +7030,7 @@
                             "value": "COMMIT_RETRY_REQUIRED"
                           },
                           "runAfter": {
-                            "Commit_rejected_Persisted": [
+                            "Commit_rejected_Boundary": [
                               "Succeeded"
                             ]
                           }
@@ -8029,23 +7142,11 @@
                         ]
                       }
                     },
-                    "Commit_confirm_Read_Save": {
-                      "type": "SetVariable",
-                      "inputs": {
-                        "name": "Receipt",
-                        "value": "@body('Commit_confirm_Read')?['d']"
-                      },
-                      "runAfter": {
-                        "Commit_confirm_Read": [
-                          "Succeeded"
-                        ]
-                      }
-                    },
                     "Commit_confirm_Authority": {
                       "type": "ParseJson",
                       "inputs": {
                         "content": {
-                          "valid": "@and(not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')),equals(variables('Receipt')?['Complete'],false),equals(variables('Receipt')?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(variables('Receipt')?['SealedAttempts'],'[]')),variables('Attempt'))))"
+                          "valid": "@and(not(empty(body('Commit_confirm_Read')?['d']?['__metadata']?['etag'])),not(equals(body('Commit_confirm_Read')?['d']?['__metadata']?['etag'],'*')),equals(body('Commit_confirm_Read')?['d']?['Complete'],false),equals(body('Commit_confirm_Read')?['d']?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(body('Commit_confirm_Read')?['d']?['SealedAttempts'],'[]')),variables('Attempt'))))"
                         },
                         "schema": {
                           "type": "object",
@@ -8063,7 +7164,7 @@
                         }
                       },
                       "runAfter": {
-                        "Commit_confirm_Read_Save": [
+                        "Commit_confirm_Read": [
                           "Succeeded"
                         ]
                       }
@@ -8084,11 +7185,11 @@
                             "Accept": "application/json;odata=verbose",
                             "Content-Type": "application/json;odata=verbose",
                             "X-HTTP-Method": "MERGE",
-                            "IF-MATCH": "@variables('Receipt')?['__metadata']?['etag']"
+                            "IF-MATCH": "@body('Commit_confirm_Read')?['d']?['__metadata']?['etag']"
                           },
                           "parameters/body": {
                             "__metadata": {
-                              "type": "@outputs('Receipt_type')"
+                              "type": "@body('Receipt_type')?['value']"
                             },
                             "Uncertain": false,
                             "DomainEffects": true,
@@ -8220,191 +7321,6 @@
                       "Succeeded"
                     ]
                   }
-                },
-                "Complete_receipt_Read": {
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                      "connectionName": "shared_sharepointonline",
-                      "operationId": "HttpRequest"
-                    },
-                    "parameters": {
-                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                      "parameters/method": "GET",
-                      "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
-                      "parameters/headers": {
-                        "Accept": "application/json;odata=verbose",
-                        "Content-Type": "application/json;odata=verbose"
-                      }
-                    },
-                    "authentication": {
-                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                      "type": "Raw"
-                    },
-                    "retryPolicy": {
-                      "type": "none"
-                    }
-                  },
-                  "runAfter": {
-                    "Public_result": [
-                      "Succeeded"
-                    ]
-                  }
-                },
-                "Complete_receipt_Read_Save": {
-                  "type": "SetVariable",
-                  "inputs": {
-                    "name": "Receipt",
-                    "value": "@body('Complete_receipt_Read')?['d']"
-                  },
-                  "runAfter": {
-                    "Complete_receipt_Read": [
-                      "Succeeded"
-                    ]
-                  }
-                },
-                "Complete_receipt_Authority": {
-                  "type": "ParseJson",
-                  "inputs": {
-                    "content": {
-                      "valid": "@and(not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')),equals(variables('Receipt')?['Complete'],false),equals(variables('Receipt')?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(variables('Receipt')?['SealedAttempts'],'[]')),variables('Attempt'))))"
-                    },
-                    "schema": {
-                      "type": "object",
-                      "required": [
-                        "valid"
-                      ],
-                      "properties": {
-                        "valid": {
-                          "type": "boolean",
-                          "enum": [
-                            true
-                          ]
-                        }
-                      }
-                    }
-                  },
-                  "runAfter": {
-                    "Complete_receipt_Read_Save": [
-                      "Succeeded"
-                    ]
-                  }
-                },
-                "Complete_receipt_Write": {
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                      "connectionName": "shared_sharepointonline",
-                      "operationId": "HttpRequest"
-                    },
-                    "parameters": {
-                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                      "parameters/method": "POST",
-                      "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
-                      "parameters/headers": {
-                        "Accept": "application/json;odata=verbose",
-                        "Content-Type": "application/json;odata=verbose",
-                        "X-HTTP-Method": "MERGE",
-                        "IF-MATCH": "@variables('Receipt')?['__metadata']?['etag']"
-                      },
-                      "parameters/body": {
-                        "__metadata": {
-                          "type": "@outputs('Receipt_type')"
-                        },
-                        "Complete": true,
-                        "ResultJson": "@string(variables('Result'))",
-                        "Uncertain": false,
-                        "Retryable": false,
-                        "Stage": "COMPLETE"
-                      }
-                    },
-                    "authentication": {
-                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                      "type": "Raw"
-                    },
-                    "retryPolicy": {
-                      "type": "none"
-                    }
-                  },
-                  "runAfter": {
-                    "Complete_receipt_Authority": [
-                      "Succeeded"
-                    ]
-                  }
-                },
-                "Complete_receipt_Confirm": {
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                      "connectionName": "shared_sharepointonline",
-                      "operationId": "HttpRequest"
-                    },
-                    "parameters": {
-                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                      "parameters/method": "GET",
-                      "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
-                      "parameters/headers": {
-                        "Accept": "application/json;odata=verbose",
-                        "Content-Type": "application/json;odata=verbose"
-                      }
-                    },
-                    "authentication": {
-                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                      "type": "Raw"
-                    },
-                    "retryPolicy": {
-                      "type": "none"
-                    }
-                  },
-                  "runAfter": {
-                    "Complete_receipt_Write": [
-                      "Succeeded",
-                      "Failed",
-                      "TimedOut"
-                    ]
-                  }
-                },
-                "Complete_receipt_Confirm_Save": {
-                  "type": "SetVariable",
-                  "inputs": {
-                    "name": "Receipt",
-                    "value": "@body('Complete_receipt_Confirm')?['d']"
-                  },
-                  "runAfter": {
-                    "Complete_receipt_Confirm": [
-                      "Succeeded"
-                    ]
-                  }
-                },
-                "Complete_receipt_Persisted": {
-                  "type": "ParseJson",
-                  "inputs": {
-                    "content": {
-                      "valid": "@and(equals(variables('Receipt')?['Complete'],true),equals(variables('Receipt')?['ResultJson'],string(variables('Result'))),equals(variables('Receipt')?['Uncertain'],false),equals(variables('Receipt')?['Retryable'],false),equals(variables('Receipt')?['Stage'],'COMPLETE'),not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')))"
-                    },
-                    "schema": {
-                      "type": "object",
-                      "required": [
-                        "valid"
-                      ],
-                      "properties": {
-                        "valid": {
-                          "type": "boolean",
-                          "enum": [
-                            true
-                          ]
-                        }
-                      }
-                    }
-                  },
-                  "runAfter": {
-                    "Complete_receipt_Confirm_Save": [
-                      "Succeeded"
-                    ]
-                  }
                 }
               },
               "else": {
@@ -8418,7 +7334,7 @@
             }
           },
           "runAfter": {
-            "Init_IntentBound": [
+            "Init_RecoveryProof": [
               "Succeeded"
             ]
           }
@@ -8528,9 +7444,189 @@
                 ]
               }
             },
+            "Definite_boundary_if_needed": {
+              "type": "If",
+              "expression": "@and(equals(variables('Receipt')?['Complete'],false),not(empty(variables('DefiniteBoundary'))))",
+              "actions": {
+                "Confirm_definite_boundary_Read": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=verbose",
+                        "Content-Type": "application/json;odata=verbose"
+                      }
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    },
+                    "retryPolicy": {
+                      "type": "none"
+                    }
+                  },
+                  "runAfter": {}
+                },
+                "Confirm_definite_boundary_Authority": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": {
+                      "valid": "@and(not(empty(body('Confirm_definite_boundary_Read')?['d']?['__metadata']?['etag'])),not(equals(body('Confirm_definite_boundary_Read')?['d']?['__metadata']?['etag'],'*')),equals(body('Confirm_definite_boundary_Read')?['d']?['Complete'],false),equals(body('Confirm_definite_boundary_Read')?['d']?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(body('Confirm_definite_boundary_Read')?['d']?['SealedAttempts'],'[]')),variables('Attempt'))))"
+                    },
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "valid"
+                      ],
+                      "properties": {
+                        "valid": {
+                          "type": "boolean",
+                          "enum": [
+                            true
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Confirm_definite_boundary_Read": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Confirm_definite_boundary_Write": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "POST",
+                      "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=verbose",
+                        "Content-Type": "application/json;odata=verbose",
+                        "X-HTTP-Method": "MERGE",
+                        "IF-MATCH": "@body('Confirm_definite_boundary_Read')?['d']?['__metadata']?['etag']"
+                      },
+                      "parameters/body": {
+                        "__metadata": {
+                          "type": "@body('Receipt_type')?['value']"
+                        },
+                        "Uncertain": false,
+                        "Stage": "@variables('DefiniteBoundary')"
+                      }
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    },
+                    "retryPolicy": {
+                      "type": "none"
+                    }
+                  },
+                  "runAfter": {
+                    "Confirm_definite_boundary_Authority": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Confirm_definite_boundary_Confirm": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=verbose",
+                        "Content-Type": "application/json;odata=verbose"
+                      }
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    },
+                    "retryPolicy": {
+                      "type": "none"
+                    }
+                  },
+                  "runAfter": {
+                    "Confirm_definite_boundary_Write": [
+                      "Succeeded",
+                      "Failed",
+                      "TimedOut"
+                    ]
+                  }
+                },
+                "Confirm_definite_boundary_Confirm_Save": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Receipt",
+                    "value": "@body('Confirm_definite_boundary_Confirm')?['d']"
+                  },
+                  "runAfter": {
+                    "Confirm_definite_boundary_Confirm": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Confirm_definite_boundary_Persisted": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": {
+                      "valid": "@and(equals(variables('Receipt')?['Uncertain'],false),equals(variables('Receipt')?['Stage'],variables('DefiniteBoundary')),not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')))"
+                    },
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "valid"
+                      ],
+                      "properties": {
+                        "valid": {
+                          "type": "boolean",
+                          "enum": [
+                            true
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Confirm_definite_boundary_Confirm_Save": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "runAfter": {
+                "Final_receipt_Tag": [
+                  "Succeeded"
+                ]
+              }
+            },
             "Reconcile_if_needed": {
               "type": "If",
-              "expression": "@and(equals(variables('Receipt')?['Complete'],false),or(equals(variables('Receipt')?['Uncertain'],true),equals(variables('Receipt')?['Stage'],'COMMITTED')))",
+              "expression": "@and(equals(variables('Receipt')?['Complete'],false),not(not(equals(variables('Result')?['success'],null))),or(equals(variables('Receipt')?['Uncertain'],true),equals(variables('Receipt')?['Stage'],'COMMITTED')))",
               "actions": {
                 "Recovery_request": {
                   "type": "OpenApiConnection",
@@ -8853,18 +7949,6 @@
                     ]
                   }
                 },
-                "Recovery_members_Bound_Code": {
-                  "type": "SetVariable",
-                  "inputs": {
-                    "name": "Code",
-                    "value": "READ_BOUND_OR_INCOMPLETE"
-                  },
-                  "runAfter": {
-                    "Recovery_members": [
-                      "Succeeded"
-                    ]
-                  }
-                },
                 "Recovery_members_Bound": {
                   "type": "ParseJson",
                   "inputs": {
@@ -8887,7 +7971,7 @@
                     }
                   },
                   "runAfter": {
-                    "Recovery_members_Bound_Code": [
+                    "Recovery_members": [
                       "Succeeded"
                     ]
                   }
@@ -8973,145 +8057,17 @@
                     ]
                   }
                 },
-                "Recover_receipt_only": {
-                  "type": "OpenApiConnection",
+                "Recovery_snapshot": {
+                  "type": "SetVariable",
                   "inputs": {
-                    "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                      "connectionName": "shared_sharepointonline",
-                      "operationId": "HttpRequest"
-                    },
-                    "parameters": {
-                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                      "parameters/method": "POST",
-                      "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
-                      "parameters/headers": {
-                        "Accept": "application/json;odata=verbose",
-                        "Content-Type": "application/json;odata=verbose",
-                        "X-HTTP-Method": "MERGE",
-                        "IF-MATCH": "@variables('Receipt')?['__metadata']?['etag']"
-                      },
-                      "parameters/body": {
-                        "__metadata": {
-                          "type": "@outputs('Receipt_type')"
-                        },
-                        "Complete": true,
-                        "ResultJson": "@string(variables('Result'))",
-                        "DomainEffects": true,
-                        "Uncertain": false,
-                        "Retryable": false,
-                        "Stage": "COMPLETE"
-                      }
-                    },
-                    "authentication": {
-                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                      "type": "Raw"
-                    },
-                    "retryPolicy": {
-                      "type": "none"
+                    "name": "RecoveryProof",
+                    "value": {
+                      "etag": "@variables('Receipt')?['__metadata']?['etag']",
+                      "attempt": "@variables('Receipt')?['AttemptToken']"
                     }
                   },
                   "runAfter": {
                     "Recovery_result": [
-                      "Succeeded"
-                    ]
-                  }
-                },
-                "Recovered_receipt": {
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                      "connectionName": "shared_sharepointonline",
-                      "operationId": "HttpRequest"
-                    },
-                    "parameters": {
-                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                      "parameters/method": "GET",
-                      "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
-                      "parameters/headers": {
-                        "Accept": "application/json;odata=verbose",
-                        "Content-Type": "application/json;odata=verbose"
-                      }
-                    },
-                    "authentication": {
-                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                      "type": "Raw"
-                    },
-                    "retryPolicy": {
-                      "type": "none"
-                    }
-                  },
-                  "runAfter": {
-                    "Recover_receipt_only": [
-                      "Succeeded",
-                      "Failed",
-                      "TimedOut"
-                    ]
-                  }
-                },
-                "Recovered_receipt_Save": {
-                  "type": "SetVariable",
-                  "inputs": {
-                    "name": "Receipt",
-                    "value": "@body('Recovered_receipt')?['d']"
-                  },
-                  "runAfter": {
-                    "Recovered_receipt": [
-                      "Succeeded"
-                    ]
-                  }
-                },
-                "Recovered_receipt_Tag": {
-                  "type": "ParseJson",
-                  "inputs": {
-                    "content": {
-                      "valid": "@and(not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')))"
-                    },
-                    "schema": {
-                      "type": "object",
-                      "required": [
-                        "valid"
-                      ],
-                      "properties": {
-                        "valid": {
-                          "type": "boolean",
-                          "enum": [
-                            true
-                          ]
-                        }
-                      }
-                    }
-                  },
-                  "runAfter": {
-                    "Recovered_receipt_Save": [
-                      "Succeeded"
-                    ]
-                  }
-                },
-                "Recovery_receipt_exact": {
-                  "type": "ParseJson",
-                  "inputs": {
-                    "content": {
-                      "valid": "@and(equals(variables('Receipt')?['Complete'],true),equals(json(variables('Receipt')?['ResultJson']),variables('Result')))"
-                    },
-                    "schema": {
-                      "type": "object",
-                      "required": [
-                        "valid"
-                      ],
-                      "properties": {
-                        "valid": {
-                          "type": "boolean",
-                          "enum": [
-                            true
-                          ]
-                        }
-                      }
-                    }
-                  },
-                  "runAfter": {
-                    "Recovered_receipt_Tag": [
                       "Succeeded"
                     ]
                   }
@@ -9121,14 +8077,14 @@
                 "actions": {}
               },
               "runAfter": {
-                "Final_receipt_Tag": [
+                "Definite_boundary_if_needed": [
                   "Succeeded"
                 ]
               }
             },
             "Seal_if_incomplete": {
               "type": "If",
-              "expression": "@equals(variables('Receipt')?['Complete'],false)",
+              "expression": "@and(equals(variables('Receipt')?['Complete'],false),not(not(equals(variables('Result')?['success'],null))))",
               "actions": {
                 "Reject_or_seal": {
                   "type": "If",
@@ -9147,191 +8103,6 @@
                         }
                       },
                       "runAfter": {}
-                    },
-                    "Complete_rejection_Read": {
-                      "type": "OpenApiConnection",
-                      "inputs": {
-                        "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                          "connectionName": "shared_sharepointonline",
-                          "operationId": "HttpRequest"
-                        },
-                        "parameters": {
-                          "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                          "parameters/method": "GET",
-                          "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
-                          "parameters/headers": {
-                            "Accept": "application/json;odata=verbose",
-                            "Content-Type": "application/json;odata=verbose"
-                          }
-                        },
-                        "authentication": {
-                          "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                          "type": "Raw"
-                        },
-                        "retryPolicy": {
-                          "type": "none"
-                        }
-                      },
-                      "runAfter": {
-                        "Rejected_result": [
-                          "Succeeded"
-                        ]
-                      }
-                    },
-                    "Complete_rejection_Read_Save": {
-                      "type": "SetVariable",
-                      "inputs": {
-                        "name": "Receipt",
-                        "value": "@body('Complete_rejection_Read')?['d']"
-                      },
-                      "runAfter": {
-                        "Complete_rejection_Read": [
-                          "Succeeded"
-                        ]
-                      }
-                    },
-                    "Complete_rejection_Authority": {
-                      "type": "ParseJson",
-                      "inputs": {
-                        "content": {
-                          "valid": "@and(not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')),equals(variables('Receipt')?['Complete'],false),equals(variables('Receipt')?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(variables('Receipt')?['SealedAttempts'],'[]')),variables('Attempt'))))"
-                        },
-                        "schema": {
-                          "type": "object",
-                          "required": [
-                            "valid"
-                          ],
-                          "properties": {
-                            "valid": {
-                              "type": "boolean",
-                              "enum": [
-                                true
-                              ]
-                            }
-                          }
-                        }
-                      },
-                      "runAfter": {
-                        "Complete_rejection_Read_Save": [
-                          "Succeeded"
-                        ]
-                      }
-                    },
-                    "Complete_rejection_Write": {
-                      "type": "OpenApiConnection",
-                      "inputs": {
-                        "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                          "connectionName": "shared_sharepointonline",
-                          "operationId": "HttpRequest"
-                        },
-                        "parameters": {
-                          "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                          "parameters/method": "POST",
-                          "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
-                          "parameters/headers": {
-                            "Accept": "application/json;odata=verbose",
-                            "Content-Type": "application/json;odata=verbose",
-                            "X-HTTP-Method": "MERGE",
-                            "IF-MATCH": "@variables('Receipt')?['__metadata']?['etag']"
-                          },
-                          "parameters/body": {
-                            "__metadata": {
-                              "type": "@outputs('Receipt_type')"
-                            },
-                            "Complete": true,
-                            "ResultJson": "@string(variables('Result'))",
-                            "Uncertain": false,
-                            "Retryable": false,
-                            "Stage": "COMPLETE"
-                          }
-                        },
-                        "authentication": {
-                          "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                          "type": "Raw"
-                        },
-                        "retryPolicy": {
-                          "type": "none"
-                        }
-                      },
-                      "runAfter": {
-                        "Complete_rejection_Authority": [
-                          "Succeeded"
-                        ]
-                      }
-                    },
-                    "Complete_rejection_Confirm": {
-                      "type": "OpenApiConnection",
-                      "inputs": {
-                        "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                          "connectionName": "shared_sharepointonline",
-                          "operationId": "HttpRequest"
-                        },
-                        "parameters": {
-                          "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                          "parameters/method": "GET",
-                          "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
-                          "parameters/headers": {
-                            "Accept": "application/json;odata=verbose",
-                            "Content-Type": "application/json;odata=verbose"
-                          }
-                        },
-                        "authentication": {
-                          "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                          "type": "Raw"
-                        },
-                        "retryPolicy": {
-                          "type": "none"
-                        }
-                      },
-                      "runAfter": {
-                        "Complete_rejection_Write": [
-                          "Succeeded",
-                          "Failed",
-                          "TimedOut"
-                        ]
-                      }
-                    },
-                    "Complete_rejection_Confirm_Save": {
-                      "type": "SetVariable",
-                      "inputs": {
-                        "name": "Receipt",
-                        "value": "@body('Complete_rejection_Confirm')?['d']"
-                      },
-                      "runAfter": {
-                        "Complete_rejection_Confirm": [
-                          "Succeeded"
-                        ]
-                      }
-                    },
-                    "Complete_rejection_Persisted": {
-                      "type": "ParseJson",
-                      "inputs": {
-                        "content": {
-                          "valid": "@and(equals(variables('Receipt')?['Complete'],true),equals(variables('Receipt')?['ResultJson'],string(variables('Result'))),equals(variables('Receipt')?['Uncertain'],false),equals(variables('Receipt')?['Retryable'],false),equals(variables('Receipt')?['Stage'],'COMPLETE'),not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')))"
-                        },
-                        "schema": {
-                          "type": "object",
-                          "required": [
-                            "valid"
-                          ],
-                          "properties": {
-                            "valid": {
-                              "type": "boolean",
-                              "enum": [
-                                true
-                              ]
-                            }
-                          }
-                        }
-                      },
-                      "runAfter": {
-                        "Complete_rejection_Confirm_Save": [
-                          "Succeeded"
-                        ]
-                      }
                     }
                   },
                   "else": {
@@ -9402,23 +8173,11 @@
                           ]
                         }
                       },
-                      "Seal_stopped_Read_Save": {
-                        "type": "SetVariable",
-                        "inputs": {
-                          "name": "Receipt",
-                          "value": "@body('Seal_stopped_Read')?['d']"
-                        },
-                        "runAfter": {
-                          "Seal_stopped_Read": [
-                            "Succeeded"
-                          ]
-                        }
-                      },
                       "Seal_stopped_Authority": {
                         "type": "ParseJson",
                         "inputs": {
                           "content": {
-                            "valid": "@and(not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')),equals(variables('Receipt')?['Complete'],false),equals(variables('Receipt')?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(variables('Receipt')?['SealedAttempts'],'[]')),variables('Attempt'))))"
+                            "valid": "@and(not(empty(body('Seal_stopped_Read')?['d']?['__metadata']?['etag'])),not(equals(body('Seal_stopped_Read')?['d']?['__metadata']?['etag'],'*')),equals(body('Seal_stopped_Read')?['d']?['Complete'],false),equals(body('Seal_stopped_Read')?['d']?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(body('Seal_stopped_Read')?['d']?['SealedAttempts'],'[]')),variables('Attempt'))))"
                           },
                           "schema": {
                             "type": "object",
@@ -9436,7 +8195,7 @@
                           }
                         },
                         "runAfter": {
-                          "Seal_stopped_Read_Save": [
+                          "Seal_stopped_Read": [
                             "Succeeded"
                           ]
                         }
@@ -9457,15 +8216,15 @@
                               "Accept": "application/json;odata=verbose",
                               "Content-Type": "application/json;odata=verbose",
                               "X-HTTP-Method": "MERGE",
-                              "IF-MATCH": "@variables('Receipt')?['__metadata']?['etag']"
+                              "IF-MATCH": "@body('Seal_stopped_Read')?['d']?['__metadata']?['etag']"
                             },
                             "parameters/body": {
                               "__metadata": {
-                                "type": "@outputs('Receipt_type')"
+                                "type": "@body('Receipt_type')?['value']"
                               },
                               "Retryable": true,
                               "Stage": "SEALED_STOPPED",
-                              "SealedAttempts": "@string(union(json(variables('Receipt')?['SealedAttempts']),createArray(variables('Attempt'))))"
+                              "SealedAttempts": "@string(union(json(body('Seal_stopped_Read')?['d']?['SealedAttempts']),createArray(variables('Attempt'))))"
                             }
                           },
                           "authentication": {
@@ -9553,404 +8312,6 @@
                             "Succeeded"
                           ]
                         }
-                      },
-                      "Sealed_token": {
-                        "type": "SetVariable",
-                        "inputs": {
-                          "name": "ReleaseToken",
-                          "value": "@outputs('Owner_token')"
-                        },
-                        "runAfter": {
-                          "Seal_stopped_Persisted": [
-                            "Succeeded"
-                          ]
-                        }
-                      },
-                      "Release_sealed_Read": {
-                        "type": "OpenApiConnection",
-                        "inputs": {
-                          "host": {
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                            "connectionName": "shared_sharepointonline",
-                            "operationId": "HttpRequest"
-                          },
-                          "parameters": {
-                            "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                            "parameters/method": "GET",
-                            "parameters/uri": "@concat('_api/web/lists(guid''4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'')/items(',string(variables('TargetGroup')),')')",
-                            "parameters/headers": {
-                              "Accept": "application/json;odata=verbose",
-                              "Content-Type": "application/json;odata=verbose"
-                            }
-                          },
-                          "authentication": {
-                            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                            "type": "Raw"
-                          },
-                          "retryPolicy": {
-                            "type": "none"
-                          }
-                        },
-                        "runAfter": {
-                          "Sealed_token": [
-                            "Succeeded"
-                          ]
-                        }
-                      },
-                      "Release_sealed_Read_Save": {
-                        "type": "SetVariable",
-                        "inputs": {
-                          "name": "Group",
-                          "value": "@body('Release_sealed_Read')?['d']"
-                        },
-                        "runAfter": {
-                          "Release_sealed_Read": [
-                            "Succeeded"
-                          ]
-                        }
-                      },
-                      "Release_sealed_Read_Shape": {
-                        "type": "ParseJson",
-                        "inputs": {
-                          "content": {
-                            "row": "@variables('Group')",
-                            "etagValid": "@and(not(empty(variables('Group')?['__metadata']?['etag'])),not(equals(variables('Group')?['__metadata']?['etag'],'*')))"
-                          },
-                          "schema": {
-                            "type": "object",
-                            "required": [
-                              "row",
-                              "etagValid"
-                            ],
-                            "properties": {
-                              "row": {
-                                "type": "object",
-                                "required": [
-                                  "Id",
-                                  "Capacity",
-                                  "SourceRequestId",
-                                  "SetupComplete",
-                                  "State",
-                                  "LanguageFocusId",
-                                  "CultureFocusId"
-                                ],
-                                "properties": {
-                                  "Id": {
-                                    "type": "integer",
-                                    "minimum": 1
-                                  },
-                                  "Capacity": {
-                                    "type": "integer",
-                                    "minimum": 2,
-                                    "maximum": 10
-                                  },
-                                  "SourceRequestId": {
-                                    "type": "integer",
-                                    "minimum": 1
-                                  },
-                                  "SetupComplete": {
-                                    "type": "boolean"
-                                  },
-                                  "State": {
-                                    "type": "string",
-                                    "enum": [
-                                      "Open",
-                                      "Closed",
-                                      "Ended"
-                                    ]
-                                  },
-                                  "LanguageFocusId": {
-                                    "type": "object",
-                                    "required": [
-                                      "results"
-                                    ],
-                                    "properties": {
-                                      "results": {
-                                        "type": "array",
-                                        "maxItems": 100,
-                                        "items": {
-                                          "type": "integer",
-                                          "minimum": 1
-                                        }
-                                      }
-                                    }
-                                  },
-                                  "CultureFocusId": {
-                                    "type": "object",
-                                    "required": [
-                                      "results"
-                                    ],
-                                    "properties": {
-                                      "results": {
-                                        "type": "array",
-                                        "maxItems": 100,
-                                        "items": {
-                                          "type": "integer",
-                                          "minimum": 1
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              },
-                              "etagValid": {
-                                "type": "boolean",
-                                "enum": [
-                                  true
-                                ]
-                              }
-                            }
-                          }
-                        },
-                        "runAfter": {
-                          "Release_sealed_Read_Save": [
-                            "Succeeded"
-                          ]
-                        }
-                      },
-                      "Release_sealed_If_owned": {
-                        "type": "If",
-                        "expression": "@equals(variables('Group')?['WriteOwner'],variables('ReleaseToken'))",
-                        "actions": {
-                          "Release_sealed_Write": {
-                            "type": "OpenApiConnection",
-                            "inputs": {
-                              "host": {
-                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                                "connectionName": "shared_sharepointonline",
-                                "operationId": "HttpRequest"
-                              },
-                              "parameters": {
-                                "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                                "parameters/method": "POST",
-                                "parameters/uri": "@concat('_api/web/lists(guid''4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'')/items(',string(variables('TargetGroup')),')')",
-                                "parameters/headers": {
-                                  "Accept": "application/json;odata=verbose",
-                                  "Content-Type": "application/json;odata=verbose",
-                                  "X-HTTP-Method": "MERGE",
-                                  "IF-MATCH": "@variables('Group')?['__metadata']?['etag']"
-                                },
-                                "parameters/body": {
-                                  "__metadata": {
-                                    "type": "@outputs('Group_type')"
-                                  },
-                                  "WriteOwner": ""
-                                }
-                              },
-                              "authentication": {
-                                "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                                "type": "Raw"
-                              },
-                              "retryPolicy": {
-                                "type": "none"
-                              }
-                            },
-                            "runAfter": {}
-                          },
-                          "Release_sealed_Readback": {
-                            "type": "OpenApiConnection",
-                            "inputs": {
-                              "host": {
-                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                                "connectionName": "shared_sharepointonline",
-                                "operationId": "HttpRequest"
-                              },
-                              "parameters": {
-                                "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
-                                "parameters/method": "GET",
-                                "parameters/uri": "@concat('_api/web/lists(guid''4bf1b37f-edce-40c5-8fa0-36543a2d0cd6'')/items(',string(variables('TargetGroup')),')')",
-                                "parameters/headers": {
-                                  "Accept": "application/json;odata=verbose",
-                                  "Content-Type": "application/json;odata=verbose"
-                                }
-                              },
-                              "authentication": {
-                                "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                                "type": "Raw"
-                              },
-                              "retryPolicy": {
-                                "type": "none"
-                              }
-                            },
-                            "runAfter": {
-                              "Release_sealed_Write": [
-                                "Succeeded",
-                                "Failed",
-                                "TimedOut"
-                              ]
-                            }
-                          },
-                          "Release_sealed_Readback_Save": {
-                            "type": "SetVariable",
-                            "inputs": {
-                              "name": "Group",
-                              "value": "@body('Release_sealed_Readback')?['d']"
-                            },
-                            "runAfter": {
-                              "Release_sealed_Readback": [
-                                "Succeeded"
-                              ]
-                            }
-                          },
-                          "Release_sealed_Readback_Shape": {
-                            "type": "ParseJson",
-                            "inputs": {
-                              "content": {
-                                "row": "@variables('Group')",
-                                "etagValid": "@and(not(empty(variables('Group')?['__metadata']?['etag'])),not(equals(variables('Group')?['__metadata']?['etag'],'*')))"
-                              },
-                              "schema": {
-                                "type": "object",
-                                "required": [
-                                  "row",
-                                  "etagValid"
-                                ],
-                                "properties": {
-                                  "row": {
-                                    "type": "object",
-                                    "required": [
-                                      "Id",
-                                      "Capacity",
-                                      "SourceRequestId",
-                                      "SetupComplete",
-                                      "State",
-                                      "LanguageFocusId",
-                                      "CultureFocusId"
-                                    ],
-                                    "properties": {
-                                      "Id": {
-                                        "type": "integer",
-                                        "minimum": 1
-                                      },
-                                      "Capacity": {
-                                        "type": "integer",
-                                        "minimum": 2,
-                                        "maximum": 10
-                                      },
-                                      "SourceRequestId": {
-                                        "type": "integer",
-                                        "minimum": 1
-                                      },
-                                      "SetupComplete": {
-                                        "type": "boolean"
-                                      },
-                                      "State": {
-                                        "type": "string",
-                                        "enum": [
-                                          "Open",
-                                          "Closed",
-                                          "Ended"
-                                        ]
-                                      },
-                                      "LanguageFocusId": {
-                                        "type": "object",
-                                        "required": [
-                                          "results"
-                                        ],
-                                        "properties": {
-                                          "results": {
-                                            "type": "array",
-                                            "maxItems": 100,
-                                            "items": {
-                                              "type": "integer",
-                                              "minimum": 1
-                                            }
-                                          }
-                                        }
-                                      },
-                                      "CultureFocusId": {
-                                        "type": "object",
-                                        "required": [
-                                          "results"
-                                        ],
-                                        "properties": {
-                                          "results": {
-                                            "type": "array",
-                                            "maxItems": 100,
-                                            "items": {
-                                              "type": "integer",
-                                              "minimum": 1
-                                            }
-                                          }
-                                        }
-                                      }
-                                    }
-                                  },
-                                  "etagValid": {
-                                    "type": "boolean",
-                                    "enum": [
-                                      true
-                                    ]
-                                  }
-                                }
-                              }
-                            },
-                            "runAfter": {
-                              "Release_sealed_Readback_Save": [
-                                "Succeeded"
-                              ]
-                            }
-                          },
-                          "Release_sealed_Gone_Code": {
-                            "type": "SetVariable",
-                            "inputs": {
-                              "name": "Code",
-                              "value": "COMMITTED_RELEASE_PENDING"
-                            },
-                            "runAfter": {
-                              "Release_sealed_Readback_Shape": [
-                                "Succeeded"
-                              ]
-                            }
-                          },
-                          "Release_sealed_Gone": {
-                            "type": "ParseJson",
-                            "inputs": {
-                              "content": {
-                                "valid": "@not(equals(variables('Group')?['WriteOwner'],variables('ReleaseToken')))"
-                              },
-                              "schema": {
-                                "type": "object",
-                                "required": [
-                                  "valid"
-                                ],
-                                "properties": {
-                                  "valid": {
-                                    "type": "boolean",
-                                    "enum": [
-                                      true
-                                    ]
-                                  }
-                                }
-                              }
-                            },
-                            "runAfter": {
-                              "Release_sealed_Gone_Code": [
-                                "Succeeded"
-                              ]
-                            }
-                          }
-                        },
-                        "else": {
-                          "actions": {}
-                        },
-                        "runAfter": {
-                          "Release_sealed_Read_Shape": [
-                            "Succeeded"
-                          ]
-                        }
-                      },
-                      "Release_sealed_Released": {
-                        "type": "SetVariable",
-                        "inputs": {
-                          "name": "Released",
-                          "value": true
-                        },
-                        "runAfter": {
-                          "Release_sealed_If_owned": [
-                            "Succeeded"
-                          ]
-                        }
                       }
                     }
                   },
@@ -9963,6 +8324,268 @@
               "runAfter": {
                 "Reconcile_if_needed": [
                   "Succeeded"
+                ]
+              }
+            },
+            "Complete_if_ready": {
+              "type": "If",
+              "expression": "@and(equals(variables('Receipt')?['Complete'],false),not(equals(variables('Result')?['success'],null)))",
+              "actions": {
+                "Complete_receipt_Authority": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": {
+                      "valid": "@and(equals(variables('Receipt')?['Complete'],false),not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')),or(and(equals(variables('RecoveryProof')?['etag'],null),and(equals(variables('Receipt')?['AttemptToken'],variables('Attempt')),not(contains(json(coalesce(variables('Receipt')?['SealedAttempts'],'[]')),variables('Attempt'))))),and(not(equals(variables('RecoveryProof')?['etag'],null)),and(equals(variables('Receipt')?['__metadata']?['etag'],variables('RecoveryProof')?['etag']),equals(variables('Receipt')?['AttemptToken'],variables('RecoveryProof')?['attempt']),equals(variables('Group')?['WriteOwner'],concat(outputs('Operation_key'),'|',variables('RecoveryProof')?['attempt']))))))"
+                    },
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "valid"
+                      ],
+                      "properties": {
+                        "valid": {
+                          "type": "boolean",
+                          "enum": [
+                            true
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {}
+                },
+                "Complete_receipt_Write": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "POST",
+                      "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=verbose",
+                        "Content-Type": "application/json;odata=verbose",
+                        "X-HTTP-Method": "MERGE",
+                        "IF-MATCH": "@variables('Receipt')?['__metadata']?['etag']"
+                      },
+                      "parameters/body": {
+                        "__metadata": {
+                          "type": "@body('Receipt_type')?['value']"
+                        },
+                        "Complete": true,
+                        "ResultJson": "@string(variables('Result'))",
+                        "Uncertain": false,
+                        "Retryable": false,
+                        "Stage": "COMPLETE",
+                        "DomainEffects": "@if(equals(variables('RecoveryProof')?['etag'],null),variables('Receipt')?['DomainEffects'],true)"
+                      }
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    },
+                    "retryPolicy": {
+                      "type": "none"
+                    }
+                  },
+                  "runAfter": {
+                    "Complete_receipt_Authority": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Complete_receipt_Confirm": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(variables('Receipt')?['Id']),')')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=verbose",
+                        "Content-Type": "application/json;odata=verbose"
+                      }
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    },
+                    "retryPolicy": {
+                      "type": "none"
+                    }
+                  },
+                  "runAfter": {
+                    "Complete_receipt_Write": [
+                      "Succeeded",
+                      "Failed",
+                      "TimedOut"
+                    ]
+                  }
+                },
+                "Complete_receipt_Confirm_Save": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Receipt",
+                    "value": "@body('Complete_receipt_Confirm')?['d']"
+                  },
+                  "runAfter": {
+                    "Complete_receipt_Confirm": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Complete_receipt_Confirm_Tag": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": {
+                      "valid": "@and(not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')))"
+                    },
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "valid"
+                      ],
+                      "properties": {
+                        "valid": {
+                          "type": "boolean",
+                          "enum": [
+                            true
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Complete_receipt_Confirm_Save": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Complete_receipt_Persisted": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": {
+                      "valid": "@and(equals(variables('Receipt')?['Complete'],true),equals(variables('Receipt')?['ResultJson'],string(variables('Result'))),equals(variables('Receipt')?['Uncertain'],false),equals(variables('Receipt')?['Retryable'],false),equals(variables('Receipt')?['Stage'],'COMPLETE'))"
+                    },
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "valid"
+                      ],
+                      "properties": {
+                        "valid": {
+                          "type": "boolean",
+                          "enum": [
+                            true
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Complete_receipt_Confirm_Tag": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "runAfter": {
+                "Seal_if_incomplete": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Completion_readback_if_needed": {
+              "type": "If",
+              "expression": "@and(not(equals(variables('Result')?['success'],null)),not(equals(actions('Complete_receipt_Persisted')?['status'],'Succeeded')))",
+              "actions": {
+                "Completion_retry_readback": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "@concat('_api/web/lists/getbytitle(''TandemOperationReceipts'')/items(',string(coalesce(variables('Receipt')?['Id'],body('Final_receipt')?['d']?['Id'])),')')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=verbose",
+                        "Content-Type": "application/json;odata=verbose"
+                      }
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    },
+                    "retryPolicy": {
+                      "type": "none"
+                    }
+                  },
+                  "runAfter": {}
+                },
+                "Completion_retry_readback_Save": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Receipt",
+                    "value": "@body('Completion_retry_readback')?['d']"
+                  },
+                  "runAfter": {
+                    "Completion_retry_readback": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Completion_retry_readback_Tag": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": {
+                      "valid": "@and(not(empty(variables('Receipt')?['__metadata']?['etag'])),not(equals(variables('Receipt')?['__metadata']?['etag'],'*')))"
+                    },
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "valid"
+                      ],
+                      "properties": {
+                        "valid": {
+                          "type": "boolean",
+                          "enum": [
+                            true
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Completion_retry_readback_Save": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "runAfter": {
+                "Complete_if_ready": [
+                  "Succeeded",
+                  "Failed",
+                  "TimedOut"
                 ]
               }
             },
@@ -10050,17 +8673,39 @@
                     ]
                   }
                 },
-                "Completed_token": {
+                "Replay_result": {
                   "type": "SetVariable",
                   "inputs": {
-                    "name": "ReleaseToken",
-                    "value": "@concat(outputs('Operation_key'),'|',variables('Receipt')?['AttemptToken'])"
+                    "name": "Result",
+                    "value": "@body('Saved_result')"
                   },
                   "runAfter": {
                     "Saved_result_binding": [
                       "Succeeded"
                     ]
                   }
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "runAfter": {
+                "Completion_readback_if_needed": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Release_final_if_settled": {
+              "type": "If",
+              "expression": "@or(equals(variables('Receipt')?['Complete'],true),and(equals(variables('Receipt')?['Retryable'],true),equals(variables('Receipt')?['Uncertain'],false),equals(variables('Receipt')?['AttemptToken'],variables('Attempt')),contains(json(coalesce(variables('Receipt')?['SealedAttempts'],'[]')),variables('Attempt'))))",
+              "actions": {
+                "Completed_token": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ReleaseToken",
+                    "value": "@concat(outputs('Operation_key'),'|',variables('Receipt')?['AttemptToken'])"
+                  },
+                  "runAfter": {}
                 },
                 "Release_completed_Read": {
                   "type": "OpenApiConnection",
@@ -10228,7 +8873,7 @@
                           },
                           "parameters/body": {
                             "__metadata": {
-                              "type": "@outputs('Group_type')"
+                              "type": "@body('Group_type')?['value']"
                             },
                             "WriteOwner": ""
                           }
@@ -10447,25 +9092,13 @@
                       "Succeeded"
                     ]
                   }
-                },
-                "Replay_result": {
-                  "type": "SetVariable",
-                  "inputs": {
-                    "name": "Result",
-                    "value": "@body('Saved_result')"
-                  },
-                  "runAfter": {
-                    "Release_completed_Released": [
-                      "Succeeded"
-                    ]
-                  }
                 }
               },
               "else": {
                 "actions": {}
               },
               "runAfter": {
-                "Seal_if_incomplete": [
+                "Complete_replay": [
                   "Succeeded"
                 ]
               }
@@ -10484,7 +9117,7 @@
           "inputs": {
             "kind": "TandemRespondGroupJoinRequest",
             "sourceTicket": 65,
-            "packageBuildId": "040a6af8-ab91-4e09-b891-b638d96178ba",
+            "packageBuildId": "ea732b74-947a-4478-a7df-92d2ff5696a1",
             "contractVersion": 1,
             "rulesVersion": 1,
             "success": "@and(equals(variables('Receipt')?['Complete'],true),equals(variables('Released'),true),equals(variables('Result')?['success'],true))",

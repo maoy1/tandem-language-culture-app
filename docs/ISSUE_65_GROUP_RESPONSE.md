@@ -13,11 +13,11 @@ is retained. #11 personal response remains Euclid's separate deliverable.
 
 ## Exact component and entry points
 
-Build **040a6af8-ab91-4e09-b891-b638d96178ba**, readable parent
+Build **ea732b74-947a-4478-a7df-92d2ff5696a1**, readable parent
 `artifacts/group_response/TandemRespondGroupJoinRequest.definition.json`, adjacent
 `.definition.review.json`, exact IO/schema/connection contract
-`config/group_response_flow_contract.json`. Parent **449 action definitions / depth5**
-across all branches, scopes and loops, within 500/8, with 51 definitions of headroom;
+`config/group_response_flow_contract.json`. Parent **393 action definitions / depth5**
+across all branches, scopes and loops, within 500/8, with 107 definitions of headroom;
 re-measure after final assembly/any added actions. Child is a separate84/depth7
 workflow; do not sum the nesting depths or confuse loop executions with definitions.
 
@@ -184,7 +184,7 @@ caller/business/parity/load tests: **NOT RUN**. Ordinary participant/privacy tes
 
 Unavoidable owner steps are final Solution import/connection selection, owner-only
 Studio draft binding and tenant test execution. Before those steps, require the
-final assembler's ZIP/version/hash tied to 040a6af8-ab91-4e09-b891-b638d96178ba, enabled matching shared
+final assembler's ZIP/version/hash tied to ea732b74-947a-4478-a7df-92d2ff5696a1, enabled matching shared
 child, verified schema target/unique/index settings, existing Invoker connection,
 and an owner/synthetic isolated operational fixture produced by the owning flows
 (#11 source group, #17 join requests). No production history fabrication or broad
@@ -274,8 +274,52 @@ profile freshness, source/party/foreign membership, immutable replay/Left, unkno
 persisted writes, partial readback, sealed prefix/three-attempt bounds, current
 physical count/capacity, release-only replay and exact target receipt fields.
 
-Final full regression: **415 passed in 58.90s** (357 baseline +58 #65 cases).
+Historical build `040a6af8-ab91-4e09-b891-b638d96178ba` at commit `02dce45`: **415 passed in 58.90s** (357 baseline +58 #65 cases).
 The focused suite and final full run cover the Closed/full/unavailable Decline
 cases, unrelated provisional-member independence, sealed-release replay and
 combined wildcard-ETag guards. `git diff --check` and final definition/generator
 fingerprints pass. No native/ordinary-user certification follows from these tests.
+
+
+## Shared finalization refinement
+
+This build reduces 449 to 393 definitions, depth5, without deleting the
+operation-time authority/freshness, exact ETag CAS, unique episode, physical count,
+commit or recovery proofs. One receipt completion handles normal Accept/Decline,
+saved rejection and positively verified committed recovery. One final matching-token
+release handles completed and safely sealed stopped attempts; the prior sealed
+release still occurs before the next receipt claim. Positive completion readback
+continues after a failed transport response, and partial readback rereads only the
+already bound receipt ID before trusting completion or releasing a token.
+
+Four identical definite-rejection receipt patches now run once after Business has
+stopped; their existing case-specific readback proofs still run at the original
+write boundary. Receipt pre-read authority/CAS/body now reference that read
+output directly; post-write snapshots are validated before further progress. Direct
+source-request snapshots replace two unused mutable copies. Entity-type projection
+and validation on the same snapshot are one typed parser. Repeated assignments
+of the same local error code are coalesced only while no nested control could
+change it; all validation actions remain.
+
+For parent fixture hooks: Release_sealed_* now uses Release_completed_*;
+Complete_rejection_*/Recover_receipt_only use Complete_receipt_*;
+Claim/Decision/Member/Commit_rejected receipt writes use
+Confirm_definite_boundary_*. The case-specific *_definite_error/Decision_conflict/
+Claim_race_busy checks remain. *_type_known guards are folded into *_type object
+parsers (body(...).value); builder signatures and public/shared IO are unchanged.
+
+Historical review and 415-test evidence are retained in
+artifacts/group_response/results/refactor-baseline.json and commit02dce45. The
+owner's historical141 count stays with its original parent fixture/version;
+this branch neither reruns it nor attributes it to this build. Generator changes
+do not change imported flows. #81 no-impact: contract/rules1/1, schemas, semantic
+rules and other consumers unchanged. Native/access/performance remain NOT RUN.
+
+Final refactor validation: **432 full-suite PASS in 87.66s**, including **75 focused #65 cases** (58 original +17 additional). Definition/generator hashes and whitespace checks PASS. Native/access/performance NOT RUN.
+
+Remaining definition breakdown: Business=300, Finalize=72, Initialization_report_response=21.
+There are 84 SharePoint connector definitions and 114 typed/Boolean validation
+definitions. The remaining local state preserves failed/skipped-action readback,
+frozen intent, attempt ownership and retry/replay boundaries. This pass stops at
+393 rather than moving checks across intervening I/O or introducing a stage engine
+to reach an arbitrary sub350 count. No additional runtime helper/flow is introduced.
