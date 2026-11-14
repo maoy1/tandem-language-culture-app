@@ -1,0 +1,36 @@
+{
+  "sourceTicket": 81,
+  "sourceExportSha256": "ce19af2e37e7de4a9317ec4c63e8d5777beaf23a57120c99b4e38d38ce4946d4",
+  "sourceFile": "TandemSharedValidation81_1_0_0_2.zip",
+  "solutionName": "TandemSharedValidation81",
+  "solutionVersion": "1.0.0.2",
+  "unmanaged": true,
+  "flowCount": 4,
+  "probeActions": {
+    "actions": 2,
+    "maximumActionDepth": 1
+  },
+  "sharedActions": {
+    "actions": 84,
+    "maximumActionDepth": 7
+  },
+  "sharePointConnectionKey": "shared_sharepointonline",
+  "connectionReferenceLogicalName": "cre46_sharepointonline_a22363a216",
+  "runtimeSource": "invoker",
+  "connector": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+  "sharedChildId": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+  "sharedBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
+  "probeFlowId": "85a3ff27-24e0-f111-84e8-7c1e52012c38",
+  "site": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+  "nativeConfigurationVerified": true,
+  "ownerExecutionEvidence": "sharepoint-caller-probe.owner-evidence.json",
+  "ordinaryUserAccessVerified": false,
+  "powerAppsSolutionConsumerParity": "NOT_RUN",
+  "automatedEventConnectionMode": "Not supplied by this manual Invoker probe",
+  "businessWritesVerified": false,
+  "childActionsMatchDeliveredV2IgnoringDesignerMetadata": true,
+  "rawExportCommitted": false,
+  "runtimeScope": "Owner ID16 plus real child call already reported; Invoker setting now confirmed by native export. Other-user tests remain deferred.",
+  "adapterSourceSha256": "11b656099168b3f3574c58c18244ca812d6f35922b98d7f1760537241da260b3",
+  "adapterLocalCases": 22
+}

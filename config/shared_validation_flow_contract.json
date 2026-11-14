@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "sourceTicket": 81,
+  "flowName": "TandemValidateContext",
+  "contractVersion": 1,
+  "rulesVersion": 1,
+  "packageBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
+  "solutionName": "TandemSharedValidation81",
+  "state": "NATIVE_SHARED_FULL_AND_MANUAL_INVOKER_ENVELOPE_VERIFIED_BUSINESS_PARITY_PENDING",
+  "trigger": {
+    "kind": "Button",
+    "input": {
+      "text": "RequestJson: JSON string, at most 250000 characters"
+    },
+    "requiredEnvelope": [
+      "contractVersion=1",
+      "rulesVersion=1",
+      "mode"
+    ]
+  },
+  "modes": {
+    "SCHEMA": "metadata.lists raw complete snapshots {role,Id,BaseTemplate,complete,Fields,ValidationFormula}; optional schemaRoles subsets; default all seven roles. Fields use native InternalName/TypeAsString/Required/Indexed/EnforceUniqueValues/Hidden/ReadOnlyField/DefaultValue/SchemaXml. No reads/collection/provenance verification in this mode.",
+    "NORMALIZE": "profiles and active-catalogue ID sets; returns normalized internal profiles/catalogues",
+    "PAIR": "profiles/catalogues plus leftId and rightId; returns eligible,fitType and four overlap arrays",
+    "GROUP": "profiles/catalogues plus candidateId and group; caller supplies fresh committed member IDs and focusSharersAvailable evidence; returns group rules",
+    "PROFILE": "exactly one profile plus catalogues; checks content independently of availability. Known Any selection can be valid content while excluded from matching."
+  },
+  "rawProfile": {
+    "required": [
+      "profileId positive integer",
+      "accountKey nonblank technical identity key",
+      "status string or null",
+      "participationStatus Active/Paused/Inactive or null",
+      "openToConnections boolean or null"
+    ],
+    "optional": [
+      "timezoneId positive integer or null",
+      "teachIds/learnIds/shareCultureIds/learnCultureIds positive-integer arrays or null"
+    ],
+    "maxProfiles": 500,
+    "availability": "Only explicit Active/Active/true; blanks stay ineligible, not defaulted"
+  },
+  "catalogues": {
+    "required": [
+      "languageIds",
+      "cultureIds",
+      "timezoneIds",
+      "anyLanguageId integer or explicit null"
+    ],
+    "source": "Trusted parent passes active concrete catalogue IDs plus the known deferred Any sentinel; duplicate IDs deduplicated"
+  },
+  "response": {
+    "success": "Evaluation completed with code OK; DOES NOT mean pair/group eligible or authorize a write",
+    "resultcode": "OK/VERSION_MISMATCH/UNSUPPORTED_MODE/INVALID_INPUT/INVALID_PROFILE_DATA/PROFILE_NOT_FOUND/PROFILE_COUNT_INVALID/SCHEMA_MISMATCH/RESPONSE_BOUND",
+    "resultjson": "JSON object with result, versions, build, source hash, child run reference, authorizesAction=false and zero I/O counters",
+    "diagnostics": "Additive stage statuses inside resultjson only; parent failedCases includes actualCode,expectedCode,diagnostics without raw input"
+  },
+  "consumerRules": [
+    "Bind authenticated actor and fetch current relevant data in trusted parent; no owner credential substitution",
+    "Inspect result.eligible for PAIR, result.compatible and other operation conditions for GROUP, result.valid for PROFILE, result.schemaMatches for SCHEMA; success alone never grants eligibility",
+    "Never return NORMALIZE internal account keys to the app; approved public projections remain consumer-owned",
+    "Keep operation-specific audience/authority, commitment, replay, ETag and unique-key writes at their authoritative boundary",
+    "Full schema mode is for explicit audit/change/deployment checks; do not repeat unrelated metadata for each business action",
+    "A manual audit does not reserve eligibility/capacity or certify future state",
+    "No production consumer has been switched; parent Solution packaging with Invoker SharePoint connections still requires native parity proof"
+  ],
+  "boundaries": {
+    "connectors": 0,
+    "businessReads": 0,
+    "writes": 0,
+    "responseResultCharacters": 200000,
+    "metadataRoles": 7,
+    "metadataFieldsPerRole": 500,
+    "schemaBaselineFields": 48,
+    "permissionsOrLicencesChanged": false,
+    "liveSchemaAudit": "NOT_RUN; current package validates supplied metadata only"
+  },
+  "sourceExportSha256": "5560d8d80f78de67966160fe0276711494b76c0f176e19356d6cf32d2c4c191c",
+  "newPackageSha256": "608052804073ccd2874a1f9d83fbfeb62fd331fcbe86e7be5ed375139576717e",
+  "localTests": 357,
+  "newCases": 115,
+  "nativeSyntheticSmokeCases": 44,
+  "nativeStatus": "QUICK3_FULL44_PASS; OWNER_SP_ID16_CHILD_OK; NATIVE_RUNTIME_SOURCE_INVOKER_VERIFIED; BUSINESS_PARITY_NOT_RUN",
+  "nativeQuickSmokeCases": 3,
+  "solutionVersion": "1.0.0.1",
+  "nativeFailureEvidence": "artifacts/shared_validation/results/v1-request-text.owner-error.json",
+  "nativeQuickRunReference": "08584069506351729738499173108cU14",
+  "nativeQuickEvidence": "artifacts/shared_validation/results/v2-quick.owner-report.json",
+  "nativeFullRunReference": "08584069504668815720383921608CU09",
+  "nativeFullEvidence": "artifacts/shared_validation/results/v2-full.owner-report.json",
+  "nativeCallerProbeEvidence": "artifacts/shared_validation/results/sharepoint-caller-probe.owner-evidence.json",
+  "nativeCallerProbeChildRunReference": "08584069483776257593504328231CU07",
+  "nativeConnectionEnvelopeEvidence": "artifacts/shared_validation/results/native-sharepoint-solution.analysis.json",
+  "nativeConnectionExportSha256": "ce19af2e37e7de4a9317ec4c63e8d5777beaf23a57120c99b4e38d38ce4946d4",
+  "nativeSourceAdapterCases": 22,
+  "runtimePackageUnchangedBySourceAdapter": true
+}
