@@ -245,7 +245,7 @@ members can see group join requests, accept/decline and manage permitted group
 controls. A request targets the group, not a designated contact. The first valid
 successfully persisted response wins, subject to #47 conflict protection.
 
-Group join requests may contain an optional introduction message (owner-approved).
+Group join requests may contain an optional introduction message (owner-approved), limited to **2,000 plain-text characters**, enforced by both app and server flow.
 Its technical field name, app input/output mapping and request schema remain to
 be specified before #17 package generation. Personal-request message scope is
 not expanded by this group-join decision.
@@ -318,7 +318,7 @@ are separate pending items. No additional paid platform or hosting is permitted.
 - [x] Empty offer/interest form blocks save; invalid existing records excluded until corrected; self-service revalidation preserves participation/open choices.
 - [x] Combined minimum 2 confirmed.
 - [x] Final choice removes leader/contact role; all active members see/respond/manage.
-- [x] Optional group-join introduction approved; technical field/length review belongs to #17.
+- [x] Optional group-join introduction approved, maximum 2,000 plain-text characters in app and server flow; technical field/setup remains #17.
 - [x] Full person/group display approved; exclude email and admin/system data.
 - [x] Implementation and deferred decisions have explicit receiving tickets below.
 - [x] Owner accepted the target field tables; PR #59 merged and #46 closed on 2026-11-08.
@@ -343,8 +343,9 @@ runtime test assignment. Implementation tickets remain open independently.
 | Notifications and operational delivery | #49 decision, #21 implementation; no channel selected by #46 |
 | Detailed error wording, paging and runtime coverage | Relevant reader/action implementation tickets and #25/#27; basic truthful failure handling remains mandatory |
 
-The proposed 1,000-character introduction limit was not approved and is not a
-contract default. Keep it for #17 review. Unavailable targets must never bypass
+The owner approved a **2,000-character** maximum for the optional plain-text
+group-join introduction. The earlier proposed 1,000 limit is not the contract.
+#17 owns the technical field mapping, setup and app/server boundary tests. Unavailable targets must never bypass
 acceptance eligibility; detailed Pending display/cancellation policy remains
 #10/#11/#17 work. No remaining follow-up is silently dropped or marked tested.
 
