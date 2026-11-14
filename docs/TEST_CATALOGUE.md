@@ -245,7 +245,7 @@ cases are REQUIREMENT PENDING, not approval of new policies or runtime behavior.
 |---|---|---|
 | REQ-012 | Inspect own Sent/Received history and attempt an unrelated request | Only authorized rows/actions; tampered inputs denied under verified access; stable terminal history |
 | REQ-013 | Two active group members, a non-member and a departed member inspect group inbox/respond | Current active members see/respond; no leader role; others denied; detailed departed-history projection follows the reader contract |
-| REQ-014 | Submit group join with blank/nonblank introduction; inspect retained request | Introduction optional, stored/displayed as plain text only to authorized request audience; final length boundary awaits #17 approval |
+| REQ-014 | Submit group join with blank/nonblank introduction; inspect retained request | Introduction optional, stored/displayed as plain text only to authorized request audience; maximum 2,000 plain-text characters approved under #17 |
 | REQ-015 | Inspect Accepted/Declined/Cancelled history and retry old action buttons | Agreed history retained; no second conflicting decision or membership; no rollback on permission failure |
 | AUTH-001 | Active member edits permitted group controls; non-member tries same | Membership checked against current authoritative data through verified access; non-member denied |
 | AUTH-002 | Direct/tampered flow invocation with another participant/request/group reference | Authenticated caller binding enforced; input IDs/email are not authorization; no private data leak |
