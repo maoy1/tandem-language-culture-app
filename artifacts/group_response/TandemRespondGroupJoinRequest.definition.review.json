@@ -1,0 +1,16 @@
+{
+  "sourceTicket": 65,
+  "packageBuildId": "ea732b74-947a-4478-a7df-92d2ff5696a1",
+  "actions": 393,
+  "maximumActionDepth": 5,
+  "definitionSha256": "ac61d26d625b93c124068eeee185dc061d20e13bfcfba484c645e4cb58b3e5d2",
+  "generatorSha256": "4889e093bad8c7ca4eb5bd8521e926f1e90bb6364b94ce047df2b322978617d1",
+  "childWorkflowReferenceName": "e9aa88eb-a666-4df1-b088-176be7bcd00d",
+  "contractVersion": 1,
+  "rulesVersion": 1,
+  "deployment": "PARENT_COMPONENT_FOR_FINAL_SOLUTION_ASSEMBLY",
+  "tenantResult": "NOT_RUN",
+  "ordinaryUserAccessVerified": false,
+  "dependency": "Exact #81 batch receipt schema and existing request/group/member mappings and Invoker; not tenant-verified",
+  "legacyZip": "NOT_APPLICABLE: linked Workflow calls require final Solution assembly"
+}
