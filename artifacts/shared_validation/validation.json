@@ -5,7 +5,7 @@
   "newCases": 93,
   "fullSuite": 335,
   "localResult": "PASS",
-  "nativeResult": "V2_QUICK_3_AND_FULL_44_PASS; LIVE_SCHEMA_AND_BUSINESS_CONSUMERS_NOT_RUN",
+  "nativeResult": "QUICK3_FULL44_AND_OWNER_SP_PARENT_CHILD_PASS; CONNECTION_EXPORT_AND_CONSUMERS_PENDING",
   "priorNativeFailure": "results/v1-smoke.owner-report.json",
   "inputError": "results/v1-request-text.owner-error.json",
   "localReproduction": "Native JSON deserialization rejects v1 primitive string schema; wrapper handles document once",
@@ -32,5 +32,7 @@
   "nativeQuickRunReference": "08584069506351729738499173108cU14",
   "nativeQuickEvidence": "artifacts/shared_validation/results/v2-quick.owner-report.json",
   "nativeFullRunReference": "08584069504668815720383921608CU09",
-  "nativeFullEvidence": "artifacts/shared_validation/results/v2-full.owner-report.json"
+  "nativeFullEvidence": "artifacts/shared_validation/results/v2-full.owner-report.json",
+  "nativeCallerProbeEvidence": "artifacts/shared_validation/results/sharepoint-caller-probe.owner-evidence.json",
+  "nativeCallerProbeChildRunReference": "08584069483776257593504328231CU07"
 }

@@ -6,7 +6,7 @@
   "rulesVersion": 1,
   "packageBuildId": "c79b7b64-b3ce-4de3-aa74-0ed62bca1524",
   "solutionName": "TandemSharedValidation81",
-  "state": "V2_NATIVE_QUICK_AND_FULL_SYNTHETIC_PASS_CONSUMER_PARITY_PENDING",
+  "state": "NATIVE_SYNTHETIC_AND_OWNER_CALLER_PROBE_PASS_CONNECTION_EXPORT_PENDING",
   "trigger": {
     "kind": "Button",
     "input": {
@@ -80,12 +80,14 @@
   "localTests": 335,
   "newCases": 93,
   "nativeSyntheticSmokeCases": 44,
-  "nativeStatus": "V2_QUICK_3_AND_FULL_44_PASS; LIVE_SCHEMA_PROVENANCE_AND_CONSUMER_PARITY_NOT_RUN",
+  "nativeStatus": "QUICK3_FULL44_PASS; OWNER_SP_ID16_CHILD_OK; CONNECTION_EXPORT_AND_REAL_CONSUMER_PARITY_PENDING",
   "nativeQuickSmokeCases": 3,
   "solutionVersion": "1.0.0.1",
   "nativeFailureEvidence": "artifacts/shared_validation/results/v1-request-text.owner-error.json",
   "nativeQuickRunReference": "08584069506351729738499173108cU14",
   "nativeQuickEvidence": "artifacts/shared_validation/results/v2-quick.owner-report.json",
   "nativeFullRunReference": "08584069504668815720383921608CU09",
-  "nativeFullEvidence": "artifacts/shared_validation/results/v2-full.owner-report.json"
+  "nativeFullEvidence": "artifacts/shared_validation/results/v2-full.owner-report.json",
+  "nativeCallerProbeEvidence": "artifacts/shared_validation/results/sharepoint-caller-probe.owner-evidence.json",
+  "nativeCallerProbeChildRunReference": "08584069483776257593504328231CU07"
 }

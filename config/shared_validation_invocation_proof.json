@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "sourceTicket": 81,
   "flow": "TandemValidateContext",
-  "state": "V2_NATIVE_FULL_44_PASS_SHAREPOINT_PARENT_AND_CONSUMER_PENDING",
+  "state": "OWNER_SHAREPOINT_PARENT_CHILD_PASS_NATIVE_CONNECTION_EXPORT_PENDING",
   "implementationCertified": false,
   "officialReferences": [
     "https://learn.microsoft.com/en-us/power-automate/create-child-flows",
@@ -18,7 +18,10 @@
     "tenantBrowser": "No connected authenticated tenant tab available",
     "evidenceBoundary": "Owner invocation body + inspected native unmanaged export, not live SharePoint/ordinary-user proof",
     "generatedSolutionImport": "PASS: imported generated v1 and parent completed 44 real child calls",
-    "generatedValidation": "V1_FAIL_RETAINED; V2_QUICK_3_AND_FULL_44_PASS"
+    "generatedValidation": "V1_FAIL_RETAINED; V2_QUICK_3_AND_FULL_44_PASS",
+    "sharePointParentExecution": "OWNER_REPORTED_SP_ID16_AND_SHARED_CHILD_OK",
+    "solutionConnectionReferences": "NOT_INSPECTED; native Solution export pending",
+    "runOnlyInvokerMode": "Not independently established by returned owner-context bodies; inspect export/configuration"
   },
   "firstOwnerCheck": {
     "action": "Existing Tandem environment > More > Solutions; inspect only",
@@ -187,5 +190,7 @@
   "nativeQuickRunReference": "08584069506351729738499173108cU14",
   "nativeQuickEvidence": "artifacts/shared_validation/results/v2-quick.owner-report.json",
   "nativeFullRunReference": "08584069504668815720383921608CU09",
-  "nativeFullEvidence": "artifacts/shared_validation/results/v2-full.owner-report.json"
+  "nativeFullEvidence": "artifacts/shared_validation/results/v2-full.owner-report.json",
+  "nativeCallerProbeEvidence": "artifacts/shared_validation/results/sharepoint-caller-probe.owner-evidence.json",
+  "nativeCallerProbeChildRunReference": "08584069483776257593504328231CU07"
 }
