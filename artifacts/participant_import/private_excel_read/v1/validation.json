@@ -1,0 +1,29 @@
+{
+  "sourceTicket": 48,
+  "packageBuildId": "bf000526-7298-41c3-93ef-8d8e36fe6803",
+  "sha256": "b06501d553f166a110d65275e8aa94a9de265b745448372e925ee6844cebf4a7",
+  "actions": 5,
+  "maximumActionDepth": 1,
+  "localTests": {
+    "passed": 48,
+    "failed": 0,
+    "scope": "12 private read proof tests plus36 existing preparation/import regressions; synthetic only"
+  },
+  "nativeConnection": "Owner reports Excel Online (Business) Connected on2026-11-15",
+  "nativeFileRead": "NOT RUN",
+  "nativeImport": "NOT RUN",
+  "nativeConfiguration": "NOT RUN",
+  "participantWriteActions": 0,
+  "secureRowActions": [
+    "Read_workbook",
+    "Private_rows",
+    "Private_email_present",
+    "Private_identity_text_present"
+  ],
+  "reportContainsIdentityValues": false,
+  "reportScope": "Aggregate counts and sanitized codes; never raw rows,addresses,logins,user IDs,source IDs or file URLs",
+  "configurationRequired": "Owner selects actual Document Library/private File/Table in supplied Read_workbook action; no raw source sharing required",
+  "originalIdentifiedWorkbookReadByAssistant": false,
+  "coreBackendChanges": 0,
+  "sharedContractImpact": "None; bounded new Excel input-adapter proof only"
+}

@@ -1,0 +1,203 @@
+{
+  "name": "bf000526-7298-41c3-93ef-8d8e36fe6803",
+  "id": "/providers/Microsoft.Flow/flows/bf000526-7298-41c3-93ef-8d8e36fe6803",
+  "type": "Microsoft.Flow/flows",
+  "properties": {
+    "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
+    "displayName": "TandemPrivateExcelReadProbe",
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Button",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ExpectedRows": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 250,
+                  "default": 206,
+                  "title": "ExpectedRows",
+                  "x-ms-content-hint": "NUMBER"
+                }
+              },
+              "required": []
+            }
+          },
+          "runtimeConfiguration": {
+            "concurrency": {
+              "runs": 1
+            }
+          }
+        }
+      },
+      "actions": {
+        "Read_workbook": {
+          "type": "OpenApiConnection",
+          "runAfter": {},
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          },
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+              "connectionName": "shared_excelonlinebusiness",
+              "operationId": "GetItems"
+            },
+            "parameters": {
+              "source": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+              "drive": "SELECT_DOCUMENT_LIBRARY",
+              "file": "SELECT_PRIVATE_WORKBOOK",
+              "table": "Table1",
+              "$top": 251
+            },
+            "authentication": "@parameters('$authentication')",
+            "retryPolicy": {
+              "type": "none"
+            }
+          }
+        },
+        "Private_rows": {
+          "type": "ParseJson",
+          "runAfter": {
+            "Read_workbook": [
+              "Succeeded"
+            ]
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          },
+          "inputs": {
+            "content": "@body('Read_workbook')?['value']",
+            "schema": {
+              "type": "array",
+              "maxItems": 251,
+              "items": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "Private_email_present": {
+          "type": "Query",
+          "runAfter": {
+            "Private_rows": [
+              "Succeeded"
+            ]
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          },
+          "inputs": {
+            "from": "@body('Private_rows')",
+            "where": "@and(not(empty(trim(string(item()?['Email'])))),not(equals(toLower(trim(string(item()?['Email']))),'anonymous')))"
+          }
+        },
+        "Private_identity_text_present": {
+          "type": "Query",
+          "runAfter": {
+            "Private_rows": [
+              "Succeeded"
+            ]
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          },
+          "inputs": {
+            "from": "@body('Private_rows')",
+            "where": "@not(empty(trim(string(item()?['Please leave your name and Email']))))"
+          }
+        },
+        "Private_read_report": {
+          "type": "Compose",
+          "runAfter": {
+            "Private_rows": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ],
+            "Private_email_present": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ],
+            "Private_identity_text_present": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          },
+          "inputs": {
+            "kind": "TandemPrivateExcelReadProbe",
+            "schemaVersion": 1,
+            "sourceTicket": 48,
+            "packageBuildId": "bf000526-7298-41c3-93ef-8d8e36fe6803",
+            "runReference": "@workflow()?['run']?['name']",
+            "success": "@and(equals(actions('Read_workbook')?['status'],'Succeeded'),equals(actions('Private_rows')?['status'],'Succeeded'),and(equals(actions('Private_email_present')?['status'],'Succeeded'),equals(actions('Private_identity_text_present')?['status'],'Succeeded')),and(less(length(coalesce(body('Private_rows'),json('[]'))),251),empty(body('Read_workbook')?['@odata.nextLink']),empty(body('Read_workbook')?['odata.nextLink'])),equals(length(coalesce(body('Private_rows'),json('[]'))),coalesce(triggerBody()?['ExpectedRows'],206)),and(contains(first(union(coalesce(body('Private_rows'),json('[]')),createArray(json('{}')))),'Email'),contains(first(union(coalesce(body('Private_rows'),json('[]')),createArray(json('{}')))),'Please leave your name and Email')))",
+            "excelStatusCode": "@coalesce(outputs('Read_workbook')?['statusCode'],0)",
+            "code": "@if(not(equals(actions('Read_workbook')?['status'],'Succeeded')),'EXCEL_READ_FAILED',if(not(equals(actions('Private_rows')?['status'],'Succeeded')),'INVALID_TABLE_RESPONSE',if(not(and(equals(actions('Private_email_present')?['status'],'Succeeded'),equals(actions('Private_identity_text_present')?['status'],'Succeeded'))),'PRIVATE_INSPECTION_FAILED',if(not(and(less(length(coalesce(body('Private_rows'),json('[]'))),251),empty(body('Read_workbook')?['@odata.nextLink']),empty(body('Read_workbook')?['odata.nextLink']))),'INCOMPLETE_OR_TOO_LARGE',if(not(equals(length(coalesce(body('Private_rows'),json('[]'))),coalesce(triggerBody()?['ExpectedRows'],206))),'ROW_COUNT_MISMATCH',if(not(and(contains(first(union(coalesce(body('Private_rows'),json('[]')),createArray(json('{}')))),'Email'),contains(first(union(coalesce(body('Private_rows'),json('[]')),createArray(json('{}')))),'Please leave your name and Email'))),'IDENTITY_HEADERS_MISMATCH','OK'))))))",
+            "rowCount": "@length(coalesce(body('Private_rows'),json('[]')))",
+            "expectedRows": "@coalesce(triggerBody()?['ExpectedRows'],206)",
+            "identityHeadersPresent": "@and(contains(first(union(coalesce(body('Private_rows'),json('[]')),createArray(json('{}')))),'Email'),contains(first(union(coalesce(body('Private_rows'),json('[]')),createArray(json('{}')))),'Please leave your name and Email'))",
+            "rowsWithEmailText": "@length(coalesce(body('Private_email_present'),json('[]')))",
+            "rowsWithOtherIdentityText": "@length(coalesce(body('Private_identity_text_present'),json('[]')))",
+            "participantWrites": 0,
+            "identityValuesIncluded": false,
+            "accountResolution": "NOT_ATTEMPTED",
+            "importDryRun": "NOT_RUN",
+            "importApply": "NOT_RUN"
+          }
+        }
+      }
+    },
+    "connectionReferences": {
+      "shared_excelonlinebusiness": {
+        "connectionName": "IMPORT_SELECT_EXISTING_EXCEL_CONNECTION",
+        "source": "Embedded",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+        "tier": "NotSpecified",
+        "apiName": "excelonlinebusiness",
+        "isProcessSimpleApiReferenceConversionAlreadyDone": false
+      }
+    },
+    "flowFailureAlertSubscribed": false,
+    "isManaged": false
+  }
+}
