@@ -2,6 +2,13 @@
 
 ## #103 — registration mode/navigation patch
 
+Owner confirmed the checked #103 native cases complete on 2026-11-16. Merge the
+v3 PR #107 and close the scoped UI issue, retaining exact owner evidence. Keep
+the unexecuted required-selection validation/backend-failure regression cases in
+#25 with fixtures/steps, and existing privacy/performance work separate. Preserve
+native app edits without repacking; no new app export/hash was supplied.
+
+
 V3 empty-view follow-up: one existing Form.Visible change plus one native sidebar
 label. Avoid the blank Item form's persistent Getting your data message, show
 clear New-registration guidance only for a successful empty own lookup, and

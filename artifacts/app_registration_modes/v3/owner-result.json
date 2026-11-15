@@ -1,0 +1,19 @@
+{
+  "issue": 103,
+  "date": "2026-11-16",
+  "ownerStatement": "yes #103 checks done, all good",
+  "scope": "Owner-checked registration UI cases in #103, across native v1/v2/v3 property fixes",
+  "result": "OWNER ACCEPTANCE PASS",
+  "includes": [
+    "saved View navigation and return to View/pencil after Save/Cancel",
+    "existing-profile New guard and first-time registration UI",
+    "clear no-profile hint, New form and Cancel returning to hint",
+    "owner-checked save/readback, catalogue and layout regressions"
+  ],
+  "remainingNotClaimed": [
+    "required-selection validation/failure regression and prepared backend failure harness retained in #25",
+    "ordinary-participant access/privacy retained in its existing tickets",
+    "Discovery performance retained in #7"
+  ],
+  "appliedAppExportHash": "NOT SUPPLIED; retain native baseline and v1/v2/v3 patches without inventing a published build hash"
+}
