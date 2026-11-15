@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "sourceTicket": 48,
+  "sharedDriftTicket": 81,
+  "importerVersion": "2.0.0",
+  "source": "Matching workbook, not the initial registration response export",
+  "sourceTabs": {
+    "active": {
+      "ParticipationStatus": "Active",
+      "OpenToConnections": true
+    },
+    "paused": {
+      "ParticipationStatus": "Paused",
+      "OpenToConnections": false
+    },
+    "non active": {
+      "ParticipationStatus": "Inactive",
+      "OpenToConnections": false
+    }
+  },
+  "excluded": "All unapproved/empty/safety-copy tabs; never infer memberships from formatting or group-size preference",
+  "columns": {
+    "sourceId": "A",
+    "group": "B",
+    "email": "D",
+    "name": "E",
+    "learn": "I",
+    "learningFocus": "J",
+    "share": "K",
+    "outcome": "O"
+  },
+  "memberships": {
+    "active + active - matched": "Active",
+    "paused or uncertain active association": "REVIEW",
+    "non active Group that they left": "Left"
+  },
+  "ownerDecisions": {
+    "currentTabs": "all three",
+    "newGroupState": "Closed",
+    "oversizedLanguageGroups": "review-only; import supported groups first"
+  },
+  "linkage": {
+    "participant": "ImportKey, resolved to actual saved Participant item Id at Apply",
+    "group": "Stable identity-free MigrationKey -> migration source request -> actual Group Id",
+    "membership": "request:<actualRequestId>:participant:<actualParticipantId>"
+  },
+  "optionalApplyWrites": [
+    "Participants create only; preserve existing",
+    "Migration-labelled Accepted Connection Requests attest historical membership; canonical native keys",
+    "Groups initially SetupComplete=false/Closed; exact-ETag publication after verified roster/source commit",
+    "Group Members with Active/Left and canonical request evidence"
+  ],
+  "noClaim": "No historical invitation/response/order dates are invented. Current app can display Accepted migration relationships without showing migration labels.",
+  "dates": "Known reviewed offset-qualified dates, otherwise actual migration recording timestamp; do not use source registration Date as a joining date",
+  "replay": "Preserve completed imports/app edits; stop/reconcile incomplete or unknown migrations; never auto-repair/rejoin/overwrite",
+  "nativeReaderBounds": {
+    "profiles": 500,
+    "groups": 100,
+    "memberships": 2000,
+    "requests": 500
+  },
+  "shared81Impact": "No production schema/rules/normalization/compatibility/capacity/commit or consumer IO/build change. One-time adapter produces existing native committed-row contract. Test new receiving data; do not expand prior acceptance."
+}

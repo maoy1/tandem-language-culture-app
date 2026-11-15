@@ -24,7 +24,7 @@ from zipfile import ZipFile, BadZipFile
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
-VERSION = '1.0.0'
+VERSION = '2.0.0'
 SITE = 'https://reedelsevier.sharepoint.com/sites/OG-TandemOrg'
 PARTICIPANTS = 'fd3adf46-f81d-4a7b-a80c-567fde0175dc'
 CATALOGUES = {'language': '3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63',
@@ -201,11 +201,14 @@ class SharePoint:
         self.token = token
         self.opener = urllib.request.build_opener(NoRedirect)
 
-    def request(self, path, method='GET', payload=None):
+    def request(self, path, method='GET', payload=None, etag=None):
         if not path.startswith('_api/'):
             raise ImportProblem('Only relative SharePoint REST paths are allowed.')
         url = SITE+'/'+urllib.parse.quote(path, safe="/?$=&(),':%")
         headers = {'Authorization': 'Bearer '+self.token, 'Accept': 'application/json;odata=nometadata'}
+        if etag:
+            if etag=='*':raise ImportProblem('Wildcard migration writes are not allowed.')
+            headers.update({'If-Match':etag,'X-HTTP-Method':'MERGE'})
         data = None
         if payload is not None:
             headers['Content-Type'] = 'application/json;odata=verbose'
@@ -216,7 +219,10 @@ class SharePoint:
                 if len(content) > 10_000_000:
                     raise SharePointError()
                 parsed = json.loads(content) if content else {}
-                return response.status, parsed.get('d', parsed)
+                parsed=parsed.get('d', parsed)
+                if isinstance(parsed,dict) and response.headers.get('ETag'):
+                    parsed['_etag']=response.headers.get('ETag')
+                return response.status, parsed
         except urllib.error.HTTPError as e:
             # Do not persist raw connector/server errors, which can contain identities/tokens.
             raise SharePointError(e.code) from None
@@ -249,6 +255,7 @@ def apply(records, sp, checkpoint=None):
     if not isinstance(entity_type, str) or not entity_type:
         raise ImportProblem('MISSING_LIST_ITEM_ENTITY_TYPE')
     catalogues = {role: sp.rows(list_base(id_)+'/items?$select=Id,Title,Active&$top=5000') for role, id_ in CATALOGUES.items()}
+    profile_count=len(sp.rows(base+'/items?$select=Id&$top=501',bound=501))
     results = []
     for record in records:
         fields = record['fields']; email = key(fields['Participantaccount'])
@@ -287,6 +294,8 @@ def apply(records, sp, checkpoint=None):
                     payload[dest+'Id'] = {'results': ids}
             if invalid or not any(payload[d+'Id']['results'] for pair in DESTINATIONS.values() for d in pair):
                 outcome['code'] = 'FIX_CATALOGUE_SELECTIONS'; continue
+            if profile_count>=500:
+                outcome['code']='CURRENT_APP_PROFILE_READ_BOUND';continue
             outcome.update(status='UNKNOWN', code='WRITE_STARTED_NOT_YET_CONFIRMED')
             if checkpoint:
                 checkpoint(results)  # Durable evidence before the request can create a row.
@@ -296,6 +305,7 @@ def apply(records, sp, checkpoint=None):
             if code != 201 or len(saved) != 1 or created.get('Id') != saved[0].get('Id'):
                 outcome.update(status='UNKNOWN', code='CREATE_UNCONFIRMED'); break
             outcome.update(status='CREATED', code='CREATED', participantId=created['Id'])
+            profile_count+=1
         except (SharePointError, ValueError) as e:
             if isinstance(e, SharePointError) and e.status in (401, 403):
                 outcome.update(status='UNKNOWN' if attempted else 'STOPPED', code='SHAREPOINT_AUTHORIZATION_FAILED'); break
@@ -328,40 +338,65 @@ def write_outputs(folder, records, summary, outcomes=None):
 
 
 def main(argv=None):
+    try:
+        from . import matching_workbook_import as matching
+    except ImportError:
+        import matching_workbook_import as matching
     parser = argparse.ArgumentParser(description=__doc__)
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument('--workbook', type=Path); source.add_argument('--prepared-csv', type=Path)
+    source.add_argument('--prepared-bundle',type=Path,help='Reviewed combined participants/groups/memberships CSV folder')
     parser.add_argument('--sheet'); parser.add_argument('--skip-rows', type=int, default=0)
     parser.add_argument('--mapping', type=Path)
+    parser.add_argument('--scope',choices=['all','active'],default='all',help='Matching workbook: default all three current tabs, never safety copy')
     parser.add_argument('--output', type=Path, help='New private output folder; default: dated folder beside input; never overwritten')
     parser.add_argument('--apply', action='store_true', help='Create missing profiles using an existing approved SharePoint token')
     parser.add_argument('--token-env', default='TANDEM_SP_ACCESS_TOKEN')
     args = parser.parse_args(argv)
     if args.skip_rows < 0:
         parser.error('--skip-rows must be zero or greater')
-    if args.prepared_csv and args.skip_rows:
+    if (args.prepared_csv or args.prepared_bundle) and args.skip_rows:
         parser.error('--skip-rows applies to the original workbook only')
     if args.apply and args.workbook:
-        parser.error('First prepare the workbook; --apply reads your reviewed --prepared-csv file')
+        parser.error('First prepare the workbook; --apply reads your reviewed --prepared-csv or --prepared-bundle')
     if args.output is None:
-        args.output = (args.prepared_csv or args.workbook).parent/('Tandem-import-'+datetime.now().strftime('%Y%m%d-%H%M%S-%f'))
+        args.output = (args.prepared_bundle or (args.prepared_csv or args.workbook).parent)/('Tandem-import-'+datetime.now().strftime('%Y%m%d-%H%M%S-%f'))
     if args.output.exists():
         parser.error('Use a new output directory to preserve earlier results and manual corrections')
     try:
-        records = from_csv(args.prepared_csv) if args.prepared_csv else prepare(workbook(args.workbook, args.sheet), configuration(args.mapping), args.skip_rows)
-        input_file = args.prepared_csv or args.workbook
+        bundle=None
+        if args.prepared_bundle:
+            bundle=matching.read_bundle(args.prepared_bundle,sys.modules[__name__]);records=bundle['participants']
+        elif args.prepared_csv:
+            records=from_csv(args.prepared_csv)
+        else:
+            with ZipFile(args.workbook) as z:
+                matching_format=any(key(s.get('name')) in matching.SHEETS for s in ET.fromstring(z.read('xl/workbook.xml')).findall('s:sheets/s:sheet',NS))
+            if matching_format:
+                sheets=matching.read_sheets(args.workbook,sys.modules[__name__])
+                if args.sheet:
+                    sheets=[s for s in sheets if s['name']==args.sheet]
+                    if not sheets:raise ImportProblem('Choose an existing current tab; safety copies are excluded.')
+                bundle=matching.prepare(sheets,configuration(args.mapping),sys.modules[__name__],args.scope,args.skip_rows);records=bundle['participants']
+            else:
+                records=prepare(workbook(args.workbook, args.sheet), configuration(args.mapping), args.skip_rows)
+        input_file = args.prepared_csv or args.workbook or args.prepared_bundle/'participants.csv'
         summary = {'kind': 'TandemOneTimePythonImport', 'version': VERSION, 'sourceTicket': 48,
                    'mode': 'APPLY' if args.apply else 'PREPARE_ONLY', 'sourceSha256': hashlib.sha256(input_file.read_bytes()).hexdigest(),
                    'skipRows': args.skip_rows, 'rowCount': len(records), 'rowsWithEmail': sum(bool(r['fields']['Participantaccount']) for r in records),
                    'rowsNeedingReview': sum(bool(r['issues']) for r in records), 'participantWrites': 0,
                    'accountResolution': 'NOT_ATTEMPTED', 'ordinaryUserAccessVerified': False}
+        if bundle:
+            summary={**summary,**matching.summary(bundle,VERSION),'mode':'APPLY' if args.apply else 'PREPARE_ONLY',
+                     'rowCount':len(records),'skipRows':args.skip_rows}
         outcomes = None
         if args.apply:
             token = os.environ.get(args.token_env, '').strip()
             if not token:
                 raise ImportProblem('No SharePoint token supplied. Preparation needs no sign-in; direct Apply needs an existing tenant-approved SharePoint token in '+args.token_env+'. No new app/consent is created by this script.')
             # Reserve a writable output location before any tenant side effect.
-            write_outputs(args.output, records, {**summary, 'complete': False}, [])
+            if bundle:matching.write_bundle(args.output,bundle,{**summary,'complete':False},sys.modules[__name__])
+            else:write_outputs(args.output, records, {**summary, 'complete': False}, [])
             def checkpoint(current):
                 path = args.output/'apply-results.private.json'
                 temp = args.output/'apply-results.private.tmp'
@@ -370,15 +405,40 @@ def main(argv=None):
                 os.replace(temp,path)
             outcomes = apply(records, SharePoint(token), checkpoint)
             summary.update(accountResolution='ATTEMPTED', participantWrites=sum(r['status'] == 'CREATED' for r in outcomes),
+                           participantWriteAttempts=sum(r['status'] in ('CREATED','UNKNOWN') for r in outcomes),
                            outcomes=dict(Counter(r['status'] for r in outcomes)), processedRows=len(outcomes),
                            complete=len(outcomes) == len(records) and not any(r['status'] in ('UNKNOWN', 'STOPPED') for r in outcomes))
+            # Keep participant results truthful even if group preflight fails or
+            # the operator interrupts the second stage.
+            (args.output/'summary.json').write_text(json.dumps({**summary,'complete':False if bundle else summary['complete']},indent=2)+'\n',encoding='utf-8')
+            if bundle and summary['complete']:
+                def group_checkpoint(current):
+                    path=args.output/'group-results.private.json';temp=args.output/'group-results.private.tmp'
+                    with temp.open('w',encoding='utf-8') as f:
+                        json.dump(current,f,indent=2);f.write('\n');f.flush();os.fsync(f.fileno())
+                    os.replace(temp,path)
+                groups=matching.apply_groups(bundle,outcomes,SharePoint(token),sys.modules[__name__],group_checkpoint)
+                summary.update(groupOutcomes=dict(Counter(g['status'] for g in groups)),
+                    groupWrites=sum(g['confirmedCreates']['groups'] for g in groups),
+                    membershipWrites=sum(g['confirmedCreates']['members'] for g in groups),
+                    migrationRequestWrites=sum(g['confirmedCreates']['requests'] for g in groups),groupsProcessed=len(groups),
+                    groupWriteAttempts=sum(sum(g['writeAttempts'].values())+g['patchAttempts'] for g in groups),
+                    complete=len(groups)==len(bundle['groups']) and not any(g['status'] in ('UNKNOWN','STOPPED') for g in groups))
         if args.apply:
             (args.output/'summary.json').write_text(json.dumps(summary,indent=2)+'\n',encoding='utf-8')
         else:
-            write_outputs(args.output, records, summary)
+            if bundle:matching.write_bundle(args.output,bundle,summary,sys.modules[__name__])
+            else:write_outputs(args.output, records, summary)
         print(json.dumps(summary, indent=2))  # Counts only, no identity values or token.
         return 2 if args.apply and not summary['complete'] else 0
     except (ValueError, SharePointError, OSError, KeyError, IndexError, BadZipFile, ET.ParseError) as e:
+        if args.apply and 'summary' in locals() and args.output.exists():
+            summary['complete']=False
+            summary['stopped']=True
+            try:
+                (args.output/'summary.json').write_text(json.dumps(summary,indent=2)+'\n',encoding='utf-8')
+            except OSError:
+                pass  # Durable pre-write journals remain the recovery evidence.
         # Source filenames and server bodies may contain identities. Keep terminal errors generic.
         print(str(e) if isinstance(e, (ImportProblem, SharePointError)) else 'Could not read/write the local input or output. Check the selected file and permissions.', file=sys.stderr)
         return 1
