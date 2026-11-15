@@ -2,6 +2,12 @@
 
 ## #103 — registration mode/navigation patch
 
+Owner applied the patch and confirmed the two requested UI behaviors work. Record
+that bounded native PASS; merge the focused implementation/evidence PR, retaining
+untested New/guard/failure/checker and broader access cases explicitly in #103.
+No app repack or changed shared/flow contracts; save native Studio changes.
+
+
 Apply five native Studio property replacements to the accepted native-repaired
 app: Form1.OnSuccess, ResetFormButton1.OnSelect and the three registration nav
 OnSelect formulas. Preserve working native catalogue bindings without repacking.
