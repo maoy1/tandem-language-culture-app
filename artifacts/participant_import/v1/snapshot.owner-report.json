@@ -1,0 +1,24 @@
+{
+  "kind": "TandemParticipantImportSnapshot",
+  "schemaVersion": 1,
+  "sourceTicket": 48,
+  "targetSite": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+  "packageBuildId": "dd2f820c-8189-4fff-981e-7cacd11d8a23",
+  "runReference": "08584068709244489672946202825CU08",
+  "collectionComplete": true,
+  "complete": true,
+  "writesCount": 0,
+  "ownerOperatorOnly": true,
+  "counts": {
+    "language": 28,
+    "culture": 85,
+    "timezone": 18,
+    "participants": 3,
+    "users": 13
+  },
+  "evidence": "Owner supplied full native Snapshot report; raw account data retained only in owner attachment.",
+  "sourceAttachmentSha256": "6914e84691007376c14916569ddf290ec2ffb78e7d194a2755d3e052dfeb4bdc",
+  "nativeSnapshot": "PASS",
+  "nativeDryRun": "NOT RUN",
+  "nativeApply": "NOT RUN"
+}
