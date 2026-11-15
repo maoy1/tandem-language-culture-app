@@ -1,0 +1,14 @@
+{
+  "kind": "TandemOneTimePythonImport",
+  "version": "1.0.0",
+  "sourceTicket": 48,
+  "mode": "PREPARE_ONLY",
+  "sourceSha256": "e75cf97e546c42446523f50d72ed0b8dfeceec63d7561655594e15380d4d6db7",
+  "skipRows": 0,
+  "rowCount": 206,
+  "rowsWithEmail": 0,
+  "rowsNeedingReview": 206,
+  "participantWrites": 0,
+  "accountResolution": "NOT_ATTEMPTED",
+  "ordinaryUserAccessVerified": false
+}
