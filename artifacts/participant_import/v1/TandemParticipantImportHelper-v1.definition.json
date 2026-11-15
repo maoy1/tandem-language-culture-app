@@ -1,0 +1,1427 @@
+{
+  "name": "dd2f820c-8189-4fff-981e-7cacd11d8a23",
+  "id": "/providers/Microsoft.Flow/flows/dd2f820c-8189-4fff-981e-7cacd11d8a23",
+  "type": "Microsoft.Flow/flows",
+  "properties": {
+    "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
+    "displayName": "TandemParticipantImportHelper",
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Button",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "PlanJson": {
+                  "type": "string",
+                  "title": "PlanJson",
+                  "default": "",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "ApplyChanges": {
+                  "type": "boolean",
+                  "title": "ApplyChanges",
+                  "default": false,
+                  "x-ms-content-hint": "BOOLEAN"
+                }
+              },
+              "required": []
+            }
+          },
+          "runtimeConfiguration": {
+            "concurrency": {
+              "runs": 1
+            }
+          }
+        }
+      },
+      "actions": {
+        "Initialize_Rows": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Rows",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "Initialize_Preflight": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Preflight",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_Rows": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Initialize_Attempted": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Attempted",
+                "type": "boolean",
+                "value": false
+              }
+            ]
+          },
+          "runAfter": {
+            "Initialize_Preflight": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Mode": {
+          "type": "If",
+          "expression": "@empty(trim(coalesce(triggerBody()?['PlanJson'],'')))",
+          "actions": {
+            "Snapshot_readonly_gate": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@equals(coalesce(triggerBody()?['ApplyChanges'],false),false)",
+                "schema": {
+                  "type": "boolean",
+                  "enum": [
+                    true
+                  ]
+                }
+              },
+              "runAfter": {}
+            },
+            "Snapshot_reads": {
+              "type": "Scope",
+              "actions": {
+                "Snapshot_language": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "_api/web/lists(guid'3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63')/items?$select=Id,Title,Active,ISOcode,Aliases&$top=5000",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=nometadata"
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {}
+                },
+                "Snapshot_culture": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "_api/web/lists(guid'cf7ed5b4-2e11-4a0a-a417-6c63ed60f614')/items?$select=Id,Title,Active,CultureKey&$top=5000",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=nometadata"
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {
+                    "Snapshot_language": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Snapshot_timezone": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "_api/web/lists(guid'7beddfff-1881-4a82-8003-29933b836350')/items?$select=Id,Title,Active,IANA_ID&$top=5000",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=nometadata"
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {
+                    "Snapshot_culture": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Snapshot_participants": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "_api/web/lists(guid'fd3adf46-f81d-4a7b-a80c-567fde0175dc')/items?$select=Id,ParticipantaccountId&$top=5000",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=nometadata"
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {
+                    "Snapshot_timezone": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Snapshot_users": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                      "parameters/method": "GET",
+                      "parameters/uri": "_api/web/siteusers?$select=Id,LoginName,Email,Title&$top=5000",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=nometadata"
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {
+                    "Snapshot_participants": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "runAfter": {
+                "Snapshot_readonly_gate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Snapshot_report": {
+              "type": "Compose",
+              "inputs": {
+                "kind": "TandemParticipantImportSnapshot",
+                "schemaVersion": 1,
+                "sourceTicket": 48,
+                "targetSite": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                "packageBuildId": "dd2f820c-8189-4fff-981e-7cacd11d8a23",
+                "runReference": "@workflow()?['run']?['name']",
+                "collectionComplete": "@and(equals(actions('Snapshot_reads')?['status'],'Succeeded'),and(contains(coalesce(body('Snapshot_language'),json('{}')),'value'),not(equals(body('Snapshot_language')?['value'],null)),less(length(coalesce(body('Snapshot_language')?['value'],json('[]'))),5000),empty(body('Snapshot_language')?['@odata.nextLink']),empty(body('Snapshot_language')?['odata.nextLink']),empty(body('Snapshot_language')?['__next'])),and(contains(coalesce(body('Snapshot_culture'),json('{}')),'value'),not(equals(body('Snapshot_culture')?['value'],null)),less(length(coalesce(body('Snapshot_culture')?['value'],json('[]'))),5000),empty(body('Snapshot_culture')?['@odata.nextLink']),empty(body('Snapshot_culture')?['odata.nextLink']),empty(body('Snapshot_culture')?['__next'])),and(contains(coalesce(body('Snapshot_timezone'),json('{}')),'value'),not(equals(body('Snapshot_timezone')?['value'],null)),less(length(coalesce(body('Snapshot_timezone')?['value'],json('[]'))),5000),empty(body('Snapshot_timezone')?['@odata.nextLink']),empty(body('Snapshot_timezone')?['odata.nextLink']),empty(body('Snapshot_timezone')?['__next'])),and(contains(coalesce(body('Snapshot_participants'),json('{}')),'value'),not(equals(body('Snapshot_participants')?['value'],null)),less(length(coalesce(body('Snapshot_participants')?['value'],json('[]'))),5000),empty(body('Snapshot_participants')?['@odata.nextLink']),empty(body('Snapshot_participants')?['odata.nextLink']),empty(body('Snapshot_participants')?['__next'])),and(contains(coalesce(body('Snapshot_users'),json('{}')),'value'),not(equals(body('Snapshot_users')?['value'],null)),less(length(coalesce(body('Snapshot_users')?['value'],json('[]'))),5000),empty(body('Snapshot_users')?['@odata.nextLink']),empty(body('Snapshot_users')?['odata.nextLink']),empty(body('Snapshot_users')?['__next'])))",
+                "complete": "@and(equals(actions('Snapshot_reads')?['status'],'Succeeded'),and(contains(coalesce(body('Snapshot_language'),json('{}')),'value'),not(equals(body('Snapshot_language')?['value'],null)),less(length(coalesce(body('Snapshot_language')?['value'],json('[]'))),5000),empty(body('Snapshot_language')?['@odata.nextLink']),empty(body('Snapshot_language')?['odata.nextLink']),empty(body('Snapshot_language')?['__next'])),and(contains(coalesce(body('Snapshot_culture'),json('{}')),'value'),not(equals(body('Snapshot_culture')?['value'],null)),less(length(coalesce(body('Snapshot_culture')?['value'],json('[]'))),5000),empty(body('Snapshot_culture')?['@odata.nextLink']),empty(body('Snapshot_culture')?['odata.nextLink']),empty(body('Snapshot_culture')?['__next'])),and(contains(coalesce(body('Snapshot_timezone'),json('{}')),'value'),not(equals(body('Snapshot_timezone')?['value'],null)),less(length(coalesce(body('Snapshot_timezone')?['value'],json('[]'))),5000),empty(body('Snapshot_timezone')?['@odata.nextLink']),empty(body('Snapshot_timezone')?['odata.nextLink']),empty(body('Snapshot_timezone')?['__next'])),and(contains(coalesce(body('Snapshot_participants'),json('{}')),'value'),not(equals(body('Snapshot_participants')?['value'],null)),less(length(coalesce(body('Snapshot_participants')?['value'],json('[]'))),5000),empty(body('Snapshot_participants')?['@odata.nextLink']),empty(body('Snapshot_participants')?['odata.nextLink']),empty(body('Snapshot_participants')?['__next'])),and(contains(coalesce(body('Snapshot_users'),json('{}')),'value'),not(equals(body('Snapshot_users')?['value'],null)),less(length(coalesce(body('Snapshot_users')?['value'],json('[]'))),5000),empty(body('Snapshot_users')?['@odata.nextLink']),empty(body('Snapshot_users')?['odata.nextLink']),empty(body('Snapshot_users')?['__next'])))",
+                "writesCount": 0,
+                "ownerOperatorOnly": true,
+                "language": "@coalesce(body('Snapshot_language')?['value'],json('[]'))",
+                "culture": "@coalesce(body('Snapshot_culture')?['value'],json('[]'))",
+                "timezone": "@coalesce(body('Snapshot_timezone')?['value'],json('[]'))",
+                "participants": "@coalesce(body('Snapshot_participants')?['value'],json('[]'))",
+                "users": "@coalesce(body('Snapshot_users')?['value'],json('[]'))"
+              },
+              "runAfter": {
+                "Snapshot_reads": [
+                  "Succeeded",
+                  "Failed",
+                  "Skipped",
+                  "TimedOut"
+                ]
+              }
+            }
+          },
+          "else": {
+            "actions": {
+              "Plan_prerequisites": {
+                "type": "Scope",
+                "actions": {
+                  "Parse_plan": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@json(triggerBody()?['PlanJson'])",
+                      "schema": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "kind",
+                          "contractVersion",
+                          "sourceTicket",
+                          "sourceSha256",
+                          "targetSite",
+                          "readyForApply",
+                          "rows"
+                        ],
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "TandemParticipantImportPlan"
+                            ]
+                          },
+                          "contractVersion": {
+                            "type": "integer",
+                            "enum": [
+                              1
+                            ]
+                          },
+                          "sourceTicket": {
+                            "type": "integer",
+                            "enum": [
+                              48
+                            ]
+                          },
+                          "sourceSha256": {
+                            "type": "string",
+                            "minLength": 64,
+                            "maxLength": 64
+                          },
+                          "targetSite": {
+                            "type": "string",
+                            "enum": [
+                              "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg"
+                            ]
+                          },
+                          "readyForApply": {
+                            "type": "boolean",
+                            "enum": [
+                              true
+                            ]
+                          },
+                          "rows": {
+                            "type": "array",
+                            "maxItems": 250,
+                            "items": {
+                              "type": "object",
+                              "additionalProperties": false,
+                              "required": [
+                                "sourceKey",
+                                "accountLogin",
+                                "sharepointUserId",
+                                "Title",
+                                "teachIds",
+                                "learnIds",
+                                "shareCultureIds",
+                                "learnCultureIds",
+                                "ParticipationStatus",
+                                "OpenToConnections"
+                              ],
+                              "properties": {
+                                "sourceKey": {
+                                  "type": "string",
+                                  "minLength": 10,
+                                  "maxLength": 255
+                                },
+                                "accountLogin": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 512
+                                },
+                                "sharepointUserId": {
+                                  "type": "integer",
+                                  "minimum": 1
+                                },
+                                "Title": {
+                                  "type": "string",
+                                  "maxLength": 255
+                                },
+                                "teachIds": {
+                                  "type": "array",
+                                  "maxItems": 5000,
+                                  "uniqueItems": true,
+                                  "items": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                  }
+                                },
+                                "learnIds": {
+                                  "type": "array",
+                                  "maxItems": 5000,
+                                  "uniqueItems": true,
+                                  "items": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                  }
+                                },
+                                "shareCultureIds": {
+                                  "type": "array",
+                                  "maxItems": 5000,
+                                  "uniqueItems": true,
+                                  "items": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                  }
+                                },
+                                "learnCultureIds": {
+                                  "type": "array",
+                                  "maxItems": 5000,
+                                  "uniqueItems": true,
+                                  "items": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                  }
+                                },
+                                "ParticipationStatus": {
+                                  "type": "string",
+                                  "enum": [
+                                    "Active",
+                                    "Paused",
+                                    "Inactive"
+                                  ]
+                                },
+                                "OpenToConnections": {
+                                  "type": "boolean"
+                                },
+                                "Learningfocus": {
+                                  "type": "string"
+                                },
+                                "Comments": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {}
+                  },
+                  "Hash_document": {
+                    "type": "Compose",
+                    "inputs": {
+                      "root": {
+                        "hash": "@body('Parse_plan')?['sourceSha256']"
+                      }
+                    },
+                    "runAfter": {
+                      "Parse_plan": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Bad_source_keys": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@body('Parse_plan')?['rows']",
+                      "where": "@not(and(startsWith(item()?['sourceKey'],'response:'),greater(length(item()?['sourceKey']),9)))"
+                    },
+                    "runAfter": {
+                      "Hash_document": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Envelope_gate": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@and(empty(body('Bad_source_keys')),xpath(xml(outputs('Hash_document')),'boolean(string-length(/root/hash)=64 and translate(/root/hash,\"0123456789abcdefABCDEF\",\"\")=\"\")'))",
+                      "schema": {
+                        "type": "boolean",
+                        "enum": [
+                          true
+                        ]
+                      }
+                    },
+                    "runAfter": {
+                      "Bad_source_keys": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Select_sourceKey": {
+                    "type": "Select",
+                    "inputs": {
+                      "from": "@body('Parse_plan')?['rows']",
+                      "select": "@item()?['sourceKey']"
+                    },
+                    "runAfter": {
+                      "Envelope_gate": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Select_sharepointUserId": {
+                    "type": "Select",
+                    "inputs": {
+                      "from": "@body('Parse_plan')?['rows']",
+                      "select": "@item()?['sharepointUserId']"
+                    },
+                    "runAfter": {
+                      "Select_sourceKey": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Select_accountLogin": {
+                    "type": "Select",
+                    "inputs": {
+                      "from": "@body('Parse_plan')?['rows']",
+                      "select": "@item()?['accountLogin']"
+                    },
+                    "runAfter": {
+                      "Select_sharepointUserId": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Unique_plan_gate": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@and(equals(length(body('Select_sourceKey')),length(union(body('Select_sourceKey'),body('Select_sourceKey')))),equals(length(body('Select_sharepointUserId')),length(union(body('Select_sharepointUserId'),body('Select_sharepointUserId')))),equals(length(body('Select_accountLogin')),length(union(body('Select_accountLogin'),body('Select_accountLogin')))))",
+                      "schema": {
+                        "type": "boolean",
+                        "enum": [
+                          true
+                        ]
+                      }
+                    },
+                    "runAfter": {
+                      "Select_accountLogin": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Read_account_field": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                        "parameters/method": "GET",
+                        "parameters/uri": "_api/web/lists(guid'fd3adf46-f81d-4a7b-a80c-567fde0175dc')/fields(guid'aa74f84e-f60d-46a2-87f9-077066fa0aa7')?$select=InternalName,TypeAsString,EnforceUniqueValues,ReadOnlyField",
+                        "parameters/headers": {
+                          "Accept": "application/json;odata=nometadata"
+                        }
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "HttpRequest"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    },
+                    "runAfter": {
+                      "Unique_plan_gate": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Read_participant_type": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                        "parameters/method": "GET",
+                        "parameters/uri": "_api/web/lists(guid'fd3adf46-f81d-4a7b-a80c-567fde0175dc')?$select=ListItemEntityTypeFullName",
+                        "parameters/headers": {
+                          "Accept": "application/json;odata=nometadata"
+                        }
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "HttpRequest"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    },
+                    "runAfter": {
+                      "Read_account_field": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Read_language": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                        "parameters/method": "GET",
+                        "parameters/uri": "_api/web/lists(guid'3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63')/items?$select=Id,Active&$top=5000",
+                        "parameters/headers": {
+                          "Accept": "application/json;odata=nometadata"
+                        }
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "HttpRequest"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    },
+                    "runAfter": {
+                      "Read_participant_type": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Active_language": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@body('Read_language')?['value']",
+                      "where": "@equals(item()?['Active'],true)"
+                    },
+                    "runAfter": {
+                      "Read_language": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Ids_language": {
+                    "type": "Select",
+                    "inputs": {
+                      "from": "@body('Active_language')",
+                      "select": "@item()?['Id']"
+                    },
+                    "runAfter": {
+                      "Active_language": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Read_culture": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                        "parameters/method": "GET",
+                        "parameters/uri": "_api/web/lists(guid'cf7ed5b4-2e11-4a0a-a417-6c63ed60f614')/items?$select=Id,Active&$top=5000",
+                        "parameters/headers": {
+                          "Accept": "application/json;odata=nometadata"
+                        }
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "HttpRequest"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    },
+                    "runAfter": {
+                      "Ids_language": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Active_culture": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@body('Read_culture')?['value']",
+                      "where": "@equals(item()?['Active'],true)"
+                    },
+                    "runAfter": {
+                      "Read_culture": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Ids_culture": {
+                    "type": "Select",
+                    "inputs": {
+                      "from": "@body('Active_culture')",
+                      "select": "@item()?['Id']"
+                    },
+                    "runAfter": {
+                      "Active_culture": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "Tenant_gate": {
+                    "type": "ParseJson",
+                    "inputs": {
+                      "content": "@and(equals(body('Read_account_field')?['EnforceUniqueValues'],true),equals(body('Read_account_field')?['TypeAsString'],'User'),equals(body('Read_account_field')?['ReadOnlyField'],false),equals(body('Read_account_field')?['InternalName'],'Participantaccount'),not(empty(body('Read_participant_type')?['ListItemEntityTypeFullName'])),and(contains(coalesce(body('Read_language'),json('{}')),'value'),not(equals(body('Read_language')?['value'],null)),less(length(coalesce(body('Read_language')?['value'],json('[]'))),5000),empty(body('Read_language')?['@odata.nextLink']),empty(body('Read_language')?['odata.nextLink']),empty(body('Read_language')?['__next'])),and(contains(coalesce(body('Read_culture'),json('{}')),'value'),not(equals(body('Read_culture')?['value'],null)),less(length(coalesce(body('Read_culture')?['value'],json('[]'))),5000),empty(body('Read_culture')?['@odata.nextLink']),empty(body('Read_culture')?['odata.nextLink']),empty(body('Read_culture')?['__next'])))",
+                      "schema": {
+                        "type": "boolean",
+                        "enum": [
+                          true
+                        ]
+                      }
+                    },
+                    "runAfter": {
+                      "Ids_culture": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                },
+                "runAfter": {}
+              },
+              "Preflight_rows": {
+                "type": "Foreach",
+                "foreach": "@body('Parse_plan')?['rows']",
+                "actions": {
+                  "Preflight_check": {
+                    "type": "Scope",
+                    "actions": {
+                      "Preflight_user": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "parameters": {
+                            "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                            "parameters/method": "GET",
+                            "parameters/uri": "@concat('_api/web/siteusers/getbyid(',string(items('Preflight_rows')?['sharepointUserId']),')?$select=Id,LoginName')",
+                            "parameters/headers": {
+                              "Accept": "application/json;odata=nometadata"
+                            }
+                          },
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                            "connectionName": "shared_sharepointonline",
+                            "operationId": "HttpRequest"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        },
+                        "runAfter": {}
+                      },
+                      "Preflight_existing": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "parameters": {
+                            "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                            "parameters/method": "GET",
+                            "parameters/uri": "@concat('_api/web/lists(guid''fd3adf46-f81d-4a7b-a80c-567fde0175dc'')/items?$select=Id,ParticipantaccountId&$filter=ParticipantaccountId eq ',string(items('Preflight_rows')?['sharepointUserId']),'&$top=2')",
+                            "parameters/headers": {
+                              "Accept": "application/json;odata=nometadata"
+                            }
+                          },
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                            "connectionName": "shared_sharepointonline",
+                            "operationId": "HttpRequest"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        },
+                        "runAfter": {
+                          "Preflight_user": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "Preflight_row_gate": {
+                        "type": "ParseJson",
+                        "inputs": {
+                          "content": "@and(equals(body('Preflight_user')?['Id'],items('Preflight_rows')?['sharepointUserId']),equals(body('Preflight_user')?['LoginName'],items('Preflight_rows')?['accountLogin']),not(empty(trim(items('Preflight_rows')?['Title']))),greater(add(add(length(items('Preflight_rows')?['teachIds']),length(items('Preflight_rows')?['learnIds'])),add(length(items('Preflight_rows')?['shareCultureIds']),length(items('Preflight_rows')?['learnCultureIds']))),0),and(contains(coalesce(body('Preflight_existing'),json('{}')),'value'),not(equals(body('Preflight_existing')?['value'],null)),less(length(coalesce(body('Preflight_existing')?['value'],json('[]'))),2),empty(body('Preflight_existing')?['@odata.nextLink']),empty(body('Preflight_existing')?['odata.nextLink']),empty(body('Preflight_existing')?['__next'])),equals(length(intersection(items('Preflight_rows')?['teachIds'],body('Ids_language'))),length(items('Preflight_rows')?['teachIds'])),equals(length(intersection(items('Preflight_rows')?['learnIds'],body('Ids_language'))),length(items('Preflight_rows')?['learnIds'])),equals(length(intersection(items('Preflight_rows')?['shareCultureIds'],body('Ids_culture'))),length(items('Preflight_rows')?['shareCultureIds'])),equals(length(intersection(items('Preflight_rows')?['learnCultureIds'],body('Ids_culture'))),length(items('Preflight_rows')?['learnCultureIds'])))",
+                          "schema": {
+                            "type": "boolean",
+                            "enum": [
+                              true
+                            ]
+                          }
+                        },
+                        "runAfter": {
+                          "Preflight_existing": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "Preflight_exists": {
+                        "type": "If",
+                        "expression": "@equals(length(body('Preflight_existing')?['value']),1)",
+                        "actions": {
+                          "Preflight_skip": {
+                            "type": "AppendToArrayVariable",
+                            "inputs": {
+                              "name": "Preflight",
+                              "value": {
+                                "sourceKey": "@items('Preflight_rows')?['sourceKey']",
+                                "sharepointUserId": "@items('Preflight_rows')?['sharepointUserId']",
+                                "status": "SKIPPED_EXISTING",
+                                "participantId": "@first(body('Preflight_existing')?['value'])?['Id']",
+                                "writeAttempted": false
+                              }
+                            },
+                            "runAfter": {}
+                          }
+                        },
+                        "else": {
+                          "actions": {
+                            "Preflight_valid": {
+                              "type": "AppendToArrayVariable",
+                              "inputs": {
+                                "name": "Preflight",
+                                "value": {
+                                  "sourceKey": "@items('Preflight_rows')?['sourceKey']",
+                                  "sharepointUserId": "@items('Preflight_rows')?['sharepointUserId']",
+                                  "status": "VALIDATED_NEW",
+                                  "participantId": null,
+                                  "writeAttempted": false
+                                }
+                              },
+                              "runAfter": {}
+                            }
+                          }
+                        },
+                        "runAfter": {
+                          "Preflight_row_gate": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    },
+                    "runAfter": {}
+                  },
+                  "Preflight_reported": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@variables('Preflight')",
+                      "where": "@equals(item()?['sourceKey'],items('Preflight_rows')?['sourceKey'])"
+                    },
+                    "runAfter": {
+                      "Preflight_check": [
+                        "Succeeded",
+                        "Failed",
+                        "Skipped",
+                        "TimedOut"
+                      ]
+                    }
+                  },
+                  "Preflight_fallback": {
+                    "type": "If",
+                    "expression": "@empty(body('Preflight_reported'))",
+                    "actions": {
+                      "Preflight_failure": {
+                        "type": "AppendToArrayVariable",
+                        "inputs": {
+                          "name": "Preflight",
+                          "value": {
+                            "sourceKey": "@items('Preflight_rows')?['sourceKey']",
+                            "sharepointUserId": "@items('Preflight_rows')?['sharepointUserId']",
+                            "status": "REJECTED",
+                            "participantId": null,
+                            "writeAttempted": false,
+                            "observedParticipants": "@coalesce(body('Preflight_existing')?['value'],json('[]'))"
+                          }
+                        },
+                        "runAfter": {}
+                      }
+                    },
+                    "else": {
+                      "actions": {}
+                    },
+                    "runAfter": {
+                      "Preflight_reported": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                },
+                "runtimeConfiguration": {
+                  "concurrency": {
+                    "repetitions": 1
+                  }
+                },
+                "runAfter": {
+                  "Plan_prerequisites": [
+                    "Succeeded"
+                  ]
+                }
+              },
+              "Preflight_errors": {
+                "type": "Query",
+                "inputs": {
+                  "from": "@variables('Preflight')",
+                  "where": "@equals(item()?['status'],'REJECTED')"
+                },
+                "runAfter": {
+                  "Preflight_rows": [
+                    "Succeeded",
+                    "Failed",
+                    "Skipped",
+                    "TimedOut"
+                  ]
+                }
+              },
+              "Entire_plan_gate": {
+                "type": "ParseJson",
+                "inputs": {
+                  "content": "@and(equals(actions('Plan_prerequisites')?['status'],'Succeeded'),equals(actions('Preflight_rows')?['status'],'Succeeded'),empty(body('Preflight_errors')),equals(length(variables('Preflight')),length(coalesce(body('Parse_plan')?['rows'],json('[]')))))",
+                  "schema": {
+                    "type": "boolean",
+                    "enum": [
+                      true
+                    ]
+                  }
+                },
+                "runAfter": {
+                  "Preflight_errors": [
+                    "Succeeded"
+                  ]
+                }
+              },
+              "Apply_phase": {
+                "type": "If",
+                "expression": "@equals(coalesce(triggerBody()?['ApplyChanges'],false),true)",
+                "actions": {
+                  "Apply_rows": {
+                    "type": "Foreach",
+                    "foreach": "@body('Parse_plan')?['rows']",
+                    "actions": {
+                      "Apply_reset": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "Attempted",
+                          "value": false
+                        },
+                        "runAfter": {}
+                      },
+                      "Apply_check": {
+                        "type": "Scope",
+                        "actions": {
+                          "Apply_user": {
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "parameters": {
+                                "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                                "parameters/method": "GET",
+                                "parameters/uri": "@concat('_api/web/siteusers/getbyid(',string(items('Apply_rows')?['sharepointUserId']),')?$select=Id,LoginName')",
+                                "parameters/headers": {
+                                  "Accept": "application/json;odata=nometadata"
+                                }
+                              },
+                              "host": {
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                "connectionName": "shared_sharepointonline",
+                                "operationId": "HttpRequest"
+                              },
+                              "authentication": "@parameters('$authentication')"
+                            },
+                            "runAfter": {}
+                          },
+                          "Apply_existing": {
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "parameters": {
+                                "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                                "parameters/method": "GET",
+                                "parameters/uri": "@concat('_api/web/lists(guid''fd3adf46-f81d-4a7b-a80c-567fde0175dc'')/items?$select=Id,ParticipantaccountId&$filter=ParticipantaccountId eq ',string(items('Apply_rows')?['sharepointUserId']),'&$top=2')",
+                                "parameters/headers": {
+                                  "Accept": "application/json;odata=nometadata"
+                                }
+                              },
+                              "host": {
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                "connectionName": "shared_sharepointonline",
+                                "operationId": "HttpRequest"
+                              },
+                              "authentication": "@parameters('$authentication')"
+                            },
+                            "runAfter": {
+                              "Apply_user": [
+                                "Succeeded"
+                              ]
+                            }
+                          },
+                          "Apply_catalogue_language": {
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "parameters": {
+                                "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                                "parameters/method": "GET",
+                                "parameters/uri": "_api/web/lists(guid'3c1fcd2b-ce62-4af0-a96d-9b0d7502cb63')/items?$select=Id,Active&$top=5000",
+                                "parameters/headers": {
+                                  "Accept": "application/json;odata=nometadata"
+                                }
+                              },
+                              "host": {
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                "connectionName": "shared_sharepointonline",
+                                "operationId": "HttpRequest"
+                              },
+                              "authentication": "@parameters('$authentication')"
+                            },
+                            "runAfter": {
+                              "Apply_existing": [
+                                "Succeeded"
+                              ]
+                            }
+                          },
+                          "Apply_active_language": {
+                            "type": "Query",
+                            "inputs": {
+                              "from": "@body('Apply_catalogue_language')?['value']",
+                              "where": "@equals(item()?['Active'],true)"
+                            },
+                            "runAfter": {
+                              "Apply_catalogue_language": [
+                                "Succeeded"
+                              ]
+                            }
+                          },
+                          "Apply_ids_language": {
+                            "type": "Select",
+                            "inputs": {
+                              "from": "@body('Apply_active_language')",
+                              "select": "@item()?['Id']"
+                            },
+                            "runAfter": {
+                              "Apply_active_language": [
+                                "Succeeded"
+                              ]
+                            }
+                          },
+                          "Apply_catalogue_culture": {
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "parameters": {
+                                "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                                "parameters/method": "GET",
+                                "parameters/uri": "_api/web/lists(guid'cf7ed5b4-2e11-4a0a-a417-6c63ed60f614')/items?$select=Id,Active&$top=5000",
+                                "parameters/headers": {
+                                  "Accept": "application/json;odata=nometadata"
+                                }
+                              },
+                              "host": {
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                "connectionName": "shared_sharepointonline",
+                                "operationId": "HttpRequest"
+                              },
+                              "authentication": "@parameters('$authentication')"
+                            },
+                            "runAfter": {
+                              "Apply_ids_language": [
+                                "Succeeded"
+                              ]
+                            }
+                          },
+                          "Apply_active_culture": {
+                            "type": "Query",
+                            "inputs": {
+                              "from": "@body('Apply_catalogue_culture')?['value']",
+                              "where": "@equals(item()?['Active'],true)"
+                            },
+                            "runAfter": {
+                              "Apply_catalogue_culture": [
+                                "Succeeded"
+                              ]
+                            }
+                          },
+                          "Apply_ids_culture": {
+                            "type": "Select",
+                            "inputs": {
+                              "from": "@body('Apply_active_culture')",
+                              "select": "@item()?['Id']"
+                            },
+                            "runAfter": {
+                              "Apply_active_culture": [
+                                "Succeeded"
+                              ]
+                            }
+                          },
+                          "Apply_row_gate": {
+                            "type": "ParseJson",
+                            "inputs": {
+                              "content": "@and(equals(body('Apply_user')?['Id'],items('Apply_rows')?['sharepointUserId']),equals(body('Apply_user')?['LoginName'],items('Apply_rows')?['accountLogin']),not(empty(trim(items('Apply_rows')?['Title']))),greater(add(add(length(items('Apply_rows')?['teachIds']),length(items('Apply_rows')?['learnIds'])),add(length(items('Apply_rows')?['shareCultureIds']),length(items('Apply_rows')?['learnCultureIds']))),0),and(contains(coalesce(body('Apply_existing'),json('{}')),'value'),not(equals(body('Apply_existing')?['value'],null)),less(length(coalesce(body('Apply_existing')?['value'],json('[]'))),2),empty(body('Apply_existing')?['@odata.nextLink']),empty(body('Apply_existing')?['odata.nextLink']),empty(body('Apply_existing')?['__next'])),equals(length(intersection(items('Apply_rows')?['teachIds'],body('Apply_ids_language'))),length(items('Apply_rows')?['teachIds'])),equals(length(intersection(items('Apply_rows')?['learnIds'],body('Apply_ids_language'))),length(items('Apply_rows')?['learnIds'])),equals(length(intersection(items('Apply_rows')?['shareCultureIds'],body('Apply_ids_culture'))),length(items('Apply_rows')?['shareCultureIds'])),equals(length(intersection(items('Apply_rows')?['learnCultureIds'],body('Apply_ids_culture'))),length(items('Apply_rows')?['learnCultureIds'])),and(contains(coalesce(body('Apply_catalogue_language'),json('{}')),'value'),not(equals(body('Apply_catalogue_language')?['value'],null)),less(length(coalesce(body('Apply_catalogue_language')?['value'],json('[]'))),5000),empty(body('Apply_catalogue_language')?['@odata.nextLink']),empty(body('Apply_catalogue_language')?['odata.nextLink']),empty(body('Apply_catalogue_language')?['__next'])),and(contains(coalesce(body('Apply_catalogue_culture'),json('{}')),'value'),not(equals(body('Apply_catalogue_culture')?['value'],null)),less(length(coalesce(body('Apply_catalogue_culture')?['value'],json('[]'))),5000),empty(body('Apply_catalogue_culture')?['@odata.nextLink']),empty(body('Apply_catalogue_culture')?['odata.nextLink']),empty(body('Apply_catalogue_culture')?['__next'])))",
+                              "schema": {
+                                "type": "boolean",
+                                "enum": [
+                                  true
+                                ]
+                              }
+                            },
+                            "runAfter": {
+                              "Apply_ids_culture": [
+                                "Succeeded"
+                              ]
+                            }
+                          },
+                          "Apply_exists": {
+                            "type": "If",
+                            "expression": "@equals(length(body('Apply_existing')?['value']),1)",
+                            "actions": {
+                              "Apply_skip": {
+                                "type": "AppendToArrayVariable",
+                                "inputs": {
+                                  "name": "Rows",
+                                  "value": {
+                                    "sourceKey": "@items('Apply_rows')?['sourceKey']",
+                                    "sharepointUserId": "@items('Apply_rows')?['sharepointUserId']",
+                                    "status": "SKIPPED_EXISTING",
+                                    "participantId": "@first(body('Apply_existing')?['value'])?['Id']",
+                                    "writeAttempted": false
+                                  }
+                                },
+                                "runAfter": {}
+                              }
+                            },
+                            "else": {
+                              "actions": {
+                                "Create_payload": {
+                                  "type": "Compose",
+                                  "inputs": {
+                                    "__metadata": {
+                                      "type": "@body('Read_participant_type')?['ListItemEntityTypeFullName']"
+                                    },
+                                    "Title": "@items('Apply_rows')?['Title']",
+                                    "ParticipantaccountId": "@items('Apply_rows')?['sharepointUserId']",
+                                    "ParticipationStatus": "@items('Apply_rows')?['ParticipationStatus']",
+                                    "OpenToConnections": "@items('Apply_rows')?['OpenToConnections']",
+                                    "TeachlanguagesId": {
+                                      "results": "@items('Apply_rows')?['teachIds']"
+                                    },
+                                    "LearnlanguagesId": {
+                                      "results": "@items('Apply_rows')?['learnIds']"
+                                    },
+                                    "ShareCulturesId": {
+                                      "results": "@items('Apply_rows')?['shareCultureIds']"
+                                    },
+                                    "LearnCulturesId": {
+                                      "results": "@items('Apply_rows')?['learnCultureIds']"
+                                    }
+                                  },
+                                  "runAfter": {}
+                                },
+                                "Payload_Learningfocus": {
+                                  "type": "Compose",
+                                  "inputs": "@if(contains(items('Apply_rows'),'Learningfocus'),setProperty(outputs('Create_payload'),'Learningfocus',items('Apply_rows')?['Learningfocus']),outputs('Create_payload'))",
+                                  "runAfter": {
+                                    "Create_payload": [
+                                      "Succeeded"
+                                    ]
+                                  }
+                                },
+                                "Payload_Comments": {
+                                  "type": "Compose",
+                                  "inputs": "@if(contains(items('Apply_rows'),'Comments'),setProperty(outputs('Payload_Learningfocus'),'Comments',items('Apply_rows')?['Comments']),outputs('Payload_Learningfocus'))",
+                                  "runAfter": {
+                                    "Payload_Learningfocus": [
+                                      "Succeeded"
+                                    ]
+                                  }
+                                },
+                                "Mark_attempted": {
+                                  "type": "SetVariable",
+                                  "inputs": {
+                                    "name": "Attempted",
+                                    "value": true
+                                  },
+                                  "runAfter": {
+                                    "Payload_Comments": [
+                                      "Succeeded"
+                                    ]
+                                  }
+                                },
+                                "Create_once": {
+                                  "type": "Scope",
+                                  "actions": {
+                                    "Create_participant": {
+                                      "type": "OpenApiConnection",
+                                      "inputs": {
+                                        "parameters": {
+                                          "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                                          "parameters/method": "POST",
+                                          "parameters/uri": "_api/web/lists(guid'fd3adf46-f81d-4a7b-a80c-567fde0175dc')/items",
+                                          "parameters/headers": {
+                                            "Accept": "application/json;odata=nometadata",
+                                            "Content-Type": "application/json;odata=verbose"
+                                          },
+                                          "parameters/body": "@outputs('Payload_Comments')"
+                                        },
+                                        "host": {
+                                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                          "connectionName": "shared_sharepointonline",
+                                          "operationId": "HttpRequest"
+                                        },
+                                        "authentication": "@parameters('$authentication')",
+                                        "retryPolicy": {
+                                          "type": "none"
+                                        }
+                                      },
+                                      "runAfter": {}
+                                    }
+                                  },
+                                  "runAfter": {
+                                    "Mark_attempted": [
+                                      "Succeeded"
+                                    ]
+                                  }
+                                },
+                                "Reread_account": {
+                                  "type": "OpenApiConnection",
+                                  "inputs": {
+                                    "parameters": {
+                                      "dataset": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                                      "parameters/method": "GET",
+                                      "parameters/uri": "@concat('_api/web/lists(guid''fd3adf46-f81d-4a7b-a80c-567fde0175dc'')/items?$select=Id,ParticipantaccountId&$filter=ParticipantaccountId eq ',string(items('Apply_rows')?['sharepointUserId']),'&$top=2')",
+                                      "parameters/headers": {
+                                        "Accept": "application/json;odata=nometadata"
+                                      }
+                                    },
+                                    "host": {
+                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                      "connectionName": "shared_sharepointonline",
+                                      "operationId": "HttpRequest"
+                                    },
+                                    "authentication": "@parameters('$authentication')"
+                                  },
+                                  "runAfter": {
+                                    "Create_once": [
+                                      "Succeeded",
+                                      "Failed",
+                                      "Skipped",
+                                      "TimedOut"
+                                    ]
+                                  }
+                                },
+                                "Reconcile_create": {
+                                  "type": "ParseJson",
+                                  "inputs": {
+                                    "content": "@and(contains(coalesce(body('Reread_account'),json('{}')),'value'),not(equals(body('Reread_account')?['value'],null)),less(length(coalesce(body('Reread_account')?['value'],json('[]'))),2),empty(body('Reread_account')?['@odata.nextLink']),empty(body('Reread_account')?['odata.nextLink']),empty(body('Reread_account')?['__next']))",
+                                    "schema": {
+                                      "type": "boolean",
+                                      "enum": [
+                                        true
+                                      ]
+                                    }
+                                  },
+                                  "runAfter": {
+                                    "Reread_account": [
+                                      "Succeeded"
+                                    ]
+                                  }
+                                },
+                                "Record_create": {
+                                  "type": "AppendToArrayVariable",
+                                  "inputs": {
+                                    "name": "Rows",
+                                    "value": {
+                                      "sourceKey": "@items('Apply_rows')?['sourceKey']",
+                                      "sharepointUserId": "@items('Apply_rows')?['sharepointUserId']",
+                                      "status": "@if(and(equals(actions('Create_participant')?['status'],'Succeeded'),equals(outputs('Create_participant')?['statusCode'],201),equals(length(body('Reread_account')?['value']),1),not(empty(body('Create_participant')?['Id'])),equals(body('Create_participant')?['Id'],first(body('Reread_account')?['value'])?['Id'])),'CREATED','UNKNOWN')",
+                                      "participantId": "@if(equals(length(body('Reread_account')?['value']),1),first(body('Reread_account')?['value'])?['Id'],null)",
+                                      "writeAttempted": true
+                                    }
+                                  },
+                                  "runAfter": {
+                                    "Reconcile_create": [
+                                      "Succeeded"
+                                    ]
+                                  }
+                                }
+                              }
+                            },
+                            "runAfter": {
+                              "Apply_row_gate": [
+                                "Succeeded"
+                              ]
+                            }
+                          }
+                        },
+                        "runAfter": {
+                          "Apply_reset": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "Apply_reported": {
+                        "type": "Query",
+                        "inputs": {
+                          "from": "@variables('Rows')",
+                          "where": "@equals(item()?['sourceKey'],items('Apply_rows')?['sourceKey'])"
+                        },
+                        "runAfter": {
+                          "Apply_check": [
+                            "Succeeded",
+                            "Failed",
+                            "Skipped",
+                            "TimedOut"
+                          ]
+                        }
+                      },
+                      "Apply_fallback": {
+                        "type": "If",
+                        "expression": "@empty(body('Apply_reported'))",
+                        "actions": {
+                          "Apply_failure": {
+                            "type": "AppendToArrayVariable",
+                            "inputs": {
+                              "name": "Rows",
+                              "value": {
+                                "sourceKey": "@items('Apply_rows')?['sourceKey']",
+                                "sharepointUserId": "@items('Apply_rows')?['sharepointUserId']",
+                                "status": "@if(variables('Attempted'),'UNKNOWN','REJECTED')",
+                                "participantId": null,
+                                "writeAttempted": "@variables('Attempted')",
+                                "observedParticipants": "@coalesce(body('Apply_existing')?['value'],json('[]'))",
+                                "observedAfterWrite": "@coalesce(body('Reread_account')?['value'],json('[]'))"
+                              }
+                            },
+                            "runAfter": {}
+                          }
+                        },
+                        "else": {
+                          "actions": {}
+                        },
+                        "runAfter": {
+                          "Apply_reported": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    },
+                    "runtimeConfiguration": {
+                      "concurrency": {
+                        "repetitions": 1
+                      }
+                    },
+                    "runAfter": {}
+                  }
+                },
+                "else": {
+                  "actions": {}
+                },
+                "runAfter": {
+                  "Entire_plan_gate": [
+                    "Succeeded"
+                  ]
+                }
+              },
+              "Final_rows": {
+                "type": "Compose",
+                "inputs": "@if(and(equals(coalesce(triggerBody()?['ApplyChanges'],false),true),equals(actions('Entire_plan_gate')?['status'],'Succeeded')),variables('Rows'),variables('Preflight'))",
+                "runAfter": {
+                  "Apply_phase": [
+                    "Succeeded",
+                    "Failed",
+                    "Skipped",
+                    "TimedOut"
+                  ]
+                }
+              },
+              "Failed_rows": {
+                "type": "Query",
+                "inputs": {
+                  "from": "@outputs('Final_rows')",
+                  "where": "@contains(createArray('REJECTED','UNKNOWN'),item()?['status'])"
+                },
+                "runAfter": {
+                  "Final_rows": [
+                    "Succeeded"
+                  ]
+                }
+              },
+              "Created_rows": {
+                "type": "Query",
+                "inputs": {
+                  "from": "@outputs('Final_rows')",
+                  "where": "@equals(item()?['status'],'CREATED')"
+                },
+                "runAfter": {
+                  "Failed_rows": [
+                    "Succeeded"
+                  ]
+                }
+              },
+              "Unknown_rows": {
+                "type": "Query",
+                "inputs": {
+                  "from": "@outputs('Final_rows')",
+                  "where": "@equals(item()?['status'],'UNKNOWN')"
+                },
+                "runAfter": {
+                  "Created_rows": [
+                    "Succeeded"
+                  ]
+                }
+              },
+              "Attempted_rows": {
+                "type": "Query",
+                "inputs": {
+                  "from": "@outputs('Final_rows')",
+                  "where": "@equals(item()?['writeAttempted'],true)"
+                },
+                "runAfter": {
+                  "Unknown_rows": [
+                    "Succeeded"
+                  ]
+                }
+              },
+              "Import_report": {
+                "type": "Compose",
+                "inputs": {
+                  "kind": "TandemParticipantImportReport",
+                  "contractVersion": 1,
+                  "sourceTicket": 48,
+                  "targetSite": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "packageBuildId": "dd2f820c-8189-4fff-981e-7cacd11d8a23",
+                  "runReference": "@workflow()?['run']?['name']",
+                  "sourceSha256": "@body('Parse_plan')?['sourceSha256']",
+                  "applyChanges": "@coalesce(triggerBody()?['ApplyChanges'],false)",
+                  "preflightPassed": "@equals(actions('Entire_plan_gate')?['status'],'Succeeded')",
+                  "allPassed": "@and(equals(actions('Entire_plan_gate')?['status'],'Succeeded'),equals(actions('Apply_phase')?['status'],'Succeeded'),empty(body('Failed_rows')),equals(length(outputs('Final_rows')),length(coalesce(body('Parse_plan')?['rows'],json('[]')))))",
+                  "writesCount": "@length(body('Created_rows'))",
+                  "unknown": "@not(empty(body('Unknown_rows')))",
+                  "unknownCount": "@length(body('Unknown_rows'))",
+                  "writeAttempts": "@length(body('Attempted_rows'))",
+                  "rows": "@outputs('Final_rows')",
+                  "preflightRows": "@variables('Preflight')",
+                  "prerequisiteStatus": "@actions('Plan_prerequisites')?['status']",
+                  "applyStatus": "@actions('Apply_phase')?['status']",
+                  "validationStatusOwner": "#61; no validation Status writes"
+                },
+                "runAfter": {
+                  "Attempted_rows": [
+                    "Succeeded"
+                  ]
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_Attempted": [
+              "Succeeded"
+            ]
+          }
+        }
+      }
+    },
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "connectionName": "IMPORT_SELECT_EXISTING_SHAREPOINT_CONNECTION",
+        "source": "Embedded",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+        "tier": "NotSpecified",
+        "apiName": "sharepointonline",
+        "isProcessSimpleApiReferenceConversionAlreadyDone": false
+      }
+    },
+    "flowFailureAlertSubscribed": false,
+    "isManaged": false
+  }
+}

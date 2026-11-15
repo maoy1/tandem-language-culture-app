@@ -1,0 +1,34 @@
+{
+  "sourceTicket": 48,
+  "packageBuildId": "dd2f820c-8189-4fff-981e-7cacd11d8a23",
+  "sha256": "aff53284304df496d73f9e6e84693d9e8affcc3470c290902e3e3b7c3ab89bb5",
+  "localTests": {
+    "passed": 36,
+    "failed": 0,
+    "scope": "Synthetic emitted graph plus read-only workbook preparer; not native certification"
+  },
+  "actions": 76,
+  "maximumActionDepth": 7,
+  "activationGraphFindings": [],
+  "unsupportedParseJsonPatterns": 0,
+  "sourceWorkbookSha256": "e75cf97e546c42446523f50d72ed0b8dfeceec63d7561655594e15380d4d6db7",
+  "realWorkbookInspection": {
+    "responses": 206,
+    "identityCellsPresent": 0,
+    "rowsWithoutProfileDetails": 22,
+    "sourceUnchanged": true
+  },
+  "nativeImport": "NOT RUN",
+  "nativeSnapshot": "NOT RUN",
+  "nativeDryRun": "NOT RUN",
+  "nativeApply": "NOT RUN",
+  "tenantWrites": 0,
+  "noIdentitiesInvented": true,
+  "noSourceWorkbookOrIdentitySnapshotInPackage": true,
+  "limitations": [
+    "Identified source and actual complete tenant snapshot pending.",
+    "Reviewed availability/ambiguous selection mapping pending.",
+    "Users absent from site users remain blocked; no automatic account grants or account creation.",
+    "Scope is create-only; existing profiles and historical groups/memberships remain preserved."
+  ]
+}
