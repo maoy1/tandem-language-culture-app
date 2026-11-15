@@ -14,7 +14,7 @@ from xml.etree import ElementTree as ET
 from zipfile import ZipFile
 import yaml
 
-from scripts.build_integrated_app import BASE_SHA,CORE_SHA,core_contracts
+from scripts.build_integrated_app import BASE_SHA,CORE_SHA,core_contracts,LEGACY_JOIN_CALL,FIXED_JOIN_CALL
 from scripts.verify_discovery_app import formula_sanity
 
 
@@ -39,9 +39,9 @@ def formulas(document):
             if isinstance(value,str) and value.startswith('='):yield name,prop,value[1:]
 
 
-def run_calls(formula):
+def run_arguments(formula):
     for match in re.finditer(r'\b(Tandem\w+)\.Run\(',formula):
-        stack=['('];quoted=False;count=1;i=match.end();start=i
+        stack=['('];quoted=False;args=[];i=match.end();start=i
         while i<len(formula) and stack:
             c=formula[i]
             if c=='"':
@@ -51,11 +51,29 @@ def run_calls(formula):
                 if c in '([{':stack.append(c)
                 elif c in ')]}':
                     assert stack.pop()=={')':'(',']':'[','}':'{'}[c],'Unbalanced Run expression'
-                elif c==',' and len(stack)==1:count+=1
+                elif c==',' and len(stack)==1:
+                    args.append(formula[start:i].strip());start=i+1
             i+=1
         assert not stack,'Unclosed Run call'
-        if i==start+1:count=0
-        yield match[1],count
+        final=formula[start:i-1].strip()
+        if final:args.append(final)
+        yield match[1],args
+
+
+def run_calls(formula):
+    for flow,args in run_arguments(formula):yield flow,len(args)
+
+
+def optional_arguments_valid(schema,args):
+    required=schema.get('required',[])
+    optional=set(schema['properties'])-set(required)
+    if not optional:return len(args)==len(required)
+    if len(args)==len(required):return True
+    if len(args)!=len(required)+1:return False
+    record=args[-1].strip()
+    if not (record.startswith('{') and record.endswith('}')):return False
+    fields=set(re.findall(r'(?:\{|,)\s*(\w+)\s*:',record))
+    return bool(fields) and fields<=optional
 
 
 def verify(base_path,core_path,path):
@@ -88,6 +106,8 @@ def verify(base_path,core_path,path):
     new_discovery=all_controls(yaml.safe_load(after['Src/scrDiscovery.pa.yaml']))
     for name,node in old_discovery.items():
         old=deepcopy(node);new=deepcopy(new_discovery.get(name))
+        if name=='btnDiscoverySend':
+            old['Properties']['OnSelect']=old['Properties']['OnSelect'].replace(LEGACY_JOIN_CALL,FIXED_JOIN_CALL)
         if name=='lblDiscoveryTitle':
             old['Properties'].pop('Width',None)
             if new:new['Properties'].pop('Width',None)
@@ -118,9 +138,9 @@ def verify(base_path,core_path,path):
             check('Canvas equality operator:'+name+'.'+prop,'==' not in masked)
             for lookup in re.findall(r'Choices\(\[@Participants\]\.[^)]+\)',formula):
                 check('existing proven lookup:'+name+'.'+prop,lookup in proven_choices)
-            for flow,arity in run_calls(formula):
+            for flow,args in run_arguments(formula):
                 spec=next(iter(flows[flow]['trigger'].values()))['inputs']['schema']
-                check(f'Run arity:{name}.{prop}/{flow}',len(spec.get('required',[]))<=arity<=len(spec['properties']))
+                check(f'Run required and optional input shape:{name}.{prop}/{flow}',optional_arguments_valid(spec,args))
                 calls.append(flow)
         if file!='Src/MainScreen1.pa.yaml':
             rendered='\n'.join(value for _,prop,value in formulas(doc) if prop in ['Text','Default','HtmlText'])
@@ -145,7 +165,7 @@ def verify(base_path,core_path,path):
         check('connection dependency:'+key,all(d in new_refs for d in ref.get('dependencies',{}).values()))
         check('connection dependents:'+key,all(d in new_refs for d in ref.get('dependents',[])))
     check('PAC loads source overlay',json.loads(after['packed.json'])['LoadConfiguration']['LoadFromYaml'] is True)
-    return {'artifactVersion':'Integrated-v2' if 'scrMyGroups' in expected else 'Requests-v1','sha256':hashlib.sha256(path.read_bytes()).hexdigest(),
+    return {'artifactVersion':'Integrated-v3' if 'scrMyGroups' in expected else 'Requests-v2','sha256':hashlib.sha256(path.read_bytes()).hexdigest(),
         'baseAppSha256':BASE_SHA,'coreZipSha256':CORE_SHA,'testCount':len(checks),'allPassed':all(c['passed'] for c in checks),
         'formulaSanityCount':count,'flowCallCount':len(calls),'boundFlows':sorted(service),'controlCount':len(all_names),'checks':checks,
         'powerFxCompilation':'NOT RUN: local checks do not compile/type-check Power Fx',

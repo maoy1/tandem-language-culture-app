@@ -1,0 +1,6 @@
+EditorState:
+  ScreensOrder:
+    - MainScreen1
+    - scrDiscovery
+    - scrRequests
+    - scrMyGroups

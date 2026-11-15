@@ -23,6 +23,19 @@ BASE_SHA='ee00b86d7810d2e6c1ccd52777b7a1ef9003e60aa8638fa270817503289ffdee'
 CORE_SHA='0d1b97508db5c5995199bac0853d45ee73ba147a48008c0fb1c369740b4868bd'
 MODULES={'requests':'scripts.app_requests_screen','groups':'scripts.app_groups_screen'}
 BASE_FLOWS={'TandemDiscovery','TandemSendRequest','TandemSendGroupJoinRequest'}
+LEGACY_JOIN_CALL='TandemSendGroupJoinRequest.Run(varDiscoveryIntentTarget, varDiscoveryIntent, varDiscoveryIntentIntroduction)'
+FIXED_JOIN_CALL='TandemSendGroupJoinRequest.Run(varDiscoveryIntentTarget, varDiscoveryIntent, {text_1: varDiscoveryIntentIntroduction})'
+
+
+def repair_discovery(document):
+    """Optional Power Apps flow inputs are supplied as a final record."""
+    result=deepcopy(document)
+    button=next(c['btnDiscoverySend'] for c in result['Screens']['scrDiscovery']['Children'] if 'btnDiscoverySend' in c)
+    formula=button['Properties']['OnSelect']
+    if formula.count(LEGACY_JOIN_CALL)!=1:
+        raise ValueError('Unexpected Discovery group-join call; review before patching')
+    button['Properties']['OnSelect']=formula.replace(LEGACY_JOIN_CALL,FIXED_JOIN_CALL)
+    return result
 
 
 def core_contracts(path):
@@ -181,7 +194,7 @@ def build(base_app,core_zip,output,pac,screen_names=('requests','groups')):
         original=(src/'scrDiscovery.pa.yaml').read_text(encoding='utf8')
         if original.strip()!=discovery.dump_yaml(discovery.screen()).strip():
             raise ValueError('Working Discovery source differs from generator; do not overwrite it')
-        screens=[('scrDiscovery',discovery.screen())]+[(m.SCREEN_NAME,m.screen()) for m in modules]
+        screens=[('scrDiscovery',repair_discovery(discovery.screen()))]+[(m.SCREEN_NAME,m.screen()) for m in modules]
         for name,document in screens:
             document=add_navigation(deepcopy(document),name,modules)
             (src/(name+'.pa.yaml')).write_text(discovery.dump_yaml(document),encoding='utf8')
@@ -198,7 +211,7 @@ def build(base_app,core_zip,output,pac,screen_names=('requests','groups')):
             if z.testzip():raise ValueError('Corrupt app package')
         sources=output.parent/'source';sources.mkdir(exist_ok=True)
         for file in src.glob('*.pa.yaml'):(sources/file.name).write_bytes(file.read_bytes())
-        manifest={'artifactVersion':'Integrated-v2' if 'groups' in screen_names else 'Requests-v1','sourceTickets':[67]+([68] if 'groups' in screen_names else []),
+        manifest={'artifactVersion':'Integrated-v3' if 'groups' in screen_names else 'Requests-v2','sourceTickets':[16,67]+([68] if 'groups' in screen_names else []),
             'baseAppSha256':BASE_SHA,'coreSolutionVersion':'1.0.0.2','coreZipSha256':CORE_SHA,
             'sha256':hashlib.sha256(output.read_bytes()).hexdigest(),'screens':order,
             'flowBindings':{n:{'id':flows[n]['id'],'inputs':next(iter(flows[n]['trigger'].values()))['inputs']['schema'],
