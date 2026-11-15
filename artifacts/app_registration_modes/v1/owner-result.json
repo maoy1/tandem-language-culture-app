@@ -2,8 +2,9 @@
   "issue": 103,
   "date": "2026-11-15",
   "patchVersion": "registration-mode-fix-v1",
-  "evidence": "Owner answered applied the fix on app, looks good after being asked whether both reported behaviors work in Studio",
-  "reportedViewNavigationWarning": "OWNER CONFIRMED FIXED",
+  "evidence": "After distinguishing working Preview from the normal player and receiving save/publish/reopen guidance, owner explicitly answered yes, issue gone",
+  "reportedViewNavigationWarning": "OWNER CONFIRMED FIXED IN NORMAL APP",
+  "history": "Earlier inferred PASS was retracted when the owner reported the normal app still failed. Preview/player verification then resolved the reported warning; no further guard change was made.",
   "reportedPencilAfterSaveOrCancel": "OWNER CONFIRMED FIXED",
   "appliedAppExportHash": "NOT SUPPLIED; preserve original native export and five-property patch",
   "remainingNotRun": [
