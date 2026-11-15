@@ -1,0 +1,15 @@
+{
+  "issue": 103,
+  "patchVersion": "registration-new-guard-v2",
+  "ownerStatement": "now the app works",
+  "context": "Owner response to the existing-profile New guard application and verification instructions",
+  "existingParticipantReportedBehavior": "OWNER CONFIRMED WORKING",
+  "appliedAppExportHash": "NOT SUPPLIED; retain native baseline plus versioned v1/v2 property patches",
+  "remainingNotRun": [
+    "separate account without a profile: New, Cancel and successful registration",
+    "stale-click and lookup failure harness",
+    "full App checker and broader regression",
+    "colleague access and ordinary-participant privacy"
+  ],
+  "scope": "Qualitative confirmation of the reported existing-participant issue, not an all-cases test result"
+}

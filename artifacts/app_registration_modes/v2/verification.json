@@ -1,0 +1,16 @@
+{
+  "issue": 103,
+  "version": "registration-new-guard-v2",
+  "baselineNativeSha256": "673bff977448c4d31390c806681b96fc3d3bc056094d6e61b0e972868c8466ae",
+  "properties": [
+    "NewRecordButtonBarContainer1.Visible",
+    "NewRecordAddIcon1.OnSelect"
+  ],
+  "fileSha256": {
+    "NewRecordAddIcon1.OnSelect.fx": "d0ce8e278e5659e7c1c9d99dbc6d4f0aa3e8f73a6f1dd8856e12533a82cde394",
+    "NewRecordButtonBarContainer1.Visible.fx": "34fc0300361ef54fbbb18034983cd0bf737a81b04b8d48c993962b92d2688484"
+  },
+  "localVerification": "PASS: baseline controls, exact two-property handoff, View/account/profile preconditions and rejection paths without reset/write",
+  "nativeAcceptance": "NOT RUN",
+  "shared81Impact": "UI New availability/entry only; existing account uniqueness, identity, schema and flow/shared contracts unchanged"
+}

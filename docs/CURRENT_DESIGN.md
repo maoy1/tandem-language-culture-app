@@ -2,6 +2,23 @@
 
 ## #103 — registration form state follow-up
 
+New availability follow-up: an existing participant could still choose New
+because its bar was always visible and its handler unconditionally called
+NewForm. V2 adds only the bar Visible and icon OnSelect properties. Show New only
+in View after mailbox resolution and when the own Person Email lookup finds no
+profile; hide on lookup error. Recheck profile/account/form state in the handler,
+warn without modifying data for an existing profile/error or active Edit/New,
+and enter New only when eligible. Existing unique account constraint remains the
+storage guard; UI lookup is not atomic authorization. No change to v1's working
+View/Save/Cancel/navigation, native catalogue bindings, automatic identity,
+schema/shared rules/flow IO. Local two-property checks PASS. Owner responded
+"now the app works" after v2 instructions: record the existing-participant
+reported behavior as owner-confirmed working. Separate first-time-account,
+stale/error, full checker and access cases remain NOT RUN/deferred; see v2's
+owner-result.json. This is not an all-cases or privacy result.
+Handoff: primary artifacts/app_registration_modes/v2; preserve the app, no repack.
+
+
 Latest owner result: navigation works in Preview and owner subsequently confirmed
 "yes, issue gone" for the normal app after save/publish/reopen guidance. Both
 reported UI defects are now owner-confirmed fixed. The earlier inferred PASS was

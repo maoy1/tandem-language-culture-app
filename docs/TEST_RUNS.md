@@ -1,5 +1,17 @@
 # Test execution records
 
+## #103 — New-guard v2 owner confirmation
+
+After receiving the existing-profile New visibility/entry patch and native
+application/publish instructions, owner replied "now the app works". Record
+that bounded existing-participant behavior as owner-confirmed working. It does
+not independently prove the separate first-time-account New/Cancel/Save path,
+stale-click/lookup-error harness, full checker, colleague access or privacy;
+these remain NOT RUN/deferred. V1's earlier normal-player and Save/Cancel results
+are retained. No post-edit export/hash was supplied; original native baseline
+and versioned property patches remain the artifact chain.
+
+
 ## 2026-11-15 — #103 normal-player verification PASS
 
 Owner clarified navigation worked in Studio Preview but failed in the normal app.
