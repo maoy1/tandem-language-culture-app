@@ -1,0 +1,9 @@
+{
+  "sourceTicket": 48,
+  "sourceBuildId": "52f719f8-3f67-4e57-9050-b55553a67fa5",
+  "evidence": "Owner reports Content not shown due to security configuration for requested Private read report Outputs.",
+  "aggregateVisibility": "FAIL_OWNER_REPORTED_MASKED",
+  "readCounts": "NOT PROVIDED",
+  "rawIdentityDisclosure": "NOT_REPORTED",
+  "privacyInstruction": "Keep raw-row security enabled; share only new aggregate Read_report output."
+}

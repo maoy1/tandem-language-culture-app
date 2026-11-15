@@ -1,0 +1,287 @@
+{
+  "name": "58ad8358-4072-4555-b411-9dcba1e1edb3",
+  "id": "/providers/Microsoft.Flow/flows/58ad8358-4072-4555-b411-9dcba1e1edb3",
+  "type": "Microsoft.Flow/flows",
+  "properties": {
+    "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
+    "displayName": "TandemPrivateExcelReadProbe v4",
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Button",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "SkipRows": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 2147483647,
+                  "default": 0,
+                  "title": "SkipRows (data rows, excluding header)",
+                  "x-ms-content-hint": "NUMBER"
+                },
+                "ExpectedRows": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 250,
+                  "default": 206,
+                  "title": "ExpectedRows (rows remaining after skip)",
+                  "x-ms-content-hint": "NUMBER"
+                }
+              },
+              "required": []
+            }
+          },
+          "runtimeConfiguration": {
+            "concurrency": {
+              "runs": 1
+            }
+          }
+        }
+      },
+      "actions": {
+        "Workbook_configuration": {
+          "type": "InitializeVariable",
+          "runAfter": {},
+          "inputs": {
+            "variables": [
+              {
+                "name": "WorkbookConfiguration",
+                "type": "object",
+                "value": {
+                  "source": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+                  "drive": "",
+                  "file": "",
+                  "table": ""
+                }
+              }
+            ]
+          }
+        },
+        "Read_options": {
+          "type": "ParseJson",
+          "runAfter": {
+            "Workbook_configuration": [
+              "Succeeded"
+            ]
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs"
+              ]
+            }
+          },
+          "inputs": {
+            "content": {
+              "SkipRows": "@coalesce(triggerBody()?['SkipRows'],0)",
+              "ExpectedRows": "@coalesce(triggerBody()?['ExpectedRows'],206)"
+            },
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "SkipRows",
+                "ExpectedRows"
+              ],
+              "properties": {
+                "SkipRows": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 2147483647
+                },
+                "ExpectedRows": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 250
+                }
+              }
+            }
+          }
+        },
+        "Read_workbook": {
+          "type": "OpenApiConnection",
+          "runAfter": {
+            "Read_options": [
+              "Succeeded"
+            ]
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          },
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+              "connectionName": "shared_excelonlinebusiness",
+              "operationId": "GetItems"
+            },
+            "parameters": {
+              "source": "@variables('WorkbookConfiguration')?['source']",
+              "drive": "@variables('WorkbookConfiguration')?['drive']",
+              "file": "@variables('WorkbookConfiguration')?['file']",
+              "table": "@variables('WorkbookConfiguration')?['table']",
+              "$top": 251,
+              "$skip": "@body('Read_options')?['SkipRows']"
+            },
+            "authentication": "@parameters('$authentication')",
+            "retryPolicy": {
+              "type": "none"
+            }
+          }
+        },
+        "Private_rows": {
+          "type": "ParseJson",
+          "runAfter": {
+            "Read_workbook": [
+              "Succeeded"
+            ]
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs"
+              ]
+            }
+          },
+          "inputs": {
+            "content": "@body('Read_workbook')?['value']",
+            "schema": {
+              "type": "array",
+              "maxItems": 251,
+              "items": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "Private_email_present": {
+          "type": "Query",
+          "runAfter": {
+            "Private_rows": [
+              "Succeeded"
+            ]
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          },
+          "inputs": {
+            "from": "@body('Private_rows')",
+            "where": "@and(not(empty(trim(string(item()?['Email'])))),not(equals(toLower(trim(string(item()?['Email']))),'anonymous')))"
+          }
+        },
+        "Private_identity_text_present": {
+          "type": "Query",
+          "runAfter": {
+            "Private_rows": [
+              "Succeeded"
+            ]
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          },
+          "inputs": {
+            "from": "@body('Private_rows')",
+            "where": "@not(empty(trim(string(item()?['Please leave your name and Email']))))"
+          }
+        },
+        "Read_report": {
+          "type": "Select",
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs"
+              ]
+            }
+          },
+          "runAfter": {
+            "Private_rows": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ],
+            "Private_email_present": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ],
+            "Private_identity_text_present": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          },
+          "inputs": {
+            "from": "@createArray(0)",
+            "select": {
+              "kind": "TandemPrivateExcelReadProbe",
+              "schemaVersion": 2,
+              "sourceTicket": 48,
+              "packageBuildId": "58ad8358-4072-4555-b411-9dcba1e1edb3",
+              "runReference": "@workflow()?['run']?['name']",
+              "success": "@and(equals(actions('Read_options')?['status'],'Succeeded'),equals(actions('Read_workbook')?['status'],'Succeeded'),equals(actions('Private_rows')?['status'],'Succeeded'),and(equals(actions('Private_email_present')?['status'],'Succeeded'),equals(actions('Private_identity_text_present')?['status'],'Succeeded')),and(less(length(coalesce(body('Private_rows'),json('[]'))),251),empty(body('Read_workbook')?['@odata.nextLink']),empty(body('Read_workbook')?['odata.nextLink'])),equals(length(coalesce(body('Private_rows'),json('[]'))),body('Read_options')?['ExpectedRows']),or(equals(length(coalesce(body('Private_rows'),json('[]'))),0),and(contains(first(union(coalesce(body('Private_rows'),json('[]')),createArray(json('{}')))),'Email'),contains(first(union(coalesce(body('Private_rows'),json('[]')),createArray(json('{}')))),'Please leave your name and Email'))))",
+              "excelStatusCode": "@coalesce(outputs('Read_workbook')?['statusCode'],0)",
+              "code": "@if(not(equals(actions('Read_options')?['status'],'Succeeded')),'INVALID_READ_OPTIONS',if(not(equals(actions('Read_workbook')?['status'],'Succeeded')),'EXCEL_READ_FAILED',if(not(equals(actions('Private_rows')?['status'],'Succeeded')),'INVALID_TABLE_RESPONSE',if(not(and(equals(actions('Private_email_present')?['status'],'Succeeded'),equals(actions('Private_identity_text_present')?['status'],'Succeeded'))),'PRIVATE_INSPECTION_FAILED',if(not(and(less(length(coalesce(body('Private_rows'),json('[]'))),251),empty(body('Read_workbook')?['@odata.nextLink']),empty(body('Read_workbook')?['odata.nextLink']))),'INCOMPLETE_OR_TOO_LARGE',if(not(equals(length(coalesce(body('Private_rows'),json('[]'))),body('Read_options')?['ExpectedRows'])),'ROW_COUNT_MISMATCH',if(not(or(equals(length(coalesce(body('Private_rows'),json('[]'))),0),and(contains(first(union(coalesce(body('Private_rows'),json('[]')),createArray(json('{}')))),'Email'),contains(first(union(coalesce(body('Private_rows'),json('[]')),createArray(json('{}')))),'Please leave your name and Email')))),'IDENTITY_HEADERS_MISMATCH',if(equals(length(coalesce(body('Private_rows'),json('[]'))),0),'NO_ROWS','OK'))))))))",
+              "rowCount": "@length(coalesce(body('Private_rows'),json('[]')))",
+              "expectedRows": "@if(equals(actions('Read_options')?['status'],'Succeeded'),body('Read_options')?['ExpectedRows'],0)",
+              "skipRows": "@if(equals(actions('Read_options')?['status'],'Succeeded'),body('Read_options')?['SkipRows'],0)",
+              "firstDataRow": "@if(and(equals(actions('Read_options')?['status'],'Succeeded'),greater(length(coalesce(body('Private_rows'),json('[]'))),0)),add(if(equals(actions('Read_options')?['status'],'Succeeded'),body('Read_options')?['SkipRows'],0),1),null)",
+              "lastDataRow": "@if(and(equals(actions('Read_options')?['status'],'Succeeded'),greater(length(coalesce(body('Private_rows'),json('[]'))),0)),add(if(equals(actions('Read_options')?['status'],'Succeeded'),body('Read_options')?['SkipRows'],0),length(coalesce(body('Private_rows'),json('[]')))),null)",
+              "identityHeadersPresent": "@and(contains(first(union(coalesce(body('Private_rows'),json('[]')),createArray(json('{}')))),'Email'),contains(first(union(coalesce(body('Private_rows'),json('[]')),createArray(json('{}')))),'Please leave your name and Email'))",
+              "rowsWithEmailText": "@length(coalesce(body('Private_email_present'),json('[]')))",
+              "rowsWithOtherIdentityText": "@length(coalesce(body('Private_identity_text_present'),json('[]')))",
+              "participantWrites": 0,
+              "identityValuesIncluded": false,
+              "accountResolution": "NOT_ATTEMPTED",
+              "importDryRun": "NOT_RUN",
+              "importApply": "NOT_RUN"
+            }
+          }
+        }
+      }
+    },
+    "connectionReferences": {
+      "shared_excelonlinebusiness": {
+        "connectionName": "IMPORT_SELECT_EXISTING_EXCEL_CONNECTION",
+        "source": "Embedded",
+        "id": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+        "tier": "NotSpecified",
+        "apiName": "excelonlinebusiness",
+        "isProcessSimpleApiReferenceConversionAlreadyDone": false
+      }
+    },
+    "flowFailureAlertSubscribed": false,
+    "isManaged": false
+  }
+}
