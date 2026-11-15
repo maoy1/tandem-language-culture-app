@@ -1,5 +1,18 @@
 # Current design source of truth
 
+## #108 — registration startup layout sizing
+
+Owner measured the same desktop window: startup View Columns=2/Form width=916/
+card width=458; Edit Columns=2/Form width=1303/card width=458. This supports a
+sizing/reflow issue, not a column-count change; exact engine cause is unproven.
+Native layout-v1 sets inner MainContainer1.LayoutAlignItems to Stretch and
+Form1.Width to Parent.Width. Preserve current field/card order/widths, Columns=2,
+v1/v2/v3 behavior and native catalogue bindings. No app repack, new reads, state
+flags, schema/identity/shared rule/flow IO changes (#81 no-impact). Local exact
+two-property/package checks PASS; native same-width View/Edit/Save/Cancel/return,
+no-profile/mobile cases NOT RUN. Stable artifacts/app_registration_layout/v1.
+
+
 ## #103 — registration form state follow-up
 
 Final owner acceptance, 2026-11-16: "yes #103 checks done, all good"; owner also

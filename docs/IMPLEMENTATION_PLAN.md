@@ -1,5 +1,15 @@
 # Tandem implementation plan
 
+## #108 — registration layout consistency
+
+Apply the two native sizing properties to the existing working app, preserving
+the owner's field order and empty-state fix. Compare startup View/Edit widths at
+the same viewport before/after, then Save/Cancel/screen return, normal player,
+and approved no-profile/mobile fixtures. Local source/ZIP checks are not native
+layout proof; keep #108 open until scoped acceptance. No flow/Solution import or
+additional connector/read/schema/shared rules; #103 acceptance remains historical.
+
+
 ## #103 — registration mode/navigation patch
 
 Owner confirmed the checked #103 native cases complete on 2026-11-16. Merge the
