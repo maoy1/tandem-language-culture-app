@@ -41,11 +41,21 @@ def validate_secure_data(action_map):
         validate_secure_data(action.get('else',{}).get('actions',{}))
 
 
+def validate_excel_template(action_map):
+    """Do not trigger import-time GetTable against invented literal IDs."""
+    parameters=action_map['Read_workbook']['inputs']['parameters']
+    for key in ('source','drive','file','table'):
+        if parameters[key]!=f"@variables('WorkbookConfiguration')?['{key}']":
+            raise ValueError('Unconfigured Excel template must defer '+key+' to runtime; no placeholder drive/file/table IDs')
+
+
 def actions(site,build_id):
     result={
-        'Read_workbook':{'type':'OpenApiConnection','runAfter':{},'runtimeConfiguration':deepcopy(SECURE),
+        'Workbook_configuration':{'type':'InitializeVariable','runAfter':{},'inputs':{'variables':[{
+            'name':'WorkbookConfiguration','type':'object','value':{'source':site,'drive':'','file':'','table':''}}]}},
+        'Read_workbook':{'type':'OpenApiConnection','runAfter':{'Workbook_configuration':['Succeeded']},'runtimeConfiguration':deepcopy(SECURE),
             'inputs':{'host':{'apiId':API,'connectionName':CONNECTOR,'operationId':'GetItems'},
-                      'parameters':{'source':site,'drive':'SELECT_DOCUMENT_LIBRARY','file':'SELECT_PRIVATE_WORKBOOK','table':'Table1','$top':251},
+                      'parameters':{**{key:f"@variables('WorkbookConfiguration')?['{key}']" for key in ('source','drive','file','table')},'$top':251},
                       'authentication':"@parameters('$authentication')",'retryPolicy':{'type':'none'}}},
         'Private_rows':{'type':'ParseJson','runAfter':{'Read_workbook':['Succeeded']},'runtimeConfiguration':deepcopy(SECURE_INPUTS),
             'inputs':{'content':"@body('Read_workbook')?['value']",'schema':{'type':'array','maxItems':251,'items':{'type':'object'}}}},
@@ -86,7 +96,7 @@ def build_package(output):
     with TemporaryDirectory(prefix='tandem-private-excel-') as directory:
         base=Path(directory)/'base.zip';doc=base_package(base)
         with ZipFile(base) as z:entries={n:json.loads(z.read(n)) for n in z.namelist()}
-    display_name=NAME+' v2'
+    display_name=NAME+' v3'
     props=doc['properties'];props['displayName']=display_name
     props['connectionReferences']={CONNECTOR:{'connectionName':'IMPORT_SELECT_EXISTING_EXCEL_CONNECTION','source':'Embedded','id':API,
         'tier':'NotSpecified','apiName':'excelonlinebusiness','isProcessSimpleApiReferenceConversionAlreadyDone':False}}
@@ -96,11 +106,12 @@ def build_package(output):
         'runtimeConfiguration':{'concurrency':{'runs':1}}}}
     definition['actions']=actions(site,doc['name'])
     validate_secure_data(definition['actions'])
+    validate_excel_template(definition['actions'])
     metrics=measure(definition['actions'])
     if analyze(definition):raise ValueError('Invalid dependency graph')
     manifest=entries['manifest.json'];resource=next(k for k,v in manifest['resources'].items() if v['type']=='Microsoft.Flow/flows')
     api_key,connection_key=str(uuid4()),str(uuid4())
-    manifest['details'].update(displayName=display_name+'-package',description='#48 owner-private read proof v2; native-compatible ParseJson Secure Inputs; no participant writes. Native recheck pending.')
+    manifest['details'].update(displayName=display_name+'-package',description='#48 private read proof v3; runtime Excel bindings avoid literal placeholder metadata lookup; native recheck pending.')
     manifest['resources'][resource]['details']['displayName']=display_name
     manifest['resources'][resource]['dependsOn']=[api_key,connection_key]
     manifest['resources'][api_key]={'id':API,'name':CONNECTOR,'type':'Microsoft.PowerApps/apis','suggestedCreationType':'Existing','details':{'displayName':'Excel Online (Business)'},'configurableBy':'System','hierarchy':'Child','dependsOn':[]}
@@ -113,15 +124,17 @@ def build_package(output):
     output.parent.mkdir(parents=True,exist_ok=True)
     with ZipFile(output,'x',ZIP_DEFLATED) as z:
         for name,value in entries.items():z.writestr(name,json.dumps(value,indent=2)+'\n')
-    review={'sourceTicket':48,'artifactVersion':'v2','packageBuildId':doc['name'],'sha256':hashlib.sha256(output.read_bytes()).hexdigest(),**metrics,
+    review={'sourceTicket':48,'artifactVersion':'v3','packageBuildId':doc['name'],'sha256':hashlib.sha256(output.read_bytes()).hexdigest(),**metrics,
         'purpose':'Private read proof only; not the revised importer. No participant/list/account writes.',
         'connection':'Existing owner Excel Online (Business), Embedded; no SharePoint or other connection required for this probe.',
-        'configurationRequired':{'action':'Read_workbook','location':site,'documentLibrary':'Select actual library in designer',
-            'file':'Choose original workbook privately using file picker','table':'Choose actual source table; Table1 is only the anonymized-source default'},
+        'configurationRequired':{'action':'Read_workbook','location':'Replace runtime expression with actual Tandem site selection',
+            'documentLibrary':'Replace runtime expression with actual library selection in designer',
+            'file':'Replace runtime expression with private file picker selection','table':'Replace runtime expression with actual existing table selection'},
         'inputs':{'ExpectedRows':'206 for original reviewed dataset; actual expected count required, maximum250'},
         'outputs':'Private_read_report Compose only: counts/status/error codes. Do not share private action settings or raw workbook rows.',
         'privacy':'Read_workbook and both row queries explicitly secure inputs/outputs. Private_rows uses supported Secure Inputs only, which also hides ParseJson outputs per Microsoft semantics. Report contains counts/codes only; native masking recheck pending.',
-        'supersedes':'v1 save failed with InvalidSecureDataConfiguration on Private_rows ParseJson outputs. No private read PASS is transferred.',
+        'supersedes':'v1 rejected ParseJson secure outputs; v2 import GetTable rejected its literal SELECT_DOCUMENT_LIBRARY placeholder. v3 keeps privacy fix and runtime-binds all four Excel selectors; import/save/read still require native proof.',
+        'importStrategy':'All source/drive/file/table values are runtime variable expressions, not invented IDs. Native metadata lookup cannot use an invalid literal template drive. Owner replaces expressions with picker selections after import. This strategy is locally checked, not tenant-certified.',
         'nativeImport':'NOT RUN','nativeFileConfiguration':'NOT RUN','nativeExcelRead':'NOT RUN',
         'limitations':['Connection Connected does not prove file access, DLP or source/table mapping.',
             'Read access may require workbook edit permission according to Microsoft connector documentation; do not grant it automatically.',
@@ -129,7 +142,7 @@ def build_package(output):
             'Original expected row count,251-row cap and nextlink checks reject incomplete/mismatched datasets.',
             'Email-text counts do not prove valid/resolved accounts or import readiness.'],
         'instructions':['Import as Create as new; select existing Excel connection. Keep helper owner-operated.',
-            'Edit supplied Read_workbook action: select Tandem site,actual Document Library,private workbook and Table. No new actions are needed.',
+            'After import, edit Read_workbook: remove the fx/runtime value in Location and select Tandem site; repeat for Document Library,File,Table in that order. No new actions are needed. Do not type library names as IDs.',
             'Save and run with ExpectedRows206 (or verified actual count). Share only Private_read_report outputs.',
             'Expect success=true,code=OK,rowCount=206,identityValuesIncluded=false,participantWrites=0. Any failure stops dependent import work.',
             'Do not run Apply on the old v1 importer for this private route. Disable/remove only this disposable probe after evidence is retained.'],

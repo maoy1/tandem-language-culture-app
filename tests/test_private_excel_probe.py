@@ -62,14 +62,31 @@ def test_anonymous_and_mixed_identity_text_are_counted_without_resolving_or_expo
 def test_all_private_row_actions_are_secured_and_no_write_operations_exist():
     actions=probe.actions('https://example.sharepoint.com/sites/Tandem','test')
     for name,node in actions.items():
-        if name!='Private_read_report':
+        if name not in {'Private_read_report','Workbook_configuration'}:
             expected={'inputs'} if node['type']=='ParseJson' else {'inputs','outputs'}
             assert set(node['runtimeConfiguration']['secureData']['properties'])==expected
     probe.validate_secure_data(actions)
     reads=[node for node in actions.values() if node['type']=='OpenApiConnection']
     assert len(reads)==1 and reads[0]['inputs']['host']['operationId']=='GetItems'
     assert not has_patterns(actions) and not analyze({'actions':actions})
-    assert measure(actions)=={'actions':5,'maximumActionDepth':1}
+    assert measure(actions)=={'actions':6,'maximumActionDepth':1}
+    probe.validate_excel_template(actions)
+
+
+def test_actual_v2_import_placeholder_is_rejected_by_new_template_gate():
+    path=probe.ROOT/'artifacts/participant_import/private_excel_read/v2/TandemPrivateExcelReadProbe-v2.zip'
+    with ZipFile(path) as z:
+        doc=json.loads(z.read(next(n for n in z.namelist() if n.endswith('/definition.json'))))
+    with pytest.raises(ValueError,match='runtime'):
+        probe.validate_excel_template(doc['properties']['definition']['actions'])
+
+
+def test_unconfigured_template_has_no_invented_file_library_or_table_ids():
+    actions=probe.actions('https://example.sharepoint.com/sites/Tandem','test')
+    parameters=actions['Read_workbook']['inputs']['parameters']
+    assert all(parameters[key].startswith("@variables('WorkbookConfiguration')") for key in ('source','drive','file','table'))
+    assert 'SELECT_' not in json.dumps(actions)
+    assert actions['Workbook_configuration']['inputs']['variables'][0]['value']['drive']==''
 
 
 @pytest.mark.parametrize('kind',['ParseJson','Compose','Response'])
@@ -97,7 +114,7 @@ def test_internal_inspection_failure_is_not_reported_as_success():
 
 def test_generated_package_requires_existing_excel_connection_and_private_file_selection(tmp_path):
     path=tmp_path/'private.zip';doc,review=probe.build_package(path)
-    assert review['nativeExcelRead']=='NOT RUN' and review['actions']==5 and review['maximumActionDepth']==1
+    assert review['nativeExcelRead']=='NOT RUN' and review['actions']==6 and review['maximumActionDepth']==1
     assert doc['properties']['connectionReferences'][probe.CONNECTOR]['source']=='Embedded'
     with ZipFile(path) as z:
         assert z.testzip() is None
