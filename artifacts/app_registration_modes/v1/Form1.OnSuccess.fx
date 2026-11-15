@@ -1,0 +1,4 @@
+Set(varValidationParticipantId, Form1.LastSubmit.ID);
+Notify("Registration saved. Validation runs in the background.", NotificationType.Information);
+UpdateContext({ editMode: false, newMode: false });
+ViewForm(Form1)

@@ -1,0 +1,23 @@
+{
+  "issue": 103,
+  "version": "registration-mode-fix-v1",
+  "sourceSha256": "673bff977448c4d31390c806681b96fc3d3bc056094d6e61b0e972868c8466ae",
+  "method": "five native Studio property pastes; no app repacking",
+  "properties": [
+    "Discovery.OnSelect",
+    "MyRequest.OnSelect",
+    "MyGroups.OnSelect",
+    "Form1.OnSuccess",
+    "ResetFormButton1.OnSelect"
+  ],
+  "fileSha256": {
+    "Discovery.OnSelect.fx": "bcd6e1fd7f883e84b31fa2a5fb1ceca5da47024f52774f96228f790a397c9a66",
+    "MyRequest.OnSelect.fx": "f9e102afa80e2fad41af622cd37cd6733aafad10f5de58984094103a44bba9ff",
+    "MyGroups.OnSelect.fx": "bfc0b8f521310842424d63550698ea44c89ee691aabe03047fec38b11a569ce5",
+    "Form1.OnSuccess.fx": "1913b8f8373613eed88473bc6c9a431894f4b65d5fb4361db3a00bb8c69443e8",
+    "ResetFormButton1.OnSelect.fx": "1888bcf4e16784dc85ca9100bb66cdd8c869badc6cf10ed818d0320249aa8a75"
+  },
+  "localVerification": "PASS: exact guard-only navigation delta; original success/cancel behavior retained before View transition; failure/submission/catalogue/identity properties untouched",
+  "nativeAcceptance": "NOT RUN",
+  "shared81Impact": "UI form state/navigation only; no schema/shared rules/flow contracts or packages changed"
+}
