@@ -1,0 +1,33 @@
+{
+  "sourceTicket": 48,
+  "artifactVersion": "v1",
+  "packageBuildId": "625d57bc-cab8-451e-9e4c-5e1f2f79f39c",
+  "actions": 121,
+  "maximumActionDepth": 7,
+  "sha256": "e486f3b3d7195acf6b6d8bd88e20148ad51aa576c81f143fa2f4e44bec732f3e",
+  "mappingSha256": "11cee0e2089db5213dba3d3c8a0df22615ac3b62b534d72cc3ec917222dcb650",
+  "nativeImport": "NOT RUN",
+  "nativeCombinedConnectors": "NOT RUN",
+  "nativeResolvePerson": "NOT RUN",
+  "nativeApply": "NOT RUN",
+  "connections": "Existing standard Excel Online (Business) and SharePoint owner connections; Embedded. No other connectors/runtime.",
+  "inputs": {
+    "ApplyChanges": "Boolean false default. First run false. True creates only eligible missing profiles; exceptions are skipped.",
+    "SkipRows": "Integer >=0 default0;206 starts data row207, header excluded.",
+    "ExpectedRows": "Exact number after skip,0..250; default206"
+  },
+  "outputs": "Import_report Outputs is a one-element array; aggregate counts and data-row-number/status/code only, no identities or raw connector errors.",
+  "configuration": "Import legacy ZIP as NEW. Privately select Read_workbook Location/Document Library/File/actual Table. Source settings not known to generator.",
+  "semantics": "Fresh preflight each run, exact single email/person, reviewed whole-cell catalogue mapping, duplicate source accounts blocked, existing profiles untouched. Apply may partially complete; no rollback, no update/delete/reset. Status is owned by #61 event validator.",
+  "oneTimeAccountEffect": "Apply calls SharePoint ensureuser for resolved claims before assigning Person field. May register account in site user information; no role assignment/group membership/sharing API is called. Dry-run has no explicit POST/ensureuser/participant write.",
+  "privacy": "Raw actions secured explicitly; report is deliberate input-secured Select projection. Verify native private histories without sharing raw values. Owner-only operator; not participant UI.",
+  "drift81": "One-time source adapter only: reviewed Excel whole-cell interpretation and email extraction do not replace shared production profile normalization/compatibility. No shared/core/app schema/IO/build changes. #61 still uses #81 after create; imported validation acceptance NOT RUN.",
+  "limitations": [
+    "No fuzzy mappings or guessed accounts. Unmapped selections/reconfirmation-only/no-account rows are exceptions.",
+    "Apply must follow reviewed dry-run; resolve person and combined connector capability are first checked there. Ensureuser/create capability remains a native apply gate.",
+    "Same-account uniqueness prevents replay duplicates; concurrent writes can yield UNKNOWN and require private reconciliation. Never automatically retry an unknown write.",
+    "SkipRows is positional; use0 if previous source rows were reordered.",
+    "No source file byte hash is claimed: Excel table reads do not supply one. Dry-run and Apply both reread current table; review any intervening source/mapping changes.",
+    "An Excel read can create a service-managed file version; no worksheet write operation exists."
+  ]
+}

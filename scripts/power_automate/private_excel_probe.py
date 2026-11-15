@@ -38,6 +38,9 @@ def validate_secure_data(action_map):
     for name,action in action_map.items():
         properties=set(action.get('runtimeConfiguration',{}).get('secureData',{}).get('properties',[]))
         if not properties<={'inputs','outputs'}:raise ValueError('Unsupported secureData values: '+name)
+        if properties and action['type'] in {'InitializeVariable','SetVariable','AppendToArrayVariable',
+                'AppendToStringVariable','IncrementVariable','DecrementVariable','Foreach','If','Scope','Switch','Until','Terminate'}:
+            raise ValueError('Secure data settings are unsupported for '+action['type']+': '+name)
         if action['type'] in {'Compose','ParseJson','Response'} and 'outputs' in properties:
             raise ValueError('Secure Outputs is unsupported for '+action['type']+': '+name)
         validate_secure_data(action.get('actions',{}))

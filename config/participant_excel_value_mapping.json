@@ -1,0 +1,1437 @@
+{
+  "kind": "TandemParticipantExcelValueMapping",
+  "schemaVersion": 1,
+  "sourceTicket": 48,
+  "overviewTicket": 45,
+  "state": "TECHNICALLY_REVIEWED_DRY_RUN_CANDIDATE",
+  "reviewed": true,
+  "source": {
+    "anonymizedInspection": "artifacts/participant_import/private/noemail-inspection/inspection.json",
+    "profileRowsSha256": "ff2ed4ee7b68cad168fbedc3a91f742649291635edc5b00779dae4b61fe13474",
+    "anonymizedWorkbookSha256": "e75cf97e546c42446523f50d72ed0b8dfeceec63d7561655594e15380d4d6db7",
+    "responseCount": 206,
+    "selectionTextsOnly": true
+  },
+  "catalogueEvidence": {
+    "snapshotAttachmentSha256": "6914e84691007376c14916569ddf290ec2ffb78e7d194a2755d3e052dfeb4bdc",
+    "runReference": "08584068709244489672946202825CU08",
+    "rolesInspected": [
+      "language",
+      "culture"
+    ],
+    "activeLanguageTitles": [
+      "Any language",
+      "Arabic",
+      "Cantonese",
+      "Chinese",
+      "Danish",
+      "Dutch",
+      "English",
+      "Filipino",
+      "Finnish",
+      "French",
+      "German",
+      "Greek",
+      "Hindi",
+      "Hungarian",
+      "Indonesian",
+      "Italian",
+      "Japanese",
+      "Korean",
+      "Polish",
+      "Portuguese",
+      "Romanian",
+      "Russian",
+      "Slovenian",
+      "Spanish",
+      "Swedish",
+      "Tamil",
+      "Thai",
+      "Turkish"
+    ],
+    "activeCultureTitles": [
+      "Algeria",
+      "Argentina",
+      "Australia",
+      "Austria",
+      "Bangladesh",
+      "Belgium",
+      "Brazil",
+      "Bulgaria",
+      "Cambodia",
+      "Cameroon",
+      "Canada",
+      "Chile",
+      "China",
+      "Colombia",
+      "Costa Rica",
+      "Croatia",
+      "Czechia",
+      "Denmark",
+      "Ecuador",
+      "Egypt",
+      "Ethiopia",
+      "Finland",
+      "France",
+      "Germany",
+      "Ghana",
+      "Greece",
+      "Hong Kong",
+      "Hungary",
+      "Iceland",
+      "India",
+      "Indonesia",
+      "Iran",
+      "Iraq",
+      "Ireland",
+      "Israel",
+      "Italy",
+      "Jamaica",
+      "Japan",
+      "Jordan",
+      "Kenya",
+      "Lebanon",
+      "Lithuania",
+      "Luxembourg",
+      "Malaysia",
+      "Malta",
+      "Mexico",
+      "Morocco",
+      "Nepal",
+      "Netherlands",
+      "New Zealand",
+      "Nigeria",
+      "Norway",
+      "Pakistan",
+      "Peru",
+      "Philippines",
+      "Poland",
+      "Portugal",
+      "Romania",
+      "Saudi Arabia",
+      "Senegal",
+      "Serbia",
+      "Singapore",
+      "Slovakia",
+      "Slovenia",
+      "South Africa",
+      "South Korea",
+      "Spain",
+      "Sri Lanka",
+      "Sweden",
+      "Switzerland",
+      "Taiwan",
+      "Tanzania",
+      "Thailand",
+      "Tunisia",
+      "Türkiye",
+      "Uganda",
+      "Ukraine",
+      "United Arab Emirates",
+      "United Kingdom",
+      "United States",
+      "Uruguay",
+      "Venezuela",
+      "Vietnam",
+      "Zambia",
+      "Zimbabwe"
+    ],
+    "runtimeRequirement": "Resolve each target title to exactly one currently Active item in its own catalogue. Missing, duplicate or inactive targets block the row. Never use list position as an ID."
+  },
+  "lookup": {
+    "strategy": "EXACT_WHOLE_CELL",
+    "key": "casefold(trim(cell))",
+    "powerAutomateKey": "toLower(trim(coalesce(cell,'')))",
+    "unicodeBoundary": "Current observed source values have equivalent lowercase/casefold keys. No general Unicode normalization, internal whitespace collapsing, punctuation splitting, token parsing or fuzzy matching. Unlisted values block.",
+    "unknown": "BLOCK_ROW",
+    "blocked": "BLOCK_ROW_NO_PARTIAL_SELECTIONS",
+    "excluded": "SKIP_BLANK_CELL_ONLY",
+    "combine": "Union and deduplicate P/Q language targets and P/Q culture targets independently. R supplies sharing only. A blocked nonblank cell blocks the entire row."
+  },
+  "columns": {
+    "P": {
+      "header": "Which Language/Culture would you like to learn?",
+      "mapping": "learn",
+      "languageDestination": "learnIds",
+      "cultureDestination": "learnCultureIds"
+    },
+    "Q": {
+      "header": "Which Language/Culture would you like to learn?2",
+      "mapping": "learn",
+      "languageDestination": "learnIds",
+      "cultureDestination": "learnCultureIds"
+    },
+    "R": {
+      "header": "Which Language/Culture would you love to share?",
+      "mapping": "share",
+      "languageDestination": "teachIds",
+      "cultureDestination": "shareCultureIds"
+    }
+  },
+  "guards": [
+    "Verify actual Excel table headers and connector property names privately; connector JSON is addressed by header, not worksheet column letter.",
+    "No inference from N learning focus, country/city, identity, language nationality, business unit or historical matches.",
+    "No Any language target or expansion of unrestricted culture to all catalogue items.",
+    "No automatic exclusion of a nonblank ambiguous selection/response. Empty or reconfirmation-only profiles require explicit reconciliation; all four empty selection arrays must not create a profile.",
+    "Existing accounts remain unchanged. No identities, account IDs, participant IDs or row overrides are included.",
+    "This proposed title mapping is separate from the existing preparer contractVersion1 ID mapping; it is not directly consumable by that preparer or deployed flows.",
+    "Technical mapping review does not certify native private source equivalence or authorize unresolved/blocked rows. Unknown future values block; source identities are never embedded."
+  ],
+  "sharedValidation": {
+    "ticket": 81,
+    "impact": "Adapter-only recommendation to existing catalogue titles; shared normalization/schema/compatibility/availability semantics unchanged. No deployed consumer, build, hash or native evidence updated. Implementation must record #81 drift review.",
+    "contractVersion": 1,
+    "rulesVersion": 1,
+    "mode": "PROFILE",
+    "boundary": "Existing #61 owns validation Status. Do not duplicate shared profile/compatibility logic or assume a legacy ZIP can call the child. Direct invocation requires the verified Solution Workflow mechanism plus importer-specific deployment/caller tests.",
+    "nativeImporterIntegration": "NOT RUN"
+  },
+  "counts": {
+    "learn": {
+      "BLOCKED": 22,
+      "MAPPED": 41,
+      "EXCLUDED": 1
+    },
+    "share": {
+      "MAPPED": 33,
+      "BLOCKED": 16,
+      "EXCLUDED": 1
+    }
+  },
+  "mappings": {
+    "learn": {
+      "anz, japan, germany, france": {
+        "sourceTexts": [
+          "ANZ, Japan, Germany, France"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Unlabelled countries/region in mixed fields; ANZ has no exact target. Do not expand regions or infer selection type."
+      },
+      "arabic, french": {
+        "sourceTexts": [
+          "Arabic, French"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Arabic",
+          "French"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "bahasa indonesian / thai / korean": {
+        "sourceTexts": [
+          "Bahasa Indonesian / Thai / Korean"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Slash may mean alternatives; whole-cell intent needs review before assigning three languages."
+      },
+      "business english, beginner + dutch": {
+        "sourceTexts": [
+          "Business English, Beginner + Dutch"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "English",
+          "Dutch"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "culture: any african countries, language: kiswahili, french": {
+        "sourceTexts": [
+          "Culture: any African countries, Language: Kiswahili, French"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "No unrestricted regional culture target; Kiswahili absent from language catalogue. No partial French-only mapping."
+      },
+      "danish": {
+        "sourceTexts": [
+          "Danish"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Danish"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "danish, german": {
+        "sourceTexts": [
+          "Danish, German"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Danish",
+          "German"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "dutch": {
+        "sourceTexts": [
+          "Dutch"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Dutch"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "dutch and spanish": {
+        "sourceTexts": [
+          "Dutch and Spanish"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Dutch",
+          "Spanish"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "dutch language and culture": {
+        "sourceTexts": [
+          "Dutch language and culture"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Culture target ambiguous; do not infer Netherlands from Dutch."
+      },
+      "dutch or french": {
+        "sourceTexts": [
+          "Dutch or French"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Alternative choices do not authorize assigning all options; explicit review required."
+      },
+      "dutch or german": {
+        "sourceTexts": [
+          "Dutch or German"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Alternative choices do not authorize assigning all options; explicit review required."
+      },
+      "dutch, tagalog, hindi": {
+        "sourceTexts": [
+          "Dutch, Tagalog, Hindi"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Dutch",
+          "Filipino",
+          "Hindi"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "english": {
+        "sourceTexts": [
+          "English"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "English"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "english & dutch": {
+        "sourceTexts": [
+          "English & Dutch"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "English",
+          "Dutch"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "english & west europe": {
+        "sourceTexts": [
+          "English & West Europe"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "West Europe absent from culture catalogue; no country expansion or partial mapping."
+      },
+      "english and french": {
+        "sourceTexts": [
+          "English and French"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "English",
+          "French"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "english and french culture": {
+        "sourceTexts": [
+          "English and French culture"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Culture scope and country target ambiguous."
+      },
+      "english, japanese": {
+        "sourceTexts": [
+          "English, Japanese"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "English",
+          "Japanese"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "english, spanish, german": {
+        "sourceTexts": [
+          "English, Spanish, German"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "English",
+          "Spanish",
+          "German"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "english/ french": {
+        "sourceTexts": [
+          "English/ French"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Slash could indicate alternatives; resolve whole-cell intent rather than assigning both languages."
+      },
+      "french": {
+        "sourceTexts": [
+          "French"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "French"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "french (i already speak french - i would like opportunity to practice)": {
+        "sourceTexts": [
+          "French (I already speak French - I would like opportunity to practice)"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "French"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "french language and culture": {
+        "sourceTexts": [
+          "French language and culture"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Culture target ambiguous; do not infer France from French."
+      },
+      "french, arabic, chinese": {
+        "sourceTexts": [
+          "French, Arabic, Chinese"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "French",
+          "Arabic",
+          "Chinese"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "french, brazilian portuguese": {
+        "sourceTexts": [
+          "French, Brazilian Portuguese"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "French",
+          "Portuguese"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "french, spanish": {
+        "sourceTexts": [
+          "French, Spanish"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "French",
+          "Spanish"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "french, swedish": {
+        "sourceTexts": [
+          "French, Swedish"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "French",
+          "Swedish"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "german": {
+        "sourceTexts": [
+          "German",
+          "german"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "German"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "german (conversation), spanish, greek (for both, language and culture)": {
+        "sourceTexts": [
+          "German (conversation), Spanish, Greek (for both, language and culture)"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Culture scope/country targets ambiguous."
+      },
+      "german - english": {
+        "sourceTexts": [
+          "German - English"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Unlabelled hyphenated pair needs whole-cell review; no automatic delimiter parsing."
+      },
+      "german language": {
+        "sourceTexts": [
+          "German Language"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "German"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "german and french": {
+        "sourceTexts": [
+          "German and french"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "German",
+          "French"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "german, portugese": {
+        "sourceTexts": [
+          "German, Portugese"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Portugese is not a configured catalogue alias; no spelling correction."
+      },
+      "germany": {
+        "sourceTexts": [
+          "Germany"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Mixed source does not establish whether this means German language or Germany culture."
+      },
+      "greek": {
+        "sourceTexts": [
+          "Greek"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Greek"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "hindi": {
+        "sourceTexts": [
+          "Hindi"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Hindi"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "human": {
+        "sourceTexts": [
+          "Human"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "No concrete catalogue selection; correction or explicitly reviewed row exclusion required."
+      },
+      "i am interested to learn about any culture in this world.": {
+        "sourceTexts": [
+          "I am interested to learn about any culture in this world."
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "No unrestricted culture target. Never map to Any language or expand to all cultures."
+      },
+      "italian": {
+        "sourceTexts": [
+          "Italian"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Italian"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "italian, french, portuguese": {
+        "sourceTexts": [
+          "Italian, French, Portuguese"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Italian",
+          "French",
+          "Portuguese"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "italian, german": {
+        "sourceTexts": [
+          "Italian, German"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Italian",
+          "German"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "japanese": {
+        "sourceTexts": [
+          "Japanese"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Japanese"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "kiswahili, french": {
+        "sourceTexts": [
+          "Kiswahili, French"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Kiswahili absent from language catalogue; do not silently drop it."
+      },
+      "korean": {
+        "sourceTexts": [
+          "Korean"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Korean"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "korean for language; any other for culture!": {
+        "sourceTexts": [
+          "Korean for language; any other for culture!"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "No unrestricted culture target; no partial Korean-only mapping."
+      },
+      "mandarin chinese": {
+        "sourceTexts": [
+          "Mandarin Chinese"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Chinese"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "mandarin or spanish": {
+        "sourceTexts": [
+          "Mandarin or Spanish"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Alternative choices do not authorize assigning all options; explicit review required."
+      },
+      "nederlands": {
+        "sourceTexts": [
+          "Nederlands"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Not an existing Dutch catalogue alias; explicit reviewed alias mapping required."
+      },
+      "portuguese": {
+        "sourceTexts": [
+          "Portuguese"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Portuguese"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "russian": {
+        "sourceTexts": [
+          "Russian"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Russian"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "slovenian": {
+        "sourceTexts": [
+          "Slovenian"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Slovenian"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "spanish": {
+        "sourceTexts": [
+          "Spanish"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Spanish"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "spanish (advanced), italian (basic)": {
+        "sourceTexts": [
+          "Spanish (advanced), Italian (basic)"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Spanish",
+          "Italian"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "spanish - already have a good level, but need more practice": {
+        "sourceTexts": [
+          "Spanish - already have a good level, but need more practice"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Spanish"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "spanish and french": {
+        "sourceTexts": [
+          "Spanish and French"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Spanish",
+          "French"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "spanish and italian": {
+        "sourceTexts": [
+          "Spanish and Italian"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Spanish",
+          "Italian"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "spanish language; culture of spain and mexico": {
+        "sourceTexts": [
+          "Spanish language; culture of Spain and Mexico"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Spanish"
+        ],
+        "cultureTitles": [
+          "Spain",
+          "Mexico"
+        ],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "spanish, french, italian": {
+        "sourceTexts": [
+          "Spanish, French, Italian"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Spanish",
+          "French",
+          "Italian"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "spanish, german": {
+        "sourceTexts": [
+          "Spanish, German"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Spanish",
+          "German"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "swiss german (swiss culture, but probably need to start with german language!)": {
+        "sourceTexts": [
+          "Swiss German (Swiss culture, but probably need to start with German language!)"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Dialect/language and staged intent ambiguous; no Swiss German target."
+      },
+      "anglais": {
+        "sourceTexts": [
+          "anglais"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Not an existing English catalogue alias; explicit reviewed alias mapping required."
+      },
+      "culture: indian   language: spanish": {
+        "sourceTexts": [
+          "culture: Indian   language: Spanish"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Spanish"
+        ],
+        "cultureTitles": [
+          "India"
+        ],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "": {
+        "sourceTexts": [
+          ""
+        ],
+        "status": "EXCLUDED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "BLANK_CELL_ONLY: contributes no selection; never excludes the participant row or authorizes an empty profile."
+      }
+    },
+    "share": {
+      "(uk) english": {
+        "sourceTexts": [
+          "(UK) English"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "English"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "brazilian portuguese": {
+        "sourceTexts": [
+          "Brazilian Portuguese"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Portuguese"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "brazilian portuguese/brazilian": {
+        "sourceTexts": [
+          "Brazilian portuguese/brazilian"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Ambiguous language/culture qualification or unsupported whole-cell alias; do not infer culture or discard text."
+      },
+      "brazilian-portuguese": {
+        "sourceTexts": [
+          "Brazilian-portuguese"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Ambiguous language/culture qualification or unsupported whole-cell alias; do not infer culture or discard text."
+      },
+      "brazilian/portuguese": {
+        "sourceTexts": [
+          "Brazilian/Portuguese"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Ambiguous language/culture qualification or unsupported whole-cell alias; do not infer culture or discard text."
+      },
+      "british": {
+        "sourceTexts": [
+          "British"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Could mean language or culture; do not infer English or United Kingdom."
+      },
+      "cantonese / chinese": {
+        "sourceTexts": [
+          "Cantonese / Chinese"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Could mean alternatives or qualification; do not automatically select both distinct languages."
+      },
+      "chinese": {
+        "sourceTexts": [
+          "Chinese"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Chinese"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "chinese and english": {
+        "sourceTexts": [
+          "Chinese and English"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Chinese",
+          "English"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "duckish": {
+        "sourceTexts": [
+          "Duckish"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Unknown label/possible typo; no fuzzy correction."
+      },
+      "dutch": {
+        "sourceTexts": [
+          "Dutch"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Dutch"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "dutch, english, polish": {
+        "sourceTexts": [
+          "Dutch, English, Polish"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Dutch",
+          "English",
+          "Polish"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "dutch/netherlands": {
+        "sourceTexts": [
+          "Dutch/Netherlands"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Ambiguous language/culture qualification or unsupported whole-cell alias; do not infer culture or discard text."
+      },
+      "english": {
+        "sourceTexts": [
+          "English"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "English"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "english uk": {
+        "sourceTexts": [
+          "English UK"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "English"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "english and great plains kansas usa culture": {
+        "sourceTexts": [
+          "English and Great Plains Kansas USA Culture"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "English"
+        ],
+        "cultureTitles": [
+          "United States"
+        ],
+        "reason": "Explicit US culture; existing country target only, no new regional semantics."
+      },
+      "english language": {
+        "sourceTexts": [
+          "English language"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "English"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "english or german (the former is my native tongue)": {
+        "sourceTexts": [
+          "English or German (the former is my native tongue)"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Alternative choices do not authorize assigning all options; explicit review required."
+      },
+      "english, american/latino culture": {
+        "sourceTexts": [
+          "English, American/Latino culture"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "American/Latino are not exact culture targets; no regional expansion or partial mapping."
+      },
+      "english, i can share some of the culture of the us although it is of course not as homogenous as other countries :)": {
+        "sourceTexts": [
+          "English, I can share some of the culture of the US although it is of course not as homogenous as other countries :)"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "English"
+        ],
+        "cultureTitles": [
+          "United States"
+        ],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "english, persian": {
+        "sourceTexts": [
+          "English, Persian"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Persian absent from language catalogue; do not infer Iran culture or drop Persian."
+      },
+      "english, swedish": {
+        "sourceTexts": [
+          "English, Swedish"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "English",
+          "Swedish"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "english, u.s.": {
+        "sourceTexts": [
+          "English, U.S."
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Ambiguous language/culture qualification or unsupported whole-cell alias; do not infer culture or discard text."
+      },
+      "english/american": {
+        "sourceTexts": [
+          "English/American"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Ambiguous language/culture qualification or unsupported whole-cell alias; do not infer culture or discard text."
+      },
+      "english/british": {
+        "sourceTexts": [
+          "English/British"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Ambiguous language/culture qualification or unsupported whole-cell alias; do not infer culture or discard text."
+      },
+      "french": {
+        "sourceTexts": [
+          "French"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "French"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "french and english": {
+        "sourceTexts": [
+          "French and English"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "French",
+          "English"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "french, either france or canada": {
+        "sourceTexts": [
+          "French, either France or Canada"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Unclear language origin or culture alternatives; do not select both cultures."
+      },
+      "german": {
+        "sourceTexts": [
+          "German"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "German"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "german (language and culture); english (for beginners only)": {
+        "sourceTexts": [
+          "German (language and culture); English (for beginners only)"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "German culture has no explicit country target; do not infer Germany or silently drop the culture component."
+      },
+      "german, english": {
+        "sourceTexts": [
+          "German, English"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "German",
+          "English"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "german, english, romanian": {
+        "sourceTexts": [
+          "German, English, Romanian"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "German",
+          "English",
+          "Romanian"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "greek": {
+        "sourceTexts": [
+          "Greek"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Greek"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "greek, english": {
+        "sourceTexts": [
+          "Greek, English"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Greek",
+          "English"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "hindi, english, indian culture": {
+        "sourceTexts": [
+          "Hindi, English, Indian Culture"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Hindi",
+          "English"
+        ],
+        "cultureTitles": [
+          "India"
+        ],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "indian culture, especially south indian.": {
+        "sourceTexts": [
+          "Indian culture, especially South Indian."
+        ],
+        "status": "MAPPED",
+        "languageTitles": [],
+        "cultureTitles": [
+          "India"
+        ],
+        "reason": "Explicit Indian culture; existing India target only, no language inferred."
+      },
+      "italian": {
+        "sourceTexts": [
+          "Italian"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Italian"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "mandarin": {
+        "sourceTexts": [
+          "Mandarin"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Chinese"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "portuguese": {
+        "sourceTexts": [
+          "Portuguese"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Portuguese"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "portuguese (brazil)": {
+        "sourceTexts": [
+          "Portuguese (Brazil)"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Portuguese"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "portuguese (brazilian)": {
+        "sourceTexts": [
+          "Portuguese (Brazilian)"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Portuguese"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "portuguese (portugal)": {
+        "sourceTexts": [
+          "Portuguese (Portugal)"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Portuguese"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "russian": {
+        "sourceTexts": [
+          "Russian"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Russian"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "spanish": {
+        "sourceTexts": [
+          "Spanish"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Spanish"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "spanish (spain) or catalan": {
+        "sourceTexts": [
+          "Spanish (Spain) or Catalan"
+        ],
+        "status": "BLOCKED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "Alternative choice; Catalan absent from language catalogue."
+      },
+      "spanish, portuguese (brazilian)": {
+        "sourceTexts": [
+          "Spanish, Portuguese (Brazilian)"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Spanish",
+          "Portuguese"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "tamil": {
+        "sourceTexts": [
+          "Tamil"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Tamil"
+        ],
+        "cultureTitles": [],
+        "reason": "Exact active catalogue title or existing catalogue alias; no culture inferred."
+      },
+      "turkish and english (only language)": {
+        "sourceTexts": [
+          "Turkish and English (only language)"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Turkish",
+          "English"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "turkish, german": {
+        "sourceTexts": [
+          "Turkish, German"
+        ],
+        "status": "MAPPED",
+        "languageTitles": [
+          "Turkish",
+          "German"
+        ],
+        "cultureTitles": [],
+        "reason": "Explicit whole-cell interpretation; language does not imply a culture."
+      },
+      "": {
+        "sourceTexts": [
+          ""
+        ],
+        "status": "EXCLUDED",
+        "languageTitles": [],
+        "cultureTitles": [],
+        "reason": "BLANK_CELL_ONLY: contributes no selection; never excludes the participant row or authorizes an empty profile."
+      }
+    }
+  },
+  "technicalReview": {
+    "scope": "Exact/explicit whole-cell catalogue interpretations reviewed during #48 implementation. No owner per-row review claimed. Ambiguous and unsupported values remain BLOCKED.",
+    "applyAcceptance": "NOT RUN; owner reviews private dry-run and saved data",
+    "date": "2026-11-15"
+  }
+}
