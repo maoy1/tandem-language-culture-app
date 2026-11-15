@@ -2,6 +2,15 @@
 
 ## #103 — registration form state follow-up
 
+Latest owner result: navigation works in Preview and owner subsequently confirmed
+"yes, issue gone" for the normal app after save/publish/reopen guidance. Both
+reported UI defects are now owner-confirmed fixed. The earlier inferred PASS was
+retracted while player failure was unresolved; retain that history in TEST_RUNS.
+No additional guard change was needed after the Preview/player distinction.
+Broader New/guard/failure/checker/access regressions remain NOT RUN/deferred in
+open #103; these results are not general release approval.
+
+
 Owner applied the five-property patch in Studio and confirmed it looks good in
 response to the explicit question about both reported behaviors. Record scoped
 owner PASS for View navigation and pencil after Save/Cancel. Do not infer the

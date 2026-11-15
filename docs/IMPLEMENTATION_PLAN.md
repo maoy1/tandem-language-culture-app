@@ -2,6 +2,12 @@
 
 ## #103 — registration mode/navigation patch
 
+Owner confirmed the normal app's warning is gone after Preview/player publication
+checks; both reported UI defects are fixed. No further formula or package change
+is required for that warning. PR #104 is merged; retain the wider unexecuted
+New/guard/failure/checker/access acceptance in #103 rather than inventing PASS.
+
+
 Owner applied the patch and confirmed the two requested UI behaviors work. Record
 that bounded native PASS; merge the focused implementation/evidence PR, retaining
 untested New/guard/failure/checker and broader access cases explicitly in #103.

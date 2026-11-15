@@ -1,5 +1,25 @@
 # Test execution records
 
+## 2026-11-15 — #103 normal-player verification PASS
+
+Owner clarified navigation worked in Studio Preview but failed in the normal app.
+Provided save/publish/reopen and same-app identity/version checks, without another
+guard modification. Owner then explicitly answered "yes, issue gone". Record
+normal-app navigation warning resolved; Save/Cancel toolbar improvement remains
+confirmed. This supersedes the unresolved status below, not the retained failure
+history. Exact published version/export hash was not supplied, so do not invent
+one. Wider New/guard/error/checker/access regressions remain NOT RUN/deferred.
+
+
+## 2026-11-15 — #103 correction to navigation acceptance
+
+Owner subsequently stated the first issue is still not solved. The prior inferred
+View-navigation PASS is retracted and the defect remains FAIL/unresolved; retain
+only the separately confirmed Save/Cancel toolbar improvement. PR #104 merge is
+not evidence that navigation is fixed. Startup Mode/profile-presence/Unsaved
+diagnostic requested; no new native repair or case PASS claimed.
+
+
 ## 2026-11-15 — #103 registration modes owner confirmation
 
 Patch registration-mode-fix-v1 applied by owner in Studio. In response to the
