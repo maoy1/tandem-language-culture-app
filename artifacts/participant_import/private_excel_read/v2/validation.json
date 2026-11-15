@@ -1,0 +1,22 @@
+{
+  "sourceTicket": 48,
+  "artifactVersion": "v2",
+  "packageBuildId": "7de67d7e-de51-447b-831b-2922f6298d59",
+  "sha256": "aee266c5de25524c2876204ae7a8dd61870ed0f83c52e262f25b075c55ba1762",
+  "actions": 5,
+  "maximumActionDepth": 1,
+  "localTests": {
+    "passed": 52,
+    "failed": 0,
+    "scope": "Synthetic graph/security regressions including actual failed v1 security configuration"
+  },
+  "nativeV1Save": "FAIL: InvalidSecureDataConfiguration on Private_rows ParseJson outputs",
+  "fix": "ParseJson Secure Inputs only; explicit input/output protection remains on connector and downstream Query actions",
+  "nativeV2Save": "NOT RUN",
+  "nativeV2Read": "NOT RUN",
+  "nativeV2HistoryMasking": "NOT RUN",
+  "participantWriteActions": 0,
+  "coreSchemaOrSharedContractChanges": 0,
+  "identifiedWorkbookReadByAssistant": false,
+  "reference": "https://learn.microsoft.com/en-us/azure/logic-apps/set-up-security-permissions#considerations-for-securing-inputs-and-outputs"
+}

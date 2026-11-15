@@ -62,11 +62,28 @@ def test_anonymous_and_mixed_identity_text_are_counted_without_resolving_or_expo
 def test_all_private_row_actions_are_secured_and_no_write_operations_exist():
     actions=probe.actions('https://example.sharepoint.com/sites/Tandem','test')
     for name,node in actions.items():
-        if name!='Private_read_report':assert set(node['runtimeConfiguration']['secureData']['properties'])=={'inputs','outputs'}
+        if name!='Private_read_report':
+            expected={'inputs'} if node['type']=='ParseJson' else {'inputs','outputs'}
+            assert set(node['runtimeConfiguration']['secureData']['properties'])==expected
+    probe.validate_secure_data(actions)
     reads=[node for node in actions.values() if node['type']=='OpenApiConnection']
     assert len(reads)==1 and reads[0]['inputs']['host']['operationId']=='GetItems'
     assert not has_patterns(actions) and not analyze({'actions':actions})
     assert measure(actions)=={'actions':5,'maximumActionDepth':1}
+
+
+@pytest.mark.parametrize('kind',['ParseJson','Compose','Response'])
+def test_native_secure_output_rejection_is_caught_before_packaging(kind):
+    with pytest.raises(ValueError,match='Secure Outputs is unsupported'):
+        probe.validate_secure_data({'Regression':{'type':kind,'runtimeConfiguration':probe.SECURE}})
+
+
+def test_actual_failed_v1_package_is_rejected_by_new_native_gate():
+    path=probe.ROOT/'artifacts/participant_import/private_excel_read/v1/TandemPrivateExcelReadProbe-v1.zip'
+    with ZipFile(path) as z:
+        doc=json.loads(z.read(next(n for n in z.namelist() if n.endswith('/definition.json'))))
+    with pytest.raises(ValueError,match='Private_rows'):
+        probe.validate_secure_data(doc['properties']['definition']['actions'])
 
 
 def test_internal_inspection_failure_is_not_reported_as_success():

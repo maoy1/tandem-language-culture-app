@@ -23,6 +23,22 @@ API='/providers/Microsoft.PowerApps/apis/'+CONNECTOR
 EMAIL='Email'
 OTHER='Please leave your name and Email'
 SECURE={'secureData':{'properties':['inputs','outputs']}}
+SECURE_INPUTS={'secureData':{'properties':['inputs']}}
+
+
+def validate_secure_data(action_map):
+    """Native Compose/ParseJson/Response only support Secure Inputs.
+
+    For these three action types, Secure Inputs also conceals their outputs.
+    Downstream row-bearing actions still need their own explicit protection.
+    """
+    for name,action in action_map.items():
+        properties=set(action.get('runtimeConfiguration',{}).get('secureData',{}).get('properties',[]))
+        if not properties<={'inputs','outputs'}:raise ValueError('Unsupported secureData values: '+name)
+        if action['type'] in {'Compose','ParseJson','Response'} and 'outputs' in properties:
+            raise ValueError('Secure Outputs is unsupported for '+action['type']+': '+name)
+        validate_secure_data(action.get('actions',{}))
+        validate_secure_data(action.get('else',{}).get('actions',{}))
 
 
 def actions(site,build_id):
@@ -31,7 +47,7 @@ def actions(site,build_id):
             'inputs':{'host':{'apiId':API,'connectionName':CONNECTOR,'operationId':'GetItems'},
                       'parameters':{'source':site,'drive':'SELECT_DOCUMENT_LIBRARY','file':'SELECT_PRIVATE_WORKBOOK','table':'Table1','$top':251},
                       'authentication':"@parameters('$authentication')",'retryPolicy':{'type':'none'}}},
-        'Private_rows':{'type':'ParseJson','runAfter':{'Read_workbook':['Succeeded']},'runtimeConfiguration':deepcopy(SECURE),
+        'Private_rows':{'type':'ParseJson','runAfter':{'Read_workbook':['Succeeded']},'runtimeConfiguration':deepcopy(SECURE_INPUTS),
             'inputs':{'content':"@body('Read_workbook')?['value']",'schema':{'type':'array','maxItems':251,'items':{'type':'object'}}}},
     }
     # Queries carry complete private rows internally, so secure BOTH directions.
@@ -70,7 +86,8 @@ def build_package(output):
     with TemporaryDirectory(prefix='tandem-private-excel-') as directory:
         base=Path(directory)/'base.zip';doc=base_package(base)
         with ZipFile(base) as z:entries={n:json.loads(z.read(n)) for n in z.namelist()}
-    props=doc['properties'];props['displayName']=NAME
+    display_name=NAME+' v2'
+    props=doc['properties'];props['displayName']=display_name
     props['connectionReferences']={CONNECTOR:{'connectionName':'IMPORT_SELECT_EXISTING_EXCEL_CONNECTION','source':'Embedded','id':API,
         'tier':'NotSpecified','apiName':'excelonlinebusiness','isProcessSimpleApiReferenceConversionAlreadyDone':False}}
     definition=props['definition']
@@ -78,12 +95,13 @@ def build_package(output):
         'ExpectedRows':{'type':'integer','minimum':1,'maximum':250,'default':206,'title':'ExpectedRows','x-ms-content-hint':'NUMBER'}},'required':[]}},
         'runtimeConfiguration':{'concurrency':{'runs':1}}}}
     definition['actions']=actions(site,doc['name'])
+    validate_secure_data(definition['actions'])
     metrics=measure(definition['actions'])
     if analyze(definition):raise ValueError('Invalid dependency graph')
     manifest=entries['manifest.json'];resource=next(k for k,v in manifest['resources'].items() if v['type']=='Microsoft.Flow/flows')
     api_key,connection_key=str(uuid4()),str(uuid4())
-    manifest['details'].update(displayName=NAME+'-package',description='#48 owner-private read proof; existing Excel Online (Business); no participant writes. Native configuration/test pending.')
-    manifest['resources'][resource]['details']['displayName']=NAME
+    manifest['details'].update(displayName=display_name+'-package',description='#48 owner-private read proof v2; native-compatible ParseJson Secure Inputs; no participant writes. Native recheck pending.')
+    manifest['resources'][resource]['details']['displayName']=display_name
     manifest['resources'][resource]['dependsOn']=[api_key,connection_key]
     manifest['resources'][api_key]={'id':API,'name':CONNECTOR,'type':'Microsoft.PowerApps/apis','suggestedCreationType':'Existing','details':{'displayName':'Excel Online (Business)'},'configurableBy':'System','hierarchy':'Child','dependsOn':[]}
     manifest['resources'][connection_key]={'type':'Microsoft.PowerApps/apis/connections','suggestedCreationType':'Existing','creationType':'Existing',
@@ -95,14 +113,15 @@ def build_package(output):
     output.parent.mkdir(parents=True,exist_ok=True)
     with ZipFile(output,'x',ZIP_DEFLATED) as z:
         for name,value in entries.items():z.writestr(name,json.dumps(value,indent=2)+'\n')
-    review={'sourceTicket':48,'packageBuildId':doc['name'],'sha256':hashlib.sha256(output.read_bytes()).hexdigest(),**metrics,
+    review={'sourceTicket':48,'artifactVersion':'v2','packageBuildId':doc['name'],'sha256':hashlib.sha256(output.read_bytes()).hexdigest(),**metrics,
         'purpose':'Private read proof only; not the revised importer. No participant/list/account writes.',
         'connection':'Existing owner Excel Online (Business), Embedded; no SharePoint or other connection required for this probe.',
         'configurationRequired':{'action':'Read_workbook','location':site,'documentLibrary':'Select actual library in designer',
             'file':'Choose original workbook privately using file picker','table':'Choose actual source table; Table1 is only the anonymized-source default'},
         'inputs':{'ExpectedRows':'206 for original reviewed dataset; actual expected count required, maximum250'},
         'outputs':'Private_read_report Compose only: counts/status/error codes. Do not share private action settings or raw workbook rows.',
-        'privacy':'Read_workbook,Private_rows and both row queries use secure inputs/outputs. No rows, emails, logins, user IDs, source IDs or file URLs in report.',
+        'privacy':'Read_workbook and both row queries explicitly secure inputs/outputs. Private_rows uses supported Secure Inputs only, which also hides ParseJson outputs per Microsoft semantics. Report contains counts/codes only; native masking recheck pending.',
+        'supersedes':'v1 save failed with InvalidSecureDataConfiguration on Private_rows ParseJson outputs. No private read PASS is transferred.',
         'nativeImport':'NOT RUN','nativeFileConfiguration':'NOT RUN','nativeExcelRead':'NOT RUN',
         'limitations':['Connection Connected does not prove file access, DLP or source/table mapping.',
             'Read access may require workbook edit permission according to Microsoft connector documentation; do not grant it automatically.',
