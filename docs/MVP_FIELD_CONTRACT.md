@@ -34,7 +34,7 @@ an existing internal field does not imply renaming its internal identity.
 
 | Internal field | Purpose and SharePoint type | Required/default | Source and maintenance | Own form | Discovery display | State |
 |---|---|---|---|---|---|---|
-| ParticipantAccount | Authoritative single Person account | Required, unique; authenticated account | System resolves; user cannot change identity | Read-only name | Display name only; no email/raw account object | Existing |
+| ParticipantAccount | Authoritative single Person account | Required, unique; authenticated account | System resolves; user cannot change identity | Hidden, populated automatically (#101); existing Person link retained | Display name only; no email/raw account object | Existing |
 | TeachLanguages | Offered languages; multi Lookup to Language catalogue | Optional, empty | Participant selection | Editable | Approved display | Existing |
 | LearnLanguages | Wanted languages; multi Lookup to Language catalogue | Optional, empty | Participant selection | Editable | Approved display | Existing |
 | ShareCultures | Cultures participant can meaningfully share; multi Lookup to Culture catalogue | Optional, empty | Participant declaration/selection | Editable | Approved display | Schema mapping observed #66 / App #5 |

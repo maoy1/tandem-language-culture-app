@@ -1,5 +1,24 @@
 # Test execution records
 
+## 2026-11-15 — #101 native registration recovery
+
+Owner result: own-profile startup PASS (v5 owner report), all six dropdowns and
+search PASS after native Studio repair; owner replied "all work, saved" and
+provided the native export. Final SHA256:
+673bff977448c4d31390c806681b96fc3d3bc056094d6e61b0e972868c8466ae.
+Local PASS: valid ZIP, all six visible controls use enabled native Choices search,
+known Self.Items account default removed, handoff copy hash identical. No repack.
+
+Earlier generated v8/v10 native catalogue failure and v8 formula failure remain
+FAIL history; local package PASS did not establish tenant functionality. V9 was
+only a local candidate. Do not transfer final native UI PASS to participant data
+submission, full App checker, other-screen actions or ordinary access/privacy.
+Edit save/reload/account preservation, new-profile automatic identity and empty
+own-view behavior, full App checker and colleague/access tests remain NOT RUN or
+explicitly deferred, pending returned evidence. App save/export is not a profile
+data save. See artifacts/app_integrated/native-repaired/verification.json.
+
+
 The test definitions are in TEST_CATALOGUE.md. This file stores observed results
 without overwriting history when requirements or deployed versions change.
 

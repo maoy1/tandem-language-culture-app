@@ -1,4 +1,26 @@
 # Current design source of truth
+
+## #101 — registration own-profile view and native handoff
+
+Registration filters the existing Person Email against the mailbox resolved by
+the owner-verified Office365Users connection, selects the matching profile and
+returns no rows for blank resolution. Keep UPN Claims for authenticated account
+binding, preserve stored Person on edits, populate the new Person/email
+automatically and hide its card. Technical Title is not a participant-facing key;
+participant IDs and the unique Person link remain unchanged. This UI filter does
+not implement the separate protected-access work in #40/#41.
+
+Owner confirmed own-profile loading and all six catalogue dropdowns/search after
+native Studio IsSearchable toggles. Final native export SHA256:
+673bff977448c4d31390c806681b96fc3d3bc056094d6e61b0e972868c8466ae.
+Preserve it byte-for-byte in primary artifacts/app_integrated/native-repaired;
+do not repack. Generated candidates failed native acceptance despite package
+checks. Public handoff includes selected formulas and sanitized evidence only,
+not the native app/connection metadata. Exact tested scope and pending save/new
+registration/App checker/access cases are retained in its README/verification.
+#81 no-impact: no shared schema, catalogue semantics, normalization, matching,
+authority or production flow IO/package changes. Discovery speed work is paused.
+
 ## Current authorized batch — 2026-11-14
 
 [#45](https://github.com/maoy1/tandem-language-culture-app/issues/45) now delivers twelve production workflows together: [#81](https://github.com/maoy1/tandem-language-culture-app/issues/81) shared validation and business flows #7/#61/#10/#62/#63/#11/#17/#65/#64/#13/#14. Implementation is complete locally; one disabled-import Solution is assembled for owner testing. All new native import, schema setup, connection, app binding and runtime acceptance remain NOT RUN. Prior native results retain their original build and do not certify this batch. The owner authorized parallel implementation while retaining one flow per ticket/PR.
