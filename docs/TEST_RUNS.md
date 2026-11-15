@@ -1,5 +1,18 @@
 # Test execution records
 
+## 2026-11-15 — #103 registration modes owner confirmation
+
+Patch registration-mode-fix-v1 applied by owner in Studio. In response to the
+question distinguishing application/testing from review only, owner stated
+"applied the fix on app, looks good". Scoped owner PASS: navigation from saved
+View without the false save/cancel warning; pencil returns after Save/Cancel.
+This is not an all-cases test statement. Full checker/per-destination reads,
+explicit Edit/New guard, New Cancel/Save, validation/transport failure and
+colleague/access cases remain NOT RUN/deferred. Original native hash identifies
+the pre-patch source; a post-edit export/hash has not been supplied. Source,
+versioned five-property patch and owner-result.json retain the evidence chain.
+
+
 ## 2026-11-15 — #101 native registration recovery
 
 Owner result: own-profile startup PASS (v5 owner report), all six dropdowns and

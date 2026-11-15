@@ -1,5 +1,24 @@
 # Tandem implementation plan
 
+## #103 — registration mode/navigation patch
+
+Owner applied the patch and confirmed the two requested UI behaviors work. Record
+that bounded native PASS; merge the focused implementation/evidence PR, retaining
+untested New/guard/failure/checker and broader access cases explicitly in #103.
+No app repack or changed shared/flow contracts; save native Studio changes.
+
+
+Apply five native Studio property replacements to the accepted native-repaired
+app: Form1.OnSuccess, ResetFormButton1.OnSelect and the three registration nav
+OnSelect formulas. Preserve working native catalogue bindings without repacking.
+Owner preview: View navigation; edit/save returns View/pencil and persists;
+Cancel discards/reverts and returns View/pencil; actual Edit/New still guarded.
+Failed save must retain editable state/data. New registration and colleague cases
+remain NOT RUN unless fixtures/access exist. Versioned guide/patch/checks under
+primary artifacts/app_registration_modes/v1 and inline in #103. No flow/Solution
+reimport or shared schema change. #101's completed results remain historical PASS.
+
+
 ## #101 — native registration handoff
 
 Preserve the owner-tested native export unchanged, verify copy hashes and publish

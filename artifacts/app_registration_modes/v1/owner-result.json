@@ -1,0 +1,18 @@
+{
+  "issue": 103,
+  "date": "2026-11-15",
+  "patchVersion": "registration-mode-fix-v1",
+  "evidence": "Owner answered applied the fix on app, looks good after being asked whether both reported behaviors work in Studio",
+  "reportedViewNavigationWarning": "OWNER CONFIRMED FIXED",
+  "reportedPencilAfterSaveOrCancel": "OWNER CONFIRMED FIXED",
+  "appliedAppExportHash": "NOT SUPPLIED; preserve original native export and five-property patch",
+  "remainingNotRun": [
+    "full App checker and per-destination backend read regression",
+    "explicit Edit/New navigation guard regression",
+    "New Cancel and New Save edge cases",
+    "validation failure retains editable state/data",
+    "backend/connection failure harness",
+    "colleague access and ordinary-participant privacy"
+  ],
+  "scope": "Two owner-reported UI defects only; no wider runtime or release approval"
+}

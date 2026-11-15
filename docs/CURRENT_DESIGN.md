@@ -1,5 +1,31 @@
 # Current design source of truth
 
+## #103 — registration form state follow-up
+
+Owner applied the five-property patch in Studio and confirmed it looks good in
+response to the explicit question about both reported behaviors. Record scoped
+owner PASS for View navigation and pencil after Save/Cancel. Do not infer the
+unreported full checker, per-destination backend read, New/error/guard regressions
+or ordinary access/privacy; these remain explicitly NOT RUN/deferred in #103 and
+owner-result.json. No new app export/hash has been supplied after these edits;
+retain the accepted native source plus the versioned property patch unchanged.
+
+Owner reports false navigation warnings in saved View and Save/Cancel remaining
+visible after successful edit/save or Cancel. This is a bounded follow-up, not
+reopening #101's own-profile/native catalogue acceptance. The five-property native
+Studio patch clears editMode/newMode and calls ViewForm only on Form1.OnSuccess;
+Cancel keeps ResetForm/context clearing then calls ViewForm. Navigation from
+registration uses actual Form1.Mode: saved View is allowed; Edit/New requires
+Save/Cancel; missing saved profile and all actor/intent guards remain unchanged.
+Failed validation/submission stays editable. No extra network calls, catalogue
+control changes or app repacking. Stable handoff: artifacts/app_registration_modes/v1.
+Local exact navigation-delta and preserved callback checks PASS; native evidence
+is bounded to the owner's two confirmed UI fixes above.
+#81 no-impact: UI state/navigation only, no shared schema/rules/compatibility,
+identity save shape, authority, flow IO/build or package changes. #103 stays open
+pending its scoped native acceptance; separate access/privacy remains deferred.
+
+
 ## #101 — registration own-profile view and native handoff
 
 Registration filters the existing Person Email against the mailbox resolved by
