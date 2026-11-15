@@ -1,0 +1,9 @@
+{
+  "sourceTicket": 48,
+  "scope": "new imported profiles only",
+  "participationStatus": "Active",
+  "openToConnections": true,
+  "existingProfiles": "preserve unchanged",
+  "validationStatusOwner": 61,
+  "implemented": false
+}
