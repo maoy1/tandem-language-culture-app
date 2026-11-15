@@ -1,5 +1,18 @@
 # Test execution records
 
+## 2026-11-16 — #103 checked registration UI acceptance PASS
+
+Owner explicitly reported "yes #103 checks done, all good" after New/Cancel
+verification; the issue's checked UI cases cover v1 mode/navigation, v2 New guard
+and v3 no-profile hint/form switching, owner-checked save/readback, catalogue and
+layout. Accept those cases for the bounded UI fix; retain earlier failures and
+partial reports as history. Do not claim the unchecked required-selection
+validation or prepared backend-failure harness passed: those cases are retained
+under #25. Ordinary-participant privacy/access and Discovery performance remain
+separate. No final native export/version hash was supplied, so existing original
+native baseline and property-patch hashes are not relabelled as a published build.
+
+
 ## #103 — New-guard v2 owner confirmation
 
 After receiving the existing-profile New visibility/entry patch and native

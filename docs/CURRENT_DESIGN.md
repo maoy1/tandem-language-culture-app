@@ -2,6 +2,28 @@
 
 ## #103 — registration form state follow-up
 
+Final owner acceptance, 2026-11-16: "yes #103 checks done, all good"; owner also
+checked the issue's registration UI cases. Record the checked native v1/v2/v3
+cases PASS and close the bounded UI defect after PR #107 merges. Preserve the
+earlier failed/incomplete reports as history. The unchecked required-selection
+validation and prepared backend-failure regressions remain explicit in #25;
+ordinary access/privacy and Discovery performance stay in their existing tickets.
+No post-edit native export/version hash was supplied; do not invent one or repack
+the working app. This acceptance introduces no schema/shared-rule/flow change.
+
+
+V3 no-profile presentation: the form remains visible with a blank selected Item,
+showing Getting your data after the own lookup has no result. Hide Form1 unless
+it is New or has a selected saved ID. Add a sidebar no-profile hint only in View,
+after mailbox resolution, with no selected ID and a successful own-profile lookup
+returning no ID; hide the hint on lookup error. Keep the existing New control and
+all mode/save/identity/catalogue/navigation logic unchanged. No new loading-state
+cache or workflow; native label insertion/properties preserve catalogue bindings,
+with no app repack. New mode shows the form; Cancel returns to the empty hint.
+Local presentation/no-write/ZIP checks PASS; owner-checked native cases are
+accepted above. #81 no-impact: presentation only, no shared schema/rules/flow IO changes.
+
+
 New availability follow-up: an existing participant could still choose New
 because its bar was always visible and its handler unconditionally called
 NewForm. V2 adds only the bar Visible and icon OnSelect properties. Show New only
