@@ -11,7 +11,11 @@ warn without modifying data for an existing profile/error or active Edit/New,
 and enter New only when eligible. Existing unique account constraint remains the
 storage guard; UI lookup is not atomic authorization. No change to v1's working
 View/Save/Cancel/navigation, native catalogue bindings, automatic identity,
-schema/shared rules/flow IO. Local two-property checks PASS; native NOT RUN.
+schema/shared rules/flow IO. Local two-property checks PASS. Owner responded
+"now the app works" after v2 instructions: record the existing-participant
+reported behavior as owner-confirmed working. Separate first-time-account,
+stale/error, full checker and access cases remain NOT RUN/deferred; see v2's
+owner-result.json. This is not an all-cases or privacy result.
 Handoff: primary artifacts/app_registration_modes/v2; preserve the app, no repack.
 
 

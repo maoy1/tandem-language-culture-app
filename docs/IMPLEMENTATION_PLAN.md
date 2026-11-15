@@ -6,8 +6,10 @@ V2 New-availability follow-up: apply two native properties for New bar visibilit
 and guarded entry, keeping v1 mode/navigation fixes. Owner: existing profile has
 no New and retains pencil/edit/save/cancel/catalogues. Delegate no-profile New,
 cancel/reopen/save and stale/error guard cases with existing fixtures; missing
-fixture is BLOCKED, never delete a working profile for this check. Native results
-NOT RUN; no app/flow/Solution import or shared contract change.
+fixture is BLOCKED, never delete a working profile for this check. Owner now
+reports the app works after v2; record that existing-participant confirmation,
+retaining first-time-account/stale/error/access cases NOT RUN/deferred. Complete
+the focused PR; no app/flow/Solution import or shared contract change.
 
 
 Owner confirmed the normal app's warning is gone after Preview/player publication
