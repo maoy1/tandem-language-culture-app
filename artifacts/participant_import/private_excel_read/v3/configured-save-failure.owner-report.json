@@ -1,0 +1,16 @@
+{
+  "sourceTicket": 48,
+  "candidate": "TandemPrivateExcelReadProbe v3 (current guided package)",
+  "nativeImport": "PASS_OWNER_CONFIRMED_FLOW_OPENED",
+  "nativeConfiguredSave": "FAIL",
+  "stageClarification": "Owner confirms error appeared after selecting file/table and saving,not during package import.",
+  "code": "DynamicOperationRequestClientFailure",
+  "operation": "excelonlinebusiness/GetTable",
+  "httpStatus": 404,
+  "graphCode": "ItemNotFound",
+  "message": "The requested resource does not exist.",
+  "nativeRead": "NOT RUN",
+  "nativeHistoryMasking": "NOT RUN",
+  "participantWrites": 0,
+  "remainingEvidence": "Need configuration-only view of Location/Document Library/File/Table; no identities or workbook rows requested."
+}
