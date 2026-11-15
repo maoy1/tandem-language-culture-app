@@ -2,6 +2,15 @@
 
 ## #103 — registration mode/navigation patch
 
+V3 empty-view follow-up: one existing Form.Visible change plus one native sidebar
+label. Avoid the blank Item form's persistent Getting your data message, show
+clear New-registration guidance only for a successful empty own lookup, and
+retain v1/v2. Owner no-profile Preview/New/Cancel then normal player verification;
+delegate save/error/phone/other-account cases with approved fixtures. Missing
+fixture is BLOCKED. Stable guide/formulas under artifacts/app_registration_modes/v3;
+native NOT RUN, no app/flow/Solution import or shared contract change.
+
+
 V2 New-availability follow-up: apply two native properties for New bar visibility
 and guarded entry, keeping v1 mode/navigation fixes. Owner: existing profile has
 no New and retains pencil/edit/save/cancel/catalogues. Delegate no-profile New,

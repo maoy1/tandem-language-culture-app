@@ -1,0 +1,18 @@
+{
+  "issue": 103,
+  "version": "registration-empty-view-v3",
+  "baselineNativeSha256": "673bff977448c4d31390c806681b96fc3d3bc056094d6e61b0e972868c8466ae",
+  "prerequisite": "current native app with v1 and v2 applied",
+  "changes": [
+    "Form1.Visible",
+    "new SidebarContainer1 label lblRegistrationEmpty: Text/Visible/AutoHeight/Width"
+  ],
+  "fileSha256": {
+    "Form1.Visible.fx": "4a2b100f7b721a4cc63aaf5fbf217351a008b7645c68259b66355acfb03f0ca2",
+    "lblRegistrationEmpty.Text.fx": "3a2743b3ec163d919a3ae524862039b23ed9e9facca3335c0579dc99167fcbf7",
+    "lblRegistrationEmpty.Visible.fx": "c8762f825a4bda1c90fd07fbe15ffbaa83c035b4fec6cdc1f878f80d24558bb3"
+  },
+  "localVerification": "PASS: baseline blank-item form, sidebar/name checks, three formula files, no writes/state-mode changes, ZIP integrity/hashes",
+  "nativeAcceptance": "NOT RUN",
+  "shared81Impact": "presentation only; no schema, shared rules, identity, catalogue/selection/save/navigation or flow contract/package changes"
+}

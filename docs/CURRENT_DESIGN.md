@@ -2,6 +2,18 @@
 
 ## #103 — registration form state follow-up
 
+V3 no-profile presentation: the form remains visible with a blank selected Item,
+showing Getting your data after the own lookup has no result. Hide Form1 unless
+it is New or has a selected saved ID. Add a sidebar no-profile hint only in View,
+after mailbox resolution, with no selected ID and a successful own-profile lookup
+returning no ID; hide the hint on lookup error. Keep the existing New control and
+all mode/save/identity/catalogue/navigation logic unchanged. No new loading-state
+cache or workflow; native label insertion/properties preserve catalogue bindings,
+with no app repack. New mode shows the form; Cancel returns to the empty hint.
+Local presentation/no-write/ZIP checks PASS; native desktop/phone/new-save cases
+NOT RUN. #81 no-impact: presentation only, no shared schema/rules/flow IO changes.
+
+
 New availability follow-up: an existing participant could still choose New
 because its bar was always visible and its handler unconditionally called
 NewForm. V2 adds only the bar Visible and icon OnSelect properties. Show New only
