@@ -1,4 +1,16 @@
 # Tandem implementation plan
+
+## #101 — native registration handoff
+
+Preserve the owner-tested native export unchanged, verify copy hashes and publish
+only reviewable formulas/receipt in the focused PR. Own-profile display and six
+dropdown/search cases have owner evidence. Reconcile edit save/reload, new-profile
+automatic identity, App checker and deferred access before claiming closure;
+do not infer participant persistence from saving/exporting the app. No more
+speculative repacked catalogue candidates or flow/Solution reimports. Keep failed
+candidate history separate from accepted native evidence. Discovery performance
+investigation remains paused at owner request.
+
 ## Current batch delivery — #45 / #81
 
 All twelve production flows have local implementations under the authorized parallel batch. Finish the coordinated disabled-import Solution, run the combined regression suite and actual-packaged-graph smoke/interoperability tests, publish one focused PR per flow and put checkbox handovers in the issues. Two disposable owner helpers (schema setup/audit and shared smoke) are additional to the twelve production flows.

@@ -1,0 +1,20 @@
+{
+  "issue": 101,
+  "delivery": "native Studio export, no repacking",
+  "sha256": "673bff977448c4d31390c806681b96fc3d3bc056094d6e61b0e972868c8466ae",
+  "bytes": 216028,
+  "localChecks": "PASS: ZIP integrity, six Choices search bindings enabled, known Self.Items default absent, exact copy hash",
+  "ownerEvidence": {
+    "ownProfileLaunch": "PASS (owner v5 report; filter/default retained in native export)",
+    "allSixDropdownsAndSearch": "PASS: owner said all work, saved"
+  },
+  "notRun": [
+    "participant edit save/reload and identity preservation",
+    "new registration automatic identity and empty own-profile view",
+    "full Studio App checker",
+    "colleague connections/access",
+    "ordinary-participant privacy",
+    "other-screen regression actions"
+  ],
+  "deploymentMetadataPublished": false
+}
