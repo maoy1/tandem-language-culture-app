@@ -1,0 +1,187 @@
+{
+  "sourceTicket": 48,
+  "packageBuildId": "dd2f820c-8189-4fff-981e-7cacd11d8a23",
+  "sha256": "aff53284304df496d73f9e6e84693d9e8affcc3470c290902e3e3b7c3ab89bb5",
+  "actions": 76,
+  "maximumActionDepth": 7,
+  "mappingSha256": "245b11c22a28709866e01190280bb13e8a028a40a5d84c4c71ce5bdf65e6e218",
+  "targetSite": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+  "productionFlow": false,
+  "ownerOperatorOnly": true,
+  "connection": "Select existing owner SharePoint connection; Embedded; no other connectors",
+  "inputs": {
+    "PlanJson": "blank => SNAPSHOT; otherwise reviewed plan_schema(targetSite)",
+    "ApplyChanges": "Boolean default false; blank plan + true refused"
+  },
+  "outputs": "Snapshot_report or Import_report Compose in owner run history; source keys and actual IDs",
+  "planSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "kind",
+      "contractVersion",
+      "sourceTicket",
+      "sourceSha256",
+      "targetSite",
+      "readyForApply",
+      "rows"
+    ],
+    "properties": {
+      "kind": {
+        "type": "string",
+        "enum": [
+          "TandemParticipantImportPlan"
+        ]
+      },
+      "contractVersion": {
+        "type": "integer",
+        "enum": [
+          1
+        ]
+      },
+      "sourceTicket": {
+        "type": "integer",
+        "enum": [
+          48
+        ]
+      },
+      "sourceSha256": {
+        "type": "string",
+        "minLength": 64,
+        "maxLength": 64
+      },
+      "targetSite": {
+        "type": "string",
+        "enum": [
+          "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg"
+        ]
+      },
+      "readyForApply": {
+        "type": "boolean",
+        "enum": [
+          true
+        ]
+      },
+      "rows": {
+        "type": "array",
+        "maxItems": 250,
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sourceKey",
+            "accountLogin",
+            "sharepointUserId",
+            "Title",
+            "teachIds",
+            "learnIds",
+            "shareCultureIds",
+            "learnCultureIds",
+            "ParticipationStatus",
+            "OpenToConnections"
+          ],
+          "properties": {
+            "sourceKey": {
+              "type": "string",
+              "minLength": 10,
+              "maxLength": 255
+            },
+            "accountLogin": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "sharepointUserId": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "Title": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "teachIds": {
+              "type": "array",
+              "maxItems": 5000,
+              "uniqueItems": true,
+              "items": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "learnIds": {
+              "type": "array",
+              "maxItems": 5000,
+              "uniqueItems": true,
+              "items": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "shareCultureIds": {
+              "type": "array",
+              "maxItems": 5000,
+              "uniqueItems": true,
+              "items": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "learnCultureIds": {
+              "type": "array",
+              "maxItems": 5000,
+              "uniqueItems": true,
+              "items": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "ParticipationStatus": {
+              "type": "string",
+              "enum": [
+                "Active",
+                "Paused",
+                "Inactive"
+              ]
+            },
+            "OpenToConnections": {
+              "type": "boolean"
+            },
+            "Learningfocus": {
+              "type": "string"
+            },
+            "Comments": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "snapshotBound": 5000,
+  "planBound": 250,
+  "nativeImport": "NOT RUN",
+  "nativeConnections": "NOT RUN",
+  "nativeActions": "NOT RUN",
+  "nativeSnapshot": "NOT RUN",
+  "limitations": [
+    "No workbook mapping or identity guessing; parent owns preparer.",
+    "Do not apply until source hash, intended test/live designation and reviewed policy are confirmed.",
+    "Owner must verify existing connection/permissions and restrict flow run access before use.",
+    "Snapshot includes private account information: owner preparation only, never participant UI.",
+    "Full pages/nextlinks fail closed. Catalogue changes after reads are a race; no transaction/rollback.",
+    "Unknown writes require manual reconciliation by unique account; never automatic retry.",
+    "Imported validation Status remains owned by #61; discoverability is not certified."
+  ],
+  "driftReview81": "No shared production schema/normalization/compatibility changes. Disposable helper consumes verified mapping; no child flow invocation or imported-flow changes.",
+  "smokeInstructions": [
+    "Owner: import ZIP as NEW; map Embedded reference to existing owner SharePoint connection. Verify owner-only access, permissions and existing #61 behavior first.",
+    "Run blank PlanJson / ApplyChanges false. Snapshot_report must have collectionComplete=true and complete=true; preserve build/run reference. Overflow/read failure blocks preparation.",
+    "Parent preparer: resolve unique actual users and exact catalogue IDs; supply sourceSha256, exact targetSite and readyForApply=true after review. No workbook is embedded.",
+    "Run reviewed PlanJson / ApplyChanges false: expect allPassed=true, writesCount=0; every row VALIDATED_NEW or SKIPPED_EXISTING with ID.",
+    "Negative fixtures: duplicate source/account, false readyForApply, wrong target, bad LoginName, inactive/unknown catalogue ID: allPassed=false and zero write attempts.",
+    "Owner activates only the reviewed load. Run same plan / ApplyChanges true: CREATED requires 201 plus matching reread ID. Any ambiguous failure is UNKNOWN; preserve report/run outputs, reconcile before another apply.",
+    "Repeat reviewed plan: all rows SKIPPED_EXISTING, writesCount=0; verify unchanged saved values. Run #61/app acceptance separately.",
+    "Cleanup: disable/delete only this disposable helper after evidence capture. No automatic participant rollback; preserve original workbook and reports."
+  ],
+  "acceptance": "NOT RUN; helper preparation does not certify #48 or release readiness"
+}

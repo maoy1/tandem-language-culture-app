@@ -1,0 +1,50 @@
+{
+  "kind": "TandemParticipantWorkbookInspection",
+  "sourceTicket": 48,
+  "sourceSha256": "e75cf97e546c42446523f50d72ed0b8dfeceec63d7561655594e15380d4d6db7",
+  "profileRowsSha256": "ff2ed4ee7b68cad168fbedc3a91f742649291635edc5b00779dae4b61fe13474",
+  "sheet": "Sheet1",
+  "responseCount": 206,
+  "sourceRange": "A1:U207",
+  "identityColumnNonblank": {
+    "D": 0,
+    "E": 0,
+    "G": 0
+  },
+  "rowsWithOneExplicitEmail": 0,
+  "rowsWithoutProfileDetails": 22,
+  "duplicateResponseIds": {},
+  "missingResponseIds": 0,
+  "ignoredSourceColumns": [
+    "B",
+    "C",
+    "F",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "S",
+    "T"
+  ],
+  "notes": [
+    "Source ID is a response key, never a SharePoint Participant ID.",
+    "No timezone is inferred from city/country; no group-size preference is imported.",
+    "Reconfirmation-only responses need the older source or explicit exclusion.",
+    "Historical availability, culture roles and free text require review; no fuzzy matching.",
+    "Comments are not copied without an explicit per-row opt-in."
+  ],
+  "readOnly": true,
+  "writes": 0,
+  "externalLinks": false,
+  "tableCount": 1,
+  "identityReady": false,
+  "profileRowsWithDetails": 184,
+  "recommendation": "WAIT_FOR_IDENTIFIED_SOURCE",
+  "nativeRead": "NOT RUN",
+  "nativeWrite": "NOT RUN",
+  "commentsDefault": "Do not copy",
+  "availabilityDefault": "No assumption; explicit reviewed policy required",
+  "catalogueMapping": "Current snapshot and reviewed exact mappings required"
+}

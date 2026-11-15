@@ -1,0 +1,24 @@
+{
+  "sourceTicket": 48,
+  "packageBuildId": "625d57bc-cab8-451e-9e4c-5e1f2f79f39c",
+  "sha256": "e486f3b3d7195acf6b6d8bd88e20148ad51aa576c81f143fa2f4e44bec732f3e",
+  "actions": 121,
+  "maximumActionDepth": 7,
+  "maxExpressionCharacters": 1295,
+  "localTests": {
+    "passed": 105,
+    "failed": 0,
+    "scope": "Actual generated graph with fictional connector transport; package/privacy/negative/replay/skip regressions",
+    "evidence": "local-tests.junit.xml"
+  },
+  "activationGraph": "PASS",
+  "unsupportedSchemaPatterns": "NONE",
+  "secureActionTypeGuard": "PASS",
+  "identityValuesInVariables": "NONE; only row indices, catalogue IDs, constants and sanitized outcomes",
+  "nativeImport": "NOT RUN",
+  "nativePrivateResultCollection": "NOT RUN",
+  "nativeCombinedConnectorsAndResolvePerson": "NOT RUN",
+  "nativeHistoryMasking": "NOT RUN",
+  "nativeApplyReplayAnd61": "NOT RUN",
+  "ordinaryUserAccess": "DEFERRED"
+}

@@ -1,0 +1,39 @@
+{
+  "sourceTicket": 48,
+  "packageBuildId": "bf000526-7298-41c3-93ef-8d8e36fe6803",
+  "sha256": "b06501d553f166a110d65275e8aa94a9de265b745448372e925ee6844cebf4a7",
+  "actions": 5,
+  "maximumActionDepth": 1,
+  "purpose": "Private read proof only; not the revised importer. No participant/list/account writes.",
+  "connection": "Existing owner Excel Online (Business), Embedded; no SharePoint or other connection required for this probe.",
+  "configurationRequired": {
+    "action": "Read_workbook",
+    "location": "https://reedelsevier.sharepoint.com/sites/OG-TandemOrg",
+    "documentLibrary": "Select actual library in designer",
+    "file": "Choose original workbook privately using file picker",
+    "table": "Choose actual source table; Table1 is only the anonymized-source default"
+  },
+  "inputs": {
+    "ExpectedRows": "206 for original reviewed dataset; actual expected count required, maximum250"
+  },
+  "outputs": "Private_read_report Compose only: counts/status/error codes. Do not share private action settings or raw workbook rows.",
+  "privacy": "Read_workbook,Private_rows and both row queries use secure inputs/outputs. No rows, emails, logins, user IDs, source IDs or file URLs in report.",
+  "nativeImport": "NOT RUN",
+  "nativeFileConfiguration": "NOT RUN",
+  "nativeExcelRead": "NOT RUN",
+  "limitations": [
+    "Connection Connected does not prove file access, DLP or source/table mapping.",
+    "Read access may require workbook edit permission according to Microsoft connector documentation; do not grant it automatically.",
+    "No workbook row modifications requested; Excel connector may still record a service-managed file version.",
+    "Original expected row count,251-row cap and nextlink checks reject incomplete/mismatched datasets.",
+    "Email-text counts do not prove valid/resolved accounts or import readiness."
+  ],
+  "instructions": [
+    "Import as Create as new; select existing Excel connection. Keep helper owner-operated.",
+    "Edit supplied Read_workbook action: select Tandem site,actual Document Library,private workbook and Table. No new actions are needed.",
+    "Save and run with ExpectedRows206 (or verified actual count). Share only Private_read_report outputs.",
+    "Expect success=true,code=OK,rowCount=206,identityValuesIncluded=false,participantWrites=0. Any failure stops dependent import work.",
+    "Do not run Apply on the old v1 importer for this private route. Disable/remove only this disposable probe after evidence is retained."
+  ],
+  "driftReview81": "New input-adapter read proof only. No shared/core schema/rules/IO/package/app changes. All identity resolution and participant writes remain unimplemented/unverified for private route."
+}

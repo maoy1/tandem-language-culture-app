@@ -1,0 +1,27 @@
+{
+  "body": [
+    {
+      "kind": "TandemPrivateExcelReadProbe",
+      "schemaVersion": 2,
+      "sourceTicket": 48,
+      "packageBuildId": "58ad8358-4072-4555-b411-9dcba1e1edb3",
+      "runReference": "08584068647525682901906306728CU16",
+      "success": true,
+      "excelStatusCode": 200,
+      "code": "OK",
+      "rowCount": 206,
+      "expectedRows": 206,
+      "skipRows": 0,
+      "firstDataRow": 1,
+      "lastDataRow": 206,
+      "identityHeadersPresent": true,
+      "rowsWithEmailText": 51,
+      "rowsWithOtherIdentityText": 155,
+      "participantWrites": 0,
+      "identityValuesIncluded": false,
+      "accountResolution": "NOT_ATTEMPTED",
+      "importDryRun": "NOT_RUN",
+      "importApply": "NOT_RUN"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "sourceTicket": 48,
+  "version": "1.0.0",
+  "scriptSha256": "98328f46f94b561e939938af46b79101b261e15da4bf5d81dcd76aadfc72c3df",
+  "mappingSha256": "11cee0e2089db5213dba3d3c8a0df22615ac3b62b534d72cc3ec917222dcb650",
+  "localTests": {
+    "passed": 43,
+    "failed": 0,
+    "evidence": "local-tests.junit.xml"
+  },
+  "anonymizedWorkbookConversion": "PASS:206 rows retained,0 identities available,0 tenant writes",
+  "defaultMode": "PREPARE_ONLY; local CSV/report; no network",
+  "nativePythonAuthentication": "NOT RUN; no approved token method verified",
+  "nativeApply": "NOT RUN",
+  "nativePersonLookupGridPaste": "NOT RUN",
+  "participantWorkflowRuntimeChange": "NONE",
+  "legacyFlowDryRun": "FAIL:206 read,110 outcomes,0 ready,0 created; do not Apply"
+}

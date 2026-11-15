@@ -1,0 +1,13 @@
+{
+  "sourceTicket": 48,
+  "sourceBuildId": "7de67d7e-de51-447b-831b-2922f6298d59",
+  "nativeStage": "Import Create as new",
+  "code": "DynamicOperationRequestClientFailure",
+  "api": "excelonlinebusiness",
+  "operation": "GetTable",
+  "httpStatus": 400,
+  "graphCode": "invalidRequest",
+  "message": "The provided drive id appears to be malformed, or does not represent a valid drive.",
+  "cause": "Generated unconfigured literal SELECT_DOCUMENT_LIBRARY reached import-time metadata validation. Owner cannot edit the action before import succeeds.",
+  "dataWrites": 0
+}

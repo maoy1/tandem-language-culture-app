@@ -1,0 +1,23 @@
+{
+  "sourceTicket": 48,
+  "artifactVersion": "v3",
+  "packageBuildId": "52f719f8-3f67-4e57-9050-b55553a67fa5",
+  "sha256": "89eefad1161338bb0c49a970be31461b87ee9f1cde7f4603429ab930fc00f8e6",
+  "actions": 6,
+  "maximumActionDepth": 1,
+  "localTests": {
+    "passed": 54,
+    "failed": 0,
+    "scope": "Synthetic graph/secureData/import-template regressions; actual failed v1/v2 ZIPs rejected"
+  },
+  "v2NativeImport": "FAIL: GetTable invalidRequest because SELECT_DOCUMENT_LIBRARY literal is not a valid drive ID",
+  "fix": "Runtime-bind all four Excel selectors through WorkbookConfiguration until owner picks real values after import; no invented drive/file/table literals",
+  "nativeV3Import": "NOT RUN",
+  "nativeV3Save": "NOT RUN",
+  "nativeV3Read": "NOT RUN",
+  "nativeV3HistoryMasking": "NOT RUN",
+  "participantWriteActions": 0,
+  "identifiedWorkbookReadByAssistant": false,
+  "coreSharedContractChanges": 0,
+  "configurationNote": "Workbook_configuration contains only empty file metadata defaults,never participant rows. Owner replaces fx values on Read_workbook with native selections."
+}

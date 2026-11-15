@@ -1,0 +1,9 @@
+{
+  "sourceTicket": 48,
+  "sourceBuildId": "bf000526-7298-41c3-93ef-8d8e36fe6803",
+  "code": "InvalidSecureDataConfiguration",
+  "action": "Private_rows",
+  "type": "ParseJson",
+  "unsupportedSecureProperty": "outputs",
+  "evidence": "Owner pasted native flow save failure; no private data or run outputs supplied."
+}

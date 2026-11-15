@@ -203,6 +203,9 @@ cython_debug/
 # Temporary file for partial code execution
 tempCodeRunnerFile.py
 
+# Owner workbook extracts, identity maps and live import snapshots (#48).
+artifacts/participant_import/private/
+
 # Ruff stuff:
 .ruff_cache/
 

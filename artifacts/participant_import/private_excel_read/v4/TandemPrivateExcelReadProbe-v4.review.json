@@ -1,0 +1,44 @@
+{
+  "sourceTicket": 48,
+  "artifactVersion": "v4",
+  "packageBuildId": "58ad8358-4072-4555-b411-9dcba1e1edb3",
+  "sha256": "67e718b4822c8c53b12469bc51dfe817f4787e665d213d8ee5207138b42f2cbf",
+  "actions": 7,
+  "maximumActionDepth": 1,
+  "purpose": "Private read proof only; not the revised importer. No participant/list/account writes.",
+  "connection": "Existing owner Excel Online (Business), Embedded; no SharePoint or other connection required for this probe.",
+  "configurationRequired": {
+    "action": "Read_workbook",
+    "location": "Replace runtime expression with actual Tandem site selection",
+    "documentLibrary": "Replace runtime expression with actual library selection in designer",
+    "file": "Replace runtime expression with private file picker selection",
+    "table": "Replace runtime expression with actual existing table selection"
+  },
+  "inputs": {
+    "SkipRows": "0 default=read from first data row;206=skip first206 data rows,start at207;header excluded",
+    "ExpectedRows": "Exact rows remaining after SkipRows;0..250,default206. Example220 total/SkipRows206 => ExpectedRows14"
+  },
+  "outputs": "Read_report Select Outputs: one-element array of counts/status/error codes. Secure Inputs only on aggregate projection; raw row actions remain protected. Native report visibility unverified.",
+  "privacy": "Read_workbook and both row queries explicitly secure inputs/outputs. Private_rows uses supported Secure Inputs only, which also hides ParseJson outputs per Microsoft semantics. Report contains counts/codes only; native masking recheck pending.",
+  "supersedes": "v3 import/save owner-confirmed; its Compose report was hidden by inherited security. v4 uses an input-secured Select aggregate projection with visible outputs by design; native visibility/read/SkipRows tests pending.",
+  "importStrategy": "All source/drive/file/table values are runtime variable expressions, not invented IDs. Native metadata lookup cannot use an invalid literal template drive. Owner replaces expressions with picker selections after import. This strategy is locally checked, not tenant-certified.",
+  "nativeImport": "NOT RUN",
+  "nativeFileConfiguration": "NOT RUN",
+  "nativeExcelRead": "NOT RUN",
+  "limitations": [
+    "Connection Connected does not prove file access, DLP or source/table mapping.",
+    "Read access may require workbook edit permission according to Microsoft connector documentation; do not grant it automatically.",
+    "No workbook row modifications requested; Excel connector may still record a service-managed file version.",
+    "ExpectedRows is the number AFTER skipping;251-row cap/nextlink checks reject more than250 remaining rows or incomplete reads.",
+    "Skipping is positional,not an import watermark; use append-only order. Reordering/inserting/deleting earlier rows can miss data.",
+    "Email-text counts do not prove valid/resolved accounts or import readiness."
+  ],
+  "instructions": [
+    "Import as Create as new; select existing Excel connection. Keep helper owner-operated.",
+    "After import, edit Read_workbook: remove the fx/runtime value in Location and select Tandem site; repeat for Document Library,File,Table in that order. No new actions are needed. Do not type library names as IDs.",
+    "Save and run with SkipRows0/ExpectedRows206 for old source,or SkipRows206/ExpectedRows equal remaining new rows. Share only Read_report Outputs.",
+    "Expect one aggregate object in an array,success=true,code=OK (or NO_ROWS for expected0),matching skip/count,identityValuesIncluded=false,participantWrites=0. Do not disable private-row security.",
+    "Do not run Apply on the old v1 importer for this private route. Disable/remove only this disposable probe after evidence is retained."
+  ],
+  "driftReview81": "New input-adapter read proof only. No shared/core schema/rules/IO/package/app changes. All identity resolution and participant writes remain unimplemented/unverified for private route."
+}

@@ -1,0 +1,45 @@
+{
+  "kind": "TandemMatchingWorkbookImport",
+  "version": "2.0.0",
+  "sourceTicket": 48,
+  "mode": "PREPARE_ONLY",
+  "sourceTabs": [
+    "active",
+    "paused",
+    "non active"
+  ],
+  "participantCount": 217,
+  "externalLinkPartsIgnored": 1,
+  "rowsWithEmail": 0,
+  "participantsNeedingReview": 217,
+  "groupCount": 32,
+  "groupsApprovedForImport": 15,
+  "groupsNeedingReview": 17,
+  "membershipCount": 76,
+  "membershipStatuses": {
+    "Active": 48,
+    "REVIEW": 8,
+    "Left": 20
+  },
+  "participantWrites": 0,
+  "groupWrites": 0,
+  "membershipWrites": 0,
+  "migrationRequestWrites": 0,
+  "accountResolution": "NOT_ATTEMPTED",
+  "nativeGroupAcceptance": "NOT_RUN",
+  "ordinaryUserAccessVerified": false,
+  "inspectionMode": "STRUCTURE_ONLY_IDENTITY_CELLS_SKIPPED",
+  "sourceSha256": "53394714c244b3e8e846d36d65c485486d6a8e73bec0b68e3052ce2bcde445f7",
+  "sourceRowsByTab": {
+    "active": 130,
+    "paused": 5,
+    "non active": 82
+  },
+  "identityCounts": "Intentionally unavailable in this structural check; do not infer actual workbook identity coverage",
+  "ownerDecisions": {
+    "sourceTabs": "all three current tabs; exclude safety copy",
+    "newGroupState": "Closed",
+    "oversizedLanguageGroups": "review-only; preserve all source members"
+  },
+  "evidenceScope": "Local parsing/preparation only; no participant identities inspected further and no tenant calls"
+}

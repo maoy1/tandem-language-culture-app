@@ -1,0 +1,24 @@
+{
+  "sourceTicket": 48,
+  "version": "2.0.0",
+  "localTests": {
+    "passed": 63,
+    "failed": 0,
+    "evidence": "local-tests.junit.xml"
+  },
+  "sourceStructureCheck": "PASS, later inspection skipped identity cells; no identity-bearing CSV reports committed",
+  "packagedNativeMyGroupsGraph": "PASS locally with synthetic 3-member migrated group",
+  "packagedNativeMyRequestsInvariant": "PASS locally for staged and terminal migration records",
+  "nativeTenantAuthAndCombinedApply": "NOT RUN",
+  "nativeMyGroupsLeaveRequestsAfterMigration": "NOT RUN",
+  "ordinaryUserAccess": "DEFERRED",
+  "ownerDecisions": {
+    "currentTabs": "all three",
+    "newGroupState": "Closed",
+    "oversizedLanguageGroups": "review-only; import supported groups first"
+  },
+  "scriptSha256": "481b69c895c1ec076018d7f7d16fba928e9b1b1eb430e0bf877af4c521d2cdff",
+  "adapterSha256": "f047fb3e7eaa3e45cca717c45733480db2c1f816ba028efeab777a7b4b38f84e",
+  "mappingSha256": "11cee0e2089db5213dba3d3c8a0df22615ac3b62b534d72cc3ec917222dcb650",
+  "newFlowPackage": "NONE; local one-time utility, no 500-action/nesting gate applies; existing production flow bytes unchanged"
+}

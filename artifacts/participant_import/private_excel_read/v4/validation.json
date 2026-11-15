@@ -1,0 +1,44 @@
+{
+  "sourceTicket": 48,
+  "artifactVersion": "v4",
+  "packageBuildId": "58ad8358-4072-4555-b411-9dcba1e1edb3",
+  "sha256": "67e718b4822c8c53b12469bc51dfe817f4787e665d213d8ee5207138b42f2cbf",
+  "actions": 7,
+  "maximumActionDepth": 1,
+  "localTests": {
+    "passed": 62,
+    "failed": 0,
+    "scope": "Synthetic generated-graph/privacy/skip-window/import regressions; no tenant I/O"
+  },
+  "inputs": {
+    "SkipRows": {
+      "default": 0,
+      "meaning": "Data rows excluded from start;206 => first remaining data row207;header not counted"
+    },
+    "ExpectedRows": {
+      "default": 206,
+      "minimum": 0,
+      "maximum": 250,
+      "meaning": "Exact count remaining after skipping"
+    }
+  },
+  "safeOutput": {
+    "action": "Read_report",
+    "type": "Select",
+    "shape": "Array containing one aggregate object",
+    "inputSecurity": [
+      "inputs"
+    ],
+    "outputSecurity": [],
+    "projectionSource": "Public singleton [0],not private rows"
+  },
+  "v3OwnerEvidence": "Owner reports requested Private_read_report is hidden due to security configuration; counts/run reference not supplied.",
+  "nativeV4Import": "NOT RUN",
+  "nativeV4Skip": "NOT RUN",
+  "nativeV4ReportVisibility": "NOT RUN",
+  "nativeV4HistoryMasking": "NOT RUN",
+  "participantWriteActions": 0,
+  "identifiedWorkbookReadByAssistant": false,
+  "sharedCoreSemanticChanges": 0,
+  "reference": "https://learn.microsoft.com/en-us/connectors/excelonlinebusiness/#list-rows-present-in-a-table"
+}
