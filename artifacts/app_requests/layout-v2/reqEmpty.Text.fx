@@ -1,0 +1,1 @@
+Switch(varReqTab, "Sent", "No sent requests. Invitations you send appear here.", "Received", "No received invitations. To find requests you sent, choose Sent.", "Group incoming", "No requests to join your groups.", "History", "No accepted, declined or withdrawn requests yet.", "Choose a request view.")

@@ -1,0 +1,1 @@
+If(varReqDialog = "New intent", "Review before starting a new action", varReqDialog = "Cancel", "Withdraw request #" & Text(varReqSelected.requestId) & "?", varReqDialog & " request #" & Text(varReqSelected.requestId))

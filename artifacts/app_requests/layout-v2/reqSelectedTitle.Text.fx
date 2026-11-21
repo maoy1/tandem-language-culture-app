@@ -1,0 +1,1 @@
+If(IsBlank(varReqSelected.requestId), "Select a request to see its details", If(varReqSelected.requestType = "Personal", "Personal invitation #", "Group join request #") & Text(varReqSelected.requestId))

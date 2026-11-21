@@ -1,5 +1,31 @@
 # Current design source of truth
 
+## #67 — compact request details native patch (layout-v2)
+
+Owner requested a clearer Requests layout after seeing a large sparse technical
+panel. Generator now bounds the existing read-only panel to760px width and136px
+height (224px for nonempty group introduction). Friendly waiting/accepted/withdrawn
+text replaces Availability/Completion internals; useful processing/unavailability
+warnings remain. Format dates, hide empty introductions, highlight the active tab,
+explain empty views, and position actions/retry/outcome under the compact panel.
+Cancel is labelled Withdraw request throughout the button/confirmation while the
+internal Cancel decision, flow signatures, guards, filters and frozen retry remain.
+
+Handoff artifacts/app_requests/layout-v2/TandemRequestsLayout-v2.zip contains27
+native Studio property entries across19 existing controls, matching guide, previous
+values for recovery and verification manifest. No .msapp repack/import; current
+native registration/catalogue bindings stay intact. Local five existing #67 source
+checks PASS; property/behavior preservation and ZIP/hash checks PASS. Native App
+checker/published/layout/action acceptance NOT RUN; issue67 stays open/In progress.
+
+Person/group names are not supplied by the current #62 response. Keep request
+references for now; approved display projection and name binding remain an explicit
+#62/#67 follow-up, not a raw-profile lookup or a delivered capability.
+#81 no-impact: display formulas only; no shared schema/rule/mapping/normalization/
+compatibility/capacity/atomic-guard or input/output contract change. No flow build,
+connector, permission, licence or extra network read. Prior tenant evidence remains
+versioned; the patch does not resolve colleague access or certify mobile/runtime.
+
 ## #110 — registration Comments layout accepted
 
 Owner applied native Studio properties: hide Learning focus_DataCard1 (Visible=false)

@@ -125,6 +125,25 @@ VALID_CONFIG = '''!IsBlank(Trim(reqName.Text)) && Len(Trim(reqName.Text)) <= 255
     (reqType.Selected.Value = "Language" || (!IsEmpty(reqCultures.SelectedItems) && CountRows(reqCultures.SelectedItems) <= 100))'''
 
 
+# Presentation only: use the existing authorized response, not raw profile lookups.
+# Display names are not yet in #62's public response; retain the request reference.
+REQUEST_STATUS = """If(varReqSelected.processing,
+    "Accepted. Your exchange is being set up. Refresh to check progress.",
+    Switch(varReqSelected.status,
+        "Pending", If(varReqSelected.direction = "Sent", "Waiting for a reply.", "Waiting for your response."),
+        "Accepted", "Accepted.",
+        "Declined", "Declined.",
+        "Cancelled", If(varReqSelected.direction = "Sent", "You withdrew this request.", "The sender withdrew this request."),
+        varReqSelected.status))"""
+REQUEST_DETAILS = """If(IsBlank(varReqSelected.requestId), "",
+    REQUEST_STATUS & Char(10) &
+    "Sent: " & IfError(Text(DateTimeValue(varReqSelected.created), DateTimeFormat.ShortDateTime), "Date unavailable") &
+    If(varReqSelected.status = "Pending" && varReqSelected.availability = "UnavailablePending",
+        Char(10) & "The person or group is no longer available. You can still withdraw or decline where offered.", "") &
+    If(varReqSelected.requestType = "Group" && !IsBlank(Trim(Coalesce(varReqSelected.introduction, ""))),
+        Char(10) & Char(10) & "Introduction" & Char(10) & varReqSelected.introduction, ""))""".replace('REQUEST_STATUS', REQUEST_STATUS)
+
+
 def screen():
     def label(name, **props):
         return control(name, 'Label@2.5.1', {'Font': "Font.'Segoe UI'", 'Size': '12', **props})
@@ -152,33 +171,34 @@ def screen():
         label('reqTitle', Text='"My requests"', X='24', Y='16', Width='Parent.Width - 640', Height='44', Size='24', FontWeight='FontWeight.Semibold'),
         button('reqBack', Text='"My registration"', X='Parent.Width - 300', Y='20', Width='160', DisplayMode='If(varReqBusy || varReqSending || !IsBlank(varReqDialog), DisplayMode.Disabled, DisplayMode.Edit)', OnSelect='Navigate(MainScreen1, ScreenTransition.None)'),
         button('reqRefresh', Text='"Refresh"', X='Parent.Width - 128', Y='20', Width='104', DisplayMode='If(varReqBusy || varReqSending || (!IsBlank(varReqDialog) && IsBlank(varRequestsIntent)), DisplayMode.Disabled, DisplayMode.Edit)', OnSelect=LOAD),
-        label('reqState', Text='If(varReqBusy, "Loading saved requests…", If(!IsBlank(varReqError), varReqError, "Review requests you sent or received. Select a request for details and available actions."))', X='24', Y='84', Width='Parent.Width - 48', Height='52'),
+        label('reqState', Text='If(varReqBusy, "Loading saved requests…", If(!IsBlank(varReqError), varReqError, Switch(varReqTab, "Sent", "Sent requests: waiting for a reply. Select one to view or withdraw it.", "Received", "Received requests: select an invitation to accept or decline.", "Group incoming", "Group requests: review invitations to join your groups.", "History", "History: requests that were accepted, declined or withdrawn.", "Choose Sent, Received, Group incoming or History.")))', X='24', Y='84', Width='Parent.Width - 48', Height='52'),
     ]
     for i, tab in enumerate(['Sent', 'Received', 'Group incoming', 'History']):
         c.append(button('reqTab' + str(i), Text='"' + tab + '"', X=str(24 + i * 174), Y='144', Width='162',
                         DisplayMode=f'If({can_browse}, DisplayMode.Edit, DisplayMode.Disabled)',
+                        Fill=f'If(varReqTab = "{tab}", RGBA(0,65,115,1), RGBA(0,120,212,1))',
                         OnSelect=f'Set(varReqTab, "{tab}"); Set(varReqSelected, Blank())'))
     c += [
         control('reqList', 'Gallery@2.15.0', {'Items': rows, 'X': '24', 'Y': '200', 'Width': '392', 'Height': 'Parent.Height - 224', 'TemplateSize': '112',
             'AccessibleLabel': '"Requests in the selected view"', 'DisplayMode': f'If({can_browse}, DisplayMode.Edit, DisplayMode.Disabled)',
             'TemplateFill': 'If(ThisItem.requestId = varReqSelected.requestId, RGBA(225,239,250,1), RGBA(255,255,255,1))',
             'OnSelect': 'Set(varReqSelected, ThisItem); Set(varReqOutcome, "")'}, [
-                label('reqRowTitle', Text='"Request #" & Text(ThisItem.requestId) & " · " & ThisItem.requestType', X='12', Y='8', Width='Parent.TemplateWidth - 24', Height='32', FontWeight='FontWeight.Semibold', OnSelect='Select(Parent)'),
-                label('reqRowState', Text='ThisItem.direction & " · " & ThisItem.status & If(ThisItem.processing, " · Processing", "") & Char(10) & ThisItem.created', X='12', Y='44', Width='Parent.TemplateWidth - 24', Height='60', OnSelect='Select(Parent)')
+                label('reqRowTitle', Text='If(ThisItem.requestType = "Personal", "Personal invitation #", "Group join request #") & Text(ThisItem.requestId)', X='12', Y='8', Width='Parent.TemplateWidth - 24', Height='32', FontWeight='FontWeight.Semibold', OnSelect='Select(Parent)'),
+                label('reqRowState', Text='ThisItem.direction & " · " & If(ThisItem.processing, "Setting up exchange", If(ThisItem.status = "Cancelled", "Withdrawn", ThisItem.status)) & Char(10) & IfError(Text(DateTimeValue(ThisItem.created), DateTimeFormat.ShortDateTime), "Date unavailable")', X='12', Y='44', Width='Parent.TemplateWidth - 24', Height='60', OnSelect='Select(Parent)')
             ], 'BrowseLayout_Vertical_TwoTextVariant_ver5.0'),
-        label('reqEmpty', Text='"No requests in this view."', X='36', Y='220', Width='360', Height='60', Visible=f'varReqLoaded && IsEmpty({rows})'),
-        label('reqSelectedTitle', Text='If(IsBlank(varReqSelected.requestId), "Select a request", "Request #" & Text(varReqSelected.requestId) & " · " & varReqSelected.requestType)', X='440', Y='200', Width='Parent.Width - 464', Height='48', Size='20'),
-        text('reqDetails', Default='If(IsBlank(varReqSelected.requestId), "", varReqSelected.direction & " · " & varReqSelected.status & Char(10) & "Created: " & varReqSelected.created & Char(10) & "Availability: " & varReqSelected.availability & Char(10) & "Completion: " & If(varReqSelected.processing, "Processing; membership completion is not confirmed", If(varReqSelected.completed, "Complete", "Not complete")) & Char(10) & Char(10) & "Introduction" & Char(10) & Coalesce(varReqSelected.introduction, ""))', DisplayMode='DisplayMode.View', Mode='TextMode.MultiLine', X='440', Y='256', Width='Parent.Width - 464', Height='Parent.Height - 464', AccessibleLabel='"Saved request details and plain-text introduction"'),
+        label('reqEmpty', Text='Switch(varReqTab, "Sent", "No sent requests. Invitations you send appear here.", "Received", "No received invitations. To find requests you sent, choose Sent.", "Group incoming", "No requests to join your groups.", "History", "No accepted, declined or withdrawn requests yet.", "Choose a request view.")', X='36', Y='220', Width='360', Height='60', Visible=f'varReqLoaded && IsEmpty({rows})'),
+        label('reqSelectedTitle', Text='If(IsBlank(varReqSelected.requestId), "Select a request to see its details", If(varReqSelected.requestType = "Personal", "Personal invitation #", "Group join request #") & Text(varReqSelected.requestId))', X='440', Y='200', Width='Parent.Width - 464', Height='48', Size='20'),
+        text('reqDetails', Default=REQUEST_DETAILS, DisplayMode='DisplayMode.View', Mode='TextMode.MultiLine', X='440', Y='256', Width='Min(760, Parent.Width - Self.X - 24)', Height='If(varReqSelected.requestType = "Group" && !IsBlank(Trim(Coalesce(varReqSelected.introduction, ""))), 224, 136)', Visible='!IsBlank(varReqSelected.requestId)', AccessibleLabel='"Request status, date and introduction where provided"'),
     ]
     for i, action in enumerate(['Accept', 'Decline', 'Cancel']):
         allow = 'varReqSelected.can' + action
-        c.append(button('reqAction' + action, Text='"' + action + '"', X=str(440 + i * 150), Y='Parent.Height - 196', Width='138', Visible=f'!IsBlank(varReqSelected.requestId) && {allow}',
+        c.append(button('reqAction' + action, Text='"Withdraw request"' if action == 'Cancel' else '"' + action + '"', X='440' if action == 'Cancel' else str(440 + i * 150), Y='reqDetails.Y + reqDetails.Height + 12', Width='180' if action == 'Cancel' else '138', Visible=f'!IsBlank(varReqSelected.requestId) && {allow}',
             DisplayMode=f'If({can_browse} && varReqLoaded && {allow}, DisplayMode.Edit, DisplayMode.Disabled)',
             OnSelect=f'Set(varReqDialog, "{action}"); Set(varReqOutcome, ""); Reset(reqName); Reset(reqType); Reset(reqCapacity); Reset(reqLanguages); Reset(reqCultures)'))
     c += [
-        button('reqRetry', Text='"Retry same action"', X='440', Y='Parent.Height - 144', Width='190', Visible=PENDING, DisplayMode='If(varReqBusy || varReqSending, DisplayMode.Disabled, DisplayMode.Edit)', OnSelect=EXECUTE),
-        button('reqNewIntent', Text='"Review new action"', X='644', Y='Parent.Height - 144', Width='190', Visible=PENDING, DisplayMode='If(varReqBusy || varReqSending, DisplayMode.Disabled, DisplayMode.Edit)', OnSelect='Set(varReqDialog, "New intent")'),
-        label('reqOutcome', Text='varReqOutcome & If(!IsBlank(varRequestsIntent), Char(10) & "Unresolved: " & varReqIntentDecision & " request #" & Text(varReqIntentRequest) & ". An earlier action may already be saved. Refresh to check its current status before choosing another action.", "")', X='440', Y='Parent.Height - 92', Width='Parent.Width - 464', Height='84'),
+        button('reqRetry', Text='"Retry same action"', X='440', Y='reqActionAccept.Y + 52', Width='190', Visible=PENDING, DisplayMode='If(varReqBusy || varReqSending, DisplayMode.Disabled, DisplayMode.Edit)', OnSelect=EXECUTE),
+        button('reqNewIntent', Text='"Review new action"', X='644', Y='reqActionAccept.Y + 52', Width='190', Visible=PENDING, DisplayMode='If(varReqBusy || varReqSending, DisplayMode.Disabled, DisplayMode.Edit)', OnSelect='Set(varReqDialog, "New intent")'),
+        label('reqOutcome', Text='varReqOutcome & If(!IsBlank(varRequestsIntent), Char(10) & "Unresolved: " & varReqIntentDecision & " request #" & Text(varReqIntentRequest) & ". An earlier action may already be saved. Refresh to check its current status before choosing another action.", "")', X='440', Y='reqRetry.Y + 52', Width='reqDetails.Width', Height='84'),
     ]
     # Modal children are appended last so the shaded backdrop covers the parent nav.
     visible = '!IsBlank(varReqDialog)'
@@ -188,8 +208,8 @@ def screen():
     def modal_label(name, **props):
         props.setdefault('Visible', visible)
         c.append(label(name, X='reqPanel.X + 24', Width='812', **props))
-    modal_label('reqDialogTitle', Text='If(varReqDialog = "New intent", "Review before starting a new action", varReqDialog & " request #" & Text(varReqSelected.requestId))', Y='100', Height='40', Size='20', FontWeight='FontWeight.Semibold')
-    modal_label('reqDialogHelp', Text='If(varReqDialog = "New intent", "The previous action may already have saved. Refresh and inspect saved status before proceeding. Starting a different action ends this local retry. It does not undo any saved change.", If(' + PERSONAL_ACCEPT + ', "Choose the new group’s name, type, size and focuses. Each focus needs someone who can share and a different person who wants to learn.", "Confirm this action for the selected request."))', Y='144', Height='76')
+    modal_label('reqDialogTitle', Text='If(varReqDialog = "New intent", "Review before starting a new action", varReqDialog = "Cancel", "Withdraw request #" & Text(varReqSelected.requestId) & "?", varReqDialog & " request #" & Text(varReqSelected.requestId))', Y='100', Height='40', Size='20', FontWeight='FontWeight.Semibold')
+    modal_label('reqDialogHelp', Text='If(varReqDialog = "New intent", "The previous action may already have saved. Refresh and inspect saved status before proceeding. Starting a different action ends this local retry. It does not undo any saved change.", If(' + PERSONAL_ACCEPT + ', "Choose the new group’s name, type, size and focuses. Each focus needs someone who can share and a different person who wants to learn.", If(varReqDialog = "Cancel", "Withdraw this pending request? It will no longer be available to accept.", "Confirm this action for the selected request.")))', Y='144', Height='76')
     form_visible = visible + ' && (' + PERSONAL_ACCEPT + ') && IsBlank(varRequestsIntent)'
     for name, title, y in [('reqNameLabel', 'Group name (required, up to 255 characters)', 228), ('reqTypeLabel', 'Exchange type', 314), ('reqLanguageLabel', 'Language focuses (required for Language / Combined)', 400), ('reqCultureLabel', 'Culture focuses (required for Culture / Combined)', 486)]:
         c.append(label(name, Text='"' + title + '"', X='reqPanel.X + 24', Y=str(y), Width='630', Height='28', Visible=form_visible))
@@ -202,7 +222,7 @@ def screen():
                        X='reqPanel.X + 24', Y=str(y), Width='812', Visible=form_visible,
                        DisplayMode=f'If({EDITABLE} && reqType.Selected.Value <> "{excluded}", DisplayMode.Edit, DisplayMode.Disabled)', AccessibleLabel='"' + name[3:] + ' focus selections"'))
     modal_label('reqDialogRules', Text='"Language: 2 or 3 people total. Culture / Combined: 2–10. Each focus requires a sharer and a different learner. Choose up to 100 focuses per catalogue. "', Y='568', Height='52', **{'Visible': form_visible})
-    c.append(button('reqConfirm', Text='If(varReqSending, "Submitting…", If(varReqDialog = "New intent", "Start a different action", "Confirm " & Lower(varReqDialog)))', X='reqPanel.X + 24', Y='Parent.Height - 92', Width='240', Visible=visible,
+    c.append(button('reqConfirm', Text='If(varReqSending, "Submitting…", If(varReqDialog = "New intent", "Start a different action", varReqDialog = "Cancel", "Withdraw request", "Confirm " & Lower(varReqDialog)))', X='reqPanel.X + 24', Y='Parent.Height - 92', Width='240', Visible=visible,
         DisplayMode='If(varReqBusy || varReqSending || (!IsBlank(varRequestsIntent) && varReqDialog <> "New intent") || (varReqDialog <> "New intent" && (!varReqLoaded || IsBlank(varAppActorId) || varAppActorId <= 0 || IsBlank(varReqSelected.requestId) || !Switch(varReqDialog, "Accept", varReqSelected.canAccept, "Decline", varReqSelected.canDecline, "Cancel", varReqSelected.canCancel, false))) || ((' + PERSONAL_ACCEPT + ') && !(' + VALID_CONFIG + ')), DisplayMode.Disabled, DisplayMode.Edit)',
         OnSelect='If(varReqDialog = "New intent", Set(varRequestsIntent, Blank()); Set(varReqDialog, Blank()); Set(varReqOutcome, "Select an action after reviewing the saved status."); ' + LOAD + ', ' + CAPTURE + ')'))
     c.append(button('reqDismiss', Text='"Back"', X='reqPanel.X + 280', Y='Parent.Height - 92', Width='140', Visible=visible, DisplayMode='If(varReqSending, DisplayMode.Disabled, DisplayMode.Edit)', OnSelect='Set(varReqDialog, Blank())'))
