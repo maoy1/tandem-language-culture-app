@@ -1,0 +1,1 @@
+ThisItem.direction & " · " & If(ThisItem.processing, "Setting up exchange", If(ThisItem.status = "Cancelled", "Withdrawn", ThisItem.status)) & Char(10) & IfError(Text(DateTimeValue(ThisItem.created), DateTimeFormat.ShortDateTime), "Date unavailable")

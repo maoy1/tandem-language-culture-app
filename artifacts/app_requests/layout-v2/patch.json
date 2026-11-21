@@ -1,0 +1,201 @@
+{
+  "issue": 67,
+  "version": "requests-layout-v2",
+  "delivery": "Native Studio property patch; not an importable app or flow",
+  "nativeAcceptance": "NOT RUN",
+  "source": "scripts/app_requests_screen.py",
+  "preservation": "PASS: control names, all OnSelect/DisplayMode/Items and LOAD/EXECUTE/CAPTURE/flow signatures unchanged",
+  "backendImpact": "None; no new fields/reads/flow contract or connection change",
+  "displayNames": "NOT AVAILABLE in current reader response; #62 follow-up, no raw lookup fallback",
+  "changes": [
+    {
+      "control": "reqState",
+      "property": "Text",
+      "formula": "If(varReqBusy, \"Loading saved requests…\", If(!IsBlank(varReqError), varReqError, Switch(varReqTab, \"Sent\", \"Sent requests: waiting for a reply. Select one to view or withdraw it.\", \"Received\", \"Received requests: select an invitation to accept or decline.\", \"Group incoming\", \"Group requests: review invitations to join your groups.\", \"History\", \"History: requests that were accepted, declined or withdrawn.\", \"Choose Sent, Received, Group incoming or History.\")))",
+      "previous": "=If(varReqBusy, \"Loading saved requests…\", If(!IsBlank(varReqError), varReqError, \"Review requests you sent or received. Select a request for details and available actions.\"))",
+      "file": "reqState.Text.fx"
+    },
+    {
+      "control": "reqTab0",
+      "property": "Fill",
+      "formula": "If(varReqTab = \"Sent\", RGBA(0,65,115,1), RGBA(0,120,212,1))",
+      "previous": null,
+      "file": "reqTab0.Fill.fx"
+    },
+    {
+      "control": "reqTab1",
+      "property": "Fill",
+      "formula": "If(varReqTab = \"Received\", RGBA(0,65,115,1), RGBA(0,120,212,1))",
+      "previous": null,
+      "file": "reqTab1.Fill.fx"
+    },
+    {
+      "control": "reqTab2",
+      "property": "Fill",
+      "formula": "If(varReqTab = \"Group incoming\", RGBA(0,65,115,1), RGBA(0,120,212,1))",
+      "previous": null,
+      "file": "reqTab2.Fill.fx"
+    },
+    {
+      "control": "reqTab3",
+      "property": "Fill",
+      "formula": "If(varReqTab = \"History\", RGBA(0,65,115,1), RGBA(0,120,212,1))",
+      "previous": null,
+      "file": "reqTab3.Fill.fx"
+    },
+    {
+      "control": "reqRowTitle",
+      "property": "Text",
+      "formula": "If(ThisItem.requestType = \"Personal\", \"Personal invitation #\", \"Group join request #\") & Text(ThisItem.requestId)",
+      "previous": "=\"Request #\" & Text(ThisItem.requestId) & \" · \" & ThisItem.requestType",
+      "file": "reqRowTitle.Text.fx"
+    },
+    {
+      "control": "reqEmpty",
+      "property": "Text",
+      "formula": "Switch(varReqTab, \"Sent\", \"No sent requests. Invitations you send appear here.\", \"Received\", \"No received invitations. To find requests you sent, choose Sent.\", \"Group incoming\", \"No requests to join your groups.\", \"History\", \"No accepted, declined or withdrawn requests yet.\", \"Choose a request view.\")",
+      "previous": "=\"No requests in this view.\"",
+      "file": "reqEmpty.Text.fx"
+    },
+    {
+      "control": "reqSelectedTitle",
+      "property": "Text",
+      "formula": "If(IsBlank(varReqSelected.requestId), \"Select a request to see its details\", If(varReqSelected.requestType = \"Personal\", \"Personal invitation #\", \"Group join request #\") & Text(varReqSelected.requestId))",
+      "previous": "=If(IsBlank(varReqSelected.requestId), \"Select a request\", \"Request #\" & Text(varReqSelected.requestId) & \" · \" & varReqSelected.requestType)",
+      "file": "reqSelectedTitle.Text.fx"
+    },
+    {
+      "control": "reqDetails",
+      "property": "AccessibleLabel",
+      "formula": "\"Request status, date and introduction where provided\"",
+      "previous": "=\"Saved request details and plain-text introduction\"",
+      "file": "reqDetails.AccessibleLabel.fx"
+    },
+    {
+      "control": "reqDetails",
+      "property": "Default",
+      "formula": "If(IsBlank(varReqSelected.requestId), \"\",\n    If(varReqSelected.processing,\n    \"Accepted. Your exchange is being set up. Refresh to check progress.\",\n    Switch(varReqSelected.status,\n        \"Pending\", If(varReqSelected.direction = \"Sent\", \"Waiting for a reply.\", \"Waiting for your response.\"),\n        \"Accepted\", \"Accepted.\",\n        \"Declined\", \"Declined.\",\n        \"Cancelled\", If(varReqSelected.direction = \"Sent\", \"You withdrew this request.\", \"The sender withdrew this request.\"),\n        varReqSelected.status)) & Char(10) &\n    \"Sent: \" & IfError(Text(DateTimeValue(varReqSelected.created), DateTimeFormat.ShortDateTime), \"Date unavailable\") &\n    If(varReqSelected.status = \"Pending\" && varReqSelected.availability = \"UnavailablePending\",\n        Char(10) & \"The person or group is no longer available. You can still withdraw or decline where offered.\", \"\") &\n    If(varReqSelected.requestType = \"Group\" && !IsBlank(Trim(Coalesce(varReqSelected.introduction, \"\"))),\n        Char(10) & Char(10) & \"Introduction\" & Char(10) & varReqSelected.introduction, \"\"))",
+      "previous": "=If(IsBlank(varReqSelected.requestId), \"\", varReqSelected.direction & \" · \" & varReqSelected.status & Char(10) & \"Created: \" & varReqSelected.created & Char(10) & \"Availability: \" & varReqSelected.availability & Char(10) & \"Completion: \" & If(varReqSelected.processing, \"Processing; membership completion is not confirmed\", If(varReqSelected.completed, \"Complete\", \"Not complete\")) & Char(10) & Char(10) & \"Introduction\" & Char(10) & Coalesce(varReqSelected.introduction, \"\"))",
+      "file": "reqDetails.Default.fx"
+    },
+    {
+      "control": "reqDetails",
+      "property": "Height",
+      "formula": "If(varReqSelected.requestType = \"Group\" && !IsBlank(Trim(Coalesce(varReqSelected.introduction, \"\"))), 224, 136)",
+      "previous": "=Parent.Height - 464",
+      "file": "reqDetails.Height.fx"
+    },
+    {
+      "control": "reqDetails",
+      "property": "Visible",
+      "formula": "!IsBlank(varReqSelected.requestId)",
+      "previous": null,
+      "file": "reqDetails.Visible.fx"
+    },
+    {
+      "control": "reqDetails",
+      "property": "Width",
+      "formula": "Min(760, Parent.Width - Self.X - 24)",
+      "previous": "=Parent.Width - 464",
+      "file": "reqDetails.Width.fx"
+    },
+    {
+      "control": "reqActionAccept",
+      "property": "Y",
+      "formula": "reqDetails.Y + reqDetails.Height + 12",
+      "previous": "=Parent.Height - 196",
+      "file": "reqActionAccept.Y.fx"
+    },
+    {
+      "control": "reqActionDecline",
+      "property": "Y",
+      "formula": "reqDetails.Y + reqDetails.Height + 12",
+      "previous": "=Parent.Height - 196",
+      "file": "reqActionDecline.Y.fx"
+    },
+    {
+      "control": "reqActionCancel",
+      "property": "Text",
+      "formula": "\"Withdraw request\"",
+      "previous": "=\"Cancel\"",
+      "file": "reqActionCancel.Text.fx"
+    },
+    {
+      "control": "reqActionCancel",
+      "property": "Width",
+      "formula": "180",
+      "previous": "=138",
+      "file": "reqActionCancel.Width.fx"
+    },
+    {
+      "control": "reqActionCancel",
+      "property": "X",
+      "formula": "440",
+      "previous": "=740",
+      "file": "reqActionCancel.X.fx"
+    },
+    {
+      "control": "reqActionCancel",
+      "property": "Y",
+      "formula": "reqDetails.Y + reqDetails.Height + 12",
+      "previous": "=Parent.Height - 196",
+      "file": "reqActionCancel.Y.fx"
+    },
+    {
+      "control": "reqRetry",
+      "property": "Y",
+      "formula": "reqActionAccept.Y + 52",
+      "previous": "=Parent.Height - 144",
+      "file": "reqRetry.Y.fx"
+    },
+    {
+      "control": "reqNewIntent",
+      "property": "Y",
+      "formula": "reqActionAccept.Y + 52",
+      "previous": "=Parent.Height - 144",
+      "file": "reqNewIntent.Y.fx"
+    },
+    {
+      "control": "reqOutcome",
+      "property": "Width",
+      "formula": "reqDetails.Width",
+      "previous": "=Parent.Width - 464",
+      "file": "reqOutcome.Width.fx"
+    },
+    {
+      "control": "reqOutcome",
+      "property": "Y",
+      "formula": "reqRetry.Y + 52",
+      "previous": "=Parent.Height - 92",
+      "file": "reqOutcome.Y.fx"
+    },
+    {
+      "control": "reqDialogTitle",
+      "property": "Text",
+      "formula": "If(varReqDialog = \"New intent\", \"Review before starting a new action\", varReqDialog = \"Cancel\", \"Withdraw request #\" & Text(varReqSelected.requestId) & \"?\", varReqDialog & \" request #\" & Text(varReqSelected.requestId))",
+      "previous": "=If(varReqDialog = \"New intent\", \"Review before starting a new action\", varReqDialog & \" request #\" & Text(varReqSelected.requestId))",
+      "file": "reqDialogTitle.Text.fx"
+    },
+    {
+      "control": "reqDialogHelp",
+      "property": "Text",
+      "formula": "If(varReqDialog = \"New intent\", \"The previous action may already have saved. Refresh and inspect saved status before proceeding. Starting a different action ends this local retry. It does not undo any saved change.\", If(varReqDialog = \"Accept\" && varReqSelected.requestType = \"Personal\", \"Choose the new group’s name, type, size and focuses. Each focus needs someone who can share and a different person who wants to learn.\", If(varReqDialog = \"Cancel\", \"Withdraw this pending request? It will no longer be available to accept.\", \"Confirm this action for the selected request.\")))",
+      "previous": "=If(varReqDialog = \"New intent\", \"The previous action may already have saved. Refresh and inspect saved status before proceeding. Starting a different action ends this local retry. It does not undo any saved change.\", If(varReqDialog = \"Accept\" && varReqSelected.requestType = \"Personal\", \"Choose the new group’s name, type, size and focuses. Each focus needs someone who can share and a different person who wants to learn.\", \"Confirm this action for the selected request.\"))",
+      "file": "reqDialogHelp.Text.fx"
+    },
+    {
+      "control": "reqConfirm",
+      "property": "Text",
+      "formula": "If(varReqSending, \"Submitting…\", If(varReqDialog = \"New intent\", \"Start a different action\", varReqDialog = \"Cancel\", \"Withdraw request\", \"Confirm \" & Lower(varReqDialog)))",
+      "previous": "=If(varReqSending, \"Submitting…\", If(varReqDialog = \"New intent\", \"Start a different action\", \"Confirm \" & Lower(varReqDialog)))",
+      "file": "reqConfirm.Text.fx"
+    },
+    {
+      "control": "reqRowState",
+      "property": "Text",
+      "formula": "ThisItem.direction & \" · \" & If(ThisItem.processing, \"Setting up exchange\", If(ThisItem.status = \"Cancelled\", \"Withdrawn\", ThisItem.status)) & Char(10) & IfError(Text(DateTimeValue(ThisItem.created), DateTimeFormat.ShortDateTime), \"Date unavailable\")",
+      "previous": "=ThisItem.direction & \" · \" & ThisItem.status & If(ThisItem.processing, \" · Processing\", \"\") & Char(10) & ThisItem.created",
+      "file": "reqRowState.Text.fx"
+    }
+  ]
+}
