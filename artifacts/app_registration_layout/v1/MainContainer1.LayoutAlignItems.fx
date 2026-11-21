@@ -1,0 +1,1 @@
+LayoutAlignItems.Stretch

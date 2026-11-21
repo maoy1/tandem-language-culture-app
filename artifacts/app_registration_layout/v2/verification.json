@@ -1,0 +1,21 @@
+{
+  "issue": 108,
+  "version": "registration-layout-v2",
+  "ownerConfirmed": "Published desktop layout works after Start alignment and original card widths restored",
+  "result": "PASS (scoped symptom)",
+  "ownerClosureRequested": "2026-11-21",
+  "properties": {
+    "Form1.AlignInContainer": "AlignInContainer.Start",
+    "Form1.Width": "Parent.Width",
+    "pairedCardWidth": 458
+  },
+  "broaderRegressionOwner": "#25",
+  "broaderRegressions": "NOT RUN; retained explicitly",
+  "postFixExport": "NOT SUPPLIED",
+  "shared81Impact": "None: presentation alignment only",
+  "fileSha256": {
+    "Form1.AlignInContainer.fx": "fda8ca4a776f5c2fc5c90ad6ccc19ec2dd0053e751aa58f54de6665abc9d6ee9",
+    "Form1.Width.fx": "8d61a892acaa1d745d8b7b84f5d47264e6884f07cfaf3509d571da2e228bc6d4",
+    "README.md": "372cc85c0bdf8dbd057bbc6e9e0d0b980f045f3f7ba46f4a682207dac093684c"
+  }
+}

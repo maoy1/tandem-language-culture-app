@@ -1,0 +1,27 @@
+{
+  "issue": 108,
+  "version": "registration-layout-v1",
+  "ownerMeasurements": {
+    "view": {
+      "columns": 2,
+      "formWidth": 916,
+      "cardWidth": 458
+    },
+    "edit": {
+      "columns": 2,
+      "formWidth": 1303,
+      "cardWidth": 458
+    }
+  },
+  "properties": [
+    "MainContainer1.LayoutAlignItems",
+    "Form1.Width"
+  ],
+  "fileSha256": {
+    "MainContainer1.LayoutAlignItems.fx": "4e1ed3decaf610683b85ac536028bbf98016eb10b608ab18d96650141a735245",
+    "Form1.Width.fx": "8d61a892acaa1d745d8b7b84f5d47264e6884f07cfaf3509d571da2e228bc6d4"
+  },
+  "localChecks": "PASS: two presentation-only formulas, no behavior/data operations; ZIP/hash integrity",
+  "nativeAcceptance": "NOT RUN",
+  "shared81Impact": "Layout-only sizing; no schema/rules/identity/catalogue/flow IO changes"
+}
