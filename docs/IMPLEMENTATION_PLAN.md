@@ -1,5 +1,24 @@
 # Tandem implementation plan
 
+## #110 — registration Comments layout accepted
+
+Owner applied native Studio properties: hide Learning focus_DataCard1 (Visible=false)
+without deleting its column; Comments_DataCard1 X=0/Y=2, Width equal to the sum of
+Learn and Teach language card widths, WidthFit=false. Parent.Width was too wide
+because the existing paired fields occupy less than the full form. Comments
+Height=DataCardValue5.Y + DataCardValue5.Height + 30; text input Mode=TextMode.MultiLine,
+Height=96 and Width=Parent.Width - 60 (about three visible lines, not a content limit).
+Preserve other card widths/order, Default/Update/MaxLength/error bindings and #108
+Form1.AlignInContainer=Start/Width=Parent.Width.
+
+Owner reported "looks good", then "all good" after the Save/Publish/reopen and comment
+save/readback instruction. Record scoped layout/published save-readback owner PASS.
+No post-change export/hash/exact runtime version supplied; no independent storage
+inspection or Cancel/long-text regression is inferred. Those checks remain under
+#25 as REG-110-PRESERVE and REG-110-LONGTEXT. No app repack or new package is needed.
+#81 drift no-impact: presentation only; existing Learningfocus/Comments schema,
+discovery projection, normalization, identity and all flow contracts unchanged.
+
 ## #108 — registration layout consistency
 
 Owner confirms the published desktop layout is repaired with
