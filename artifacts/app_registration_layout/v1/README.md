@@ -1,5 +1,11 @@
 # #108 — stable registration form width (v1)
 
+> Historical candidate: owner reported no improvement from v1 alone.
+> Final owner-confirmed repair: Form1.AlignInContainer = AlignInContainer.Start,
+> keep Form1.Width = Parent.Width and restore paired card Width = 458.
+> Existing parent Stretch settings and conditional form visibility remain.
+> Do not treat the original v1 ZIP as the complete repair.
+
 Owner measured, at the same window size:
 
 | State | Columns | Form width | Learn-language card width |

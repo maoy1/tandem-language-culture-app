@@ -1,5 +1,15 @@
 # Test execution records
 
+## #108 — published registration layout owner confirmation
+
+Published desktop defect PASS by owner report after Form1.AlignInContainer=Start,
+Width=Parent.Width and original paired card widths458 restored. Owner requested
+closure on 2026-11-21. v1-only sizing and visibility diagnostics did not fix the
+symptom; responsive-card experiment reverted. Final property handoff is layout-v2;
+no post-fix native app export/hash/version supplied. Broader REG-108-* cases remain
+NOT RUN under #25 (Save/Cancel/return, profile/catalogue, no-profile and mobile).
+No ordinary-user privacy or broader release acceptance inferred.
+
 ## 2026-11-16 — #103 checked registration UI acceptance PASS
 
 Owner explicitly reported "yes #103 checks done, all good" after New/Cancel

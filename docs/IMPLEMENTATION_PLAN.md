@@ -2,12 +2,20 @@
 
 ## #108 — registration layout consistency
 
-Apply the two native sizing properties to the existing working app, preserving
-the owner's field order and empty-state fix. Compare startup View/Edit widths at
-the same viewport before/after, then Save/Cancel/screen return, normal player,
-and approved no-profile/mobile fixtures. Local source/ZIP checks are not native
-layout proof; keep #108 open until scoped acceptance. No flow/Solution import or
-additional connector/read/schema/shared rules; #103 acceptance remains historical.
+Owner confirms the published desktop layout is repaired with
+Form1.AlignInContainer=AlignInContainer.Start, Width=Parent.Width and original
+paired card widths458 restored. Existing parent Stretch settings, conditional
+visibility, field order and native catalogue bindings remain. Earlier v1 alone
+failed; responsive-card-width experiment reverted; historical evidence retained.
+Owner requested finishing/closure on 2026-11-21. Reconciled handoff:
+artifacts/app_registration_layout/v2 (property ZIP, not an app binary).
+
+Scoped native published-layout result PASS. No post-fix app export/hash/version
+was supplied; do not relabel the inspected earlier export as the repaired build.
+Broader post-fix Save/Cancel/return, profile/catalogue, no-profile/New and mobile
+regressions remain NOT RUN under #25 as REG-108-*; closure of this bounded defect
+is not a general acceptance or release claim. No shared schema/rules/identity/
+flow contract impact (#81 no-impact); no app repack, new connector/read or grant.
 
 
 ## #103 — registration mode/navigation patch

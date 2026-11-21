@@ -2,15 +2,20 @@
 
 ## #108 — registration startup layout sizing
 
-Owner measured the same desktop window: startup View Columns=2/Form width=916/
-card width=458; Edit Columns=2/Form width=1303/card width=458. This supports a
-sizing/reflow issue, not a column-count change; exact engine cause is unproven.
-Native layout-v1 sets inner MainContainer1.LayoutAlignItems to Stretch and
-Form1.Width to Parent.Width. Preserve current field/card order/widths, Columns=2,
-v1/v2/v3 behavior and native catalogue bindings. No app repack, new reads, state
-flags, schema/identity/shared rule/flow IO changes (#81 no-impact). Local exact
-two-property/package checks PASS; native same-width View/Edit/Save/Cancel/return,
-no-profile/mobile cases NOT RUN. Stable artifacts/app_registration_layout/v1.
+Owner confirms the published desktop layout is repaired with
+Form1.AlignInContainer=AlignInContainer.Start, Width=Parent.Width and original
+paired card widths458 restored. Existing parent Stretch settings, conditional
+visibility, field order and native catalogue bindings remain. Earlier v1 alone
+failed; responsive-card-width experiment reverted; historical evidence retained.
+Owner requested finishing/closure on 2026-11-21. Reconciled handoff:
+artifacts/app_registration_layout/v2 (property ZIP, not an app binary).
+
+Scoped native published-layout result PASS. No post-fix app export/hash/version
+was supplied; do not relabel the inspected earlier export as the repaired build.
+Broader post-fix Save/Cancel/return, profile/catalogue, no-profile/New and mobile
+regressions remain NOT RUN under #25 as REG-108-*; closure of this bounded defect
+is not a general acceptance or release claim. No shared schema/rules/identity/
+flow contract impact (#81 no-impact); no app repack, new connector/read or grant.
 
 
 ## #103 — registration form state follow-up
